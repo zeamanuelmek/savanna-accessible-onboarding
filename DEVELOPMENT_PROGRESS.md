@@ -474,6 +474,22 @@ Done — see Phase 1.
 
 **Also by hand:** Chrome zoom at 200% and 400% on a laptop (`Ctrl` `+`), and Windows high-contrast mode.
 
+### Vercel check (after pushing `ac6fc1e`) — needs a team fix
+
+- **Fonts on Vercel: pass.** On `https://savanna-accessible-onboarding.vercel.app/savanna-onboarding/index.html`,
+  Chromium loaded Poppins (400/500/600/700) and Noto Sans Ethiopic from our own files (all HTTP 200, `font/woff2`).
+  Amharic headings render with Poppins plus Noto Sans Ethiopic.
+- **The GitHub repo is connected to two new Vercel projects**, `savanna-accessible-onboarding` and
+  `savanna-accessible-onboarding-7fbn`. It is **not** connected to the old `dimts-track1` project, so
+  `https://dimts-track1.vercel.app` still shows the old "Dimts" upload from 11 Nov.
+- **Root Directory is not applied** in either new project. The build log says `entrypoint: "."`, so the repo root is
+  published:
+  - the demo only works under `/savanna-onboarding/` (the site root returns 404);
+  - `CLAUDE.md` and `DEVELOPMENT_PROGRESS.md` are publicly readable;
+  - `.vercelignore` is not used (it sits in `savanna-onboarding/`), so `tests/` is public too.
+  - None of this is secret, but it is internal.
+- I changed **nothing** on Vercel (`CLAUDE.md` §10: ask first).
+
 ### Real vs simulated after Phase 1
 
 Unchanged from Phase 0, except: Savanna branding is now **implemented** (tokens taken from the reference; it is
