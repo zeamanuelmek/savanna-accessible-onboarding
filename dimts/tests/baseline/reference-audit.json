@@ -1,0 +1,772 @@
+{
+  "generated": "2026-11-12T16:12:24.530Z",
+  "note": "Measured from the frozen Savanna reference pages served on http://localhost (not an ALX domain).",
+  "results": {
+    "homepage-v1-paced": {
+      "bodyFont": "Poppins, sans-serif",
+      "bodyColor": "rgb(33, 37, 41)",
+      "bodyBg": "rgb(255, 255, 255)",
+      "fontsLoaded": {
+        "Poppins": [
+          "400",
+          "500",
+          "600",
+          "700"
+        ],
+        "DM Sans": [
+          "400"
+        ],
+        "Font Awesome 6 Free": [
+          "900",
+          "400"
+        ]
+      },
+      "aktivGroteskAvailable": false,
+      "textFontsUsed": [
+        [
+          "Poppins 400",
+          48
+        ],
+        [
+          "Poppins 600",
+          12
+        ],
+        [
+          "Poppins 500",
+          12
+        ],
+        [
+          "Poppins 700",
+          3
+        ]
+      ],
+      "textColours": [
+        [
+          "rgb(33, 37, 41)",
+          36
+        ],
+        [
+          "rgb(219, 62, 62)",
+          16
+        ],
+        [
+          "rgba(33, 37, 41, 0.75)",
+          10
+        ],
+        [
+          "rgb(108, 117, 125)",
+          7
+        ],
+        [
+          "rgb(25, 135, 84)",
+          4
+        ],
+        [
+          "rgb(255, 255, 255)",
+          1
+        ],
+        [
+          "rgb(255, 193, 7)",
+          1
+        ]
+      ],
+      "backgroundsByArea": [
+        [
+          "rgb(255, 255, 255)",
+          1493
+        ],
+        [
+          "rgb(219, 62, 62)",
+          11
+        ],
+        [
+          "rgb(253, 247, 247)",
+          2
+        ],
+        [
+          "rgb(233, 236, 239)",
+          2
+        ]
+      ],
+      "fontSizes": [
+        [
+          "14px",
+          63
+        ],
+        [
+          "17.5px",
+          6
+        ],
+        [
+          "12.25px",
+          2
+        ],
+        [
+          "24.5px",
+          2
+        ],
+        [
+          "15px",
+          1
+        ],
+        [
+          "10px",
+          1
+        ]
+      ],
+      "radii": [
+        [
+          "15px",
+          28
+        ],
+        [
+          "5.25px",
+          9
+        ],
+        [
+          "7px",
+          6
+        ],
+        [
+          "4.25px",
+          5
+        ],
+        [
+          "700px",
+          3
+        ],
+        [
+          "50%",
+          2
+        ]
+      ],
+      "samples": [
+        {
+          "sel": "h1",
+          "font": "Poppins, sans-serif",
+          "size": "17.5px",
+          "weight": "500",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "auto"
+        },
+        {
+          "sel": ".btn-primary",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(255, 255, 255)",
+          "bg": "rgb(219, 62, 62)",
+          "radius": "5.25px",
+          "padding": "5.25px 10.5px",
+          "height": "33.5px"
+        },
+        {
+          "sel": ".btn",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(255, 255, 255)",
+          "bg": "rgb(219, 62, 62)",
+          "radius": "5.25px",
+          "padding": "5.25px 10.5px",
+          "height": "33.5px"
+        },
+        {
+          "sel": "a",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(0, 0, 0)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "3.5px",
+          "height": "47px"
+        },
+        {
+          "sel": "#sidebar",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgb(255, 255, 255)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "720px"
+        },
+        {
+          "sel": ".card",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgb(255, 255, 255)",
+          "radius": "7px",
+          "padding": "0px",
+          "height": "72px"
+        }
+      ],
+      "fontRequests": [
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/fa-solid-900.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/fa-regular-400.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/rP2Yp2ywxg089UriI5-g4vlH9VoD8Cmcqbu0-K6z9mXg.woff2",
+          "status": 200
+        }
+      ]
+    },
+    "homepage-v1-self-paced": {
+      "bodyFont": "Poppins, sans-serif",
+      "bodyColor": "rgb(33, 37, 41)",
+      "bodyBg": "rgb(255, 255, 255)",
+      "fontsLoaded": {
+        "Poppins": [
+          "300",
+          "400",
+          "500",
+          "600",
+          "700"
+        ],
+        "Font Awesome 6 Free": [
+          "900"
+        ]
+      },
+      "aktivGroteskAvailable": false,
+      "textFontsUsed": [
+        [
+          "Poppins 400",
+          28
+        ],
+        [
+          "Poppins 700",
+          14
+        ],
+        [
+          "Poppins 500",
+          8
+        ],
+        [
+          "Poppins 600",
+          3
+        ],
+        [
+          "Poppins 300",
+          3
+        ]
+      ],
+      "textColours": [
+        [
+          "rgb(33, 37, 41)",
+          22
+        ],
+        [
+          "rgb(219, 62, 62)",
+          15
+        ],
+        [
+          "rgba(33, 37, 41, 0.75)",
+          11
+        ],
+        [
+          "rgb(0, 0, 0)",
+          7
+        ],
+        [
+          "rgb(255, 255, 255)",
+          1
+        ]
+      ],
+      "backgroundsByArea": [
+        [
+          "rgb(255, 255, 255)",
+          1301
+        ],
+        [
+          "rgb(248, 249, 250)",
+          21
+        ],
+        [
+          "rgb(233, 236, 239)",
+          3
+        ],
+        [
+          "rgb(253, 247, 247)",
+          2
+        ],
+        [
+          "rgb(248, 216, 216)",
+          2
+        ]
+      ],
+      "fontSizes": [
+        [
+          "14px",
+          33
+        ],
+        [
+          "24.5px",
+          6
+        ],
+        [
+          "12.25px",
+          5
+        ],
+        [
+          "10.5px",
+          4
+        ],
+        [
+          "17.5px",
+          4
+        ],
+        [
+          "15px",
+          1
+        ],
+        [
+          "35px",
+          1
+        ],
+        [
+          "7px",
+          1
+        ],
+        [
+          "10px",
+          1
+        ]
+      ],
+      "radii": [
+        [
+          "15px",
+          18
+        ],
+        [
+          "7px",
+          8
+        ],
+        [
+          "5.25px",
+          3
+        ],
+        [
+          "700px",
+          3
+        ],
+        [
+          "4.25px",
+          3
+        ],
+        [
+          "50%",
+          2
+        ]
+      ],
+      "samples": [
+        {
+          "sel": "h1",
+          "font": "Poppins, sans-serif",
+          "size": "17.5px",
+          "weight": "500",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "auto"
+        },
+        {
+          "sel": "h3",
+          "font": "Poppins, sans-serif",
+          "size": "24.5px",
+          "weight": "500",
+          "color": "rgb(219, 62, 62)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "29.3906px"
+        },
+        {
+          "sel": ".btn-primary",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(255, 255, 255)",
+          "bg": "rgb(219, 62, 62)",
+          "radius": "5.25px",
+          "padding": "5.25px 10.5px",
+          "height": "auto"
+        },
+        {
+          "sel": ".btn",
+          "font": "Poppins, sans-serif",
+          "size": "12.25px",
+          "weight": "400",
+          "color": "rgb(219, 62, 62)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "700px",
+          "padding": "3.5px 7px",
+          "height": "27.375px"
+        },
+        {
+          "sel": "a",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(0, 0, 0)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "3.5px",
+          "height": "47px"
+        },
+        {
+          "sel": "#sidebar",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgb(255, 255, 255)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "720px"
+        },
+        {
+          "sel": ".card",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgb(255, 255, 255)",
+          "radius": "7px",
+          "padding": "0px",
+          "height": "498.391px"
+        }
+      ],
+      "fontRequests": [
+        {
+          "url": "http://localhost:4173/assets/fonts/fa-solid-900.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLDz8Z1xlFd2JQEk.woff2",
+          "status": 200
+        }
+      ]
+    },
+    "concept-with-navigation": {
+      "bodyFont": "Poppins, sans-serif",
+      "bodyColor": "rgb(33, 37, 41)",
+      "bodyBg": "rgb(255, 255, 255)",
+      "fontsLoaded": {
+        "Poppins": [
+          "400",
+          "500",
+          "600",
+          "700"
+        ],
+        "Font Awesome 6 Free": [
+          "900",
+          "400"
+        ]
+      },
+      "aktivGroteskAvailable": false,
+      "textFontsUsed": [
+        [
+          "Poppins 400",
+          70
+        ],
+        [
+          "Poppins 500",
+          19
+        ],
+        [
+          "Poppins 700",
+          19
+        ],
+        [
+          "Poppins 600",
+          2
+        ]
+      ],
+      "textColours": [
+        [
+          "rgb(0, 43, 86)",
+          63
+        ],
+        [
+          "rgb(33, 37, 41)",
+          25
+        ],
+        [
+          "rgb(86, 72, 183)",
+          10
+        ],
+        [
+          "rgb(2, 142, 202)",
+          5
+        ],
+        [
+          "rgb(255, 255, 255)",
+          3
+        ],
+        [
+          "rgba(33, 37, 41, 0.75)",
+          2
+        ],
+        [
+          "rgb(51, 51, 51)",
+          2
+        ]
+      ],
+      "backgroundsByArea": [
+        [
+          "rgb(255, 255, 255)",
+          690
+        ],
+        [
+          "rgb(231, 233, 236)",
+          225
+        ],
+        [
+          "rgb(243, 240, 255)",
+          133
+        ],
+        [
+          "rgb(238, 247, 255)",
+          133
+        ],
+        [
+          "rgb(5, 242, 131)",
+          25
+        ],
+        [
+          "rgb(219, 62, 62)",
+          19
+        ],
+        [
+          "rgb(233, 236, 239)",
+          18
+        ]
+      ],
+      "fontSizes": [
+        [
+          "14px",
+          86
+        ],
+        [
+          "17.5px",
+          9
+        ],
+        [
+          "21px",
+          7
+        ],
+        [
+          "12.25px",
+          3
+        ],
+        [
+          "15px",
+          1
+        ],
+        [
+          "7px",
+          1
+        ],
+        [
+          "16px",
+          1
+        ],
+        [
+          "35px",
+          1
+        ],
+        [
+          "10px",
+          1
+        ]
+      ],
+      "radii": [
+        [
+          "15px",
+          18
+        ],
+        [
+          "10px",
+          9
+        ],
+        [
+          "5.25px",
+          7
+        ],
+        [
+          "8px",
+          2
+        ],
+        [
+          "700px",
+          1
+        ],
+        [
+          "4.25px",
+          1
+        ]
+      ],
+      "samples": [
+        {
+          "sel": "h1",
+          "font": "Poppins, sans-serif",
+          "size": "35px",
+          "weight": "500",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "42px"
+        },
+        {
+          "sel": "h2",
+          "font": "Poppins, sans-serif",
+          "size": "28px",
+          "weight": "500",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "45.5px"
+        },
+        {
+          "sel": "h3",
+          "font": "Poppins, sans-serif",
+          "size": "24.5px",
+          "weight": "700",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "auto"
+        },
+        {
+          "sel": ".btn-primary",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(255, 255, 255)",
+          "bg": "rgb(219, 62, 62)",
+          "radius": "5.25px",
+          "padding": "5.25px 10.5px",
+          "height": "33.5px"
+        },
+        {
+          "sel": ".btn",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(51, 51, 51)",
+          "bg": "rgb(255, 255, 255)",
+          "radius": "5.25px",
+          "padding": "5.25px 10.5px",
+          "height": "auto"
+        },
+        {
+          "sel": "a",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(0, 0, 0)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "3.5px",
+          "height": "47px"
+        },
+        {
+          "sel": "#sidebar",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(33, 37, 41)",
+          "bg": "rgb(255, 255, 255)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "720px"
+        },
+        {
+          "sel": "input, select",
+          "font": "Poppins, sans-serif",
+          "size": "14px",
+          "weight": "400",
+          "color": "rgb(0, 0, 0)",
+          "bg": "rgba(0, 0, 0, 0)",
+          "radius": "0px",
+          "padding": "0px",
+          "height": "auto"
+        }
+      ],
+      "fontRequests": [
+        {
+          "url": "http://localhost:4173/assets/fonts/fa-solid-900.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/fa-regular-400.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/assets/fonts/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "status": 200
+        }
+      ]
+    }
+  }
+}
