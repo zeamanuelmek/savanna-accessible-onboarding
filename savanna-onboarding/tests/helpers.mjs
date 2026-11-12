@@ -16,7 +16,7 @@ export async function freshStart(page, { lang = 'en', prefs = {}, extra = {} } =
 
 export async function go(page, hash = '#/') {
   await page.goto(APP + hash);
-  await page.waitForFunction(() => !!window.Dimts);
+  await page.waitForFunction(() => !!window.SavannaOnboarding);
 }
 
 /** Pick an option (radio or checkbox) by its value inside the current form. */

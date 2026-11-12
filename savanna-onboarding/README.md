@@ -1,65 +1,126 @@
-# Dimts (ድምፅ): accessible onboarding prototype
+# Savanna Accessible Onboarding Module
 
-Track 1 starting point for the Accessibility Hackathon 2026 (ALX Ethiopia / Digital Bridge).
+A reusable onboarding and learner-profile **module** for the Savanna learning platform, built for the Digital Bridge
+Accessibility Hackathon 2026 (ALX Ethiopia), Track 1. It is not a website or an LMS. It is a web component that
+Savanna or any other site can add with a script tag.
 
-Dimts is one accessible form engine, packaged as a web component, that runs four forms:
+**Access without disclosure:** learners choose how they want to interact (read-aloud, voice, larger text, simple
+mode) without ever stating or proving a disability.
+
+**One form engine, many journeys:**
 
 | Form | What it does |
 | --- | --- |
-| `signup` | Sign-up with any ID or none (Fayda, kebele, passport, refugee ID, other, "refer me" through a partner), partner-assisted mode with learner consent, Ethiopian-calendar date of birth |
-| `passport` | Support Passport: "What would help you?", never a diagnosis. Stays on the device; the learner chooses who sees it |
+| `signup` | Sign-up with any ID or none (Fayda, kebele ID, passport, refugee ID, another document, or "refer me" through a partner). Includes a partner-assisted route with learner consent, and an Ethiopian-calendar date of birth |
+| `passport` | Support Passport: "What would help you?", never a diagnosis. Stays on the device |
 | `employer` | Employers tick the support a job offers, from the same list. Output as schema.org `JobPosting` |
-| `apply` | Job application prefilled from the profile (no asking twice), voice answers, opt-in sharing of the Support Passport |
+| `apply` | Job application prefilled from the profile (no asking twice), with opt-in sharing of the Support Passport |
 
-The jobs page filters by the learner's support needs **on the device**, so the job board never sees them.
+## What is real and what is not
 
-## Run it
+| Feature | Status |
+|---|---|
+| One question per screen, error summary, check your answers, autosave, Ethiopian calendar | implemented |
+| Savanna look: Poppins, navy text, Savanna red actions, Noto Sans Ethiopic for Amharic | implemented (Phase 1) |
+| Text size, high contrast, language settings | implemented |
+| Read-aloud | partial: uses the device voice; most phones have no Amharic voice; no recorded audio yet |
+| Voice answers | partial: Chrome only, sends audio to Google. **Known bug:** unconfirmed speech is saved (fix in Phase 3) |
+| "Finish later" SMS | **simulated**: a labelled preview, no SMS is sent |
+| ID verification | unavailable: IDs are never verified |
+| Amharic text | AI draft: needs native-speaker review |
+| Backend / API | unavailable: the module sends nothing; the host page decides where data goes |
 
-No build step. Serve the folder with any static server:
+## Run the demo
+
+No build step. Serve this folder with any static server:
 
 ```bash
-python3 -m http.server 8080
+cd savanna-onboarding
+python -m http.server 8080        # or: node tests/static-server.mjs  (port 4173)
 # open http://localhost:8080
 ```
 
-## Add it to any site (Savanna, a job board)
+## Add it to a site
 
 ```html
-<script src="dimts.js" defer></script>
+<script src="savanna-onboarding.js" defer></script>
 <script src="forms.js" defer></script>
-<dimts-form form="signup" lang="am"></dimts-form>
+<savanna-onboarding-form form="signup" lang="am"></savanna-onboarding-form>
 <script>
-  document.addEventListener('dimts:complete', e => {
+  document.addEventListener('savanna-onboarding:complete', e => {
     // e.detail = { form, instance, lang, answers } -> send to your own API
   });
 </script>
 ```
 
-## What is built in
+Full guide: [`docs/for-developers.md`](docs/for-developers.md). The old names (`dimts.js`, `<dimts-form>`,
+`window.Dimts`, `dimts:*` events) still work as deprecated aliases.
 
-- Welcome screen: the learner chooses how to answer (read and type, listen, speak, or simple steps with pictures). Turn it on with `<dimts-form form="signup" welcome>`
-- Settings (`<dimts-settings>`): language, text size, contrast, how I answer, read-aloud. Saved once and applied everywhere the component is used on that phone
+## Keyboard and screen-reader (ARIA) support
 
-- One question per screen; the question is the page heading and focus moves to it on every screen
-- No time limits; answers saved after every question; "Finish later" resume link (SMS preview)
-- Read-aloud for every question (pre-recorded clip if provided via `audio`, else the device voice)
-- Voice answers (Amharic `am-ET` / English) with "I heard… / Yes / Say it again / Type it instead", behind a consent screen
-- Plain error messages + error summary, "Check your answers" with change links
-- "Read everything to me" easy mode with large picture answers
-- Amharic / English switch; Ethiopian calendar with Gregorian conversion
-- axe-core: 0 critical or serious issues on all screens tested; no horizontal scroll at 320px (≈ 400% zoom)
+**Keyboard**
+
+- Everything works with the keyboard alone: `Tab` / `Shift+Tab` to move, `Space` to choose an option, arrow keys
+  inside a group of single choices, `Enter` to continue.
+- Every control shows a 3px navy focus outline (at least 3:1 contrast), and focus is never hidden behind other content.
+- The demo page starts with a "Skip to main content" link. On small screens the menu button opens with `Enter` or
+  `Space`, and `Escape` closes it and returns focus to the button.
+- There are no keyboard traps and no time limits.
+
+**Focus management**
+
+- On every new question, focus moves to the question, which is the page's only `<h1>`.
+- After an error, focus moves to the "There is a problem" summary. Its link takes you to the field.
+- After "Change" on the check-your-answers screen, you return to that question, and then back to the summary.
+
+**Names, roles and states**
+
+- Only real `<button>` and `<a>` elements act as controls. Every icon is decorative (`aria-hidden`) and sits next to
+  visible text, so every button has a spoken name.
+- Single and multiple choices are native radio buttons and checkboxes inside a `<fieldset>`, with the question as
+  the `<legend>`.
+- Toggles report their state (`aria-pressed` on "Read aloud", `aria-expanded` on "Get help" and the menu).
+- Errors: the field gets `aria-invalid="true"` and is linked to its error message and hint with `aria-describedby`.
+- Progress ("Question 2 of 6") is plain text. The visual bar is hidden from screen readers.
+- Status messages ("Saved", "Welcome back", the number of jobs shown) are announced through a polite `role="status"` live region.
+- Pop-ups are inline panels (help, voice consent), so there is nothing to trap focus in.
+
+**Structure and language**
+
+- The module never adds a `<main>` landmark of its own; the host page keeps its single `<main>`. Headings never skip
+  a level.
+- The page and every Amharic or English part declare their language (`lang="am"` / `lang="en"`), so screen readers
+  switch voice.
+
+**Learner settings:** text size (16 / 20 / 24px base, and never smaller inside Savanna's 14px pages), high contrast,
+language, how I like to answer, read aloud. Settings are saved on the device and apply everywhere the module appears.
+
+**What has been tested:**
+
+- **Automated (Playwright + axe-core):** axe-core with zero serious or critical issues; keyboard-only sign-up; focus
+  outline contrast; no sideways scrolling at 320px (= 400% zoom); one `<main>`; heading order; language of parts.
+- **Not yet tested by a person:** NVDA, TalkBack inside an Android WebView. Until those are done, the module makes no
+  claim of WCAG 2.2 AA conformance.
+
+## Tests
+
+```bash
+cd savanna-onboarding
+npm install
+npx playwright install chromium                     # first time only
+npx playwright test --workers=1 --project=mobile    # phone size
+npx playwright test --workers=1 --project=desktop   # desktop size
+```
+
+The Savanna reference pages are read from `../../Savanna-static-pages` (or set `REFERENCE_DIR`). The reference
+audit test is skipped if they are not there.
 
 ## Files
 
-- `dimts.js`: the engine (web component, no dependencies)
+- `savanna-onboarding.js`: the engine (web component, design tokens, no dependencies)
 - `forms.js`: the four form recipes (plain data)
-- `index.html`, `app.js`, `app.css`: demo host page standing in for Savanna / a job platform
-
-## Next steps
-
-1. Native speaker reviews all Amharic text
-2. Record Amharic + English audio for every prompt and add `audio` paths
-3. REST API (OpenAPI) + Docker Compose for the judges' one-hour install
-4. Real SMS provider (AfroMessage / GeezSMS / SMSEthiopia) behind a pluggable interface
-5. Partner console for AAAPD-style organisations
-6. Test with co-designers using TalkBack and NVDA; write the WCAG 2.2 AA conformance report
+- `assets/fonts/`: Poppins and Noto Sans Ethiopic (SIL Open Font Licence, licence files included)
+- `index.html`, `app.js`, `app.css`: demo host page standing in for Savanna or a job platform
+- `docs/`: developer documentation
+- `tests/`: Playwright + axe-core tests
+- Design tokens and their sources: [`../DESIGN_TOKENS.md`](../DESIGN_TOKENS.md). Progress: [`../DEVELOPMENT_PROGRESS.md`](../DEVELOPMENT_PROGRESS.md)

@@ -1,6 +1,7 @@
 /*!
- * Dimts (ድምፅ) — accessible, audio-first, one-question-per-screen form engine.
- * Drop-in web component: <script src="dimts.js" defer></script> + <dimts-form form="signup"></dimts-form>
+ * Savanna Accessible Onboarding Module — accessible, audio-first, one-question-per-screen form engine.
+ * Drop-in web component: <script src="savanna-onboarding.js" defer></script> + <savanna-onboarding-form form="signup"></savanna-onboarding-form>
+ * The old names <dimts-form>, <dimts-settings>, window.Dimts and dimts:* events still work as deprecated aliases.
  * No framework, no build step, no paid API. Data stays in the browser unless the host page sends it.
  */
 (function () {
@@ -21,12 +22,17 @@
     root.setAttribute('data-dm-size', p.size);
     root.setAttribute('data-dm-contrast', p.contrast);
   }
+  /* Events are named savanna-onboarding:<name>. The old dimts:<name> event is also sent (deprecated alias). */
+  function emit(target, name, detail, bubbles) {
+    target.dispatchEvent(new CustomEvent('savanna-onboarding:' + name, { bubbles: !!bubbles, detail: detail }));
+    target.dispatchEvent(new CustomEvent('dimts:' + name, { bubbles: !!bubbles, detail: detail }));
+  }
   function setPrefs(patch) {
     var p = getPrefs();
     Object.keys(patch).forEach(function (k) { p[k] = patch[k]; });
     store.set('dimts.prefs', p);
     applyPrefs();
-    document.dispatchEvent(new CustomEvent('dimts:prefs', { detail: p }));
+    emit(document, 'prefs', p);
     return p;
   }
   // Choosing a way of answering sets sensible defaults; each can still be changed separately in Settings.
@@ -235,98 +241,172 @@
     return true;
   }
 
-  /* ---------- styles (injected once; all classes prefixed dm- to avoid clashing with Bootstrap) ---------- */
-  var CSS = [
-    'dimts-form{display:block;font-family:"Noto Sans Ethiopic","Nyala","Abyssinica SIL",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#0b1a33;line-height:1.5;font-size:1.0625rem}',
-    'html[data-dm-size=large] dimts-form,html[data-dm-size=large] dimts-settings{font-size:1.25rem}',
-    'html[data-dm-size=xlarge] dimts-form,html[data-dm-size=xlarge] dimts-settings{font-size:1.5rem}',
-    'dimts-settings{display:block;font-family:"Noto Sans Ethiopic","Nyala","Abyssinica SIL",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#0b1a33;line-height:1.5;font-size:1.0625rem}',
-    'html[data-dm-contrast=high] .dm{color:#000;background:#fff}',
-    'html[data-dm-contrast=high] .dm-hint,html[data-dm-contrast=high] .dm-progress{color:#000}',
-    'html[data-dm-contrast=high] .dm-opt,html[data-dm-contrast=high] .dm-input,html[data-dm-contrast=high] .dm-btn,html[data-dm-contrast=high] .dm-panel{border-color:#000;border-width:3px}',
-    'html[data-dm-contrast=high] .dm-primary{background:#000;border-color:#000;color:#fff}',
-    'html[data-dm-contrast=high] .dm-link{color:#000}',
-    'html[data-dm-contrast=high] .dm-opt:has(input:checked){background:#fff;border-width:5px;border-color:#000}',
-    'html[data-dm-contrast=high] .dm-opt input{accent-color:#000}',
-    'html[data-dm-contrast=high] .dm-note{background:#fff;border:3px solid #000}',
-    '.dm-voice-first [data-act=speak]{background:#0a3d91;border-color:#0a3d91;color:#fff;order:-1}',
-    '.dm-settings fieldset{margin:0 0 1.5em}',
-    '.dm-settings legend{font-weight:700;font-size:1.2em;margin-bottom:.4em}',
+  /* ---------- where this script was loaded from (the fonts folder sits next to it) ---------- */
+  var BASE = (function () {
+    try { var s = document.currentScript && document.currentScript.src; return s ? s.replace(/[^\/]*$/, '') : ''; } catch (e) { return ''; }
+  })();
 
+  /* ---------- fonts: Poppins (as served by Savanna) + Noto Sans Ethiopic for Amharic. Both SIL OFL, self-hosted. ---------- */
+  var RANGE = {
+    latin: 'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD',
+    'latin-ext': 'U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF',
+    ethiopic: 'U+030E, U+1200-1399, U+2D80-2DDE, U+AB01-AB2E, U+1E7E0-1E7E6, U+1E7E8-1E7EB, U+1E7ED-1E7EE, U+1E7F0-1E7FE'
+  };
+  function fontFaces() {
+    if (!BASE) return ''; // inline install: the host provides fonts, the stack below falls back cleanly
+    var out = [];
+    [400, 500, 600, 700].forEach(function (w) {
+      ['latin-ext', 'latin'].forEach(function (sub) {
+        out.push('@font-face{font-family:"Poppins";font-style:normal;font-weight:' + w + ';font-display:swap;src:url("' + BASE + 'assets/fonts/poppins-' + w + '-' + sub + '.woff2") format("woff2");unicode-range:' + RANGE[sub] + '}');
+      });
+    });
+    out.push('@font-face{font-family:"Noto Sans Ethiopic";font-style:normal;font-weight:400 700;font-display:swap;src:url("' + BASE + 'assets/fonts/noto-sans-ethiopic-ethiopic.woff2") format("woff2");unicode-range:' + RANGE.ethiopic + '}');
+    return out.join('\n');
+  }
+
+  /* ---------- design tokens ----------
+     CSS custom properties prefixed --so- ("Savanna onboarding"), so they never clash with Savanna or Bootstrap.
+     A host can override any of them on :root or on the element. Values, sources and contrast: DESIGN_TOKENS.md. */
+  var TOKENS = [
+    ':root{',
+    '--so-navy:#002b56;',            // --savanna-alx-primary
+    '--so-text:var(--so-navy);--so-heading:var(--so-navy);',
+    '--so-text-muted:#335578;',      // --savanna-alx-primary-hover
+    '--so-primary:#da3a3a;',         // Savanna red #db3e3e darkened 1% lightness -> 4.52:1 on white
+    '--so-primary-hover:#bf2424;',
+    '--so-on-primary:#fff;',
+    '--so-surface:#fff;',
+    '--so-surface-alt:#e7e9ec;',     // --savanna-alx-light-background
+    '--so-surface-info:#cce8f4;',    // --savanna-alx-tertiary-80
+    '--so-border:#66809a;',          // --savanna-alx-primary-40 (4.10:1, form control edges)
+    '--so-border-strong:var(--so-navy);',
+    '--so-border-subtle:#dee2e6;',   // --bs-border-color (decorative dividers only)
+    '--so-header-border:#e5e6e6;',   // --savanna-theme-header-border-color (decorative)
+    '--so-selected-bg:#e7e9ec;--so-selected-border:var(--so-navy);',
+    '--so-error:#dc3545;',           // --bs-form-invalid-color
+    '--so-success-bg:#cdfce6;',      // --savanna-alx-secondary-80
+    '--so-success-accent:#05f283;',  // --savanna-alx-secondary (fill only, never text)
+    '--so-accent:#5648b7;',          // --savanna-alx-accent (callout bar)
+    '--so-info-accent:#028eca;',     // --savanna-alx-tertiary (borders only, fails as text)
+    '--so-focus:var(--so-navy);--so-focus-width:3px;--so-focus-offset:2px;',
+    '--so-border-width:2px;',
+    '--so-radius-sm:5.25px;--so-radius:7px;--so-radius-card:15px;--so-radius-pill:999px;',
+    '--so-font:"Poppins","Noto Sans Ethiopic","Nyala","Ebrima",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;',
+    '--so-base-size:max(1rem,16px);', // never shrinks under Savanna's 14px root; follows a larger browser default
+    '--so-scale:1;',
+    '--so-target:48px;--so-target-sm:44px;',
+    '}',
+    'html[data-dm-size=large]{--so-scale:1.25}',
+    'html[data-dm-size=xlarge]{--so-scale:1.5}',
+    'html[data-dm-contrast=high]{--so-text:#000;--so-heading:#000;--so-text-muted:#000;--so-primary:#000;--so-primary-hover:#333;' +
+      '--so-surface-alt:#fff;--so-surface-info:#fff;--so-success-bg:#fff;--so-selected-bg:#fff;--so-selected-border:#000;' +
+      '--so-border:#000;--so-border-strong:#000;--so-border-subtle:#000;--so-header-border:#000;--so-accent:#000;--so-info-accent:#000;' +
+      '--so-success-accent:#000;--so-error:#a3000b;--so-focus:#000;--so-border-width:3px}'
+  ].join('');
+
+  /* ---------- component styles (all classes prefixed dm-, all values from the tokens above) ---------- */
+  var CSS = [
+    'savanna-onboarding-form,savanna-onboarding-settings,dimts-form,dimts-settings{display:block;font-family:var(--so-font);color:var(--so-text);line-height:1.5;font-size:calc(var(--so-base-size) * var(--so-scale))}',
     '.dm{max-width:40em;margin:0 auto}',
+    '.dm:lang(am){line-height:1.7}',
     '.dm *{box-sizing:border-box}',
-    '.dm-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5em;margin-bottom:1em;padding-bottom:.75em;border-bottom:1px solid #e3e8ef}',
-    '.dm-bar-r{display:flex;flex-wrap:wrap;gap:.4em;margin-left:auto}',
-    '.dm-meter{height:8px;background:#e3e8ef;border-radius:99px;overflow:hidden;margin:.35em 0 1em}',
-    '.dm-meter span{display:block;height:100%;background:#0b5c3b;border-radius:99px}',
-    'html[data-dm-contrast=high] .dm-meter{background:#fff;border:2px solid #000}',
-    'html[data-dm-contrast=high] .dm-meter span{background:#000}',
-    '.dm-opt:hover{border-color:#0b1a33}',
-    '.dm-btn{transition:background .15s}',
     '.dm button,.dm input,.dm select,.dm textarea{font:inherit}',
-    '.dm-btn{min-height:48px;min-width:48px;padding:.6em 1.1em;border-radius:10px;border:2px solid #0b1a33;background:#fff;color:#0b1a33;cursor:pointer;font-weight:600}',
-    '.dm-btn:hover{background:#eef2f8}',
-    '.dm-primary{background:#0b5c3b;border-color:#0b5c3b;color:#fff}',
-    '.dm-primary:hover{background:#08452c}',
-    '.dm-small{min-height:44px;padding:.35em .75em;font-size:.9em;border-width:1.5px}',
-    '.dm-link{background:none;border:none;color:#0a3d91;text-decoration:underline;text-underline-offset:3px;padding:.5em 0;min-height:44px;cursor:pointer;font-weight:600}',
-    '.dm :focus-visible{outline:3px solid #ffbf47;outline-offset:2px;box-shadow:0 0 0 6px #0b1a33}',
-    '.dm-progress{color:#3b4a63;margin:0 0 .25em;font-size:.95em}',
-    '.dm-q{font-size:1.6em;line-height:1.3;margin:.25em 0 .5em;font-weight:700}',
-    '.dm-q:focus,.dm-q:focus-visible{outline:none;box-shadow:none}',
+    '.dm :focus-visible{outline:var(--so-focus-width) solid var(--so-focus);outline-offset:var(--so-focus-offset);box-shadow:none}',
+    '.dm-q:focus,.dm-q:focus-visible{outline:none}',
+
+    '.dm-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5em;margin-bottom:1em;padding-bottom:.75em;border-bottom:1px solid var(--so-border-subtle)}',
+    '.dm-bar-r{display:flex;flex-wrap:wrap;gap:.5em;margin-left:auto}',
+    '.dm-progress{color:var(--so-text-muted);margin:0 0 .25em;font-size:.95em;font-weight:500}',
+    '.dm-meter{height:8px;background:var(--so-surface-alt);border-radius:var(--so-radius-pill);overflow:hidden;margin:.35em 0 1.25em}',
+    '.dm-meter span{display:block;height:100%;background:var(--so-heading);border-radius:var(--so-radius-pill)}',
+
+    '.dm-q{font-size:1.75em;line-height:1.3;margin:.25em 0 .5em;font-weight:600;color:var(--so-heading)}',
     '.dm-q label{display:block}',
-    '.dm-hint{color:#3b4a63;margin:0 0 1em}',
+    '.dm-opt-tag{font-weight:400;font-size:.6em;color:var(--so-text-muted)}',
+    '.dm-hint{color:var(--so-text-muted);margin:0 0 1em}',
     '.dm fieldset{border:none;padding:0;margin:0;min-width:0}',
-    '.dm legend{padding:0}',
-    '.dm-input{width:100%;min-height:52px;padding:.6em .8em;border:2px solid #0b1a33;border-radius:8px;background:#fff;color:#0b1a33;font-size:1.15em}',
+    '.dm legend{padding:0;max-width:100%}',
+
+    '.dm-btn{display:inline-flex;align-items:center;justify-content:center;gap:.4em;min-height:var(--so-target);min-width:var(--so-target);padding:.6em 1.2em;border-radius:var(--so-radius-sm);border:var(--so-border-width) solid var(--so-border-strong);background:var(--so-surface);color:var(--so-heading);cursor:pointer;font-weight:500;text-align:center;transition:background-color .15s,border-color .15s}',
+    '.dm-btn:hover{background:var(--so-surface-alt)}',
+    '.dm-primary{background:var(--so-primary);border-color:var(--so-primary);color:var(--so-on-primary)}',
+    '.dm-primary:hover{background:var(--so-primary-hover);border-color:var(--so-primary-hover)}',
+    '.dm-small{min-height:var(--so-target-sm);padding:.35em .8em;font-size:.9em}',
+    '.dm-link{background:none;border:none;color:var(--so-heading);text-decoration:underline;text-underline-offset:3px;padding:.5em .25em;min-height:var(--so-target-sm);cursor:pointer;font-weight:500}',
+    '.dm-link:hover{text-decoration-thickness:2px}',
+    '.dm-voice-first [data-act=speak]{background:var(--so-heading);border-color:var(--so-heading);color:var(--so-surface);order:-1}',
+
+    '.dm-input{width:100%;min-height:52px;padding:.6em .8em;border:var(--so-border-width) solid var(--so-border);border-radius:var(--so-radius);background:var(--so-surface);color:var(--so-text);font-size:1.1em}',
+    '.dm-input:hover{border-color:var(--so-border-strong)}',
     '.dm textarea.dm-input{min-height:8em}',
-    '.dm-input[aria-invalid=true]{border-color:#b3261e;border-width:3px}',
-    '.dm-opts{display:grid;gap:.6em;margin:0 0 1em;padding:0;list-style:none}',
-    '.dm-opt{display:flex;align-items:center;gap:.75em;min-height:56px;padding:.6em .9em;border:2px solid #9aa6b8;border-radius:10px;background:#fff;cursor:pointer}',
-    '.dm-opt:has(input:checked){border-color:#0b5c3b;background:#e8f4ee;border-width:3px}',
-    '.dm-opt input{width:1.6em;height:1.6em;flex:none;accent-color:#0b5c3b}',
-    '.dm-ico{font-size:1.6em;flex:none}',
-    '.dm-opt>span:last-child{min-width:0;overflow-wrap:anywhere}',
-    '.dm-opt{max-width:100%}',
-    '.dm-tools{display:flex;flex-wrap:wrap;gap:.6em;margin:1em 0}',
-    '.dm-heard{border:2px solid #0a3d91;background:#eef4ff;border-radius:10px;padding:.9em;margin:1em 0}',
-    '.dm-heard p{margin:0 0 .6em}',
-    '.dm-heard q{font-weight:700;font-size:1.15em}',
-    '.dm-status{min-height:1.5em;margin:.5em 0;color:#0a3d91;font-weight:600}',
-    '.dm-actions{display:flex;flex-wrap:wrap;gap:.75em;margin-top:1.25em;align-items:center}',
-    '.dm-errors{border:4px solid #b3261e;padding:1em;margin:0 0 1em;border-radius:8px;background:#fff}',
-    '.dm-errors h2{margin:0 0 .5em;font-size:1.25em}',
-    '.dm-errors ul{margin:0;padding-left:1.2em}',
-    '.dm-errors a{color:#b3261e;font-weight:700}',
-    '.dm-err{display:block;color:#b3261e;font-weight:700;margin:.25em 0 .5em}',
+    '.dm-input[aria-invalid=true]{border-color:var(--so-error);border-width:3px}',
     '.dm-date{display:flex;flex-wrap:wrap;gap:.75em}',
-    '.dm-date div{display:flex;flex-direction:column}',
-    '.dm-date label{font-weight:600}',
-    '.dm-date .dm-input{width:auto}',
-    '.dm-panel{border:2px solid #0b1a33;border-radius:10px;padding:1em;margin:1em 0;background:#fffdf5}',
-    '.dm-panel h2{margin:0 0 .5em;font-size:1.2em}',
+    '.dm-date div{display:flex;flex-direction:column;gap:.25em;max-width:100%}',
+    '.dm-date label{font-weight:500}',
+    '.dm-date .dm-input{width:auto;max-width:100%}',
+
+    '.dm-opts{display:grid;gap:.6em;margin:0 0 1em;padding:0;list-style:none}',
+    '.dm-opt{display:flex;align-items:center;gap:.75em;min-height:56px;max-width:100%;padding:.6em .9em;border:var(--so-border-width) solid var(--so-border);border-radius:var(--so-radius);background:var(--so-surface);cursor:pointer}',
+    '.dm-opt:hover{border-color:var(--so-border-strong)}',
+    '.dm-opt:has(input:checked){border-color:var(--so-selected-border);background:var(--so-selected-bg);box-shadow:inset 0 0 0 1px var(--so-selected-border);font-weight:500}',
+    '.dm-opt input{width:1.5em;height:1.5em;flex:none;margin:0;accent-color:var(--so-heading)}',
+    '.dm-ico{font-size:1.5em;flex:none;line-height:1}',
+    '.dm-opt>span:last-child{min-width:0;overflow-wrap:anywhere}',
+    '.dm a,.dm samp,.dm q{overflow-wrap:anywhere}', // long links (resume link) wrap at 400% zoom
+
+    '.dm-tools{display:flex;flex-wrap:wrap;gap:.6em;margin:1em 0}',
+    '.dm-heard{border:var(--so-border-width) solid var(--so-info-accent);background:var(--so-surface-info);border-radius:var(--so-radius);padding:.9em;margin:1em 0}',
+    '.dm-heard p{margin:0 0 .6em}',
+    '.dm-heard q{font-weight:600;font-size:1.15em}',
+    '.dm-status{min-height:1.5em;margin:.5em 0;color:var(--so-heading);font-weight:500}',
+    '.dm-actions{display:flex;flex-wrap:wrap;gap:.75em;margin-top:1.5em;align-items:center}',
+
+    '.dm-errors{border:4px solid var(--so-error);border-radius:var(--so-radius);padding:1em 1.1em;margin:0 0 1.25em;background:var(--so-surface)}',
+    '.dm-errors h2{margin:0 0 .5em;font-size:1.25em;color:var(--so-heading)}',
+    '.dm-errors ul{margin:0;padding-left:1.2em}',
+    '.dm-errors a{color:var(--so-error);font-weight:600}',
+    '.dm-err{display:block;color:var(--so-error);font-weight:600;margin:.25em 0 .5em}',
+
+    '.dm-panel{border:1px solid var(--so-border-subtle);border-radius:var(--so-radius-card);padding:1em 1.1em;margin:1em 0;background:var(--so-surface-alt)}',
+    '.dm-panel h2{margin:0 0 .5em;font-size:1.2em;color:var(--so-heading)}',
+    '.dm-note,.dm-success{position:relative;padding:.85em 1em .85em 1.4em;margin:1em 0;border-radius:var(--so-radius);overflow:hidden}',
+    '.dm-note{background:var(--so-surface-alt)}',
+    '.dm-success{background:var(--so-success-bg)}',
+    '.dm-note::before,.dm-success::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:var(--so-accent)}',
+    '.dm-success::before{background:var(--so-success-accent)}',
+    '.dm-success .dm-q{margin-top:0}',
     '.dm-review{margin:0 0 1em;padding:0}',
-    '.dm-review div{display:grid;grid-template-columns:1fr;gap:.15em;padding:.75em 0;border-bottom:1px solid #c5cdd9}',
-    '.dm-review dt{font-weight:700}',
+    '.dm-review div{display:grid;grid-template-columns:1fr;gap:.15em;padding:.75em 0;border-bottom:1px solid var(--so-border-subtle)}',
+    '.dm-review dt{font-weight:600}',
     '.dm-review dd{margin:0}',
-    '.dm-note{background:#f3f5f9;border-left:6px solid #0b5c3b;padding:.75em 1em;margin:1em 0}',
     '.dm-vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}',
-    '.dm-easy .dm-q{font-size:1.9em}',
-    '.dm-easy .dm-ico{font-size:2.2em}',
-    '.dm-easy .dm-opt{min-height:68px;font-size:1.2em}',
+
+    '.dm-settings fieldset{margin:0 0 1.5em}',
+    '.dm-settings legend{font-weight:600;font-size:1.2em;margin-bottom:.4em;color:var(--so-heading)}',
+    '.dm-easy .dm-q{font-size:2em}',
+    '.dm-easy .dm-ico{font-size:2.1em}',
+    '.dm-easy .dm-opt{min-height:68px;font-size:1.15em}',
+
+    'html[data-dm-contrast=high] .dm{background:#fff}',
+    'html[data-dm-contrast=high] .dm-meter{border:2px solid #000}',
+    'html[data-dm-contrast=high] .dm-panel,html[data-dm-contrast=high] .dm-note,html[data-dm-contrast=high] .dm-success,html[data-dm-contrast=high] .dm-heard{border:3px solid #000}',
+    'html[data-dm-contrast=high] .dm-opt:has(input:checked){border-width:5px;box-shadow:none}',
+    '@media (forced-colors:active){.dm-opt:has(input:checked){border-width:4px}.dm-meter span{background:CanvasText}}',
     '@media (prefers-reduced-motion:reduce){.dm *{transition:none!important;animation:none!important}}'
   ].join('\n');
+
   function injectCss() {
-    if (document.getElementById('dimts-styles')) return;
-    var s = document.createElement('style'); s.id = 'dimts-styles'; s.textContent = CSS;
+    if (document.getElementById('savanna-onboarding-styles')) return;
+    var s = document.createElement('style'); s.id = 'savanna-onboarding-styles';
+    s.textContent = fontFaces() + '\n' + TOKENS + '\n' + CSS;
     (document.head || document.documentElement).appendChild(s);
   }
 
   /* ---------- the web component ---------- */
-  class DimtsForm extends HTMLElement {}
+  class SavannaOnboardingForm extends HTMLElement {}
   var PENDING = [];
 
-  DimtsForm.prototype.connectedCallback = function () {
+  SavannaOnboardingForm.prototype.connectedCallback = function () {
     if (this._ready) return;
     injectCss();
     var id = this.getAttribute('form');
@@ -356,14 +436,20 @@
     this._onPrefs = function (e) {
       if (self._selfPrefs) return;
       self.lang = e.detail.lang; self.easy = e.detail.easy;
-      if (self.mode !== 'done') { if (self.mode === 'question') self.collect(); self.render(false); }
+      if (self.mode === 'done') return; // keep the host's content in the done slot
+      if (self.mode === 'question') {
+        self.collect();
+        // an error on screen is re-worded in the new language, never left in the old one
+        if (self.error) { var ef = self.field(); self.error = self.validate(ef, self.answers[ef.id]); }
+      } else if (self.mode === 'welcome' && self.error) self.error = t('errMode', self.lang);
+      self.render(false);
     };
-    document.addEventListener('dimts:prefs', this._onPrefs);
+    document.addEventListener('savanna-onboarding:prefs', this._onPrefs);
     this.render(false);
   };
-  DimtsForm.prototype.disconnectedCallback = function () { document.removeEventListener('dimts:prefs', this._onPrefs); this._ready = false; stopSpeaking(); if (this.rec) try { this.rec.abort(); } catch (e) {} };
+  SavannaOnboardingForm.prototype.disconnectedCallback = function () { document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; stopSpeaking(); if (this.rec) try { this.rec.abort(); } catch (e) {} };
 
-  DimtsForm.prototype.applyPrefill = function () {
+  SavannaOnboardingForm.prototype.applyPrefill = function () {
     var ctx = { profile: store.get('dimts.profile', {}), passport: store.get('dimts.passport', {}) };
     var self = this;
     this.prefilled = {};
@@ -377,25 +463,25 @@
     });
   };
 
-  DimtsForm.prototype.visible = function () {
+  SavannaOnboardingForm.prototype.visible = function () {
     var a = this.answers;
     return this.cfg.fields.filter(function (f) { return evalShowIf(f.showIf, a); });
   };
-  DimtsForm.prototype.field = function () {
+  SavannaOnboardingForm.prototype.field = function () {
     var vis = this.visible();
     if (this.step >= vis.length) this.step = vis.length - 1;
     if (this.step < 0) this.step = 0;
     return vis[this.step];
   };
-  DimtsForm.prototype.save = function () { store.set(this.draftKey, { answers: this.answers, step: this.step, mode: this.mode, at: Date.now() }); };
-  DimtsForm.prototype.savePrefs = function (extra) {
+  SavannaOnboardingForm.prototype.save = function () { store.set(this.draftKey, { answers: this.answers, step: this.step, mode: this.mode, at: Date.now() }); };
+  SavannaOnboardingForm.prototype.savePrefs = function (extra) {
     var patch = { lang: this.lang, easy: this.easy };
     if (extra) Object.keys(extra).forEach(function (k) { patch[k] = extra[k]; });
     this._selfPrefs = true; setPrefs(patch); this._selfPrefs = false;
   };
 
   /* --- rendering --- */
-  DimtsForm.prototype.bar = function (showBack) {
+  SavannaOnboardingForm.prototype.bar = function (showBack) {
     var lang = this.lang;
     return '<div class="dm-bar">' +
       '<div>' + (showBack ? '<button type="button" class="dm-link" data-act="back">← ' + t('back', lang) + '</button>' : '') + '</div>' +
@@ -408,7 +494,7 @@
       '<button type="button" class="dm-btn dm-small" data-act="help">' + t('helpClose', lang) + '</button></div>';
   };
 
-  DimtsForm.prototype.render = function (moveFocus) {
+  SavannaOnboardingForm.prototype.render = function (moveFocus) {
     var lang = this.lang;
     this.className = '';
     var html = '<div class="dm' + (this.easy ? ' dm-easy' : '') + (getPrefs().mode === 'speak' ? ' dm-voice-first' : '') + '" lang="' + lang + '">';
@@ -427,7 +513,7 @@
   };
 
   var MODE_ICONS = { read_type: '⌨️', listen: '🎧', speak: '🎤', simple: '🖼️' };
-  DimtsForm.prototype.renderWelcome = function () {
+  SavannaOnboardingForm.prototype.renderWelcome = function () {
     var lang = this.lang, cur = getPrefs().mode, err = this.error;
     var h = this.bar(false);
     if (err) h += '<div class="dm-errors" role="alert" tabindex="-1"><h2>' + t('problem', lang) + '</h2><ul><li><a href="#dm-input" data-act="focus-input">' + esc(err) + '</a></li></ul></div>';
@@ -445,7 +531,7 @@
     return h;
   };
 
-  DimtsForm.prototype.renderQuestion = function () {
+  SavannaOnboardingForm.prototype.renderQuestion = function () {
     var f = this.field(), lang = this.lang, vis = this.visible(), v = this.answers[f.id];
     var label = L(f.label, lang), hint = L(f.hint, lang);
     var describedBy = [hint ? 'dm-hint' : '', this.error ? 'dm-err' : '', this.prefilled[f.id] ? 'dm-pre' : ''].filter(Boolean).join(' ');
@@ -480,7 +566,7 @@
     return h;
   };
 
-  DimtsForm.prototype.renderInput = function (f, v, describedBy) {
+  SavannaOnboardingForm.prototype.renderInput = function (f, v, describedBy) {
     var lang = this.lang, aria = (describedBy && f.type !== 'choice' && f.type !== 'multi' && f.type !== 'consent' && f.type !== 'ethdate') ? ' aria-describedby="' + describedBy + '"' : '';
     var inv = this.error ? ' aria-invalid="true"' : '';
     if (f.type === 'text' || f.type === 'tel' || f.type === 'email') {
@@ -511,7 +597,7 @@
     return '';
   };
 
-  DimtsForm.prototype.display = function (f, v) {
+  SavannaOnboardingForm.prototype.display = function (f, v) {
     var lang = this.lang;
     if (v == null || v === '' || (Array.isArray(v) && !v.length)) return t('notGiven', lang);
     var opts = f.options === 'NEEDS' ? NEEDS : f.options;
@@ -521,7 +607,7 @@
     return String(v);
   };
 
-  DimtsForm.prototype.renderReview = function () {
+  SavannaOnboardingForm.prototype.renderReview = function () {
     var lang = this.lang, self = this;
     var h = this.bar(true) + '<form class="dm-form" novalidate><h1 class="dm-q" tabindex="-1">' + t('review', lang) + '</h1><p class="dm-hint">' + t('reviewHint', lang) + '</p><dl class="dm-review">';
     this.visible().forEach(function (f, i) {
@@ -535,7 +621,7 @@
     return h;
   };
 
-  DimtsForm.prototype.renderSaved = function () {
+  SavannaOnboardingForm.prototype.renderSaved = function () {
     var lang = this.lang;
     var link = location.href.split('#')[0].split('?')[0] + '?resume=' + this.resumeCode + location.hash;
     var sms = lang === 'am' ? 'ምዝገባዎን ለመቀጠል፦ ' + link : 'Continue your form: ' + link;
@@ -545,13 +631,14 @@
       '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="resume">' + t('next', lang) + '</button></div>';
   };
 
-  DimtsForm.prototype.renderDone = function () {
+  SavannaOnboardingForm.prototype.renderDone = function () {
     var lang = this.lang;
-    return '<h1 class="dm-q" tabindex="-1">' + esc(L(this.cfg.doneTitle, lang) || '✓') + '</h1><p>' + esc(L(this.cfg.doneText, lang)) + '</p><div class="dm-done-slot"></div>';
+    // Help stays in the same place on every screen (WCAG 3.2.6); the result is shown as a success panel.
+    return this.bar(false) + '<div class="dm-success"><h1 class="dm-q" tabindex="-1"><span aria-hidden="true">✓ </span>' + esc(L(this.cfg.doneTitle, lang)) + '</h1><p>' + esc(L(this.cfg.doneText, lang)) + '</p></div><div class="dm-done-slot"></div>';
   };
 
   /* --- reading the current value out of the DOM --- */
-  DimtsForm.prototype.collect = function () {
+  SavannaOnboardingForm.prototype.collect = function () {
     if (this.mode !== 'question') return;
     var f = this.field(), form = this.querySelector('.dm-form');
     if (!form) return;
@@ -566,7 +653,7 @@
     if (this.answers[f.id] !== undefined) delete this.prefilled[f.id];
   };
 
-  DimtsForm.prototype.validate = function (f, v) {
+  SavannaOnboardingForm.prototype.validate = function (f, v) {
     var lang = this.lang, empty = v == null || v === '' || (Array.isArray(v) && !v.length);
     if (empty) {
       if (f.optional) return '';
@@ -580,7 +667,7 @@
   };
 
   /* --- events --- */
-  DimtsForm.prototype.onSubmit = function (e) {
+  SavannaOnboardingForm.prototype.onSubmit = function (e) {
     e.preventDefault();
     this._interacted = true;
     stopSpeaking();
@@ -605,7 +692,7 @@
     this.render(true);
   };
 
-  DimtsForm.prototype.onChange = function (e) {
+  SavannaOnboardingForm.prototype.onChange = function (e) {
     var f = this.mode === 'question' && this.field();
     if (!f) return;
     if (f.type === 'ethdate') {
@@ -620,7 +707,7 @@
     }
   };
 
-  DimtsForm.prototype.onClick = function (e) {
+  SavannaOnboardingForm.prototype.onClick = function (e) {
     var b = e.target.closest('[data-act]');
     if (!b || !this.contains(b)) return;
     this._interacted = true;
@@ -668,10 +755,10 @@
     if (act === 'heard-type') { this.setHeard(''); var ti = this.querySelector('#dm-input'); if (ti) { ti.focus(); if (ti.select) ti.select(); } return; }
   };
 
-  DimtsForm.prototype.status = function (msg) { var s = this.querySelector('.dm-status'); if (s) { s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); } };
-  DimtsForm.prototype.setHeard = function (html) { var h = this.querySelector('#dm-heard'); if (h) h.innerHTML = html; };
+  SavannaOnboardingForm.prototype.status = function (msg) { var s = this.querySelector('.dm-status'); if (s) { s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); } };
+  SavannaOnboardingForm.prototype.setHeard = function (html) { var h = this.querySelector('#dm-heard'); if (h) h.innerHTML = html; };
 
-  DimtsForm.prototype.readQuestion = function () {
+  SavannaOnboardingForm.prototype.readQuestion = function () {
     var lang = this.lang, text, audio;
     if (this.mode === 'question') {
       var f = this.field();
@@ -687,7 +774,7 @@
     if (!speak(text, lang, audio)) this.status(t('noAmVoice', lang));
   };
 
-  DimtsForm.prototype.startVoice = function () {
+  SavannaOnboardingForm.prototype.startVoice = function () {
     var lang = this.lang, self = this, f = this.field();
     if (!SR) { this.status(t('voiceUnsupported', lang)); return; }
     if (store.get('dimts.voiceConsent', null) !== true) {
@@ -716,7 +803,7 @@
     try { rec.start(); } catch (e) { this.rec = null; this.status(t('voiceError', lang)); }
   };
 
-  DimtsForm.prototype.handleTranscript = function (f, alts) {
+  SavannaOnboardingForm.prototype.handleTranscript = function (f, alts) {
     var lang = this.lang, said = alts[0] || '', shown = said;
     var form = this.querySelector('.dm-form');
     if (f.type === 'choice' || f.type === 'consent' || f.type === 'multi') {
@@ -743,7 +830,7 @@
     speak(t('heard', lang) + ' ' + shown, lang);
   };
 
-  DimtsForm.prototype.finish = function () {
+  SavannaOnboardingForm.prototype.finish = function () {
     var detail = { form: this.getAttribute('form'), instance: this.getAttribute('instance') || null, lang: this.lang, answers: JSON.parse(JSON.stringify(this.answers)) };
     var self = this;
     // keep only answers for questions that were actually shown (minimum data)
@@ -752,13 +839,15 @@
     store.del(this.draftKey);
     this.mode = 'done';
     this.render(true);
-    this.dispatchEvent(new CustomEvent('dimts:complete', { bubbles: true, detail: detail }));
+    emit(this, 'complete', detail, true);
   };
 
-  if (!customElements.get('dimts-form')) customElements.define('dimts-form', DimtsForm);
+  if (!customElements.get('savanna-onboarding-form')) customElements.define('savanna-onboarding-form', SavannaOnboardingForm);
+  // Deprecated alias: a subclass, because one constructor can only be registered once.
+  if (!customElements.get('dimts-form')) customElements.define('dimts-form', class extends SavannaOnboardingForm {});
 
-  /* ---------- <dimts-settings>: one place to change preferences; changes apply everywhere at once ---------- */
-  class DimtsSettings extends HTMLElement {
+  /* ---------- <savanna-onboarding-settings>: one place to change preferences; changes apply everywhere at once ---------- */
+  class SavannaOnboardingSettings extends HTMLElement {
     connectedCallback() {
       if (this._ready) return;
       this._ready = true;
@@ -778,10 +867,10 @@
         if (s) setTimeout(function () { s.textContent = t('settingsSaved', getPrefs().lang); }, 50);
       });
       this._onPrefs = function () { if (!self._selfPrefs) self.render(); };
-      document.addEventListener('dimts:prefs', this._onPrefs);
+      document.addEventListener('savanna-onboarding:prefs', this._onPrefs);
       this.render();
     }
-    disconnectedCallback() { document.removeEventListener('dimts:prefs', this._onPrefs); this._ready = false; }
+    disconnectedCallback() { document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; }
     render() {
       var p = getPrefs(), lang = p.lang;
       function group(name, legend, options, current) {
@@ -799,7 +888,9 @@
         '<p class="dm-status" role="status" aria-live="polite"></p></form></div>';
     }
   }
-  if (!customElements.get('dimts-settings')) customElements.define('dimts-settings', DimtsSettings);
+  if (!customElements.get('savanna-onboarding-settings')) customElements.define('savanna-onboarding-settings', SavannaOnboardingSettings);
+  if (!customElements.get('dimts-settings')) customElements.define('dimts-settings', class extends SavannaOnboardingSettings {});
+  injectCss(); // tokens are available to the host page as soon as the script runs
   applyPrefs();
 
   /* ---------- resume links (?resume=CODE) ---------- */
@@ -808,11 +899,12 @@
     if (code && store.get('dimts.resume.' + code, null)) { /* draft is already keyed by form; nothing else to do */ }
   } catch (e) {}
 
-  window.Dimts = {
-    version: '0.2.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store,
+  var API = window.SavannaOnboarding = {
+    version: '0.3.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: stopSpeaking, label: L,
     prefs: getPrefs, setPrefs: setPrefs
   };
-  document.dispatchEvent(new CustomEvent('dimts:ready'));
+  window.Dimts = API; // deprecated alias
+  emit(document, 'ready', null);
 })();

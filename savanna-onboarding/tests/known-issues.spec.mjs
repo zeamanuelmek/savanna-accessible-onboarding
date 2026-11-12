@@ -38,8 +38,7 @@ test('PRIVACY: "Say it again" discards the previous transcript (fix in Phase 3)'
   await expect(page.locator('#dm-input')).toHaveValue('');
 });
 
-test('BRAND: the old name "Dimts" is not visible to learners (fix in Phase 1)', async ({ page }) => {
-  test.fail(true, 'Old prototype name is still in the title, header and text');
+test('BRAND: the old name "Dimts" is not visible to learners (fixed in Phase 1)', async ({ page }) => {
   for (const hash of ['#/', '#/signup', '#/jobs', '#/settings']) {
     await go(page, hash);
     expect(await page.title()).not.toMatch(/dimts/i);
@@ -47,8 +46,7 @@ test('BRAND: the old name "Dimts" is not visible to learners (fix in Phase 1)', 
   }
 });
 
-test('LEARNER VIEW: no developer page in the learner navigation (fix in Phase 1)', async ({ page }) => {
-  test.fail(true, '"For developers" is in the learner menu');
+test('LEARNER VIEW: no developer page in the learner navigation (fixed in Phase 1)', async ({ page }) => {
   await go(page, '#/');
   await expect(page.locator('#nav a[href="#/developers"]')).toHaveCount(0);
 });

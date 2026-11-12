@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); })
 test('sign-up journey completes and creates a profile', async ({ page }) => {
   await page.addInitScript(() => {
     window.__events = [];
-    document.addEventListener('dimts:complete', e => window.__events.push(e.detail));
+    document.addEventListener('savanna-onboarding:complete', e => window.__events.push(e.detail));
   });
   await signupTo(page, 'END');
   expect(await heading(page)).toBe('Check your answers');
@@ -142,3 +142,18 @@ for (const hash of ['#/', '#/signup', '#/jobs', '#/settings']) {
     expect(overflow).toBeLessThanOrEqual(0);
   });
 }
+
+test('old names still work: <dimts-form>, window.Dimts and the dimts:complete event (deprecated aliases)', async ({ page }) => {
+  await go(page, '#/');
+  expect(await page.evaluate(() => window.Dimts === window.SavannaOnboarding)).toBe(true);
+  await page.evaluate(() => {
+    window.__legacy = 0;
+    document.addEventListener('dimts:complete', () => { window.__legacy++; });
+    document.getElementById('view').innerHTML = '<dimts-form form="passport"></dimts-form>';
+  });
+  await expect(page.locator('dimts-form .dm-q')).toHaveText('Would you like to tell us what helps you learn and work?');
+  await pick(page, 'later'); await next(page);
+  await expect(page.locator('dimts-form .dm-q')).toHaveText('Check your answers');
+  await next(page);
+  expect(await page.evaluate(() => window.__legacy)).toBe(1);
+});

@@ -1,15 +1,18 @@
-/* Demo host page: plays the role of Savanna / a job platform around the <dimts-form> component. */
+/* Demo host page: plays the role of Savanna / a job platform around the <savanna-onboarding-form> component. */
 (function () {
-  var D = window.Dimts, store = D.store, L = D.label;
+  var D = window.SavannaOnboarding, store = D.store, L = D.label;
   var view = document.getElementById('view');
 
   function lang() { return (store.get('dimts.prefs', {}).lang) || 'am'; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   var TX = {
     en: {
-      home: 'Home', join: 'Join', passport: 'Support Passport', jobs: 'Jobs', post: 'Post a job', dev: 'For developers', settings: 'Settings', menu: 'Menu',
+      home: 'Home', join: 'Join', passport: 'Support Passport', jobs: 'Jobs', post: 'Post a job', settings: 'Settings', menu: 'Menu',
+      product: 'Savanna Accessible Onboarding Module', brandSub: 'Accessible onboarding',
+      foot: 'Demo for the Accessibility Hackathon 2026 (Track 1: accessible onboarding). All data stays in this browser. Sample jobs are fictional. Amharic wording is a draft for native-speaker review.',
+      jobsShown: '{n} jobs shown', jobShown: '1 job shown',
       heroTitle: 'Sign up, say what helps you, find work that fits',
-      heroText: 'Dimts (ድምፅ, "voice") is one accessible form engine. It asks one question per screen, reads every question aloud, accepts voice answers you can check and fix, and never times out. The same engine runs sign-up, the Support Passport, job applications and the employer form.',
+      heroText: 'The Savanna Accessible Onboarding Module is one accessible form engine. It asks one question per screen, can read every question aloud, accepts voice answers you can check and fix, and never times out. The same engine runs sign-up, the Support Passport, job applications and the employer form.',
       start: 'Start: join Savanna', cards: 'What you can try',
       c1: 'Join, with any ID or none', c1t: 'Fayda, kebele ID, passport, refugee ID, another document, or "refer me" through a partner. Partner staff can also register a learner with their consent.',
       c2: 'Support Passport', c2t: '"What would help you?", never "what is your disability?". It stays on your phone and you choose who sees it.',
@@ -33,9 +36,12 @@
       notFound: 'This job was not found.', back: 'Back to jobs'
     },
     am: {
-      home: 'መነሻ', join: 'ይመዝገቡ', passport: 'የድጋፍ ፓስፖርት', jobs: 'ሥራዎች', post: 'ሥራ ያስተዋውቁ', dev: 'ለገንቢዎች', settings: 'ቅንብሮች', menu: 'ምናሌ',
+      home: 'መነሻ', join: 'ይመዝገቡ', passport: 'የድጋፍ ፓስፖርት', jobs: 'ሥራዎች', post: 'ሥራ ያስተዋውቁ', settings: 'ቅንብሮች', menu: 'ምናሌ',
+      product: 'Savanna Accessible Onboarding Module', brandSub: 'ተደራሽ ምዝገባ',
+      foot: 'ለተደራሽነት ሃካቶን 2026 (ትራክ 1፦ ተደራሽ ምዝገባ) የተዘጋጀ ማሳያ። ሁሉም መረጃ በዚህ ብራውዘር ውስጥ ይቆያል። የናሙና ሥራዎቹ ልብ ወለድ ናቸው። የአማርኛው ጽሑፍ በአፍ መፍቻ ተናጋሪ የሚገመገም ረቂቅ ነው።',
+      jobsShown: '{n} ሥራዎች ይታያሉ', jobShown: '1 ሥራ ይታያል',
       heroTitle: 'ይመዝገቡ፣ የሚረዳዎትን ይንገሩን፣ የሚስማማዎትን ሥራ ያግኙ',
-      heroText: 'ድምፅ (Dimts) ተደራሽ የቅጽ ሞተር ነው። በአንድ ገጽ አንድ ጥያቄ ይጠይቃል፣ እያንዳንዱን ጥያቄ ጮክ ብሎ ያነባል፣ በድምፅ የሰጡትን መልስ አረጋግጠው እንዲያስተካክሉ ያስችላል፣ የጊዜ ገደብም የለውም። ይኸው ሞተር ምዝገባን፣ የድጋፍ ፓስፖርትን፣ የሥራ ማመልከቻንና የቀጣሪ ቅጽን ያስኬዳል።',
+      heroText: '<span lang="en">Savanna Accessible Onboarding Module</span> አንድ ተደራሽ የቅጽ ሞተር ነው። በአንድ ገጽ አንድ ጥያቄ ይጠይቃል፣ እያንዳንዱን ጥያቄ ጮክ ብሎ ያነባል፣ በድምፅ የሰጡትን መልስ አረጋግጠው እንዲያስተካክሉ ያስችላል፣ የጊዜ ገደብም የለውም። ይኸው ሞተር ምዝገባን፣ የድጋፍ ፓስፖርትን፣ የሥራ ማመልከቻንና የቀጣሪ ቅጽን ያስኬዳል።',
       start: 'ይጀምሩ፦ ሳቫናን ይቀላቀሉ', cards: 'ሊሞክሯቸው የሚችሉ',
       c1: 'በማንኛውም መታወቂያ ወይም ያለ መታወቂያ ይመዝገቡ', c1t: 'ፋይዳ፣ የቀበሌ መታወቂያ፣ ፓስፖርት፣ የስደተኛ መታወቂያ፣ ሌላ ሰነድ ወይም በአጋር ድርጅት በኩል። የአጋር ሠራተኞችም በተማሪው ፈቃድ መመዝገብ ይችላሉ።',
       c2: 'የድጋፍ ፓስፖርት', c2t: '"ምን ይረዳዎታል?" እንጂ "ምን አካል ጉዳት አለብዎት?" አንልም። በስልክዎ ላይ ይቆያል፤ ማን እንደሚያየው እርስዎ ይወስናሉ።',
@@ -92,13 +98,15 @@
 
   /* ---- views ---- */
   function nav(route) {
-    var items = [['#/', 'home'], ['#/signup', 'join'], ['#/passport', 'passport'], ['#/jobs', 'jobs'], ['#/employer', 'post'], ['#/settings', 'settings'], ['#/developers', 'dev']];
+    var items = [['#/', 'home'], ['#/signup', 'join'], ['#/passport', 'passport'], ['#/jobs', 'jobs'], ['#/employer', 'post'], ['#/settings', 'settings']];
     document.getElementById('nav').innerHTML = items.map(function (i) {
       var cur = route === i[0] || (i[0] === '#/jobs' && route.indexOf('#/apply') === 0);
       return '<li><a href="' + i[0] + '"' + (cur ? ' aria-current="page"' : '') + '>' + T(i[1]) + '</a></li>';
     }).join('');
     document.documentElement.lang = lang();
     document.getElementById('menu-label').textContent = T('menu');
+    document.getElementById('brand-sub').textContent = T('brandSub');
+    document.getElementById('foot-text').textContent = T('foot');
   }
 
   /* ---- mobile menu: a disclosure button; links stay a plain list for screen readers ---- */
@@ -119,11 +127,11 @@
 
   function mountForm(formId, instance, onDone) {
     view.innerHTML = '<div class="form-wrap"></div>';
-    var el = document.createElement('dimts-form');
+    var el = document.createElement('savanna-onboarding-form');
     el.setAttribute('form', formId);
     if (instance) el.setAttribute('instance', instance);
     if (formId === 'signup') el.setAttribute('welcome', '');
-    el.addEventListener('dimts:complete', function (e) { onDone(e.detail, el.querySelector('.dm-done-slot')); });
+    el.addEventListener('savanna-onboarding:complete', function (e) { onDone(e.detail, el.querySelector('.dm-done-slot')); });
     view.firstChild.appendChild(el);
     var q = el.querySelector('.dm-q'); if (q) q.focus();
     return el;
@@ -131,7 +139,7 @@
 
   function home() {
     view.innerHTML =
-      '<section class="hero"><p class="eyebrow">Accessibility Hackathon 2026 · Track 1</p><h1 tabindex="-1">' + T('heroTitle') + '</h1><p class="lead">' + T('heroText') + '</p>' +
+      '<section class="hero"><p class="eyebrow" lang="en">Accessibility Hackathon 2026 · Track 1</p><h1 tabindex="-1">' + T('heroTitle') + '</h1><p class="lead">' + T('heroText') + '</p>' +
       '<p class="actions"><a class="btn primary big" href="#/signup">' + T('start') + ' →</a> <a class="btn big ghost" href="#/settings">⚙️ ' + T('settings') + '</a></p></section>' +
       '<h2>' + T('cards') + '</h2><ul class="cards">' +
       [['#/signup', 'c1', '🪪'], ['#/passport', 'c2', '🔒'], ['#/jobs', 'c3', '💼'], ['#/employer', 'c4', '🏢']].map(function (c) {
@@ -190,21 +198,22 @@
     h += '<p role="status" id="jobs-status" class="muted"></p>';
     if (!list.length) h += '<p>' + T('none') + '</p>';
     h += '<ul class="jobs">' + list.map(function (x) {
-      var j = x.j;
-      return '<li class="job"><article aria-labelledby="job-' + j.id + '"><h2 id="job-' + j.id + '">' + esc(j.title) + '</h2>' +
-        '<p class="meta">' + esc(j.org) + ' · ' + esc(j.location) + ' · ' + esc(L(MODE[j.mode], lang())) + (j.sample ? ' · <span class="tag">' + T('sample') + '</span>' : '') + '</p>' +
-        '<p>' + esc(j.description) + '</p>' +
+      var j = x.j, en = j.sample && lang() !== 'en' ? ' lang="en"' : '';
+      return '<li class="job"><article aria-labelledby="job-' + j.id + '"><h2 id="job-' + j.id + '"' + en + '>' + esc(j.title) + '</h2>' +
+        '<p class="meta"><span' + en + '>' + esc(j.org) + ' · ' + esc(j.location) + '</span> · ' + esc(L(MODE[j.mode], lang())) + (j.sample ? ' · <span class="tag">' + T('sample') + '</span>' : '') + '</p>' +
+        '<p' + en + '>' + esc(j.description) + '</p>' +
         (needs.length ? '<p class="match">' + T('match', { k: x.k, n: needs.length }) + '</p>' : '') +
         '<h3>' + T('offers') + '</h3><ul class="needs small">' + j.offers.map(function (o) { return '<li' + (needs.indexOf(o) !== -1 ? ' class="hit"' : '') + '><span aria-hidden="true">' + needIcon(o) + '</span> ' + esc(needLabel(o)) + '</li>'; }).join('') + '</ul>' +
-        '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '">🔊 ' + T('listen') + '<span class="vh"> ' + esc(j.title) + '</span></button> <a class="btn primary" href="#/apply/' + j.id + '">' + T('apply') + '<span class="vh"> ' + esc(j.title) + '</span></a></p></article></li>';
+        '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '">🔊 ' + T('listen') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></button> <a class="btn primary" href="#/apply/' + j.id + '">' + T('apply') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></a></p></article></li>';
     }).join('') + '</ul>';
     view.innerHTML = h;
+    // The result count is announced on load and after filtering (status live region, filled after it exists).
+    var count = list.length;
+    setTimeout(function () { var s = document.getElementById('jobs-status'); if (s) s.textContent = count === 1 ? T('jobShown') : T('jobsShown', { n: count }); }, 60);
     var flt = document.getElementById('flt');
     if (flt) flt.addEventListener('change', function () {
       store.set('dimts.jobFilter', flt.checked); jobsView();
       var f = document.getElementById('flt'); if (f) f.focus();
-      var count = view.querySelectorAll('.job').length;
-      setTimeout(function () { var s = document.getElementById('jobs-status'); if (s) s.textContent = (lang() === 'am' ? count + ' ሥራዎች ይታያሉ' : count + (count === 1 ? ' job shown' : ' jobs shown')); }, 60);
     });
     view.querySelectorAll('[data-listen]').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -239,25 +248,20 @@
         '<p><a class="btn" href="#/jobs">' + T('back') + '</a></p>';
     });
     var banner = document.createElement('p'); banner.className = 'muted';
-    banner.innerHTML = T('applyFor') + ' <strong>' + esc(j.title) + '</strong> · ' + esc(j.org);
+    var en = j.sample && lang() !== 'en' ? ' lang="en"' : ''; // sample jobs are written in English
+    banner.innerHTML = T('applyFor') + ' <span' + en + '><strong>' + esc(j.title) + '</strong> · ' + esc(j.org) + '</span>';
     view.insertBefore(banner, view.firstChild);
     var q = el.querySelector('.dm-q'); if (q) q.focus();
   }
 
-  function developers() {
-    var base = location.origin + location.pathname.replace(/index\.html$/, '');
-    view.innerHTML = document.getElementById('dev-template').innerHTML.split('{{BASE}}').join(esc(base));
-    focusH1();
-  }
-
   function settingsView() {
-    view.innerHTML = '<div class="form-wrap"><dimts-settings></dimts-settings></div>';
+    view.innerHTML = '<div class="form-wrap"><savanna-onboarding-settings></savanna-onboarding-settings></div>';
     var h = view.querySelector('.dm-q'); if (h) h.focus();
   }
 
   function focusH1() { var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); } }
 
-  var TITLES = { '#/': 'home', '#/signup': 'join', '#/passport': 'passport', '#/jobs': 'jobs', '#/employer': 'post', '#/settings': 'settings', '#/developers': 'dev' };
+  var TITLES = { '#/': 'home', '#/signup': 'join', '#/passport': 'passport', '#/jobs': 'jobs', '#/employer': 'post', '#/settings': 'settings' };
   function route() {
     var r = location.hash || '#/';
     if (r.indexOf('#/') !== 0) return; // in-page anchors such as the skip link
@@ -266,7 +270,7 @@
     var isForm = r === '#/signup' || r === '#/employer' || r === '#/settings' || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('dimts.passport', null) || window.__editPassport));
     document.getElementById('host-lang').hidden = isForm;
     var base = r.indexOf('#/apply/') === 0 ? '#/apply' : r;
-    document.title = (base === '#/apply' ? T('apply') : T(TITLES[base] || 'home')) + ' · Dimts ድምፅ';
+    document.title = (base === '#/apply' ? T('apply') : T(TITLES[base] || 'home')) + ' · ' + T('product');
     if (base !== '#/passport') window.__editPassport = false;
     if (r === '#/' || r === '#') home();
     else if (r === '#/signup') signup();
@@ -274,7 +278,6 @@
     else if (r === '#/jobs') jobsView();
     else if (r === '#/employer') employer();
     else if (base === '#/apply') apply(r.slice('#/apply/'.length));
-    else if (r === '#/developers') developers();
     else if (r === '#/settings') settingsView();
     else home();
     window.scrollTo(0, 0);
@@ -282,7 +285,7 @@
 
   function syncHostLang() { var b = document.getElementById('host-lang'); b.textContent = lang() === 'am' ? 'English' : 'አማርኛ'; b.setAttribute('lang', lang() === 'am' ? 'en' : 'am'); }
   // Preferences can change from any component (language switch, Settings): keep the host page in step.
-  document.addEventListener('dimts:prefs', function () {
+  document.addEventListener('savanna-onboarding:prefs', function () {
     var r = location.hash || '#/';
     nav(r); syncHostLang();
     var formPage = r === '#/signup' || r === '#/employer' || r === '#/settings' || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('dimts.passport', null) || window.__editPassport));

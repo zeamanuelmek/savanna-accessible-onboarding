@@ -370,4 +370,128 @@ Remember to hard-refresh the live demo after a deploy.
 
 ### Next step
 
-Wait for "go to Phase 1".
+Done — see Phase 1.
+
+---
+
+## Phase 1 — Brand, design system and rename ✅ (12 Nov 2026)
+
+### What changed
+
+| File | Change |
+|---|---|
+| `savanna-onboarding/dimts.js` → `savanna-onboarding.js` | Renamed file. New element names `<savanna-onboarding-form>` and `<savanna-onboarding-settings>`; `<dimts-form>` and `<dimts-settings>` stay as aliases. Global `window.SavannaOnboarding` (alias `window.Dimts`). Events `savanna-onboarding:complete / :prefs / :ready` (the old `dimts:*` events are still sent). New design tokens (`--so-*`), self-hosted fonts, all styles rebuilt on the tokens. Done screen keeps the help bar (3.2.6) and shows a success panel. An error on screen is re-worded when the language changes. Long links wrap at 400% zoom |
+| `savanna-onboarding/assets/fonts/` | Poppins 400–700 (8 files, copied from the reference) + Noto Sans Ethiopic (Google Fonts) + both OFL licence files |
+| `savanna-onboarding/app.css` | Rewritten on the tokens: Savanna-style white header, navy text, red primary buttons, 15px cards, callouts with an accent bar. The header wraps at 320px |
+| `savanna-onboarding/index.html` | New title, description, theme colour, favicon and "Savanna · Accessible onboarding" brand. Skip link with separate `lang` parts. Translatable footer. Developer page template removed |
+| `savanna-onboarding/app.js` | "Dimts" removed from all text. Developer page removed from the menu and the routes. Brand subtitle, footer and page titles translated. English sample jobs marked `lang="en"` on Amharic pages. The job count is announced on load as well as after filtering |
+| `savanna-onboarding/forms.js` | Uses `window.SavannaOnboarding` |
+| `savanna-onboarding/docs/for-developers.md` | New: the former "For developers" page, updated to the new names, with a table of old names |
+| `savanna-onboarding/README.md` | Rewritten: name, real-vs-simulated table, install, **keyboard and ARIA support**, tests |
+| `DESIGN_TOKENS.md` | New: every token with its value, Savanna source line, use and contrast result |
+| `tests/a11y.spec.mjs` | Now also checks on every screen: one `<main>`, one `<h1>`, no skipped heading levels, only real buttons, language of parts, and no sideways scroll at 320px (400% zoom) |
+| `tests/design.spec.mjs` | New: contrast of 19 token pairs in normal and high contrast; green never used for text; primary button colours; focus outline ≥ 3:1 on every Tab stop; base text size 16/20/24px inside a 14px host page; fonts load (HTTP 200) and apply |
+| `tests/keyboard.spec.mjs` | New: full sign-up with the keyboard only (every stop has a focus outline and is fully on screen, 2.4.11); skip link; mobile menu with `Escape` |
+| `tests/smoke.spec.mjs` | New events; new test that the old names still work |
+| `tests/known-issues.spec.mjs` | "Dimts visible" and "developer page in the menu" are fixed, so they are now normal tests |
+
+### Decisions applied (CLAUDE.md §2)
+
+- **Primary red:** `#da3a3a`, which is Savanna `#db3e3e` darkened by 1 point of lightness — the smallest step that
+  reaches 4.5:1 with white (4.52). Hover `#bf2424` (6.01).
+- **Navy `#002b56`** for all headings and text. Muted text `#335578` (Savanna's primary-hover).
+- **Green** `#05f283` only as the bar on success panels (with a light green background and navy text); a test checks
+  it is never used for text.
+- **Focus outline:** 3px solid navy with a 2px offset: 14.19:1 on white, 11.67:1 on light panels.
+- **Base text size:** `max(1rem, 16px) × learner scale` (1 / 1.25 / 1.5). That gives 16 / 20 / 24px, even inside
+  Savanna's 14px root. A larger browser default (e.g. 20px) is respected.
+
+### Tests (one worker, as agreed)
+
+| Run | Passed | Skipped (by design) | Unexpected failures | Time |
+|---|---|---|---|---|
+| Phone (Pixel 5) | 75 | 5 (token maths and reference audit run on desktop only) | 0 | 2.7 min |
+| Desktop | 79 | 1 (the mobile menu test runs on phone only) | 0 | 2.9 min |
+| **Total** | **154** | **6** | **0** | |
+
+- Up from 139 at the Phase 0 baseline: new design, keyboard and alias tests were added, and the "developers page"
+  screen was removed.
+- **axe-core: 80 scans, 0 violations of any severity.**
+- The 6 remaining known bugs fail as expected on both devices. Two known bugs ("Dimts" visible, developer page in
+  the menu) are fixed and are now normal tests.
+- **Problems the new tests found and I fixed this phase:**
+  - Primary button text was navy instead of white (a general style rule overrode it; found from screenshots).
+  - The header overflowed by 10px at 320px.
+  - The resume link on "Finish later" overflowed by 22px at 320px. This existed before Phase 1; it was found by the
+    new per-screen 400% zoom check.
+  - An error message stayed in the old language after a language change.
+  - English sample-job titles were not marked `lang="en"` on Amharic pages.
+
+### Section 8 routine — automated parts
+
+| Step | Result |
+|---|---|
+| 1. Keyboard only | **Automated, pass:** full sign-up with Tab/Space/Enter; every Tab stop has a visible 3px outline with ≥ 3:1 contrast and is fully on screen; skip link works; menu closes with `Escape` and returns focus |
+| 2. NVDA | **Manual — to do by the team** (checklist below) |
+| 3. TalkBack in an Android WebView | **Manual — to do by the team** (checklist below) |
+| 4. 400% zoom (320px), no sideways scrolling | **Automated, pass** on all 20 screens × 2 languages. This found a real problem (the long resume link on "Finish later"), now fixed |
+| 5. axe-core, zero serious/critical | **Automated, pass:** 80 scans (20 screens × 2 languages × 2 devices) |
+| Rules: one `<main>`, headings in order, real buttons, language of parts | **Automated, pass** on every screen |
+| Rule: errors linked with `aria-describedby`, focus to the summary | Automated in the smoke tests, pass |
+
+### Manual checks for the team (not yet done — please record results here)
+
+**NVDA (Windows, Chrome or Firefox), on https://dimts-track1.vercel.app**
+
+1. Home page: press `H` repeatedly. Expect: one heading level 1 "Sign up, say what helps you…", then "What you can
+   try" (level 2), then the four card titles (level 3).
+2. Press `D`. Expect landmarks: banner, navigation "Main", main, content info (footer). Only one main.
+3. Join → choose "Read and type" → Continue. Expect NVDA to read the question "Who is filling in this form?" as the
+   heading, then the group name. Press `F` to move through form fields; each option is read as a radio button with
+   its label.
+4. On "What is your full name?", press Continue with the box empty. Expect "There is a problem" to be read, then
+   the error link. Activate the link: focus goes to the box, and NVDA reads the label, the error and the hint.
+5. Switch to Amharic (አማርኛ button). Expect NVDA to switch voice for Amharic text and back for English names (if
+   an Amharic voice is installed; if not, note what happens).
+6. Settings: change text size and contrast. Expect each choice to be read as a radio button, then "Saved…" to be
+   announced.
+7. Jobs: expect "4 jobs shown" to be announced when the page opens. Turn the filter on (after making a Support
+   Passport) and expect the new count to be announced. Each job title is a heading (`H`).
+
+**TalkBack inside an Android WebView**
+
+1. Send the demo link to yourself in Telegram, then open it inside Telegram (not in Chrome).
+2. Swipe through the home page. Expect the brand, the menu button ("Menu, collapsed"), the heading and the buttons, each
+   with a clear name. Double-tap Menu: it should say "expanded".
+3. Complete sign-up by swiping and double-tapping. Expect each question to be read first, options as radio buttons,
+   and the error summary read when a question is skipped.
+4. Tap "Answer by voice". Inside a WebView, voice input is probably **not available**. Expect a clear message
+   ("Voice answers are not available in this browser…"), and typing or tapping still works. Write down exactly what
+   happens.
+5. Tap "Listen to the question". Note whether anything is spoken. If nothing happens and no message appears, record
+   it (known gap, planned for Phases 3/4).
+6. Turn on Settings → Extra large text. Check that nothing is cut off and that there is no sideways scrolling.
+
+**Also by hand:** Chrome zoom at 200% and 400% on a laptop (`Ctrl` `+`), and Windows high-contrast mode.
+
+### Real vs simulated after Phase 1
+
+Unchanged from Phase 0, except: Savanna branding is now **implemented** (tokens taken from the reference; it is
+not the official ALX design system, which we have not been given). Fonts are self-hosted, so they do not depend on
+Typekit or Google at run time.
+
+### Known issues still open
+
+- The 6 remaining known-bug tests: unconfirmed speech saved; "Say it again" keeps the transcript; no mic on the
+  date question; duplicate ids with two forms; abandoned-route answers kept in the draft; profile in plain text.
+- Browser storage keys still start with `dimts.` (internal, not shown to learners). They move to the storage adapter
+  in Phase 2.
+- The `data-dm-size` / `data-dm-contrast` attributes on `<html>` and the `dm-` class prefix keep their old short
+  names (internal).
+- The error summary and help panel (both `h2`) come before the question `h1` in reading order. This follows the
+  common GOV.UK pattern, and no heading level is skipped.
+- Read-aloud with no voices installed (common in WebViews) is still silent with no message (Phases 3/4).
+
+### Next step
+
+Wait for "go to Phase 2".

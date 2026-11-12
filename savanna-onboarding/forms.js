@@ -1,7 +1,7 @@
-/* Dimts form "recipes". Each form is plain data: the same engine renders all four.
+/* Savanna Accessible Onboarding Module: form "recipes". Each form is plain data: the same engine renders all four.
    Amharic wording is a first draft: a native speaker must review it before testing with learners. */
 (function () {
-  var D = window.Dimts;
+  var D = window.SavannaOnboarding;
 
   /* 1. SIGN-UP (with ID ladder and partner-assisted mode) */
   D.register('signup', {
