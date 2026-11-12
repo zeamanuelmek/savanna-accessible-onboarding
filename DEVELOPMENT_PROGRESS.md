@@ -32,7 +32,9 @@ No feature code was written. The Savanna reference files were not changed.
 cd savanna-onboarding
 npm install
 npx playwright install chromium   # first time only
-npm test                          # all tests, phone + desktop (about 7 minutes on this laptop)
+npx playwright test --workers=1 --project=mobile    # phone, ~3 min (memory-light; recommended on this laptop)
+npx playwright test --workers=1 --project=desktop   # desktop, ~3 min
+npm test                          # everything with 2 workers (~7 min, needs more memory)
 npx playwright test --project=desktop tests/smoke.spec.mjs   # a quicker subset
 npm run test:report               # open the HTML report
 ```
@@ -316,18 +318,41 @@ Done — see Phase 0.5.
 | `savanna-onboarding/.vercelignore` | Keeps tests and reports out of the Vercel deploy |
 | `CLAUDE.md` | Decisions 4–7, Phase 0.5, new §8 accessibility definition of done, Vercel root directory, sections renumbered (8→9, 9→10) |
 
-The Savanna reference folder (`Desktop/Savanna-static-pages`) was **not** changed in this phase. It still holds
-the old Phase 0 commit and the old `dimts/` folder from before the move — see "Decision needed" below.
+### Clean-up (approved by the team, 12 Nov)
+
+- **Reference folder reset.** `Desktop/Savanna-static-pages` was reset to ALX's `origin/main` (`9e83ac7`, which is
+  also what GitHub has today). The leftovers were deleted: `CLAUDE.md`, `DEVELOPMENT_PROGRESS.md` and the old `dimts/` folder with its
+  `node_modules`. Nothing else was changed. `git status` is clean and the folder matches ALX's repo exactly.
+  To delete the empty `dimts/` folder I had to stop two processes I had left running during Phase 0 (a test web server
+  and the shell that started it). They were stopped by their exact process ids, and nothing else was touched.
+- **History rewritten.** The first push of Phase 0.5 included `node_modules/` and partial `test-results/` because the
+  `.gitignore` didn't come across in the move. Every commit was rewritten without them (`git filter-branch`),
+  keeping commit messages, authors and dates, and force-pushed to `main`. The final files are identical to before. The
+  local repo was garbage-collected (71 KB). Local `main` = remote `main` = `5b57cc0`; `git status` is clean.
+- The GitHub repo is now **private** (team change).
 
 ### Vercel
 
-Root Directory: **`savanna-onboarding`** · Framework Preset: Other · no build command · output directory default.
+Connected by the team: Root Directory **`savanna-onboarding`** · Framework Preset: Other · no build command.
+Remember to hard-refresh the live demo after a deploy.
 
-### Tests
+### Tests (re-run in the new location, memory-light: `npx playwright test --workers=1`, one project at a time)
 
-- **Full browser suite: not re-run in the new location.** The run was stopped by Claude Code because the laptop was low on memory (not a test failure). Re-run with `npm test` in `savanna-onboarding/` before starting Phase 1.
-- Checked without a browser: the test server serves the demo (`/index.html`, `/dimts.js` → 200) and the reference pages (`/reference/pages/…`, `/reference/assets/…` → 200), and refuses paths outside both folders (`..` → 404). Server file passes a syntax check.
-- No app code changed in this phase; only test paths moved. The Phase 0 baseline (139 passed, 3 skipped) stands until the re-run confirms it.
+| Run | Passed | Skipped | Unexpected failures | Time |
+|---|---|---|---|---|
+| Mobile (Pixel 5) | 68 | 3 (reference audit is desktop-only, by design) | 0 | 2.8 min |
+| Desktop | 71 | 0 | 0 | 2.7 min |
+| **Total** | **139** | **3** | **0** | — |
+
+- **Matches the Phase 0 baseline exactly** (139 passed, 3 skipped).
+- The **8 known-bug tests** still fail as expected on both devices, counted as "passed" because they are marked
+  `test.fail()`: unconfirmed speech saved; "Say it again" keeps the old transcript; "Dimts" visible; developer page in
+  the learner menu; no mic on the date question; duplicate ids with two forms; abandoned-route answers kept in the draft; profile
+  stored as plain text.
+- axe-core: 84 scans (42 per device), **0 violations of any severity**.
+- Reference audit re-measured from `../Savanna-static-pages`: fonts, colours, sizes and radii are identical to Phase 0.
+  Only the timestamp, the `/reference/` URL prefix and the order of font requests changed.
+- One worker is now the recommended way to run on this laptop: about 5.5 min in total, versus about 7 min with 2 workers, and it doesn't run out of memory.
 
 ### Prototype vs the new definition of done (found by reading the code; to fix in the phases shown)
 
