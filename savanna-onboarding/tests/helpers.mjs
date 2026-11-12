@@ -1,7 +1,7 @@
 // Shared helpers for the onboarding module tests.
 import AxeBuilder from '@axe-core/playwright';
 
-export const APP = '/dimts/index.html';
+export const APP = '/index.html';
 
 /** Open the demo with a clean device: no drafts, no profile, chosen language. */
 export async function freshStart(page, { lang = 'en', prefs = {}, extra = {} } = {}) {

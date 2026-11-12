@@ -3,8 +3,8 @@
 // so Phase 1 design tokens come from evidence rather than memory.
 // Output: tests/baseline/reference-audit.json
 import { test, expect } from '@playwright/test';
-import { writeFileSync, mkdirSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const OUT = join(dirname(fileURLToPath(import.meta.url)), 'baseline');
@@ -12,7 +12,12 @@ const PAGES = ['homepage-v1-paced', 'homepage-v1-self-paced', 'concept-with-navi
 const results = {};
 
 test.describe.configure({ mode: 'serial' });
-test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'run once, on desktop'));
+// The reference clone lives next to this repo (see tests/static-server.mjs). Skip if it is not there.
+const REFERENCE = resolve(process.env.REFERENCE_DIR || join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'Savanna-static-pages'));
+test.beforeEach(() => {
+  test.skip(test.info().project.name !== 'desktop', 'run once, on desktop');
+  test.skip(!existsSync(join(REFERENCE, 'pages')), 'Savanna reference clone not found at ' + REFERENCE);
+});
 
 for (const name of PAGES) {
   test(`reference page: ${name}`, async ({ page }) => {
@@ -25,7 +30,7 @@ for (const name of PAGES) {
     page.on('requestfailed', req => {
       if (req.resourceType() === 'font') fontRequests.push({ url: req.url().split('?')[0], failed: req.failure()?.errorText });
     });
-    await page.goto(`/pages/${name}.html`, { waitUntil: 'load' });
+    await page.goto(`/reference/pages/${name}.html`, { waitUntil: 'load' });
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(500);
 

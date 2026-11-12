@@ -13,7 +13,7 @@ export default defineConfig({
   },
   webServer: {
     command: 'node tests/static-server.mjs',
-    url: `http://localhost:${PORT}/dimts/index.html`,
+    url: `http://localhost:${PORT}/index.html`,
     reuseExistingServer: true,
     env: { PORT: String(PORT) }
   },

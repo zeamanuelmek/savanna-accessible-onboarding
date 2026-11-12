@@ -15,21 +15,21 @@ No feature code was written. The Savanna reference files were not changed.
 |---|---|
 | `DEVELOPMENT_PROGRESS.md` | This file |
 | `CLAUDE.md` | Project instructions (first commit of it) |
-| `dimts/` | The prototype, committed as-is for the first time (no edits to its code) |
-| `dimts/package.json`, `package-lock.json`, `.gitignore` | Test tooling only |
-| `dimts/playwright.config.mjs` | Runs every test on a small Android phone (Pixel 5) and a desktop |
-| `dimts/tests/static-server.mjs` | Tiny local web server for tests (no dependencies) |
-| `dimts/tests/helpers.mjs` | Shared test steps (clean device, walk the sign-up form, run axe) |
-| `dimts/tests/a11y.spec.mjs` | axe-core scan of 21 learner screens in English and Amharic |
-| `dimts/tests/smoke.spec.mjs` | 18 checks that the features the prototype claims really work |
-| `dimts/tests/known-issues.spec.mjs` | 8 known bugs written as tests that are *expected to fail* until fixed |
-| `dimts/tests/reference-audit.spec.mjs` | Measures fonts and colours the Savanna reference pages really render |
-| `dimts/tests/baseline/reference-audit.json` | Output of that measurement (evidence for Phase 1) |
+| `savanna-onboarding/` | The prototype, committed as-is for the first time (no edits to its code) |
+| `savanna-onboarding/package.json`, `package-lock.json`, `.gitignore` | Test tooling only |
+| `savanna-onboarding/playwright.config.mjs` | Runs every test on a small Android phone (Pixel 5) and a desktop |
+| `savanna-onboarding/tests/static-server.mjs` | Tiny local web server for tests (no dependencies) |
+| `savanna-onboarding/tests/helpers.mjs` | Shared test steps (clean device, walk the sign-up form, run axe) |
+| `savanna-onboarding/tests/a11y.spec.mjs` | axe-core scan of 21 learner screens in English and Amharic |
+| `savanna-onboarding/tests/smoke.spec.mjs` | 18 checks that the features the prototype claims really work |
+| `savanna-onboarding/tests/known-issues.spec.mjs` | 8 known bugs written as tests that are *expected to fail* until fixed |
+| `savanna-onboarding/tests/reference-audit.spec.mjs` | Measures fonts and colours the Savanna reference pages really render |
+| `savanna-onboarding/tests/baseline/reference-audit.json` | Output of that measurement (evidence for Phase 1) |
 
 ### How to run the tests
 
 ```bash
-cd dimts
+cd savanna-onboarding
 npm install
 npx playwright install chromium   # first time only
 npm test                          # all tests, phone + desktop (about 7 minutes on this laptop)
@@ -133,8 +133,8 @@ Other problems found by reading the code (no test yet):
 
 ### Savanna reference audit (fonts and colours) — no styling changed yet
 
-Source: this repository *is* a clone of `alx-africa/Savanna-static-pages`. Values below come from its CSS
-and from measuring the three frozen pages in Chromium (`dimts/tests/baseline/reference-audit.json`).
+Source: the reference clone of `alx-africa/Savanna-static-pages` (now kept next to this repo at `../Savanna-static-pages`). Values below come from its CSS
+and from measuring the three frozen pages in Chromium (`savanna-onboarding/tests/baseline/reference-audit.json`).
 The learner pages use the **ALX theme** (`<body data-theme-suffix="_alx">`).
 
 **Fonts**
@@ -273,7 +273,7 @@ Not planned: Vitest (Playwright covers unit tests), ESLint a11y plugins (they ta
 
 ### Risks and ALX-dependent assumptions
 
-- **This repo is a clone of `alx-africa/Savanna-static-pages`** (git remote points there). Our module is committed on its `main` branch. Pushing would target ALX's repo. Recommend a separate repo for the module (see decisions).
+- ~~**This repo is a clone of `alx-africa/Savanna-static-pages`** (git remote points there). Our module is committed on its `main` branch. Pushing would target ALX's repo. Recommend a separate repo for the module (see decisions).~~ Resolved in Phase 0.5: own repo.
 - The official ALX starter and integration contract arrive at kickoff (14 Nov). Until then: no REST endpoints, Level 1 script tag only.
 - Savanna's 14 px root font size and Bootstrap 5.3.3 globals will affect an embedded module — scoped styles must survive them (tested in Phase 8 by mounting inside a reference page copy).
 - The 35-feature ALX checklist has not been provided — not mapped, not invented.
@@ -282,11 +282,66 @@ Not planned: Vitest (Playwright covers unit tests), ESLint a11y plugins (they ta
 - Vercel project `dimts-track1` deploys from somewhere unknown to this audit (CLI or another repo). Renaming the folder may affect it — will ask before touching it.
 - Windows test machine: Chromium takes ~20 s to shut down; full suite ~7 min.
 
-### Decisions needed from the team before Phase 1
+### Decisions needed from the team before Phase 1 (all answered — see Phase 0.5)
 
 1. **Where should the module live?** (a) keep committing inside this clone of the reference repo (simplest, but never push), or (b) create a new repo for the module and keep the reference beside it, read-only. Recommended: **(b)**.
 2. **Folder / tag names:** OK to rename `dimts/` → `savanna-onboarding/` and `<dimts-form>` → `<savanna-onboarding-form>` (keeping the old tag as an alias)? This may affect the Vercel deploy settings.
 3. **Primary colour for the module:** Savanna learner-shell red `#db3e3e` (needs a darker variant for small text) **or** Savanna content navy `#002b56` with green `#05f283` accents (passes contrast as-is, calmer, matches the concept pages). Recommended: navy primary, red only where it must match the shell.
+
+### Next step
+
+Done — see Phase 0.5.
+
+---
+
+## Phase 0.5 — Own repository + accessibility definition of done ✅ (12 Nov 2026)
+
+### Team decisions recorded (also in `CLAUDE.md` §2)
+
+- Own repo: https://github.com/zeamanuelmek/savanna-accessible-onboarding (public).
+- Folder `savanna-onboarding/`; element `<savanna-onboarding-form>` with `<dimts-form>` kept as an alias (code rename happens in Phase 1).
+- Colour: primary actions = Savanna red darkened just enough for 4.5:1; headings and text = navy `#002b56`; green only for success states, never text; focus outline ≥ 3:1.
+- Module sets its own base text size (no shrinking in Savanna's 14 px pages) and follows the learner's text-size setting.
+- Accessibility definition of done (ALX training, 12 Nov) added as `CLAUDE.md` §8. WCAG 2.2 AA is the bar for every phase.
+
+### What changed
+
+| Change | Detail |
+|---|---|
+| New repo folder | `Desktop/savanna-accessible-onboarding/`, created with `git format-patch` + `git am`, so the Phase 0 commit keeps its author, date and message |
+| `dimts/` → `savanna-onboarding/` | `git mv` (history follows the files) |
+| `tests/static-server.mjs` | Serves the module at `/` and the reference clone, read only, at `/reference/` (from `../Savanna-static-pages`, or `REFERENCE_DIR`) |
+| `tests/helpers.mjs`, `playwright.config.mjs` | Demo is now `/index.html` |
+| `tests/reference-audit.spec.mjs` | Reads `/reference/pages/…`; skips cleanly if the reference clone is missing |
+| `savanna-onboarding/.vercelignore` | Keeps tests and reports out of the Vercel deploy |
+| `CLAUDE.md` | Decisions 4–7, Phase 0.5, new §8 accessibility definition of done, Vercel root directory, sections renumbered (8→9, 9→10) |
+
+The Savanna reference folder (`Desktop/Savanna-static-pages`) was **not** changed in this phase. It still holds
+the old Phase 0 commit and the old `dimts/` folder from before the move — see "Decision needed" below.
+
+### Vercel
+
+Root Directory: **`savanna-onboarding`** · Framework Preset: Other · no build command · output directory default.
+
+### Tests
+
+- **Full browser suite: not re-run in the new location.** The run was stopped by Claude Code because the laptop was low on memory (not a test failure). Re-run with `npm test` in `savanna-onboarding/` before starting Phase 1.
+- Checked without a browser: the test server serves the demo (`/index.html`, `/dimts.js` → 200) and the reference pages (`/reference/pages/…`, `/reference/assets/…` → 200), and refuses paths outside both folders (`..` → 404). Server file passes a syntax check.
+- No app code changed in this phase; only test paths moved. The Phase 0 baseline (139 passed, 3 skipped) stands until the re-run confirms it.
+
+### Prototype vs the new definition of done (found by reading the code; to fix in the phases shown)
+
+| Rule | Today | Phase |
+|---|---|---|
+| Language of parts | Static footer and sample jobs are English inside an Amharic page without `lang="en"`; skip link mixes both languages in one string | 1 |
+| Result count announced on load (jobs) | Only announced after the filter changes, not on load | 7 (small fix may come earlier) |
+| WebView fallback | No recogniser → clear message (good). If speech synthesis exists but the device has **no voices at all** (common in WebViews), English read-aloud stays silent with no message | 3 / 4 |
+| Pop-ups | Help and voice consent are inline panels (allowed). No `<dialog>` in use | — |
+| Second `<main>` | Module adds none (good). Demo host has one | — |
+| Consistent help (3.2.6) | Help button is in the same top bar on every question (good); missing on the done screen | 1 / 2 |
+| Redundant entry (3.3.7) | Apply prefills name and phone (good); profile-update journey must do the same | 2 |
+| Keyboard / NVDA / TalkBack-in-WebView | Not yet run by a person | to do by the team, each phase |
+| README keyboard and ARIA section | Missing | 1 (with the README rename) |
 
 ### Next step
 
