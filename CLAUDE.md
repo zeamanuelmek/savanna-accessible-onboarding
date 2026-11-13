@@ -32,7 +32,7 @@ Event: 14–15 November 2026, ALX Tech Hub, Lideta, Addis Ababa. Submission dead
 
 1. **Stop after every phase** for team review (section 0).
 2. **Keep the existing framework-free Web Component core.** Do NOT rewrite in React now. Add a `SavannaOnboarding.mount(selector, options)` / `unmount()` API on top of it. Revisit React only after the official ALX starter is inspected at kickoff (14 Nov).
-3. **Scope and order** follow section 6. Offline sync, Docker and API work come after the core phases and are cut first if time runs out.
+3. **Scope and order** follow section 6. Offline sync and API work come after the core phases and are cut first if time runs out. **Docker Compose is a required deliverable (section 11) and is never cut.** Note: offline also earns points under "Built for Ethiopia" (section 11); the team decides whether it stays cut-first.
 4. **Own repository** (Phase 0.5, 12 Nov): https://github.com/zeamanuelmek/savanna-accessible-onboarding. The module lives in `savanna-onboarding/` inside it. The Savanna reference is a separate, untouched clone next to it at `../Savanna-static-pages` (tests read it from there, or from `REFERENCE_DIR`). **Ask before resetting or deleting anything in the reference folder.**
 5. **Names:** folder `savanna-onboarding/`, element `<savanna-onboarding-form>` (and `<savanna-onboarding-settings>`); `<dimts-form>` stays as an alias for now.
 6. **Colour:** primary actions use Savanna red `#db3e3e`, darkened only as much as needed to reach 4.5:1 for text and buttons. Headings and text use navy `#002b56`. Green is for success states only, never for text. The focus outline must meet 3:1.
@@ -107,13 +107,21 @@ Persistent text size, contrast, audio-first, language, interaction mode. Minimis
 Job application reuses the engine, prefilled from the profile, voice for open questions; employer accommodation form; on-device matching that never reveals disability; JobPosting output.
 
 **Phase 8 — Savanna integration (needs the official starter, 14 Nov).**
-Script-tag build, mount/unmount API, host configuration, scoped styles, integration guide, a **separate test host page** proving it works outside the demo site. Reassess when the starter arrives; stop and ask if the contract is unclear.
+Script-tag build, mount/unmount API, host configuration, scoped styles, integration guide, a **separate test host page** proving it works outside the demo site. **Docker Compose (required):** one command, `docker compose up`, serves the demo and the test host page locally, using only free images and no paid services. First draft of the README install guide, aimed at a developer installing the module in about an hour. Reassess when the starter arrives; stop and ask if the contract is unclear.
 
 **Phase 9 — Accessibility, privacy and security testing.**
-axe-core, keyboard-only, NVDA, TalkBack (incl. Android WebView), 200% and 400% zoom, 320px reflow, sound off, large text, high contrast, transcript editing, error handling. Privacy and security review. Write the **accessibility conformance report** (test · expected · actual · pass/fail · evidence · limitations · untested). Map the official ALX 35-feature checklist when provided — never invent it.
+axe-core, keyboard-only, NVDA, TalkBack (incl. Android WebView), 200% and 400% zoom, 320px reflow, sound off, large text, high contrast, transcript editing, error handling. Privacy and security review. Fill in the **WCAG 2.2 AA conformance report** in `savanna-onboarding/docs/conformance-report.md` (test · expected · actual · pass/fail · evidence · limitations · untested). Run the **judging gate** with a co-designer (section 11): the main task completed unaided with NVDA, TalkBack, keyboard only, 200% zoom and sound off. Test on a low-cost Android phone over a 3G-speed connection. Map the official ALX 35-feature checklist when provided — never invent it.
 
 **Phase 10 — Submission.**
-README, install and integration guide, Docker Compose (if required), testing evidence, demo script, architecture overview, clear list of real vs simulated features. Verify a clean setup works.
+Submit by **16:30 on 15 Nov**. Includes:
+- README and install guide, tested by someone new installing the module in about an hour
+- Docker Compose (**required**): check that `docker compose up` works on a clean machine
+- The final open licence in `LICENSE` (announced at kickoff on 14 Nov)
+- The finished conformance report
+- Testing evidence, a demo script and an architecture overview
+- A clear list of real vs simulated features
+
+Verify a clean setup works.
 
 ## 7. Non-negotiable rules
 
@@ -130,7 +138,7 @@ README, install and integration guide, Docker Compose (if required), testing evi
 
 ## 8. Accessibility definition of done (ALX training, 12 Nov)
 
-**WCAG 2.2 AA is the definition of done for every phase.** A phase is not finished until its changes pass the routine below. Record results in `DEVELOPMENT_PROGRESS.md` (and later `ACCESSIBILITY_CONFORMANCE.md`). Steps that need a person (NVDA, TalkBack) are listed as "to do by the team" until someone runs them — never reported as passed without evidence.
+**WCAG 2.2 AA is the definition of done for every phase.** A phase is not finished until its changes pass the routine below. Record results in `DEVELOPMENT_PROGRESS.md` (and later `savanna-onboarding/docs/conformance-report.md`). Steps that need a person (NVDA, TalkBack) are listed as "to do by the team" until someone runs them — never reported as passed without evidence.
 
 **End-of-phase test routine (in this order):**
 1. **Keyboard only** — every control reachable and usable, visible focus, logical order, no traps.
@@ -160,10 +168,55 @@ README, install and integration guide, Docker Compose (if required), testing evi
 - `DEVELOPMENT_PROGRESS.md` — per phase: changed files, tests run, results, known issues, real vs simulated, next step, decisions needed.
 - `DESIGN_TOKENS.md` — colours, typography, fonts, spacing, sources and contrast results.
 - `README.md` — what it is, setup, run, install on another site, configuration.
-- `ACCESSIBILITY_CONFORMANCE.md` — from Phase 9 (start collecting evidence earlier).
+- `savanna-onboarding/docs/conformance-report.md` — WCAG 2.2 AA conformance report (required deliverable). The skeleton exists now; fill it in during Phase 9, collecting evidence earlier.
+- `LICENSE` — placeholder until the open licence is announced at kickoff (14 Nov).
 
 ## 10. Deployment
 
 - Live demo is on Vercel (project `dimts-track1`). Prefer connecting the GitHub repo to Vercel so each push deploys. Ask the user before renaming the Vercel project or changing its domain.
 - Vercel settings for this repo: **Root Directory `savanna-onboarding`**, Framework Preset "Other", no build command, output directory `.` (default). `savanna-onboarding/.vercelignore` keeps tests out of the deploy. Revisit when Phase 8 adds a build step.
 - Users may see a cached old version; remind the user to refresh after deploys.
+
+## 11. Official deliverables and judging (digitalbridge.et, recorded 13 Nov)
+
+### Deliverables — submit by 16:30 on day 2 (15 Nov)
+
+| # | Deliverable | Notes |
+|---|---|---|
+| D1 | **Code under the open licence announced at kickoff** | `LICENSE` is a placeholder until 14 Nov. The bundled fonts stay under their own SIL Open Font Licence. |
+| D2 | **README that lets a developer install the module in about an hour** | "Adoptable" is worth 25 of 100 points. Test it with someone who has not seen the project. |
+| D3 | **Docker Compose — required** | One command, `docker compose up`, serves the demo and the test host page locally. Free images only, no paid services, no accounts. |
+| D4 | **WCAG 2.2 AA conformance report** | `savanna-onboarding/docs/conformance-report.md`. The skeleton exists; results are filled in during Phase 9. |
+
+### Pass/fail gate (all three are required before scoring)
+
+1. **A co-designer completes the main task unaided** using NVDA, TalkBack, keyboard only, 200% zoom and sound off.
+2. **axe-core shows zero critical or serious issues.**
+3. **The team submits the conformance report.**
+
+### Scores (out of 100)
+
+| Area | Points | What it means |
+|---|---|---|
+| S1 Works for the intended people | 30 | Disabled learners, partner staff and employers can actually use it |
+| S2 Adoptable | 25 | Easy for Savanna or another site to install and run |
+| S3 Built for Ethiopia | 15 | Amharic, Ethiopian calendar, cheap Android phones on 3G, offline |
+| S4 Quality, security and privacy | 15 | |
+| S5 Cheap to keep running | 15 | No paid-API lock-in |
+
+### Which phase delivers what
+
+| Item | Phase(s) | How |
+|---|---|---|
+| D1 Licence | 0.5 (placeholder) → 10 | Fill in `LICENSE` on 14 Nov when the licence is announced; final check in Phase 10 |
+| D2 README / install in about an hour | 1 (draft) → 8 → 10 | Phase 8: script-tag build, `mount()` API, integration guide, test host page. Phase 10: time a fresh install |
+| D3 Docker Compose | 8 → 10 | Phase 8: `docker compose up` serves the demo and test host page. Phase 10: clean-machine check |
+| D4 Conformance report | 0.5 (skeleton) → every phase (evidence) → 9 | Phase 9: fill in every criterion with evidence |
+| Gate 1: co-designer unaided | every phase (section 8 routine) → 9 | Phase 9: run the main task with a co-designer, including sound off and 200% zoom |
+| Gate 2: axe zero critical/serious | every phase | Already automated; currently 0 violations |
+| Gate 3: report submitted | 9 → 10 | |
+| S1 Works for the intended people | 2, 3, 4, 5, 7, 9 | Engine, voice and typing, read-aloud and low literacy, identity and private support, career journeys, testing with people |
+| S2 Adoptable | 1, 2, 8, 10 | Scoped styles and tokens, clean engine, mount API, script tag, Docker, README |
+| S3 Built for Ethiopia | 1, 3, 4, 6, 9 | Amharic font (1), Amharic voice (3), recorded Amharic audio (4), offline (6), cheap Android on 3G test (9). The Ethiopian calendar already exists; a native-speaker review of the Amharic is needed |
+| S4 Quality, security, privacy | 2, 3, 5, 6, 9 | Privacy bug fixes (2, 3), consent and data minimising (5, 6), security review (9) |
+| S5 Cheap to keep running | all, checked in 8 and 10 | Static files, no paid APIs, voice and audio behind replaceable adapters, free Docker images |

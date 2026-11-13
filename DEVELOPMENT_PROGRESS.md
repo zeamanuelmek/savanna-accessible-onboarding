@@ -510,4 +510,60 @@ Typekit or Google at run time.
 
 ### Next step
 
+Done — see "Official deliverables and judging" below. Phase 2 has not started.
+
+---
+
+## Official hackathon deliverables and judging (recorded 13 Nov 2026)
+
+Source: the official site, digitalbridge.et, as given by the team. Full detail is now in `CLAUDE.md` §11.
+
+### What changed
+
+| File | Change |
+|---|---|
+| `CLAUDE.md` | New §11: the 4 deliverables, the pass/fail gate, the scoring, and which phase delivers each one. Docker Compose changed from "if required" to **required and never cut** (§2.3, Phase 8, Phase 10). Phase 9 now names the co-designer gate and a test on a low-cost Android phone over 3G. Conformance report path updated (§8, §9) |
+| `LICENSE` | New placeholder. The open licence is announced at kickoff on 14 Nov; until it is filled in, no licence is granted. The font licences (SIL OFL) are listed |
+| `savanna-onboarding/docs/conformance-report.md` | New skeleton: all 55 WCAG 2.2 A + AA success criteria, the judging gate, test environments, known limitations and an evidence index. **Every result says "Not yet tested"** |
+
+No code was changed, so no tests were run.
+
+### Deliverables (due 16:30, 15 Nov)
+
+| Deliverable | Status now | Delivered in |
+|---|---|---|
+| D1 Code under the open licence announced at kickoff | Placeholder `LICENSE` | Fill in on 14 Nov; check in Phase 10 |
+| D2 README that lets a developer install in about an hour (Adoptable = 25 pts) | Partial: README and `docs/for-developers.md` exist; no `mount()` API, build or test host page yet | Phase 8 (build, API, guide) → Phase 10 (timed fresh install) |
+| D3 Docker Compose, required (`docker compose up` serves the demo and the test host page, no paid services) | Not started | Phase 8 → Phase 10 (clean-machine check) |
+| D4 WCAG 2.2 AA conformance report | Skeleton, nothing tested | Evidence gathered every phase → filled in Phase 9 |
+
+### Pass/fail gate
+
+| Gate | Status now |
+|---|---|
+| Co-designer completes the main task unaided (NVDA, TalkBack, keyboard only, 200% zoom, sound off) | **Not yet tested.** Keyboard only and zoom are covered by automated tests; NVDA and TalkBack still need a person |
+| axe-core: zero critical or serious issues | **Passing today** (0 violations in 80 automated scans, Phase 1) |
+| Conformance report submitted | Skeleton only |
+
+### Scores (out of 100) and where the points come from
+
+| Area | Points | Delivered in | Where we are |
+|---|---|---|---|
+| Works for the intended people | 30 | Phases 2, 3, 4, 5, 7, 9 | Core form engine works; voice privacy bug, read-aloud gaps, identity badges and the learner takeover are still open |
+| Adoptable | 25 | Phases 1, 2, 8, 10 | Scoped styles and tokens done; the `mount()` API, script-tag build, Docker and the "install in about an hour" README are still to come |
+| Built for Ethiopia | 15 | Phases 1, 3, 4, 6, 9 | Amharic text and font, and the Ethiopian calendar, exist. Recorded Amharic audio, offline, a 3G test and the native-speaker review are not done yet |
+| Quality, security and privacy | 15 | Phases 2, 3, 5, 6, 9 | 154 automated tests; 4 privacy bugs still open; no security review yet |
+| Cheap to keep running | 15 | All, checked in 8 and 10 | Static files, no paid APIs, self-hosted fonts. Browser voice input depends on Google's free service; adapters will keep it replaceable |
+
+### Decisions needed from the team
+
+1. **Offline:** it earns points under "Built for Ethiopia", but Phase 6 is still marked "cut first". Keep it cut-first,
+   or protect a minimal offline version (cache the app so it reopens without a connection)?
+2. **The "main task" for the co-designer gate:** proposed as "sign up and save a Support Passport". Please confirm.
+3. **3G performance:** the Amharic font file is ~198 KB and loads only when Amharic text is on screen. A throttled-3G
+   test is planned for Phase 9. Do we also want a size budget for the page?
+4. **Vercel (still open from Phase 1):** Root Directory not applied, and `dimts-track1.vercel.app` still shows the old version.
+
+### Next step
+
 Wait for "go to Phase 2".
