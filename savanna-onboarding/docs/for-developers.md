@@ -139,6 +139,24 @@ SavannaOnboarding.setSpeech({
   The default is the browser's own engine (free; needs a connection; audio goes to Google). **Addis AI** (Amharic speech
   to text and text to speech) is a possible future engine behind this adapter, **not a dependency**.
 
+## 3c. Read aloud and recorded audio (Phase 4)
+
+- **Settings:** `easy` = read aloud (questions read out, a Listen button on every answer); `pictures` = pictures
+  and bigger buttons. They are separate. Choosing "Simple steps with pictures" turns both on; "Listen and respond"
+  and "Speak my answers" turn on read aloud only; "Read and type" turns both off.
+- **Player:** one at a time on the page (`SavannaOnboarding.player`): Listen, Pause/Resume, Stop, Play again;
+  Escape stops. A new question is read automatically only when read aloud is on, with Pause and Stop showing at once.
+- **Recorded clips:** `assets/audio/<lang>/<name>.mp3` (or `.m4a`), named as in `docs/audio-script.md`:
+  `<form>-<field>-question`, `<form>-<field>-option-<value>`, `<form>-check-answers`, `<form>-done`,
+  `welcome-question`, `welcome-option-<mode>`, `error-…`, `saved-for-later` (underscores become hyphens).
+  A field's own `audio: { am: 'url' }` overrides the name.
+- **Manifest:** `assets/audio/manifest.json` lists the clips that exist; `node tools/check-audio.cjs` writes it.
+  Only listed clips are requested, so missing clips never cause failed downloads (and work offline once cached).
+- **Fallback:** recorded clip → the phone's voice → a status message ("There is no recording for this yet … Everything is
+  written on the screen"). A clip that fails to play is marked and the phone's voice reads instead, with a message.
+- **Speech output adapter:** `output.speak(text, lang, audioUrl, done)` must call `done()` when a piece finishes,
+  so the player can continue; `pause()` and `resume()` are optional.
+
 ## 4. Styling
 
 - **Scoped classes:** all classes start with `dm-`, so nothing clashes with Bootstrap.

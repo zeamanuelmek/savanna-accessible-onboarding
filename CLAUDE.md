@@ -52,7 +52,7 @@ Decisions from the Phase 2 review (14 Nov):
 14. **Phase order for the rest of the event:** 3 → 5 → 8 → 4 (about 17:30) → 6 → 7 → 9 → 10. Approved schedule and cut order are in `DEVELOPMENT_PROGRESS.md` (Phase 2).
 15. **Gate main task (confirmed): "sign up for Savanna and save a Support Passport".** That path must be perfect first.
 16. **Phase 8 shows a realistic learner journey inside the Savanna starter pages**, not our showroom menu (details in Phase 8 below). The current demo site stays as the **developer and test page**.
-17. **Amharic:** the co-designer or an interpreter reviews the Amharic text on 14 Nov afternoon; Zeamanuel records the audio clips that night from `savanna-onboarding/docs/audio-script.md`. Text changes go into the code first, then the script is regenerated (`node tools/audio-script.cjs`).
+17. **Amharic:** the co-designer or an interpreter reviews the Amharic text on 14 Nov afternoon; Zeamanuel records the audio clips that night from `savanna-onboarding/docs/audio-script.md` into `savanna-onboarding/assets/audio/am/` (MP3, or M4A), then runs `node tools/check-audio.cjs` and commits the clips with `assets/audio/manifest.json`. Text changes go into the code first, then the script is regenerated (`node tools/audio-script.cjs`).
 18. **No microphone on the date question** (approved cut, Phase 3): the Ethiopian date is typed or chosen. Documented in `docs/for-developers.md`.
 
 ## 3. Starting point (what already exists)

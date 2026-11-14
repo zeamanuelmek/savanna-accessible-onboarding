@@ -66,8 +66,17 @@ const ROOT = require('path').join(__dirname, '..').split('\\').join('/') + '/';
 
 ## How to record
 
-- **Format:** MP3, mono, 44.1 kHz or 48 kHz, 64–96 kbps (small files for 3G). One clip per file, file names exactly as listed.
+- **Format:** MP3 (recommended), mono, 44.1 kHz or 48 kHz, 64–96 kbps, ideally under 300 KB (small files for 3G).
+  M4A (AAC) also works: keep the same name with \`.m4a\`. One clip per file, file names exactly as listed.
 - **Where:** \`savanna-onboarding/assets/audio/am/\`.
+- **Check:** from \`savanna-onboarding/\`, run \`node tools/check-audio.cjs\`. It lists found, missing and broken clips
+  and writes \`assets/audio/manifest.json\`. Commit the clips and the manifest together: a clip that is not in the
+  manifest is never played.
+- **Missing clips are fine:** the phone's voice reads instead (if it has one); otherwise a short message says the
+  words are on the screen. Audio is never required.
+- **Recorded for later:** six clips under "On every screen when needed" are not played yet: \`help\`, \`resumed\`,
+  \`prefilled\`, \`voice-consent\`, \`voice-check\` and \`voice-used\`. Record them last. (The error clips and
+  \`saved-for-later\` are played.)
 - **Voice:** calm, slow and clear, as if to someone hearing it for the first time. Leave about half a second of silence
   at the start and end. No music.
 - **Lengths** are estimates (about 4 syllables a second, plus a pause). Natural speech that runs longer is fine.

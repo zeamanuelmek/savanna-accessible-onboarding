@@ -997,3 +997,65 @@ Automated, inside the Savanna pages:
 ### Next step
 
 Wait for "go to Phase 4".
+
+---
+
+## Phase 4 — Low literacy and read aloud ✅ (14 Nov 2026)
+
+### What changed
+
+- `savanna-onboarding/savanna-onboarding.js` (version 0.8.0):
+  - **Player** (`SavannaOnboarding.player`): one at a time on the page. It reads a list in order: each piece uses its
+    recording if there is one, otherwise the phone's voice. Controls: **Pause/Resume, Stop, Play again**; **Escape**
+    also stops.
+  - **Listen button on every answer** (when read aloud is on): a separate button beside each answer, named
+    "Listen: <answer>". It never chooses the answer.
+  - **Read aloud is no longer unstoppable:** a new question is read automatically only when read aloud is on, and
+    Pause and Stop appear at once (WCAG 1.4.2).
+  - **Read aloud and "Pictures and bigger buttons" are separate settings** (both in Settings; the welcome choice
+    sets sensible defaults).
+  - **Recorded clips** are found by their names in `docs/audio-script.md` (`assets/audio/<lang>/<name>.mp3` or
+    `.m4a`), through `assets/audio/manifest.json`. Only listed clips are requested.
+  - **Clear text** when a clip is missing (the phone's voice reads instead), when a clip fails ("A recording could
+    not be played…"), and when there is no voice at all ("There is no recording for this yet … Everything is written
+    on the screen").
+  - "Listen" also on "Check your answers" and the done screen (when read aloud is on). Error messages are read first,
+    using the recorded error clips.
+- `tools/check-audio.cjs` (new): checks the clips against the script. It reports found, missing, wrong-format, empty
+  and too-large files, and writes the manifest. `assets/audio/am/README.md` explains the drop-in steps.
+  `assets/audio/manifest.json` is empty for now.
+- `docs/audio-script.md` regenerated with the drop-in steps (folder, MP3/M4A, the check command, which six clips are
+  "for later").
+- Docs: `README.md` (real vs simulated, keyboard and ARIA), `for-developers.md` (read aloud section), `CLAUDE.md`
+  (decision 17).
+- Tests: new `tests/readaloud.spec.mjs` (10 tests, with a fake voice and real tiny audio files served in place of
+  clips); 2 new screens in the accessibility sweep; one log-in test fixed (a racing "Log out" click).
+
+### How to add tonight's recordings
+
+1. Put the files in **`savanna-onboarding/assets/audio/am/`**, named exactly as in `docs/audio-script.md`
+   (for example `signup-name-question.mp3`).
+2. Format: **MP3** (mono, 64–96 kbps, ideally under 300 KB). M4A also works, with the same name ending `.m4a`.
+3. From `savanna-onboarding/`, run **`node tools/check-audio.cjs`**. It prints "Audio check: N of 73 clips found",
+   then lists the missing ones by number and any broken or wrongly named files, and writes `assets/audio/manifest.json`.
+4. Commit and push the clips **and** `manifest.json`. Vercel deploys them; refresh the page.
+
+### Tests (one worker, mobile then desktop)
+
+| Project | Passed | Skipped | Failed |
+|---|---|---|---|
+| mobile (Pixel 5) | 175 | 5 | 0 |
+| desktop | 178 | 1 | 1 → 0 |
+
+On desktop, the log-in test failed once under load: its first step clicked "Log out" while the next step read the
+page. I removed that click (the test clears the session itself), and the journey file then passed 10 of 10.
+- axe-core: **160 scans** (40 screens × 2 languages × 2 devices), 0 serious or critical. This includes the "Listen on
+  every answer" screen with the player showing, and the pictures screen, with no sideways scrolling at 320px.
+
+### Real vs simulated after Phase 4
+
+- **Read aloud: implemented.** Amharic still depends on tonight's recordings: until they are added, most phones
+  have no Amharic voice, and the learner sees the "words are on the screen" message.
+- **Not done (approved cut 4):** a simplified-wording option.
+
+---

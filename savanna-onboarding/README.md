@@ -150,7 +150,8 @@ Also added: a "Skip to main content" link, and focused items never hide under th
 | The module inside Savanna's own pages (starter kit) | implemented as a demo: Savanna's CSS unchanged, our pages around it |
 | Log-in | **simulated**: a labelled demo. No server, no SMS; the code is shown on screen. Meets WCAG 3.3.8: nothing to remember, no puzzle, the code can be pasted or filled in by the phone, no time limit |
 | Text size, high contrast, language settings | implemented |
-| Read-aloud | partial: uses the device voice; most phones have no Amharic voice; recorded audio comes in Phase 4 |
+| Read-aloud | implemented: "Listen" on every question and a Listen button on every answer, with Pause/Resume, Stop and Play again; Escape stops it. Plays the recorded Amharic clips named in [`docs/audio-script.md`](docs/audio-script.md) when they exist, otherwise the phone's voice, otherwise a short message that everything is on screen. **The recordings are being made by the team; until they are added, Amharic relies on the phone's voice, which most phones do not have.** Audio is never required |
+| Pictures and bigger buttons | implemented: a separate setting from read aloud |
 | Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Google, so consent is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions, or on the date. Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
 | "Finish later" SMS | **simulated**: a labelled preview, no SMS is sent |
 | ID verification | unavailable: IDs are never verified. Each ID choice shows an honest badge ("Self-declared · not verified", "Partner referral pending"); after sign-up the status is "Self-declared", "Number recorded — not verified" or "Partner referral pending" |
@@ -185,6 +186,8 @@ Also added: a "Skip to main content" link, and focused items never hide under th
 - Single and multiple choices are native radio buttons and checkboxes inside a `<fieldset>`, with the question as
   the `<legend>`. ID trust badges are part of each option's name.
 - Toggles report their state (`aria-pressed` on "Read aloud" and the microphone, `aria-expanded` on "Get help" and the menu).
+- Each answer's Listen button is a separate button beside the answer (never inside it), named "Listen: <the answer>".
+  While audio plays, Pause and Stop appear next to "Listen to the question"; `Escape` also stops it (WCAG 1.4.2).
 - Errors: the field gets `aria-invalid="true"` and is linked to its error message and hint with `aria-describedby`.
 - Progress ("Question 2 of 7") is plain text. The visual bar is hidden from screen readers.
 - Status messages ("Saved", "Welcome back", the number of jobs shown) are announced through a polite `role="status"` live region.
@@ -198,7 +201,7 @@ Also added: a "Skip to main content" link, and focused items never hide under th
   switch voice.
 
 **Learner settings:** text size (16 / 20 / 24px base, and never smaller inside Savanna's 14px pages), high contrast,
-language, how I like to answer, read aloud, voice answers on or off. Settings are saved on the device and apply
+language, how I like to answer, read aloud, pictures and bigger buttons, voice answers on or off. Settings are saved on the device and apply
 everywhere the module appears.
 
 **What has been tested:**

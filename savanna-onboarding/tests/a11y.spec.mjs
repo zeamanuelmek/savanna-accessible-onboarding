@@ -43,6 +43,8 @@ const screens = {
   'signup: finish later': async p => { await signupTo(p, 'name'); await p.locator('[data-act=later]').click(); },
   'voice: consent panel': async p => { await go(p, '#/'); await fakeVoice(p, false); await signupTo(p, 'name'); await p.locator('[data-act=speak]').click(); await p.locator('.dm-heard, .dm-panel [data-act=voice-allow]').first().waitFor(); },
   'voice: check what I said': async p => { await go(p, '#/'); await fakeVoice(p, true); await signupTo(p, 'name'); await p.locator('[data-act=speak]').click(); await p.locator('[data-ref=heard-edit]').waitFor(); },
+  'read aloud: Listen on every answer, player showing': async p => { await signupTo(p, 'id_route'); await p.locator('[data-act=easy]').click(); await p.evaluate(() => window.SavannaOnboarding.setSpeech({ output: { speak: () => true, stop() {}, pause() {}, resume() {} } })); await p.locator('[data-act=listen]').click(); await p.locator('[data-act=stop-audio]').waitFor(); },
+  'pictures and big buttons': async p => { await go(p, '#/'); await p.evaluate(() => window.SavannaOnboarding.setPrefs({ pictures: true, easy: true })); await go(p, '#/passport'); },
   'signup: help open': async p => { await signupTo(p, 'filler'); await p.locator('.dm-bar [data-act=help]').click(); },
   'profile: summary': async p => { await signupTo(p, 'END'); await next(p); await go(p, '#/profile'); },
   'profile: no profile yet': async p => go(p, '#/profile'),

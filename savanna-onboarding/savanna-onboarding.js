@@ -45,7 +45,12 @@
 
   /* ---------- learner preferences: saved once, applied everywhere the component is embedded ---------- */
   var MODES = ['read_type', 'listen', 'speak', 'simple'];
-  function getPrefs() { var p = store.get('prefs', {}); return { lang: p.lang || 'am', easy: !!p.easy, mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal' }; }
+  // easy = read aloud. pictures = pictures and bigger buttons (separate since Phase 4; older saves follow "simple" mode).
+  function getPrefs() {
+    var p = store.get('prefs', {});
+    return { lang: p.lang || 'am', easy: !!p.easy, pictures: p.pictures != null ? !!p.pictures : p.mode === 'simple',
+      mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal' };
+  }
   function applyPrefs() {
     var p = getPrefs(), root = document.documentElement;
     root.setAttribute('data-dm-size', p.size);
@@ -66,7 +71,7 @@
   }
   // Choosing a way of answering sets sensible defaults; each can still be changed separately in Settings.
   function prefsForMode(mode) {
-    var p = getPrefs(), patch = { mode: mode, easy: mode !== 'read_type' };
+    var p = getPrefs(), patch = { mode: mode, easy: mode !== 'read_type', pictures: mode === 'simple' };
     if (mode === 'simple' && p.size === 'normal') patch.size = 'large';
     return patch;
   }
@@ -124,7 +129,12 @@
       m_read_type: 'Read and type', m_listen: 'Listen and respond', m_speak: 'Speak my answers', m_simple: 'Simple steps with pictures and big text',
       errMode: 'Choose one way to continue.',
       settings: 'Settings', settingsHint: 'Your settings are saved on this phone and used everywhere this tool appears.',
-      s_lang: 'Language', s_size: 'Text size', s_contrast: 'Contrast', s_mode: 'How I like to answer', s_read: 'Read everything to me',
+      s_lang: 'Language', s_size: 'Text size', s_contrast: 'Contrast', s_mode: 'How I like to answer', s_read: 'Read aloud',
+      s_readHint: 'Questions are read out, and every answer has its own Listen button. Everything is also written on the screen.',
+      s_pictures: 'Pictures and bigger buttons',
+      play: 'Listen', pause: 'Pause', resume: 'Resume', stopAudio: 'Stop', replay: 'Play again',
+      noAudio: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.',
+      clipFailed: 'A recording could not be played, so the phone\'s voice is reading instead.',
       size_normal: 'Normal', size_large: 'Large', size_xlarge: 'Extra large',
       contrast_normal: 'Standard', contrast_high: 'High contrast',
       on: 'On', off: 'Off',
@@ -183,7 +193,12 @@
       m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
       errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
       settings: 'ቅንብሮች', settingsHint: 'ቅንብሮችዎ በዚህ ስልክ ላይ ይቀመጣሉ፤ ይህ መሣሪያ በሚገኝበት ቦታ ሁሉ ይሠራሉ።',
-      s_lang: 'ቋንቋ', s_size: 'የጽሑፍ መጠን', s_contrast: 'ንፅፅር', s_mode: 'መመለስ የምመርጥበት መንገድ', s_read: 'ሁሉንም አንብብልኝ',
+      s_lang: 'ቋንቋ', s_size: 'የጽሑፍ መጠን', s_contrast: 'ንፅፅር', s_mode: 'መመለስ የምመርጥበት መንገድ', s_read: 'ጮክ ብሎ ማንበብ',
+      s_readHint: 'ጥያቄዎች ይነበባሉ፤ እያንዳንዱ መልስም የራሱ «አዳምጥ» አዝራር አለው። ሁሉም ነገር በማያ ገጹ ላይም ተጽፏል።',
+      s_pictures: 'ሥዕሎችና ትልልቅ አዝራሮች',
+      play: 'አዳምጥ', pause: 'ለአፍታ አቁም', resume: 'ማጫወት ቀጥል', stopAudio: 'አቁም', replay: 'እንደገና አጫውት',
+      noAudio: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
+      clipFailed: 'ቅጂው መጫወት አልቻለም፤ ስለዚህ የስልኩ ድምፅ እያነበበ ነው።',
       size_normal: 'መደበኛ', size_large: 'ትልቅ', size_xlarge: 'በጣም ትልቅ',
       contrast_normal: 'መደበኛ', contrast_high: 'ከፍተኛ ንፅፅር',
       on: 'በርቷል', off: 'ጠፍቷል',
@@ -267,10 +282,10 @@
   }
   // Plays a pre-recorded clip if one exists (preferred: works offline, no API), else browser speech.
   // Returns false when no voice for the language is available.
-  function speak(text, lang, audioUrl) {
+  function speak(text, lang, audioUrl, done) {
     stopSpeaking();
     if (audioUrl) {
-      try { currentAudio = new Audio(audioUrl); currentAudio.play(); return true; } catch (e) {}
+      try { currentAudio = new Audio(audioUrl); if (done) currentAudio.onended = done; currentAudio.play(); return true; } catch (e) {}
     }
     if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return false;
     var code = lang === 'am' ? 'am' : 'en';
@@ -281,6 +296,7 @@
     u.lang = code === 'am' ? 'am-ET' : 'en-US';
     if (voice) u.voice = voice;
     u.rate = 0.95;
+    if (done) { u.onend = done; u.onerror = function (e) { if (!e || e.error !== 'interrupted' && e.error !== 'canceled') done(); }; }
     window.speechSynthesis.speak(u);
     return true;
   }
@@ -316,8 +332,97 @@
       return { stop: function () { try { rec.stop(); } catch (e) {} }, abort: function () { try { rec.abort(); } catch (e) {} } };
     }
   };
-  var speech = { input: browserInput, output: { speak: function (a, b, c) { return speak(a, b, c); }, stop: function () { stopSpeaking(); } } };
+  var speech = { input: browserInput, output: {
+    speak: function (text, lang, audioUrl, done) { return speak(text, lang, audioUrl, done); },
+    stop: function () { stopSpeaking(); },
+    pause: function () { try { window.speechSynthesis.pause(); } catch (e) {} },
+    resume: function () { try { window.speechSynthesis.resume(); } catch (e) {} }
+  } };
   function setSpeech(o) { if (o && o.input) speech.input = o.input; if (o && o.output) speech.output = o.output; }
+
+  /* ---------- recorded audio ----------
+     Clips live in assets/audio/<lang>/ next to this script, named as in docs/audio-script.md
+     (for example am/signup-name-question.mp3). assets/audio/manifest.json lists the clips that exist; it is written by
+     "node tools/check-audio.cjs". Only listed clips are requested, so a missing clip never causes a failed download:
+     the phone's voice reads instead, and if there is none, a message says the words are on the screen. */
+  var AUDIO = { manifest: null, loading: null, failed: {} };
+  function loadAudioManifest() {
+    if (AUDIO.loading) return AUDIO.loading;
+    if (!BASE || !window.fetch) { AUDIO.manifest = {}; AUDIO.loading = Promise.resolve(); return AUDIO.loading; }
+    AUDIO.loading = fetch(BASE + 'assets/audio/manifest.json')
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .catch(function () { return {}; })
+      .then(function (m) { AUDIO.manifest = m || {}; });
+    return AUDIO.loading;
+  }
+  function clipUrl(key, lang) {
+    var list = AUDIO.manifest && AUDIO.manifest[lang], name = list && list[key];
+    if (!name) return null;
+    var url = BASE + 'assets/audio/' + lang + '/' + name;
+    return AUDIO.failed[url] ? null : url;
+  }
+  function clipKey() { return Array.prototype.join.call(arguments, '-').replace(/_/g, '-'); }
+
+  /* ---------- the player: one at a time, for every form on the page ----------
+     play([{ key, text, url? }], lang) reads a list in order: each piece uses its recording when there is one, otherwise
+     the phone's voice. pause / resume / stop / replay. Audio is never required: everything is also on screen. */
+  var Player = {
+    items: [], i: 0, state: 'idle', lang: 'en', last: null, owner: null, audio: null, subs: [],
+    on: function (fn) { this.subs.push(fn); }, off: function (fn) { var k = this.subs.indexOf(fn); if (k !== -1) this.subs.splice(k, 1); },
+    emit: function () { var s = this; this.subs.slice().forEach(function (fn) { fn(s); }); },
+    play: function (items, lang, owner) {
+      this.stop(true);
+      var self = this;
+      this.items = items; this.i = 0; this.lang = lang; this.owner = owner || null; this.state = 'playing';
+      this.last = { items: items, lang: lang, owner: owner || null };
+      this.emit();
+      loadAudioManifest().then(function () { if (self.items === items && self.state === 'playing') self.next(); });
+    },
+    next: function () {
+      var self = this, items = this.items;
+      if (this.state !== 'playing') return;
+      this.audio = null;
+      if (this.i >= items.length) { this.state = 'idle'; this.emit(); return; }
+      var it = items[this.i++], url = it.url || (it.key ? clipUrl(it.key, this.lang) : null);
+      var done = function () { if (self.items === items) self.next(); };
+      if (!url) return this.voice(it, done);
+      var a = this.audio = new Audio(url), failed = false;
+      var fail = function () {
+        if (failed || self.audio !== a) return;
+        failed = true; AUDIO.failed[url] = true; self.audio = null;
+        self.report('clipFailed');
+        self.voice(it, done);
+      };
+      a.onended = done; a.onerror = fail;
+      try { var pr = a.play(); if (pr && pr.catch) pr.catch(fail); } catch (e) { fail(); }
+    },
+    voice: function (it, done) {
+      if (this.state !== 'playing') return;
+      if (!speech.output.speak(it.text, this.lang, null, done)) { this.report('noAudio'); this.state = 'idle'; this.items = []; this.emit(); }
+    },
+    report: function (code) { if (this.owner && this.owner.audioIssue) this.owner.audioIssue(code); },
+    pause: function () {
+      if (this.state !== 'playing') return;
+      this.state = 'paused';
+      if (this.audio) { try { this.audio.pause(); } catch (e) {} } else if (speech.output.pause) speech.output.pause();
+      this.emit();
+    },
+    resume: function () {
+      if (this.state !== 'paused') return;
+      this.state = 'playing';
+      if (this.audio) { try { var pr = this.audio.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }
+      else if (speech.output.resume) speech.output.resume();
+      this.emit();
+    },
+    stop: function (quiet) {
+      var was = this.state;
+      this.state = 'idle'; this.items = [];
+      if (this.audio) { try { this.audio.pause(); } catch (e) {} this.audio = null; }
+      try { speech.output.stop(); } catch (e) {}
+      if (!quiet && was !== 'idle') this.emit();
+    },
+    replay: function () { if (this.last) this.play(this.last.items, this.last.lang, this.last.owner); }
+  };
   var AM_DIGITS = { 'ዜሮ': '0', 'አንድ': '1', 'ሁለት': '2', 'ሶስት': '3', 'ሦስት': '3', 'አራት': '4', 'አምስት': '5', 'ስድስት': '6', 'ሰባት': '7', 'ስምንት': '8', 'ዘጠኝ': '9' };
   var EN_DIGITS = { zero: '0', oh: '0', one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9' };
   function spokenDigits(s) {
@@ -593,6 +698,7 @@
     '.dm{max-width:40em;margin:0 auto}',
     '.dm:lang(am){line-height:1.7}',
     '.dm *{box-sizing:border-box}',
+    '.dm [hidden]{display:none!important}',
     '.dm button,.dm input,.dm select,.dm textarea{font:inherit}',
     '.dm :focus-visible{outline:var(--so-focus-width) solid var(--so-focus);outline-offset:var(--so-focus-offset);box-shadow:none}',
     // keep a gap when the browser scrolls a control into view, so the whole focus outline stays on screen (2.4.7, 2.4.11)
@@ -641,6 +747,11 @@
     '.dm a,.dm samp,.dm q{overflow-wrap:anywhere}', // long links (resume link) wrap at 400% zoom
 
     '.dm-tools{display:flex;flex-wrap:wrap;gap:.6em;margin:1em 0}',
+    '.dm-player{display:contents}',
+    '.dm-player[hidden]{display:none}',
+    '.dm-opt-row{display:flex;flex-wrap:wrap;gap:.4em;align-items:stretch}',
+    '.dm-opt-row .dm-opt{flex:1 1 12em;min-width:0}',
+    '.dm-play{flex:0 0 auto;min-height:56px}',
     '.dm-heard{border:var(--so-border-width) solid var(--so-info-accent);background:var(--so-surface-info);border-radius:var(--so-radius);padding:.9em;margin:1em 0}',
     '.dm-heard p{margin:0 0 .6em}',
     '.dm-heard q{font-weight:600;font-size:1.15em}',
@@ -708,6 +819,23 @@
     },
     status: function () { return '<p class="dm-status" role="status" aria-live="polite"></p>'; },
 
+    /* "Listen" and the player controls (Pause/Resume, Stop, Play again). Shown and labelled by the controller. */
+    listenTools: function (vm) {
+      var lang = vm.lang;
+      return '<button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button>' +
+        '<span class="dm-player" data-ref="player" hidden>' +
+        '<button type="button" class="dm-btn" data-act="pause"><span aria-hidden="true">⏸ </span><span data-ref="pause-label">' + t('pause', lang) + '</span></button>' +
+        '<button type="button" class="dm-btn" data-act="stop-audio"><span aria-hidden="true">⏹ </span>' + t('stopAudio', lang) + '</button>' +
+        '<button type="button" class="dm-btn" data-act="replay"><span aria-hidden="true">↻ </span>' + t('replay', lang) + '</button></span>';
+    },
+    /* One answer option, with its own Listen button when read aloud is on. The button sits beside the label (never
+       inside it), and its name starts with the visible word "Listen" (WCAG 2.5.3). */
+    option: function (vm, label, play, i) {
+      if (!vm.easy) return label;
+      return '<div class="dm-opt-row">' + label + '<button type="button" class="dm-btn dm-play" data-act="play-opt" data-i="' + i + '" aria-label="' + esc(t('play', vm.lang) + ': ' + play) + '">' +
+        '<span aria-hidden="true">🔊 </span>' + t('play', vm.lang) + '</button></div>';
+    },
+
     bar: function (vm, showBack) {
       var lang = vm.lang, helpId = View.id(vm, 'help');
       return '<div class="dm-bar">' +
@@ -722,7 +850,7 @@
     },
 
     page: function (vm) {
-      var html = '<div class="dm' + (vm.easy ? ' dm-easy' : '') + (vm.voiceFirst ? ' dm-voice-first' : '') + '" lang="' + vm.lang + '">';
+      var html = '<div class="dm' + (vm.pictures ? ' dm-easy' : '') + (vm.voiceFirst ? ' dm-voice-first' : '') + '" lang="' + vm.lang + '">';
       var m = vm.s.mode;
       html += m === 'welcome' ? View.welcome(vm) : m === 'question' ? View.question(vm) : m === 'review' ? View.review(vm) :
         m === 'saved' ? View.saved(vm) : m === 'done' ? View.done(vm) : '';
@@ -737,10 +865,10 @@
         '<p id="' + hintId + '" class="dm-hint">' + t('welcomeHint', lang) + '</p>' +
         (err ? View.errorLine(vm, err) : '') +
         '<div class="dm-opts">' + MODES.map(function (m, i) {
-          return '<label class="dm-opt"><input' + (i === 0 ? ' id="' + View.id(vm, 'input') + '" data-ref="input"' : '') + ' type="radio" name="mode" value="' + m + '"' + (vm.prefsMode === m ? ' checked' : '') + '>' +
-            '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span><span>' + t('m_' + m, lang) + '</span></label>';
+          return View.option(vm, '<label class="dm-opt"><input' + (i === 0 ? ' id="' + View.id(vm, 'input') + '" data-ref="input"' : '') + ' type="radio" name="mode" value="' + m + '"' + (vm.prefsMode === m ? ' checked' : '') + '>' +
+            '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span><span>' + t('m_' + m, lang) + '</span></label>', t('m_' + m, lang), i);
         }).join('') + '</div></fieldset>' +
-        '<div class="dm-tools"><button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button></div>' +
+        '<div class="dm-tools">' + View.listenTools(vm) + '</div>' +
         View.status() +
         '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button></div></form>';
       return h;
@@ -764,7 +892,7 @@
       if (vm.error) h += View.errorLine(vm, vm.error);
       h += View.input(vm, f, v, group ? '' : describedBy);
       if (group) h += '</fieldset>';
-      h += '<div class="dm-tools"><button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button>';
+      h += '<div class="dm-tools">' + View.listenTools(vm);
       var canSpeak = voiceAllowed(f) && speech.input.supported();
       if (canSpeak) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">🎤 ' + t('speak', lang) + '</button>';
       h += '</div>';
@@ -791,9 +919,9 @@
         var multi = f.type === 'multi', sel = multi ? (v || []) : [v];
         return '<div class="dm-opts">' + optionsOf(f).map(function (o, i) {
           var checked = sel.indexOf(o.value) !== -1 ? ' checked' : '';
-          return '<label class="dm-opt"><input' + (i === 0 ? ' id="' + inputId + '" data-ref="input"' : '') + ' type="' + (multi ? 'checkbox' : 'radio') + '" name="v" value="' + esc(o.value) + '"' + checked + '>' +
+          return View.option(vm, '<label class="dm-opt"><input' + (i === 0 ? ' id="' + inputId + '" data-ref="input"' : '') + ' type="' + (multi ? 'checkbox' : 'radio') + '" name="v" value="' + esc(o.value) + '"' + checked + '>' +
             (o.icon ? '<span class="dm-ico" aria-hidden="true">' + o.icon + '</span>' : '') + '<span>' + esc(L(o.label, lang)) +
-            (o.badge ? ' <span class="dm-badge">' + esc(L(o.badge, lang)) + '</span>' : '') + '</span></label>';
+            (o.badge ? ' <span class="dm-badge">' + esc(L(o.badge, lang)) + '</span>' : '') + '</span></label>', L(o.label, lang), i);
         }).join('') + '</div>';
       }
       if (f.type === 'ethdate') {
@@ -829,6 +957,7 @@
       });
       h += '</dl>';
       if (cfg.reviewNote) h += '<div class="dm-note">' + esc(L(cfg.reviewNote, lang)) + '</div>';
+      if (vm.easy) h += '<div class="dm-tools">' + View.listenTools(vm) + '</div>';
       return h + View.status() + '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + esc(L(cfg.submitLabel, lang) || t('submit', lang)) + '</button></div></form>';
     },
 
@@ -844,7 +973,8 @@
     done: function (vm) {
       var lang = vm.lang;
       // Help stays in the same place on every screen (WCAG 3.2.6); the result is shown as a success panel.
-      return View.bar(vm, false) + '<div class="dm-success"><h1 class="dm-q" tabindex="-1"><span aria-hidden="true">✓ </span>' + esc(L(vm.cfg.doneTitle, lang)) + '</h1><p>' + esc(L(vm.cfg.doneText, lang)) + '</p></div><div class="dm-done-slot"></div>';
+      return View.bar(vm, false) + '<div class="dm-success"><h1 class="dm-q" tabindex="-1"><span aria-hidden="true">✓ </span>' + esc(L(vm.cfg.doneTitle, lang)) + '</h1><p>' + esc(L(vm.cfg.doneText, lang)) + '</p></div>' +
+        (vm.easy ? '<div class="dm-tools">' + View.listenTools(vm) + '</div>' + View.status() : '') + '<div class="dm-done-slot"></div>';
     },
 
     /* Review panel. Nothing from speech reaches the answer until "Use this answer" is chosen. */
@@ -916,6 +1046,7 @@
     if (!this._listening) {
       this._listening = true;
       this.addEventListener('click', this.onClick.bind(this));
+      this.addEventListener('keydown', function (e) { if (e.key === 'Escape' && Player.state !== 'idle') { Player.stop(); } });
       this.addEventListener('submit', this.onSubmit.bind(this));
       this.addEventListener('change', this.onChange.bind(this));
     }
@@ -931,10 +1062,14 @@
       self.render(false);
     };
     document.addEventListener('savanna-onboarding:prefs', this._onPrefs);
+    this._onPlayer = function () { self.updatePlayer(); };
+    Player.on(this._onPlayer);
+    if (this.easy) loadAudioManifest();
     this.render(false);
   };
   SavannaOnboardingForm.prototype.disconnectedCallback = function () {
-    document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; speech.output.stop();
+    document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; Player.off(this._onPlayer);
+    if (Player.owner === this) Player.stop();
     if (this.voice && this.voice.session) this.voice.session.abort();
     this.voice = null;
   };
@@ -949,7 +1084,7 @@
   SavannaOnboardingForm.prototype.vm = function () {
     var s = this.state, mode = getPrefs().mode;
     return {
-      cfg: this.cfg, s: s, lang: this.lang, easy: this.easy, uid: this.uid, error: this.error, helpOpen: this.helpOpen,
+      cfg: this.cfg, s: s, lang: this.lang, easy: this.easy, pictures: getPrefs().pictures, uid: this.uid, error: this.error, helpOpen: this.helpOpen,
       welcomeOn: this.welcomeOn, startAtReview: this.startAtReview, prefsMode: mode, voiceFirst: mode === 'speak',
       resumeLink: location.href.split('#')[0].split('?')[0] + '?resume=' + s.resumeCode + location.hash
     };
@@ -973,6 +1108,9 @@
     // Filled in after the live region exists, so screen readers announce it.
     if (flash) this.status(flash);
     var m = this.state.mode;
+    this._played = false;
+    this.updatePlayer();
+    // Read aloud reads each new question once; Pause and Stop appear at once, and Escape stops it (WCAG 1.4.2).
     if ((m === 'question' || m === 'welcome') && this.easy && this._interacted) this.readQuestion();
   };
 
@@ -1000,7 +1138,7 @@
   SavannaOnboardingForm.prototype.onSubmit = function (e) {
     e.preventDefault();
     this._interacted = true;
-    stopSpeaking();
+    Player.stop();
     var s = this.state;
     if (s.mode === 'review') return this.finish();
     if (s.mode === 'welcome') {
@@ -1038,7 +1176,10 @@
     }
     if (this.easy && (f.type === 'choice' || f.type === 'multi' || f.type === 'consent') && e.target.closest) {
       var lab = e.target.closest('.dm-opt');
-      if (lab && e.target.checked) speak(lab.textContent.trim(), this.lang);
+      if (lab && e.target.checked) {
+        var all = Array.prototype.slice.call(this.querySelectorAll('.dm-form .dm-opt'));
+        this.readOption(all.indexOf(lab));
+      }
     }
   };
 
@@ -1049,7 +1190,7 @@
     var act = b.getAttribute('data-act'), s = this.state;
     if (act === 'focus-input') { e.preventDefault(); var i = this.ref('input'); if (i) i.focus(); return; }
     if (act === 'back') {
-      stopSpeaking(); this.error = '';
+      Player.stop(); this.error = '';
       if (!s.returnToReview) this.collect(); // Back from a "Change" discards the unsaved edit, as before
       s.back(this.welcomeOn);
       this.save(); this.render(true); return;
@@ -1060,7 +1201,7 @@
     }
     if (act === 'easy') {
       this.collect();
-      this.easy = !this.easy; this.savePrefs(); stopSpeaking(); this.render(false);
+      this.easy = !this.easy; this.savePrefs(); Player.stop(); this.render(false);
       var eb = this.querySelector('[data-act=easy]'); if (eb) eb.focus();
       return;
     }
@@ -1072,6 +1213,10 @@
       return;
     }
     if (act === 'listen') { this.readQuestion(); return; }
+    if (act === 'play-opt') { this.readOption(parseInt(b.getAttribute('data-i'), 10)); return; }
+    if (act === 'pause') { if (Player.state === 'paused') Player.resume(); else Player.pause(); return; }
+    if (act === 'stop-audio') { Player.stop(); var lb = this.querySelector('[data-act=listen]'); if (lb) lb.focus(); return; }
+    if (act === 'replay') { if (Player.last && Player.last.owner === this) Player.replay(); else this.readQuestion(); return; }
     if (act === 'speak') { this.startVoice(); return; }
     if (act === 'change') { s.change(parseInt(b.getAttribute('data-step'), 10)); this.render(true); return; }
     if (act === 'later') {
@@ -1090,21 +1235,52 @@
   SavannaOnboardingForm.prototype.status = function (msg) { var s = this.querySelector('.dm-status'); if (s) { s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); } };
   SavannaOnboardingForm.prototype.setHeard = function (html) { var h = this.ref('heard'); if (h) h.innerHTML = shiftHeadings(html, this.headingLevel()); };
 
-  SavannaOnboardingForm.prototype.readQuestion = function () {
-    var lang = this.lang, text, audio, mode = this.state.mode;
-    if (mode === 'question') {
-      var f = this.state.field();
-      text = L(f.label, lang) + '. ' + (f.body ? L(f.body, lang) + '. ' : '') + (f.hint ? L(f.hint, lang) + '. ' : '');
-      var opts = optionsOf(f);
-      if (opts.length) text += opts.map(function (o) { return L(o.label, lang); }).join('. ');
-      audio = f.audio && f.audio[lang];
-    } else if (mode === 'welcome') {
-      text = t('welcomeTitle', lang) + '. ' + t('welcomeHint', lang) + '. ' + MODES.map(function (m) { return t('m_' + m, lang); }).join('. ');
-    } else {
-      var q = this.querySelector('.dm-q'); text = q ? q.textContent : '';
+  /* --- read aloud: what to read on each screen, as pieces named like the clips in docs/audio-script.md --- */
+  var ERROR_CLIPS = { errChoice: 'error-choose-one', errMulti: 'error-choose-some', errRequired: 'error-required', errPhone: 'error-phone',
+    errDate: 'error-date', errConsent: 'error-consent', errMode: 'error-mode' };
+  SavannaOnboardingForm.prototype.readItems = function () {
+    var lang = this.lang, s = this.state, form = this.getAttribute('form'), cfg = this.cfg, items = [], self = this;
+    if (this.error) {
+      var ek = Object.keys(ERROR_CLIPS).filter(function (k) { return t(k, lang) === self.error; })[0];
+      items.push({ key: ek ? ERROR_CLIPS[ek] : null, text: this.error });
     }
-    if (!speech.output.speak(text, lang, audio)) this.status(t('noAmVoice', lang));
+    if (s.mode === 'question') {
+      var f = s.field();
+      items.push({ key: clipKey(form, f.id, 'question'), url: f.audio && f.audio[lang],
+        text: [L(f.label, lang), L(f.body, lang), L(f.hint, lang)].filter(Boolean).join(' ') });
+      optionsOf(f).forEach(function (o) { items.push({ key: clipKey(form, f.id, 'option', o.value), text: L(o.label, lang) }); });
+    } else if (s.mode === 'welcome') {
+      items.push({ key: 'welcome-question', text: t('welcomeTitle', lang) + ' ' + t('welcomeHint', lang) });
+      MODES.forEach(function (m) { items.push({ key: clipKey('welcome', 'option', m), text: t('m_' + m, lang) }); });
+    } else if (s.mode === 'review') {
+      items.push({ key: clipKey(form, 'check-answers'), text: (L(cfg.reviewTitle, lang) || t('review', lang)) + '. ' + (L(cfg.reviewHint, lang) || t('reviewHint', lang)) });
+      if (cfg.reviewNote) items.push({ key: clipKey(form, 'check-answers-note'), text: L(cfg.reviewNote, lang) });
+    } else if (s.mode === 'done') {
+      items.push({ key: clipKey(form, 'done'), text: L(cfg.doneTitle, lang) + ' ' + L(cfg.doneText, lang) });
+    } else if (s.mode === 'saved') {
+      items.push({ key: 'saved-for-later', text: t('savedTitle', lang) + '. ' + t('savedText', lang) });
+    }
+    return items;
   };
+  SavannaOnboardingForm.prototype.readQuestion = function () { this._played = true; Player.play(this.readItems(), this.lang, this); };
+  SavannaOnboardingForm.prototype.readOption = function (i) {
+    var lang = this.lang, s = this.state, form = this.getAttribute('form'), item;
+    if (s.mode === 'welcome') item = { key: clipKey('welcome', 'option', MODES[i]), text: t('m_' + MODES[i], lang) };
+    else { var f = s.field(), o = optionsOf(f)[i]; if (!o) return; item = { key: clipKey(form, f.id, 'option', o.value), text: L(o.label, lang) }; }
+    this._played = true;
+    Player.play([item], lang, this);
+  };
+  /* Player controls: Pause/Resume and Stop while something plays, Play again afterwards. */
+  SavannaOnboardingForm.prototype.updatePlayer = function () {
+    var box = this.ref('player');
+    if (!box) return;
+    var mine = Player.owner === this, active = mine && Player.state !== 'idle';
+    box.hidden = !(active || (mine && this._played));
+    var pause = box.querySelector('[data-act=pause]'), stop = box.querySelector('[data-act=stop-audio]'), again = box.querySelector('[data-act=replay]');
+    pause.hidden = !active; stop.hidden = !active; again.hidden = active;
+    var lbl = this.ref('pause-label'); if (lbl) lbl.textContent = t(Player.state === 'paused' ? 'resume' : 'pause', this.lang);
+  };
+  SavannaOnboardingForm.prototype.audioIssue = function (code) { this.status(t(code, this.lang)); };
 
   /* --- voice input: a small state machine ---
      idle -> consent (our explanation, first use only) -> listening (browser may ask for the microphone)
@@ -1136,7 +1312,7 @@
       this.voice.state = 'processing'; this.voice.session.stop(); this.setVoiceButton(false); this.status(t('processing', lang)); return;
     }
     this.voiceReset();
-    speech.output.stop();
+    Player.stop();
     var v = this.voice = { state: 'listening', field: f };
     this.setVoiceButton(true);
     this.status(t('listening', lang) + ' ' + t('micAsk', lang));
@@ -1176,7 +1352,7 @@
     this.setVoiceButton(false);
     this.setHeard(View.heard(this.vm(), v));
     var hh = this.ref('heard-h'); if (hh) hh.focus();
-    speech.output.speak(t('heard', lang) + ' ' + v.shown, lang);
+    if (this.easy) Player.play([{ key: null, text: t('heard', lang) + ' ' + v.shown }], lang, this);
   };
 
   /* The learner checked the transcript: only now does it become the answer (still saved only on Continue). */
@@ -1223,9 +1399,11 @@
         }
         if (n === 'mode') patch = prefsForMode(v);
         else if (n === 'easy') patch.easy = v === 'on';
+        else if (n === 'pictures') patch.pictures = v === 'on';
         else patch[n] = v;
         self._selfPrefs = true; setPrefs(patch); self._selfPrefs = false;
         var keep = n + '=' + (n === 'mode' ? v : patch[n] === true ? 'on' : patch[n] === false ? 'off' : v);
+        if (n === 'easy' && !patch.easy) Player.stop();
         self.render();
         var el = self.querySelector('input[name="' + n + '"][value="' + keep.split('=')[1] + '"]') || self.querySelector('input[name="' + n + '"]:checked');
         if (el) el.focus();
@@ -1251,7 +1429,8 @@
         group('size', t('s_size', lang), [['normal', t('size_normal', lang)], ['large', t('size_large', lang)], ['xlarge', t('size_xlarge', lang)]], p.size) +
         group('contrast', t('s_contrast', lang), [['normal', t('contrast_normal', lang)], ['high', t('contrast_high', lang)]], p.contrast) +
         group('mode', t('s_mode', lang), MODES.map(function (m) { return [m, t('m_' + m, lang), null, MODE_ICONS[m]]; }), p.mode) +
-        group('easy', t('s_read', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.easy ? 'on' : 'off') +
+        group('easy', t('s_read', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.easy ? 'on' : 'off', t('s_readHint', lang)) +
+        group('pictures', t('s_pictures', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.pictures ? 'on' : 'off') +
         group('voice', t('s_voice', lang), [['on', t('voice_on', lang)], ['off', t('voice_off', lang)]], store.get('voiceConsent', null) === true ? 'on' : 'off', t('s_voiceHint', lang)) +
         '<p class="dm-status" role="status" aria-live="polite"></p></form></div>';
     }
@@ -1315,10 +1494,11 @@
 
   var API = window.SavannaOnboarding = {
     mount: mount, unmount: unmount,
-    version: '0.7.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
+    version: '0.8.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
-    speak: speak, stopSpeaking: stopSpeaking, label: L,
+    speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
+    player: Player, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
     prefs: getPrefs, setPrefs: setPrefs
   };
   window.Dimts = API; // deprecated alias

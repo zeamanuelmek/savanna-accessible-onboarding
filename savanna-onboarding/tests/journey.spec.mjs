@@ -135,7 +135,6 @@ test('pages for learners ask to log in when nobody is logged in', async ({ page 
 test('simulated log-in: labelled, no password to remember, code can be pasted, no time limit (WCAG 3.3.8)', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await signUpFromHome(page, { check: 'Check your answers', ready: 'Your account is ready' });
-  await page.locator('#sidebar a[data-logout]').click({ force: true }).catch(() => {});
   await page.evaluate(() => localStorage.removeItem('savanna-demo.session'));
   await at(page, '/login.html');
   await expect(page.locator('.sj .notice')).toContainText('Simulated log-in');
