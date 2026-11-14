@@ -1,0 +1,90 @@
+// Run: node tools/audio-script.cjs  (from savanna-onboarding/). Builds docs/audio-script.md from the live form configs and interface strings (run in Chromium so the engine loads).
+const { chromium } = require('@playwright/test');
+const fs = require('fs');
+const ROOT = require('path').join(__dirname, '..').split('\\').join('/') + '/';
+(async () => {
+  const b = await chromium.launch();
+  const p = await b.newPage();
+  await p.goto('file:///' + ROOT + 'index.html');
+  await p.waitForFunction(() => window.SavannaOnboarding && window.SavannaOnboarding.forms.passport);
+  const data = await p.evaluate(() => {
+    const D = window.SavannaOnboarding, am = v => (v && (v.am || v)) || '';
+    const ui = {}; // interface strings: read via a throwaway form in Amharic
+    return {
+      forms: ['signup', 'passport'].map(id => ({ id, cfg: D.forms[id], fields: D.forms[id].fields.map(f => ({
+        id: f.id, label: am(f.label), hint: am(f.hint), body: am(f.body), partner: !!(f.showIf && f.showIf.field === 'filler'),
+        showIf: f.showIf && f.showIf.field ? f.showIf.field + (f.showIf.equals ? ' = ' + f.showIf.equals : ' is one of ' + (f.showIf.in || []).join(', ')) : '',
+        options: (f.options === 'NEEDS' ? D.NEEDS : (f.options || [])).map(o => ({ value: o.value, text: am(o.label) }))
+      })), reviewNote: am(D.forms[id].reviewNote), submit: am(D.forms[id].submitLabel), doneTitle: am(D.forms[id].doneTitle), doneText: am(D.forms[id].doneText) }))
+    };
+  });
+  // interface strings come straight from the engine source (the UI.am object)
+  const src = fs.readFileSync(ROOT + 'savanna-onboarding.js', 'utf8');
+  const amBlock = src.slice(src.indexOf('    am: {'), src.indexOf('\n    }\n  };', src.indexOf('    am: {')));
+  const S = k => { const m = amBlock.match(new RegExp("\\b" + k + ": '([^']*)'")); if (!m) throw new Error('no string ' + k); return m[1]; };
+  await b.close();
+
+  const secs = text => {
+    const eth = (text.match(/[\u1200-\u137F]/g) || []).length;           // one Ethiopic character ≈ one syllable
+    const lat = (text.match(/[A-Za-z]+/g) || []).length * 2;              // English words / names ≈ 2 syllables
+    const digits = (text.match(/[0-9]/g) || []).length;                   // numbers read digit by digit
+    return Math.max(2, Math.round((eth + lat + digits) / 4 + 1));         // slow, clear reading ≈ 4 syllables a second, plus a pause
+  };
+  const rows = []; let n = 0;
+  const add = (section, file, text, note) => rows.push({ section, n: ++n, file: 'am/' + file + '.mp3', text, s: secs(text), note: note || '' });
+
+  add('Start', 'welcome-question', S('welcomeTitle') + ' ' + S('welcomeHint'));
+  ['read_type', 'listen', 'speak', 'simple'].forEach(m => add('Start', 'welcome-option-' + m.replace('_', '-'), S('m_' + m)));
+  const signup = data.forms[0], passport = data.forms[1];
+  for (const form of [signup, passport]) {
+    const sec = form.id === 'signup' ? 'Sign-up' : 'Support Passport';
+    for (const f of form.fields) {
+      const note = f.showIf ? 'Only when ' + f.showIf : '';
+      add(sec, form.id + '-' + f.id.replace(/_/g, '-') + '-question', [f.label, f.body, f.hint].filter(Boolean).join(' '), note);
+      for (const o of f.options) add(sec, form.id + '-' + f.id.replace(/_/g, '-') + '-option-' + o.value.replace(/_/g, '-'), o.text, '');
+    }
+    add(sec, form.id + '-check-answers', S('review') + '። ' + S('reviewHint'));
+    if (form.reviewNote) add(sec, form.id + '-check-answers-note', form.reviewNote);
+    add(sec, form.id + '-done', form.doneTitle + ' ' + form.doneText);
+  }
+  const common = [['help', S('helpTitle') + ' ' + S('helpText')], ['resumed', S('resumed')], ['prefilled', S('prefilled')],
+    ['error-choose-one', S('errChoice')], ['error-choose-some', S('errMulti')], ['error-required', S('errRequired')],
+    ['error-phone', S('errPhone')], ['error-date', S('errDate')], ['error-consent', S('errConsent')], ['error-mode', S('errMode')],
+    ['voice-consent', S('voiceConsentTitle') + '። ' + S('voiceConsent')], ['voice-check', S('heardCheck')], ['voice-used', S('voiceUsed')],
+    ['saved-for-later', S('savedTitle') + '። ' + S('savedText')]];
+  common.forEach(([f, txt]) => add('On every screen when needed', f, txt));
+
+  const total = rows.reduce((a, r) => a + r.s, 0);
+  let md = `# Amharic audio script: sign-up and Support Passport
+
+> Generated from the live form text (\`forms.js\` and \`savanna-onboarding.js\`, module 0.5.0) on 14 Nov 2026, so every
+> line matches the screen word for word. **The Amharic is an AI draft.** The co-designer or interpreter reviews it this
+> afternoon; change the text **in the code first**, then regenerate this list, so screen and audio never differ.
+>
+> Regenerate with \`node tools/audio-script.cjs\`. Recorded by Zeamanuel tonight. Wired in during Phase 4 (each clip plays from the "Listen" button and the per-option
+> play buttons). Audio is never required: every clip has the same words on screen (WCAG 1.2.1).
+
+## How to record
+
+- **Format:** MP3, mono, 44.1 kHz or 48 kHz, 64–96 kbps (small files for 3G). One clip per file, file names exactly as listed.
+- **Where:** \`savanna-onboarding/assets/audio/am/\`.
+- **Voice:** calm, slow and clear, as if to someone hearing it for the first time. Leave about half a second of silence
+  at the start and end. No music.
+- **Lengths** are estimates (about 4 syllables a second, plus a pause). Natural speech that runs longer is fine.
+- **Names stay as written:** AAAPD, Tomorrow is Better, RRS / UNHCR, Fayda, ALX, Google.
+- Read numbers as the learner will see them (for example "0911 234 567" digit by digit).
+
+**${rows.length} clips, about ${Math.round(total / 60)} minutes of audio in total.**
+`;
+  let sec = '';
+  for (const r of rows) {
+    if (r.section !== sec) {
+      sec = r.section;
+      md += `\n## ${sec}\n\n| # | File | Exact Amharic text | About | Note |\n|---|---|---|---|---|\n`;
+    }
+    md += `| ${r.n} | \`${r.file}\` | <span lang="am">${r.text.replace(/\|/g, '\\|')}</span> | ${r.s} s | ${r.note} |\n`;
+  }
+  md += `\n## Not in this list (later, if time allows)\n\n- English versions (the device voice usually reads English well enough).\n- Job board, job application and employer form.\n- Messages that contain a changing number (for example "There are now 10 questions"): read by the device voice.\n`;
+  fs.writeFileSync(ROOT + 'docs/audio-script.md', md);
+  console.log(rows.length, 'clips', total, 'seconds');
+})();

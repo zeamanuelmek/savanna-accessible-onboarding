@@ -17,8 +17,7 @@ function fakeSpeech(page, transcript) {
   }, transcript);
 }
 
-test('PRIVACY: unconfirmed speech is never saved (fix in Phase 3)', async ({ page }) => {
-  test.fail(true, 'Known bug: transcript is written to the draft before the learner confirms');
+test('PRIVACY: unconfirmed speech is never saved (fixed in Phase 3)', async ({ page }) => {
   await fakeSpeech(page, 'Secret Spoken Name');
   await signupTo(page, 'name');
   await page.locator('[data-act=speak]').click();
@@ -27,8 +26,7 @@ test('PRIVACY: unconfirmed speech is never saved (fix in Phase 3)', async ({ pag
   expect(draft).not.toContain('Secret Spoken Name');
 });
 
-test('PRIVACY: "Say it again" discards the previous transcript (fix in Phase 3)', async ({ page }) => {
-  test.fail(true, 'Known bug: the first transcript stays in the input and the draft');
+test('PRIVACY: "Say it again" discards the previous transcript (fixed in Phase 3)', async ({ page }) => {
   await fakeSpeech(page, 'Wrong Words');
   await signupTo(page, 'name');
   await page.locator('[data-act=speak]').click();
@@ -51,11 +49,12 @@ test('LEARNER VIEW: no developer page in the learner navigation (fixed in Phase 
   await expect(page.locator('#nav a[href="#/developers"]')).toHaveCount(0);
 });
 
-test('VOICE: the date question offers a microphone (Phase 3)', async ({ page }) => {
-  test.fail(true, 'Date field has no voice input');
+// Decision (Phase 3, approved cut order): the date is typed or chosen, not spoken. Three separate parts in the
+// Ethiopian calendar are hard to recognise reliably, and voice is cut first. Documented in docs/for-developers.md.
+test('VOICE: the date question has no microphone (decision, Phase 3)', async ({ page }) => {
   await page.addInitScript(() => { window.SpeechRecognition = class { start() {} stop() {} abort() {} }; });
   await signupTo(page, 'dob');
-  await expect(page.locator('[data-act=speak]')).toHaveCount(1);
+  await expect(page.locator('[data-act=speak]')).toHaveCount(0);
 });
 
 test('MULTI-INSTANCE: two forms on one page do not share element ids (fixed in Phase 2)', async ({ page }) => {

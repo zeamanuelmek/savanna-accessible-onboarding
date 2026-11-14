@@ -47,6 +47,14 @@ Decisions from the 13 Nov deliverables and the 14 Nov training and opening deck 
 12. **Testing on the cheapest phone.** Manual testing includes the cheapest Android phone the team can borrow (in addition to the 3G-speed test).
 13. **Integration target: Level 1 (script tag) + Level 3 (schema.org JobPosting).** No server and no invented endpoints. The data and events the module gives the host are documented in `savanna-onboarding/docs/api-schema.md` as JSON Schema.
 
+Decisions from the Phase 2 review (14 Nov):
+
+14. **Phase order for the rest of the event:** 3 → 5 → 8 → 4 (about 17:30) → 6 → 7 → 9 → 10. Approved schedule and cut order are in `DEVELOPMENT_PROGRESS.md` (Phase 2).
+15. **Gate main task (confirmed): "sign up for Savanna and save a Support Passport".** That path must be perfect first.
+16. **Phase 8 shows a realistic learner journey inside the Savanna starter pages**, not our showroom menu (details in Phase 8 below). The current demo site stays as the **developer and test page**.
+17. **Amharic:** the co-designer or an interpreter reviews the Amharic text on 14 Nov afternoon; Zeamanuel records the audio clips that night from `savanna-onboarding/docs/audio-script.md`. Text changes go into the code first, then the script is regenerated (`node tools/audio-script.cjs`).
+18. **No microphone on the date question** (approved cut, Phase 3): the Ethiopian date is typed or chosen. Documented in `docs/for-developers.md`.
+
 ## 3. Starting point (what already exists)
 
 The prototype (files `dimts.js`, `forms.js`, `app.js`, `app.css`, `index.html`, `README.md`, now in `savanna-onboarding/`) already has:
@@ -57,11 +65,11 @@ The prototype (files `dimts.js`, `forms.js`, `app.js`, `app.css`, `index.html`, 
 - Welcome screen (choose: read and type / listen / speak / simple), `<dimts-settings>` (language, text size, contrast, answer mode, read-aloud), preferences applied globally via `data-dm-size` / `data-dm-contrast` on `<html>`.
 - Demo host (`app.js`): mobile menu, home, jobs list with on-device support filter, schema.org JobPosting output, "For developers" page.
 - Amharic + English strings (Amharic is a DRAFT needing native-speaker review).
-- Live demo: https://dimts-track1.vercel.app (Vercel project `dimts-track1`).
+- Live demo (then): https://dimts-track1.vercel.app (Vercel project `dimts-track1`). Now: https://savanna-accessible-onboarding.vercel.app (section 10).
 
 **Known problems to fix (found in review):**
-- **Privacy bug:** after speech recognition, the engine writes the transcript into the answer and saves the draft BEFORE the learner confirms. Unreviewed speech must never be saved. Fix in Phase 3.
-- No trust badge beside each ID choice; no per-option play button; no microphone on the date field; no profile page; no "learner takes over" step after partner sign-up; consent is not revocable in the UI.
+- ~~**Privacy bug:** unreviewed speech was saved before the learner confirmed.~~ Fixed in Phase 3.
+- No trust badge beside each ID choice; no per-option play button; no microphone on the date field (decision 18: stays that way); ~~no profile page~~ (Phase 2); no "learner takes over" step after partner sign-up; ~~voice consent is not revocable in the UI~~ (Phase 3; support-sharing consent is Phase 5).
 - "For developers" page is inside the learner site — must move to docs and a separate test host page.
 - Green theme is not Savanna branding.
 - Sensitive data (profile, support needs) stored in plain localStorage.
@@ -116,7 +124,14 @@ Persistent text size, contrast, audio-first, language, interaction mode. Minimis
 Job application reuses the engine, prefilled from the profile, voice for open questions; employer accommodation form; on-device matching that never reveals disability; JobPosting output.
 
 **Phase 8 — Savanna integration (no longer blocked).** The official starter kit is https://github.com/alx-africa/Savanna-static-pages, the same repo as our reference clone `../Savanna-static-pages` (commit `9e83ac7`, unchanged as of 11:30 on 14 Nov). **At the start of Phase 8, pull it again** in case ALX updates it during the event. Then mount the module inside those pages **without changing ALX's files**: do the integration in our repo (or in a copy), never in the reference clone.
-Script-tag build, mount/unmount API, host configuration, scoped styles, integration guide, a **separate test host page** proving it works outside the demo site. **Docker Compose (required):** one command, `docker compose up`, serves the demo and the test host page locally, using only free images and no paid services. First draft of the README install guide, aimed at a developer installing the module in about an hour. Stop and ask if the integration contract is unclear.
+**What judges see must be a realistic learner journey inside the Savanna starter pages** (not our showroom menu):
+- Savanna home → "Sign up" → our onboarding (one question per screen) → a simple dashboard
+- the profile, with the Support Passport and "My profile" (profile editing)
+- Savanna's jobs section, with our on-device job filter and the job application
+- an employer page with the accommodations form
+- a **simple simulated log-in** that meets WCAG 3.3.8 (no memory tests or puzzles, paste and password managers allowed), **clearly labelled as simulated**
+The current demo site stays as the developer and test page.
+Also: script-tag build, mount/unmount API, host configuration, scoped styles, integration guide, a **separate test host page** proving it works outside the demo site. **Docker Compose (required):** one command, `docker compose up`, serves the demo and the test host page locally, using only free images and no paid services. First draft of the README install guide, aimed at a developer installing the module in about an hour. Stop and ask if the integration contract is unclear.
 
 **Phase 9 — Accessibility, privacy and security testing.**
 axe-core, keyboard-only, NVDA, TalkBack (incl. Android WebView), 200% and 400% zoom, 320px reflow, sound off, large text, high contrast, transcript editing, error handling. Privacy and security review. Fill in the **WCAG 2.2 AA conformance report** in `savanna-onboarding/docs/conformance-report.md` (test · expected · actual · pass/fail · evidence · limitations · untested). Run the **judging gate** with a co-designer (section 11): the main task completed unaided with NVDA, TalkBack, keyboard only, 200% zoom and sound off. Test on the cheapest Android phone the team can borrow, and over a 3G-speed connection. Map the official ALX 35-feature checklist when provided — never invent it.
@@ -184,8 +199,9 @@ Verify a clean setup works.
 
 ## 10. Deployment
 
-- Live demo is on Vercel (project `dimts-track1`). Prefer connecting the GitHub repo to Vercel so each push deploys. Ask the user before renaming the Vercel project or changing its domain.
-- Vercel settings for this repo: **Root Directory `savanna-onboarding`**, Framework Preset "Other", no build command, output directory `.` (default). `savanna-onboarding/.vercelignore` keeps tests out of the deploy. Revisit when Phase 8 adds a build step.
+- **Live demo: https://savanna-accessible-onboarding.vercel.app** (Vercel project `savanna-accessible-onboarding`, connected to this GitHub repo; each push to `main` deploys). Fixed by the team on 13 Nov: Root Directory `savanna-onboarding`, so only the module folder is published (CLAUDE.md and the tests are not). Checked 14 Nov: it served commit `45bac8a` (module 0.4.0).
+- The duplicate project `savanna-accessible-onboarding-7fbn` is being deleted by the team. The old `dimts-track1` site (old "Dimts" version) stays as it is for now.
+- Settings: Framework Preset "Other", no build command, output directory `.`. `savanna-onboarding/.vercelignore` keeps tests and tools out of the deploy. Revisit when Phase 8 adds a build step. Ask the user before renaming a Vercel project or changing its domain.
 - Users may see a cached old version; remind the user to refresh after deploys.
 
 ## 11. Official deliverables and judging (digitalbridge.et, recorded 13 Nov)

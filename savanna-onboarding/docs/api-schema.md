@@ -4,7 +4,7 @@
 > API and no endpoint**. The module sends nothing over the network. It hands data to the host page as browser
 > events; the host decides where the data goes. Privacy rule: **nothing leaves the host without consent.**
 >
-> This page is the contract a developer needs. It matches module version `0.4.0` (Phase 2). The schemas use
+> This page is the contract a developer needs. It matches module version `0.5.0` (Phase 3). The schemas use
 > JSON Schema 2020-12. Amharic labels are a draft pending native-speaker review; stored **values** are always the
 > English codes below, never translated text.
 
@@ -49,6 +49,10 @@ They are never sent to employers.
   "additionalProperties": false
 }
 ```
+
+Also stored on the device: `savanna-onboarding.voiceConsent` (`true` / `false`), the learner's choice about voice
+input. Unconfirmed speech is never stored or sent; a spoken answer becomes part of `answers` only after the learner
+checks it and chooses "Use this answer".
 
 ## 3. Completion envelope
 

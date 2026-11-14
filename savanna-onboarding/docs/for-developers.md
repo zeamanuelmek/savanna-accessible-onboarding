@@ -75,6 +75,35 @@ One file, `savanna-onboarding.js`, in clear layers:
 | Presentation (`View`) | Turns the state into HTML |
 | Component | Reads the page, updates the state, asks the view to draw |
 
+## 3b. Voice input and the speech adapter
+
+- **Never saved unchecked.** After the learner speaks, the module shows "I heard: …" with the words in an editable box
+  (or, for a choice, the option it matched). Nothing goes into the answer until they choose **Use this answer**, and,
+  like typing, it is saved only when they choose **Continue**. **Say it again** and **Type it instead** throw the words
+  away. Changing language or leaving the question also throws them away.
+- **Consent first.** The first time, the module explains that the browser sends the recording to Google. The learner
+  can turn voice answers off (or on) at any time in Settings.
+- **Never on sensitive questions** (`sensitive: true`: ID and support needs), and **not on the date question**: the
+  Ethiopian date has three parts that browsers recognise badly, so it is typed or chosen (a team decision).
+- **Fallbacks:** when the browser has no speech engine (for example inside some apps' WebView), there is no microphone
+  button; a learner who chose "Speak my answers" sees a plain note. Blocked microphone, no network, nothing heard, no
+  microphone and unsupported language each give a clear message, and typing or tapping always works.
+- **Replaceable engine.** All speech goes through one adapter:
+
+```js
+SavannaOnboarding.setSpeech({
+  input: {
+    supported: () => true,
+    // call h.result(['best guess', 'other guess']), h.error('network' | 'not-allowed' | 'no-speech' | ...), then h.end()
+    start: (lang, h) => { /* start your engine */ return { stop() {}, abort() {} }; }
+  },
+  output: { speak: (text, lang, audioUrl) => true, stop: () => {} }
+});
+```
+
+  The default is the browser's own engine (free; needs a connection; audio goes to Google). **Addis AI** (Amharic speech
+  to text and text to speech) is a possible future engine behind this adapter, **not a dependency**.
+
 ## 4. Styling
 
 - **Scoped classes:** all classes start with `dm-`, so nothing clashes with Bootstrap.

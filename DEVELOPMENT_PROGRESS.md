@@ -441,7 +441,7 @@ Done — see Phase 1.
 
 ### Manual checks for the team (not yet done — please record results here)
 
-**NVDA (Windows, Chrome or Firefox), on https://dimts-track1.vercel.app**
+**NVDA (Windows, Chrome or Firefox), on https://savanna-accessible-onboarding.vercel.app** (updated 14 Nov; the old dimts-track1 site shows the old version)
 
 1. Home page: press `H` repeatedly. Expect: one heading level 1 "Sign up, say what helps you…", then "What you can
    try" (level 2), then the four card titles (level 3).
@@ -690,8 +690,108 @@ conformance report, minimum offline.
 1. Approve the schedule and cut order above.
 2. Confirm the gate's main task (proposed: sign up and save a Support Passport).
 3. Who records Amharic audio tonight, and who reviews the Amharic text.
-4. Vercel (open since Phase 1): set Root Directory to `savanna-onboarding`; `dimts-track1.vercel.app` still shows the old version.
+4. ~~Vercel~~ Resolved: fixed by the team on 13 Nov (see Phase 2 review decisions below).
 
 ### Next step
 
 Wait for "go to Phase 3".
+
+---
+
+## Phase 2 review decisions (14 Nov 2026)
+
+Recorded in `CLAUDE.md` §2 (decisions 14–18), §6 (Phase 8) and §10.
+
+- **Schedule and cut order approved**, with one change: **Phase order 3 → 5 → 8 → 4 (about 17:30) → 6**, then 7, 9, 10.
+- **Phase 8** must show a **realistic learner journey inside the Savanna starter pages**: Savanna home → "Sign up" →
+  our onboarding → a simple dashboard; the profile with Support Passport and "My profile"; Savanna's jobs section with
+  our filter and application; an employer page with the accommodations form; a **simple simulated log-in** meeting WCAG
+  3.3.8 (no memory tests, paste allowed), clearly labelled as simulated. The current site stays as the developer and test page.
+- **Gate main task confirmed:** "sign up for Savanna and save a Support Passport". That path must be perfect first.
+- **Amharic:** the co-designer or an interpreter reviews the text this afternoon; Zeamanuel records the clips tonight
+  from `savanna-onboarding/docs/audio-script.md` (written in Phase 3, ahead of Phase 4).
+- **Vercel: resolved (by the team, 13 Nov).** Project `savanna-accessible-onboarding` publishes only the
+  `savanna-onboarding` folder. Checked 14 Nov: https://savanna-accessible-onboarding.vercel.app serves the demo at its
+  root (module 0.4.0, commit `45bac8a`), and `CLAUDE.md` and the tests are no longer public (404). The duplicate project
+  is being deleted. The old `dimts-track1` site stays as it is for now. (This closes the Vercel item from Phases 1 and 2.)
+
+---
+
+## Phase 3 — Answer input system (speak, type, tap) ✅ (14 Nov 2026)
+
+### What changed
+
+- `savanna-onboarding/savanna-onboarding.js` (version 0.5.0):
+  - **Speech adapter:** all speech input and output go through one interface; `SavannaOnboarding.setSpeech({ input, output })`
+    plugs in another engine (Addis AI possible later, not a dependency). Default: the browser's engine.
+  - **Voice state machine:** idle → consent (first use) → listening → processing → review → confirmed, plus error and
+    discarded. The transcript lives only in the review panel until the learner chooses **Use this answer**.
+  - **Review panel:** "I heard: …", the words in an **editable box**, "Or did you say: …" alternatives as buttons, and
+    **Use this answer / Say it again / Type it instead** ("Tap it instead" for choices). For a choice it shows the option
+    it matched; nothing is ticked until confirmed.
+  - **Clear status:** "Microphone on. Listening… speak now. Your browser may ask to use the microphone. Choose Allow.";
+    the button becomes "Stop listening" (red, `aria-pressed="true"`); pressing it again stops.
+  - **Errors with plain messages:** microphone blocked, no network, nothing heard, no microphone, language not
+    supported, other failure. Typing and tapping always keep working.
+  - **No speech engine** (for example inside some apps' WebView): no microphone button; a learner who chose "Speak my
+    answers" sees a plain note instead.
+  - **Continue while a voice answer is waiting** does not skip the check: the learner is asked to choose first.
+  - Changing language, opening help or leaving the question throws unconfirmed words away.
+  - **Settings → "Voice answers: Allowed / Not allowed"**, with the Google explanation: consent can be withdrawn (or
+    given) at any time. The consent panel says so.
+- `savanna-onboarding/docs/audio-script.md` (new): **73 Amharic clips** for the sign-up and Support Passport path
+  (about 10 minutes), each with its number, file name, exact Amharic text and rough length, plus recording guidance.
+  Generated from the live text by `savanna-onboarding/tools/audio-script.cjs`, so it never drifts from the screens.
+- Docs: `for-developers.md` (voice and speech adapter section), `README.md` (live URL, voice row), `api-schema.md`
+  (voice consent key; version), `CLAUDE.md` (decisions 14–18, Phase 8 journey, Vercel), `.vercelignore` (tools/).
+- Tests: new `tests/voice.spec.mjs` (17 tests, using a fake speech engine); voice consent and review panels added to
+  the accessibility sweep; two known bugs now normal tests.
+
+### Fixed
+
+| Problem | Status | Test |
+|---|---|---|
+| Unconfirmed speech saved to the draft (privacy bug) | **Fixed.** Never written to the answer or the draft before "Use this answer"; saved only on Continue | known-issues + voice |
+| "Say it again" kept the old words | **Fixed** | known-issues |
+| Voice consent could not be withdrawn | **Fixed** (Settings) | voice |
+| No microphone on the date | **Decision:** stays without one (approved cut; documented) | known-issues (now checks there is none) |
+| Silent failure without a speech engine | **Fixed** for voice input (read-aloud fallback is Phase 4) | voice |
+
+### Tests (one worker, mobile then desktop)
+
+| Project | Passed | Skipped | Failed |
+|---|---|---|---|
+| mobile (Pixel 5) | 112 | 5 | 0 |
+| desktop | 116 | 1 | 0 |
+
+- axe-core: **96 scans** (24 screens × 2 languages × 2 devices), **0 serious or critical**, including the voice consent
+  panel and the "check what I said" panel. Structure, language of parts and 320px checks pass on all of them.
+- Only one expected failure left: profile stored as plain text (Phase 6 decision).
+- **Not tested:** a real microphone and Google's recogniser (tests use a fake engine), Amharic recognition quality,
+  and behaviour inside a real Android WebView. These need a person with a phone (Phase 9, or earlier on the deployed demo).
+
+### Section 8 routine
+
+Keyboard, axe, 320px: automated, pass. **NVDA and TalkBack: still to do by the team.** Suggested quick check for voice:
+on Chrome for Android, answer the name question by voice, fix one word in the box, choose "Use this answer".
+
+### Real vs simulated after Phase 3
+
+Voice input: **partial** (works where the browser has a speech engine and a connection; audio goes to Google with
+consent; review before use is implemented; Amharic quality unknown). Everything else as after Phase 2.
+
+### Known issues still open
+
+Read-aloud silent with no voices, no pause/stop, combined read-aloud/picture setting (Phase 4); trust badges, learner
+takeover, staff name in the profile, sharing choice not enforced (Phase 5); plain-text storage, offline app shell
+(Phase 6); realistic journey inside the starter pages, mount API, simulated log-in, Docker Compose (Phase 8);
+NVDA/TalkBack by a person; Amharic review (this afternoon) and recordings (tonight).
+
+### Decisions needed
+
+None blocking Phase 5. For the Amharic review this afternoon: please mark changes on `docs/audio-script.md` (or send
+them) and I will put them into the code and regenerate the script before recording.
+
+### Next step
+
+Wait for "go to Phase 5".

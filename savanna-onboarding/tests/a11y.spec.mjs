@@ -7,6 +7,8 @@
 import { test, expect } from '@playwright/test';
 import { freshStart, go, next, signupTo, axe, summarise } from './helpers.mjs';
 
+const fakeVoice = (p, consent) => p.evaluate(c => { window.SavannaOnboarding.setSpeech({ input: { supported: () => true, start: (l, h) => { setTimeout(() => { h.result(['Abebe Kebede', 'Abebe Kebedde']); h.end(); }, 10); return { stop() {}, abort() {} }; } } }); if (c) localStorage.setItem('savanna-onboarding.voiceConsent', 'true'); }, consent);
+
 const screens = {
   'home': async p => go(p, '#/'),
   'signup: welcome': async p => go(p, '#/signup'),
@@ -20,6 +22,8 @@ const screens = {
   'signup: check answers': async p => signupTo(p, 'END'),
   'signup: done': async p => { await signupTo(p, 'END'); await next(p); },
   'signup: finish later': async p => { await signupTo(p, 'name'); await p.locator('[data-act=later]').click(); },
+  'voice: consent panel': async p => { await go(p, '#/'); await fakeVoice(p, false); await signupTo(p, 'name'); await p.locator('[data-act=speak]').click(); await p.locator('.dm-heard, .dm-panel [data-act=voice-allow]').first().waitFor(); },
+  'voice: check what I said': async p => { await go(p, '#/'); await fakeVoice(p, true); await signupTo(p, 'name'); await p.locator('[data-act=speak]').click(); await p.locator('[data-ref=heard-edit]').waitFor(); },
   'signup: help open': async p => { await signupTo(p, 'filler'); await p.locator('.dm-bar [data-act=help]').click(); },
   'profile: summary': async p => { await signupTo(p, 'END'); await next(p); await go(p, '#/profile'); },
   'profile: no profile yet': async p => go(p, '#/profile'),

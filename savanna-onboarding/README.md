@@ -1,5 +1,7 @@
 # Savanna Accessible Onboarding Module
 
+Live demo (developer and test page): https://savanna-accessible-onboarding.vercel.app
+
 A reusable onboarding and learner-profile **module** for the Savanna learning platform, built for the Digital Bridge
 Accessibility Hackathon 2026 (ALX Ethiopia), Track 1. It is not a website or an LMS. It is a web component that
 Savanna or any other site can add with a script tag.
@@ -34,7 +36,7 @@ mode) without ever stating or proving a disability.
 | Savanna look: Poppins, navy text, Savanna red actions, Noto Sans Ethiopic for Amharic | implemented (Phase 1) |
 | Text size, high contrast, language settings | implemented |
 | Read-aloud | partial: uses the device voice; most phones have no Amharic voice; no recorded audio yet |
-| Voice answers | partial: Chrome only, sends audio to Google, consent asked first. **Never offered on ID or support-needs questions.** **Known bug:** unconfirmed speech is saved (fix in Phase 3) |
+| Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Google, so consent is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions, or on the date. Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
 | "Finish later" SMS | **simulated**: a labelled preview, no SMS is sent |
 | ID verification | unavailable: IDs are never verified |
 | Amharic text | AI draft: needs native-speaker review |

@@ -75,8 +75,22 @@
   var UI = {
     en: {
       back: 'Back', next: 'Continue', submit: 'Submit', listen: 'Listen to the question',
-      speak: 'Answer by voice', stop: 'Stop listening', listening: 'Listening… speak now.',
-      heard: 'I heard:', yes: "Yes, that's right", again: 'Say it again', type: 'Type it instead',
+      speak: 'Answer by voice', stop: 'Stop listening', listening: 'Microphone on. Listening… speak now.',
+      heard: 'I heard:', yes: 'Use this answer', again: 'Say it again', type: 'Type it instead',
+      micAsk: 'Your browser may ask to use the microphone. Choose Allow.', micOn: 'Microphone on',
+      processing: 'Working out what you said…',
+      heardCheck: 'Check it and fix it if needed. Nothing is kept until you choose "Use this answer".',
+      tapInstead: 'Tap it instead', heardEdit: 'Your answer, from your voice', heardMatch: 'This matches:', orDid: 'Or did you say:',
+      voiceUsed: 'Answer added from your voice. Check it, then choose Continue.',
+      voiceDiscarded: 'The voice answer was thrown away. Type or tap your answer.',
+      voiceCheckFirst: 'First check the answer from your voice: choose "Use this answer" or "Type it instead".',
+      voiceDenied: 'The microphone is blocked. You can type or tap instead, or allow the microphone in your browser settings.',
+      voiceNetwork: 'Voice answers need an internet connection. Please type or tap your answer.',
+      voiceNoSpeech: 'I did not hear anything. Try again, or type or tap your answer.',
+      voiceNoMic: 'No microphone was found. Please type or tap your answer.',
+      voiceLangUnsupported: 'Voice answers in this language are not available in this browser. Please type or tap your answer.',
+      s_voice: 'Voice answers', voice_on: 'Allowed', voice_off: 'Not allowed',
+      s_voiceHint: 'To turn your voice into text, this browser sends your recording to Google. Voice is never offered for ID or support questions.',
       progress: 'Question {n} of {total}', optional: '(optional)', problem: 'There is a problem',
       review: 'Check your answers', reviewHint: 'Make sure everything is right before you send it.',
       change: 'Change', notGiven: 'Not given', later: 'Finish later', help: 'Get help',
@@ -89,7 +103,7 @@
       savedText: 'Nothing is lost. Open this link on this phone to continue:',
       smsPreview: 'In the live version we would send you this SMS:',
       voiceConsentTitle: 'Before you use your voice',
-      voiceConsent: 'To turn your voice into text, this browser sends your recording to Google. You can type or tap instead. Do you want to use your voice?',
+      voiceConsent: 'To turn your voice into text, this browser sends your recording to Google. You can type or tap instead. You can turn this off at any time in Settings. Do you want to use your voice?',
       voiceAllow: 'Yes, use my voice', voiceDeny: 'No, I will type or tap',
       voiceUnsupported: 'Voice answers are not available in this browser. Try Chrome on Android, or type or tap your answer.',
       voiceNoMatch: 'I did not catch one of the choices. Please say it again or tap your answer.',
@@ -120,8 +134,22 @@
     },
     am: {
       back: 'ተመለስ', next: 'ቀጥል', submit: 'ላክ', listen: 'ጥያቄውን አዳምጥ',
-      speak: 'በድምፅ ይመልሱ', stop: 'ማዳመጥ አቁም', listening: 'እያዳመጥኩ ነው… አሁን ይናገሩ።',
-      heard: 'የሰማሁት፦', yes: 'አዎ፣ ትክክል ነው', again: 'እንደገና ይናገሩ', type: 'በመጻፍ ይመልሱ',
+      speak: 'በድምፅ ይመልሱ', stop: 'ማዳመጥ አቁም', listening: 'ማይክሮፎኑ በርቷል። እያዳመጥኩ ነው… አሁን ይናገሩ።',
+      heard: 'የሰማሁት፦', yes: 'ይህን መልስ ተጠቀም', again: 'እንደገና ይናገሩ', type: 'በመጻፍ ይመልሱ',
+      micAsk: 'ብራውዘርዎ ማይክሮፎኑን ለመጠቀም ፈቃድ ሊጠይቅ ይችላል። «ፍቀድ»ን ይምረጡ።', micOn: 'ማይክሮፎኑ በርቷል',
+      processing: 'የተናገሩትን እየለየሁ ነው…',
+      heardCheck: 'ያረጋግጡት፤ ካስፈለገም ያስተካክሉት። «ይህን መልስ ተጠቀም»ን እስኪመርጡ ድረስ ምንም አይቀመጥም።',
+      tapInstead: 'በመንካት ይመልሱ', heardEdit: 'ከድምፅዎ የተገኘ መልስ', heardMatch: 'ይህ የሚዛመደው፦', orDid: 'ወይስ ያሉት ይህ ነው፦',
+      voiceUsed: 'ከድምፅዎ መልስ ተጨምሯል። ያረጋግጡት፤ ከዚያ «ቀጥል»ን ይምረጡ።',
+      voiceDiscarded: 'የድምፅ መልሱ ተሰርዟል። መልስዎን ይጻፉ ወይም ይንኩ።',
+      voiceCheckFirst: 'መጀመሪያ ከድምፅዎ የተገኘውን መልስ ያረጋግጡ፦ «ይህን መልስ ተጠቀም» ወይም «በመጻፍ ይመልሱ»ን ይምረጡ።',
+      voiceDenied: 'ማይክሮፎኑ ታግዷል። በምትኩ መጻፍ ወይም መንካት፣ ወይም በብራውዘርዎ ቅንብሮች ማይክሮፎኑን መፍቀድ ይችላሉ።',
+      voiceNetwork: 'በድምፅ መመለስ የኢንተርኔት ግንኙነት ያስፈልገዋል። እባክዎ መልስዎን ይጻፉ ወይም ይንኩ።',
+      voiceNoSpeech: 'ምንም አልሰማሁም። እንደገና ይሞክሩ ወይም መልስዎን ይጻፉ ወይም ይንኩ።',
+      voiceNoMic: 'ማይክሮፎን አልተገኘም። እባክዎ መልስዎን ይጻፉ ወይም ይንኩ።',
+      voiceLangUnsupported: 'በዚህ ቋንቋ በድምፅ መመለስ በዚህ ብራውዘር አይቻልም። እባክዎ መልስዎን ይጻፉ ወይም ይንኩ።',
+      s_voice: 'በድምፅ መመለስ', voice_on: 'ተፈቅዷል', voice_off: 'አልተፈቀደም',
+      s_voiceHint: 'ድምፅዎን ወደ ጽሑፍ ለመቀየር ይህ ብራውዘር ቅጂዎን ወደ Google ይልካል። ለመታወቂያ ወይም ለድጋፍ ጥያቄዎች ድምፅ በፍጹም አይቀርብም።',
       progress: 'ጥያቄ {n} ከ{total}', optional: '(አማራጭ)', problem: 'ችግር አለ',
       review: 'መልሶችዎን ያረጋግጡ', reviewHint: 'ከመላክዎ በፊት ሁሉም ትክክል መሆኑን ያረጋግጡ።',
       change: 'ቀይር', notGiven: 'አልተሰጠም', later: 'በኋላ ልጨርስ', help: 'እርዳታ',
@@ -134,7 +162,7 @@
       savedText: 'ምንም አልጠፋም። ለመቀጠል ይህን ሊንክ በዚህ ስልክ ይክፈቱ፦',
       smsPreview: 'በእውነተኛው ስሪት ይህን አጭር መልእክት እንልክልዎታለን፦',
       voiceConsentTitle: 'ድምፅዎን ከመጠቀምዎ በፊት',
-      voiceConsent: 'ድምፅዎን ወደ ጽሑፍ ለመቀየር ይህ ብራውዘር ቅጂዎን ወደ Google ይልካል። በምትኩ መጻፍ ወይም መንካት ይችላሉ። ድምፅዎን መጠቀም ይፈልጋሉ?',
+      voiceConsent: 'ድምፅዎን ወደ ጽሑፍ ለመቀየር ይህ ብራውዘር ቅጂዎን ወደ Google ይልካል። በምትኩ መጻፍ ወይም መንካት ይችላሉ። ይህን በማንኛውም ጊዜ በቅንብሮች ውስጥ ማጥፋት ይችላሉ። ድምፅዎን መጠቀም ይፈልጋሉ?',
       voiceAllow: 'አዎ፣ ድምፄን ተጠቀም', voiceDeny: 'አይ፣ እጽፋለሁ ወይም እነካለሁ',
       voiceUnsupported: 'በዚህ ብራውዘር በድምፅ መመለስ አይቻልም። በአንድሮይድ ላይ Chrome ይሞክሩ ወይም ይጻፉ።',
       voiceNoMatch: 'ከምርጫዎቹ አንዱን አልሰማሁም። እባክዎ እንደገና ይናገሩ ወይም መልስዎን ይንኩ።',
@@ -230,8 +258,39 @@
     return true;
   }
 
-  /* ---------- speech: voice input ---------- */
+  /* ---------- speech: voice input ----------
+     SPEECH ADAPTER. All speech goes through one interface, so another engine (for example Addis AI for Amharic,
+     or an on-device engine) can be plugged in with SavannaOnboarding.setSpeech({ input, output }) without touching
+     the forms. The default is the browser's own engine: free, but voice input sends audio to Google and needs a
+     connection.
+       input.supported()                       -> true when voice input can work here
+       input.start(lang, { result(alternatives), error(code), end() }) -> { stop(), abort() }
+         error codes: 'not-allowed', 'network', 'no-speech', 'audio-capture', 'language-not-supported', 'aborted', 'failed'
+       output.speak(text, lang, audioUrl)      -> false when no voice is available for that language
+       output.stop()                                                                                       */
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var browserInput = {
+    supported: function () { return !!SR; },
+    start: function (lang, h) {
+      var rec = new SR();
+      rec.lang = lang === 'am' ? 'am-ET' : 'en-US';
+      rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = false;
+      rec.onresult = function (ev) {
+        var alts = [], r = ev.results[0];
+        for (var i = 0; i < r.length; i++) alts.push(r[i].transcript);
+        h.result(alts);
+      };
+      rec.onerror = function (ev) {
+        var e = ev && ev.error;
+        h.error(e === 'service-not-allowed' ? 'not-allowed' : e === 'language-not-supported' || e === 'bad-grammar' ? 'language-not-supported' : e || 'failed');
+      };
+      rec.onend = function () { h.end(); };
+      rec.start();
+      return { stop: function () { try { rec.stop(); } catch (e) {} }, abort: function () { try { rec.abort(); } catch (e) {} } };
+    }
+  };
+  var speech = { input: browserInput, output: { speak: function (a, b, c) { return speak(a, b, c); }, stop: function () { stopSpeaking(); } } };
+  function setSpeech(o) { if (o && o.input) speech.input = o.input; if (o && o.output) speech.output = o.output; }
   var AM_DIGITS = { 'ዜሮ': '0', 'አንድ': '1', 'ሁለት': '2', 'ሶስት': '3', 'ሦስት': '3', 'አራት': '4', 'አምስት': '5', 'ስድስት': '6', 'ሰባት': '7', 'ስምንት': '8', 'ዘጠኝ': '9' };
   var EN_DIGITS = { zero: '0', oh: '0', one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9' };
   function spokenDigits(s) {
@@ -552,6 +611,9 @@
     '.dm-heard{border:var(--so-border-width) solid var(--so-info-accent);background:var(--so-surface-info);border-radius:var(--so-radius);padding:.9em;margin:1em 0}',
     '.dm-heard p{margin:0 0 .6em}',
     '.dm-heard q{font-weight:600;font-size:1.15em}',
+    '.dm-heard-label{display:block;font-weight:600;margin:.25em 0}',
+    '.dm-heard .dm-input{margin-bottom:.5em}',
+    '.dm-mic-on{background:var(--so-primary)!important;border-color:var(--so-primary)!important;color:var(--so-on-primary)!important}',
     '.dm-status{min-height:1.5em;margin:.5em 0;color:var(--so-heading);font-weight:500}',
     '.dm-actions{display:flex;flex-wrap:wrap;gap:.75em;margin-top:1.5em;align-items:center}',
 
@@ -670,8 +732,11 @@
       h += View.input(vm, f, v, group ? '' : describedBy);
       if (group) h += '</fieldset>';
       h += '<div class="dm-tools"><button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button>';
-      if (voiceAllowed(f)) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">🎤 ' + t('speak', lang) + '</button>';
+      var canSpeak = voiceAllowed(f) && speech.input.supported();
+      if (canSpeak) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">🎤 ' + t('speak', lang) + '</button>';
       h += '</div>';
+      // A learner who chose "speak my answers" is told plainly when this browser (e.g. an app's WebView) cannot listen.
+      if (voiceAllowed(f) && !canSpeak && vm.prefsMode === 'speak') h += '<p class="dm-note">' + t('voiceUnsupported', lang) + '</p>';
       h += '<div id="' + View.id(vm, 'heard') + '" data-ref="heard"></div>';
       h += View.status();
       h += '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button>';
@@ -748,19 +813,30 @@
       return View.bar(vm, false) + '<div class="dm-success"><h1 class="dm-q" tabindex="-1"><span aria-hidden="true">✓ </span>' + esc(L(vm.cfg.doneTitle, lang)) + '</h1><p>' + esc(L(vm.cfg.doneText, lang)) + '</p></div><div class="dm-done-slot"></div>';
     },
 
+    /* Review panel. Nothing from speech reaches the answer until "Use this answer" is chosen. */
+    heard: function (vm, v) {
+      var lang = vm.lang, f = v.field, hid = View.id(vm, 'heard-h'), eid = View.id(vm, 'heard-edit');
+      var choice = f.type === 'choice' || f.type === 'consent' || f.type === 'multi';
+      var h = '<div class="dm-heard" role="group" aria-labelledby="' + hid + '"><p id="' + hid + '" data-ref="heard-h" tabindex="-1">' + t('heard', lang) + ' <q>' + esc(v.transcript) + '</q></p>';
+      if (choice) {
+        h += '<p>' + t('heardMatch', lang) + ' <strong>' + esc(v.shown) + '</strong></p>';
+      } else {
+        h += '<p class="dm-hint">' + t('heardCheck', lang) + '</p><label for="' + eid + '" class="dm-heard-label">' + t('heardEdit', lang) + '</label>' +
+          (f.type === 'textarea' ? '<textarea id="' + eid + '" data-ref="heard-edit" class="dm-input">' + esc(v.value) + '</textarea>'
+            : '<input id="' + eid + '" data-ref="heard-edit" class="dm-input" type="' + (f.type === 'tel' ? 'tel' : 'text') + '"' + (f.type === 'tel' ? ' inputmode="tel"' : '') + ' value="' + esc(v.value) + '">');
+        if (v.others.length) h += '<p class="dm-hint">' + t('orDid', lang) + '</p><div class="dm-tools">' + v.others.map(function (o, i) {
+          return '<button type="button" class="dm-btn dm-small" data-act="heard-alt" data-alt="' + i + '">' + esc(o) + '</button>';
+        }).join('') + '</div>';
+      }
+      return h + '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="heard-yes">' + t('yes', lang) + '</button>' +
+        '<button type="button" class="dm-btn" data-act="heard-again">' + t('again', lang) + '</button>' +
+        '<button type="button" class="dm-btn" data-act="heard-type">' + t(choice ? 'tapInstead' : 'type', lang) + '</button></div></div>';
+    },
+
     voiceConsent: function (vm) {
       var lang = vm.lang, hid = View.id(vm, 'vc');
       return '<div class="dm-panel" role="group" aria-labelledby="' + hid + '"><h2 id="' + hid + '" data-ref="vc" tabindex="-1">' + t('voiceConsentTitle', lang) + '</h2><p>' + t('voiceConsent', lang) + '</p>' +
         '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="voice-allow">' + t('voiceAllow', lang) + '</button><button type="button" class="dm-btn" data-act="voice-deny">' + t('voiceDeny', lang) + '</button></div></div>';
-    },
-
-    heard: function (vm, shown, others) {
-      var lang = vm.lang, hid = View.id(vm, 'heard-h');
-      return '<div class="dm-heard" role="group" aria-labelledby="' + hid + '"><p id="' + hid + '" data-ref="heard-h" tabindex="-1">' + t('heard', lang) + ' <q>' + esc(shown) + '</q></p>' +
-        '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="heard-yes">' + t('yes', lang) + '</button>' +
-        '<button type="button" class="dm-btn" data-act="heard-again">' + t('again', lang) + '</button>' +
-        '<button type="button" class="dm-btn" data-act="heard-type">' + t('type', lang) + '</button></div>' +
-        (others.length ? '<p class="dm-hint">' + others.map(esc).join(' · ') + '</p>' : '') + '</div>';
     }
   };
 
@@ -817,8 +893,9 @@
     this.render(false);
   };
   SavannaOnboardingForm.prototype.disconnectedCallback = function () {
-    document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; stopSpeaking();
-    if (this.rec) try { this.rec.abort(); } catch (e) {}
+    document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; speech.output.stop();
+    if (this.voice && this.voice.session) this.voice.session.abort();
+    this.voice = null;
   };
 
   SavannaOnboardingForm.prototype.ref = function (name) { return this.querySelector('[data-ref="' + name + '"]'); };
@@ -839,6 +916,7 @@
 
   SavannaOnboardingForm.prototype.render = function (moveFocus) {
     var flash = this.flash; this.flash = '';
+    if (this.voice) { if (this.voice.session) this.voice.session.abort(); this.voice = null; } // unconfirmed speech is thrown away
     this.className = '';
     this.innerHTML = View.page(this.vm());
     if (moveFocus !== false) {
@@ -887,6 +965,11 @@
       s.mode = 'question'; this.render(true); return;
     }
     if (s.mode !== 'question') return;
+    if (this.voice && this.voice.state === 'review') {
+      this.status(t('voiceCheckFirst', this.lang));
+      var hh = this.ref('heard-h'); if (hh) hh.focus();
+      return;
+    }
     var shownTotal = s.progress().total;
     this.collect();
     var f = s.field();
@@ -950,10 +1033,11 @@
     }
     if (act === 'resume') { s.mode = 'question'; this.render(true); return; }
     if (act === 'voice-allow') { store.set('voiceConsent', true); this.startVoice(); return; }
-    if (act === 'voice-deny') { store.set('voiceConsent', false); this.setHeard(''); var inp = this.ref('input'); if (inp) inp.focus(); return; }
-    if (act === 'heard-yes') { this.setHeard(''); this.status(t('saved', this.lang)); var nb = this.querySelector('.dm-primary'); if (nb) nb.focus(); return; }
-    if (act === 'heard-again') { this.setHeard(''); this.startVoice(); return; }
-    if (act === 'heard-type') { this.setHeard(''); var ti = this.ref('input'); if (ti) { ti.focus(); if (ti.select) ti.select(); } return; }
+    if (act === 'voice-deny') { store.set('voiceConsent', false); this.voiceReset(); var inp = this.ref('input'); if (inp) inp.focus(); return; }
+    if (act === 'heard-yes') { this.confirmVoice(); return; }
+    if (act === 'heard-alt') { var ed = this.ref('heard-edit'); if (ed && this.voice) { ed.value = this.voice.others[+b.getAttribute('data-alt')]; ed.focus(); } return; }
+    if (act === 'heard-again') { this.voiceReset(); this.startVoice(); return; }
+    if (act === 'heard-type') { this.voiceReset(); this.status(t('voiceDiscarded', this.lang)); var ti = this.ref('input'); if (ti) ti.focus(); return; }
   };
 
   SavannaOnboardingForm.prototype.status = function (msg) { var s = this.querySelector('.dm-status'); if (s) { s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); } };
@@ -972,58 +1056,96 @@
     } else {
       var q = this.querySelector('.dm-q'); text = q ? q.textContent : '';
     }
-    if (!speak(text, lang, audio)) this.status(t('noAmVoice', lang));
+    if (!speech.output.speak(text, lang, audio)) this.status(t('noAmVoice', lang));
   };
 
+  /* --- voice input: a small state machine ---
+     idle -> consent (our explanation, first use only) -> listening (browser may ask for the microphone)
+     -> processing -> review (editable transcript) -> confirmed, or -> error / discarded.
+     The transcript lives only in this.voice and in the review panel. It is written into the answer only when the
+     learner chooses "Use this answer", and saved only when they choose Continue, like typing. */
+  SavannaOnboardingForm.prototype.setVoiceButton = function (on) {
+    var b = this.querySelector('[data-act=speak]'), lang = this.lang;
+    if (!b) return;
+    b.setAttribute('aria-pressed', String(on));
+    b.classList.toggle('dm-mic-on', on);
+    b.textContent = on ? '⏹ ' + t('stop', lang) : '🎤 ' + t('speak', lang);
+  };
+  SavannaOnboardingForm.prototype.voiceReset = function () {
+    if (this.voice && this.voice.session) this.voice.session.abort();
+    this.voice = null; this.setHeard(''); this.setVoiceButton(false);
+  };
   SavannaOnboardingForm.prototype.startVoice = function () {
     var lang = this.lang, self = this, f = this.state.field();
     if (!voiceAllowed(f)) return; // never on sensitive questions
-    if (!SR) { this.status(t('voiceUnsupported', lang)); return; }
+    if (!speech.input.supported()) { this.status(t('voiceUnsupported', lang)); return; }
     if (store.get('voiceConsent', null) !== true) {
+      this.voice = { state: 'consent', field: f };
       this.setHeard(View.voiceConsent(this.vm()));
       var h = this.ref('vc'); if (h) h.focus();
       return;
     }
-    if (this.rec) { try { this.rec.stop(); } catch (e) {} this.rec = null; return; }
-    stopSpeaking();
-    this.collect();
-    var rec = new SR();
-    rec.lang = lang === 'am' ? 'am-ET' : 'en-US';
-    rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = false;
-    var btn = this.querySelector('[data-act=speak]');
-    if (btn) { btn.setAttribute('aria-pressed', 'true'); btn.textContent = '⏹ ' + t('stop', lang); }
-    this.status(t('listening', lang));
-    rec.onresult = function (ev) {
-      var alts = [], r = ev.results[0];
-      for (var i = 0; i < r.length; i++) alts.push(r[i].transcript);
-      self.handleTranscript(f, alts);
+    if (this.voice && this.voice.state === 'listening') { // second press: stop listening and use what was heard
+      this.voice.state = 'processing'; this.voice.session.stop(); this.setVoiceButton(false); this.status(t('processing', lang)); return;
+    }
+    this.voiceReset();
+    speech.output.stop();
+    var v = this.voice = { state: 'listening', field: f };
+    this.setVoiceButton(true);
+    this.status(t('listening', lang) + ' ' + t('micAsk', lang));
+    var handlers = {
+      result: function (alts) { if (self.voice === v) self.handleTranscript(f, alts); },
+      error: function (code) {
+        if (self.voice !== v || code === 'aborted') return;
+        v.state = 'error'; self.setVoiceButton(false);
+        self.status(t({ 'not-allowed': 'voiceDenied', network: 'voiceNetwork', 'no-speech': 'voiceNoSpeech', 'audio-capture': 'voiceNoMic', 'language-not-supported': 'voiceLangUnsupported' }[code] || 'voiceError', lang));
+      },
+      end: function () {
+        if (self.voice !== v) return;
+        self.setVoiceButton(false);
+        if (v.state === 'listening' || v.state === 'processing') { v.state = 'idle'; }
+      }
     };
-    rec.onerror = function (ev) { self.status(ev.error === 'no-speech' ? t('voiceNoMatch', lang) : t('voiceError', lang)); };
-    rec.onend = function () { self.rec = null; var b = self.querySelector('[data-act=speak]'); if (b) { b.setAttribute('aria-pressed', 'false'); b.textContent = '🎤 ' + t('speak', lang); } };
-    this.rec = rec;
-    try { rec.start(); } catch (e) { this.rec = null; this.status(t('voiceError', lang)); }
+    try { v.session = speech.input.start(lang, handlers); }
+    catch (e) { v.state = 'error'; this.setVoiceButton(false); this.status(t('voiceError', lang)); }
   };
 
-  // KNOWN BUG (fixed in Phase 3): the transcript is written into the answer and saved before the learner confirms it.
   SavannaOnboardingForm.prototype.handleTranscript = function (f, alts) {
-    var lang = this.lang, said = alts[0] || '', shown = said, form = this.querySelector('.dm-form');
+    var lang = this.lang, said = (alts[0] || '').trim(), v = this.voice;
+    v.transcript = said; v.others = [];
     if (f.type === 'choice' || f.type === 'consent' || f.type === 'multi') {
       var opts = optionsOf(f), hits = [];
       for (var i = 0; i < alts.length && !hits.length; i++) hits = matchOptions(alts[i], opts);
-      if (!hits.length) { this.status(t('voiceNoMatch', lang)); return; }
+      if (!hits.length) { v.state = 'error'; this.status(t('voiceNoMatch', lang)); return; }
       if (f.type !== 'multi') hits = [hits[0]];
-      hits.forEach(function (val) { var inp = form.querySelector('input[name=v][value="' + val + '"]'); if (inp) inp.checked = true; });
-      shown = hits.map(function (val) { var o = opts.filter(function (x) { return x.value === val; })[0]; return o ? L(o.label, lang) : val; }).join(', ');
+      v.hits = hits;
+      v.shown = hits.map(function (val) { var o = opts.filter(function (x) { return x.value === val; })[0]; return o ? L(o.label, lang) : val; }).join(', ');
     } else {
-      var val = f.type === 'tel' ? spokenDigits(said) : said, inp = this.ref('input');
-      if (inp) inp.value = val;
-      shown = val;
+      v.value = f.type === 'tel' ? spokenDigits(said) : said;
+      v.shown = v.value;
+      if (f.type === 'text' || f.type === 'textarea') v.others = alts.slice(1).map(function (a) { return (a || '').trim(); }).filter(function (a) { return a && a !== said; });
     }
-    this.collect(); this.save();
-    var others = f.type === 'text' || f.type === 'textarea' ? alts.slice(1).filter(function (a) { return a && a !== said; }) : [];
-    this.setHeard(View.heard(this.vm(), shown, others));
+    v.state = 'review';
+    this.setVoiceButton(false);
+    this.setHeard(View.heard(this.vm(), v));
     var hh = this.ref('heard-h'); if (hh) hh.focus();
-    speak(t('heard', lang) + ' ' + shown, lang);
+    speech.output.speak(t('heard', lang) + ' ' + v.shown, lang);
+  };
+
+  /* The learner checked the transcript: only now does it become the answer (still saved only on Continue). */
+  SavannaOnboardingForm.prototype.confirmVoice = function () {
+    var v = this.voice, form = this.querySelector('.dm-form');
+    if (!v || v.state !== 'review' || !form) return;
+    if (v.hits) {
+      if (v.field.type !== 'multi') Array.prototype.forEach.call(form.querySelectorAll('input[name=v]'), function (i) { i.checked = false; });
+      v.hits.forEach(function (val) { var inp = form.querySelector('input[name=v][value="' + val + '"]'); if (inp) inp.checked = true; });
+    } else {
+      var ed = this.ref('heard-edit'), inp = this.ref('input');
+      if (inp) inp.value = ed ? ed.value : v.value;
+    }
+    v.state = 'confirmed'; this.voice = null; this.setHeard('');
+    this.status(t('voiceUsed', this.lang));
+    var nb = form.querySelector('button[type=submit]'); if (nb) nb.focus();
   };
 
   SavannaOnboardingForm.prototype.finish = function () {
@@ -1045,6 +1167,13 @@
       var self = this;
       this.addEventListener('change', function (e) {
         var n = e.target.name, v = e.target.value, patch = {};
+        if (n === 'voice') { // consent to voice input, given or withdrawn here at any time
+          store.set('voiceConsent', v === 'on');
+          var ve = self.querySelector('input[name=voice][value="' + v + '"]'); if (ve) ve.focus();
+          var vs = self.querySelector('.dm-status');
+          if (vs) { vs.textContent = ''; setTimeout(function () { vs.textContent = t('settingsSaved', getPrefs().lang); }, 50); }
+          return;
+        }
         if (n === 'mode') patch = prefsForMode(v);
         else if (n === 'easy') patch.easy = v === 'on';
         else patch[n] = v;
@@ -1063,8 +1192,9 @@
     disconnectedCallback() { document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; }
     render() {
       var p = getPrefs(), lang = p.lang;
-      function group(name, legend, options, current) {
-        return '<fieldset><legend>' + legend + '</legend><div class="dm-opts">' + options.map(function (o) {
+      function group(name, legend, options, current, hint) {
+        var hid = hint ? 'so-set-' + name + '-hint' : '';
+        return '<fieldset' + (hint ? ' aria-describedby="' + hid + '"' : '') + '><legend>' + legend + '</legend>' + (hint ? '<p id="' + hid + '" class="dm-hint">' + hint + '</p>' : '') + '<div class="dm-opts">' + options.map(function (o) {
           return '<label class="dm-opt"><input type="radio" name="' + name + '" value="' + o[0] + '"' + (current === o[0] ? ' checked' : '') + (o[2] ? ' lang="' + o[2] + '"' : '') + '>' +
             (o[3] ? '<span class="dm-ico" aria-hidden="true">' + o[3] + '</span>' : '') + '<span' + (o[2] ? ' lang="' + o[2] + '"' : '') + '>' + o[1] + '</span></label>';
         }).join('') + '</div></fieldset>';
@@ -1075,6 +1205,7 @@
         group('contrast', t('s_contrast', lang), [['normal', t('contrast_normal', lang)], ['high', t('contrast_high', lang)]], p.contrast) +
         group('mode', t('s_mode', lang), MODES.map(function (m) { return [m, t('m_' + m, lang), null, MODE_ICONS[m]]; }), p.mode) +
         group('easy', t('s_read', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.easy ? 'on' : 'off') +
+        group('voice', t('s_voice', lang), [['on', t('voice_on', lang)], ['off', t('voice_off', lang)]], store.get('voiceConsent', null) === true ? 'on' : 'off', t('s_voiceHint', lang)) +
         '<p class="dm-status" role="status" aria-live="polite"></p></form></div>';
     }
   }
@@ -1087,7 +1218,7 @@
      A code that is not on this device (the link was opened on another phone) is explained by the form. */
 
   var API = window.SavannaOnboarding = {
-    version: '0.4.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage,
+    version: '0.5.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: stopSpeaking, label: L,
