@@ -53,7 +53,7 @@
 | 14 | `am/signup-learner-consent-question.mp3` | <span lang="am">ተማሪ፦ ይህ ሰው ቅጹን አብሮዎት እንዲሞላ ይስማማሉ? እባክዎ ይህን ለተማሪው ጮክ ብለው ያንብቡ። ተማሪው በድምፅ ወይም በመንካት ይመልሳል።</span> | 19 s | Only when filler = partner |
 | 15 | `am/signup-learner-consent-option-yes.mp3` | <span lang="am">አዎ፣ እስማማለሁ</span> | 3 s |  |
 | 16 | `am/signup-learner-consent-option-no.mp3` | <span lang="am">አልስማማም</span> | 3 s |  |
-| 17 | `am/signup-name-question.mp3` | <span lang="am">ሙሉ ስምዎ ማን ነው? መጠራት በሚፈልጉት መንገድ ይጻፉት።</span> | 8 s |  |
+| 17 | `am/signup-name-question.mp3` | <span lang="am">ምን ብለን እንጥራዎ? የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።</span> | 18 s |  |
 | 18 | `am/signup-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ ስንት ነው? ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።</span> | 14 s |  |
 | 19 | `am/signup-id-route-question.mp3` | <span lang="am">የትኛው መታወቂያ አለዎት? ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ። መታወቂያዎች በራስ-ሰር አይረጋገጡም፤ የሚነግሩንን እንመዘግባለን።</span> | 22 s |  |
 | 20 | `am/signup-id-route-option-fayda.mp3` | <span lang="am">ፋይዳ ብሔራዊ መታወቂያ</span> | 4 s |  |

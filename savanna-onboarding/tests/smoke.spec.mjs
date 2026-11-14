@@ -83,7 +83,7 @@ test('answers survive a reload (autosave) and show a welcome-back message', asyn
 test('check answers: change returns to the review screen', async ({ page }) => {
   await signupTo(page, 'END');
   await page.locator('[data-act=change]').nth(1).click();
-  expect(await heading(page)).toContain('full name');
+  expect(await heading(page)).toContain('What should we call you');
   await page.fill('[data-ref=input]', 'Tigist Alemu');
   await next(page);
   expect(await heading(page)).toBe('Check your answers');
@@ -113,7 +113,7 @@ test('settings apply text size and contrast to the page', async ({ page }) => {
 test('language switch changes the question to Amharic', async ({ page }) => {
   await signupTo(page, 'name');
   await page.locator('[data-act=lang]').click();
-  expect(await heading(page)).toBe('ሙሉ ስምዎ ማን ነው?');
+  expect(await heading(page)).toBe('ምን ብለን እንጥራዎ?');
   await expect(page.locator('.dm')).toHaveAttribute('lang', 'am');
 });
 

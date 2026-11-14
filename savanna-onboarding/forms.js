@@ -11,6 +11,23 @@
   var NOT_CHECKED = { en: 'Self-declared · not verified', am: 'በራስ የተገለጸ · አልተረጋገጠም' };
   var ORGS = { aaapd: 'AAAPD', tib: 'Tomorrow is Better', other: { en: 'a partner organisation', am: 'አጋር ድርጅት' } };
   function orgName(v, lang) { var o = ORGS[v] || ORGS.other; return D.label(o, lang); }
+  /* Names: speech recognition is unreliable for Ethiopian names, so the learner always checks a spoken name, can ask
+     someone to type it, and may use Amharic (Ethiopic) or Latin letters. */
+  var NAME = {
+    voiceWarning: { en: 'Voice may get names wrong. Please check and correct it.', am: 'ድምፅ ስሞችን ሊሳሳት ይችላል። እባክዎ ያረጋግጡና ያስተካክሉ።' },
+    askHelper: {
+      button: { en: 'Ask someone to type this for me', am: 'ሌላ ሰው እንዲጽፍልኝ ልጠይቅ' },
+      text: { en: 'You can hand the phone to someone you trust. They type your name, then give the phone back. You then check the name and choose Continue.',
+        am: 'ስልኩን ለሚያምኑት ሰው መስጠት ይችላሉ። ስምዎን ጽፈው ስልኩን ይመልሱልዎታል። ከዚያ ስሙን አረጋግጠው «ቀጥል»ን ይምረጡ።' }
+    },
+    validate: function (v) {
+      if (!/^[\p{L}\p{M}][\p{L}\p{M}\s'’.\-፡]*$/u.test(String(v).trim())) {
+        return { en: 'Use letters only. Amharic or English letters are both fine.', am: 'ፊደላትን ብቻ ይጠቀሙ። የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ።' };
+      }
+      return '';
+    }
+  };
+  function withName(f) { f.voiceWarning = NAME.voiceWarning; f.askHelper = NAME.askHelper; f.validate = NAME.validate; return f; }
 
   /* 1. SIGN-UP (with ID ladder and partner-assisted mode) */
   D.register('signup', {
@@ -40,9 +57,9 @@
           { value: 'yes', icon: '✅', label: { en: 'Yes, I agree', am: 'አዎ፣ እስማማለሁ' }, say: ['yes', 'agree', 'አዎ', 'እስማማለሁ'] },
           { value: 'no', icon: '✋', label: { en: 'No', am: 'አልስማማም' }, say: ['no', 'አልስማማም'] }
         ] },
-      { id: 'name', type: 'text', autocomplete: 'name',
-        label: { en: 'What is your full name?', am: 'ሙሉ ስምዎ ማን ነው?' },
-        hint: { en: 'Write it the way you like to be called.', am: 'መጠራት በሚፈልጉት መንገድ ይጻፉት።' } },
+      withName({ id: 'name', type: 'text', autocomplete: 'nickname', reviewLabel: { en: 'Name we call you', am: 'የምንጠራዎ ስም' },
+        label: { en: 'What should we call you?', am: 'ምን ብለን እንጥራዎ?' },
+        hint: { en: 'Amharic or English letters are both fine. You can add your full name later in My profile, if you want to.', am: 'የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።' } }),
       { id: 'phone', type: 'tel', autocomplete: 'tel',
         label: { en: 'What is your phone number?', am: 'ስልክ ቁጥርዎ ስንት ነው?' },
         hint: { en: 'We use it only to send you a link to continue. For example 0911 234 567.', am: 'ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።' } },
@@ -146,7 +163,8 @@
   D.register('apply', {
     title: { en: 'Apply for this job', am: 'ለዚህ ሥራ ያመልክቱ' },
     fields: [
-      { id: 'name', type: 'text', prefill: { from: 'profile', key: 'name' }, label: { en: 'Your full name', am: 'ሙሉ ስምዎ' } },
+      withName({ id: 'name', type: 'text', autocomplete: 'name', prefill: { from: 'profile', key: ['full_name', 'name'] },
+        label: { en: 'Your name for this application', am: 'ለዚህ ማመልከቻ ስምዎ' } }),
       { id: 'phone', type: 'tel', prefill: { from: 'profile', key: 'phone' }, label: { en: 'Your phone number', am: 'ስልክ ቁጥርዎ' } },
       { id: 'why', type: 'textarea', label: { en: 'Why do you want this job?', am: 'ይህን ሥራ ለምን ይፈልጋሉ?' },
         hint: { en: 'A few sentences are enough. You can type, or answer by voice and check the words before they are used.', am: 'ጥቂት ዓረፍተ ነገሮች ይበቃሉ። መጻፍ፣ ወይም በድምፅ መልሰው ቃላቱን ከመጠቀምዎ በፊት ማረጋገጥ ይችላሉ።' } },
@@ -214,7 +232,11 @@
     title: { en: 'My profile', am: 'የእኔ መገለጫ' },
     startAt: 'review',
     fields: [
-      fromSignup('name', { prefill: { from: 'profile', key: 'name' }, reviewLabel: { en: 'Name', am: 'ስም' } }),
+      fromSignup('name', { prefill: { from: 'profile', key: 'name' } }),
+      withName({ id: 'full_name', type: 'text', optional: true, autocomplete: 'name', prefill: { from: 'profile', key: 'full_name' },
+        reviewLabel: { en: 'Full name (optional)', am: 'ሙሉ ስም (አማራጭ)' },
+        label: { en: 'What is your full name?', am: 'ሙሉ ስምዎ ማን ነው?' },
+        hint: { en: 'Optional. Add it only if you want it on job applications. Amharic or English letters are both fine.', am: 'አማራጭ። በሥራ ማመልከቻዎች ላይ እንዲታይ ከፈለጉ ብቻ ይጨምሩት። የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ።' } }),
       fromSignup('phone', { prefill: { from: 'profile', key: 'phone' }, reviewLabel: { en: 'Phone number', am: 'ስልክ ቁጥር' } }),
       fromSignup('id_route', { prefill: { from: 'profile', key: 'id_route' } }),
       fromSignup('id_number', { reviewLabel: { en: 'ID number (only if you want to add or change it)', am: 'የመታወቂያ ቁጥር (መጨመር ወይም መቀየር ከፈለጉ ብቻ)' } }),

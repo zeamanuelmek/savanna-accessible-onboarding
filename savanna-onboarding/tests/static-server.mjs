@@ -11,6 +11,16 @@ import { fileURLToPath } from 'node:url';
 const MODULE_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const REFERENCE_ROOT = resolve(process.env.REFERENCE_DIR || join(MODULE_ROOT, '..', '..', 'Savanna-static-pages'));
 const PORT = Number(process.env.PORT || 4173);
+// The same security headers as the live site (vercel.json), so every test runs under the real Content Security Policy.
+// Not applied to /reference/: those are ALX's frozen pages, audited as they are.
+const VERCEL = JSON.parse(await readFile(join(MODULE_ROOT, 'vercel.json'), 'utf8'));
+function securityHeaders(path) {
+  const out = {};
+  for (const rule of VERCEL.headers) {
+    if (rule.source === '/(.*)' || rule.source === path) for (const h of rule.headers) out[h.key.toLowerCase()] = h.value;
+  }
+  return out;
+}
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml',
@@ -27,11 +37,13 @@ function resolvePath(urlPath) {
 
 createServer(async (req, res) => {
   try {
-    let file = resolvePath(decodeURIComponent(new URL(req.url, 'http://x').pathname));
+    const path = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+    let file = resolvePath(path);
     if (!file) { res.writeHead(403); return res.end(); }
     if ((await stat(file).catch(() => null))?.isDirectory()) file = join(file, 'index.html');
     const body = await readFile(file);
-    res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream', 'cache-control': 'no-store' });
+    const extra = path.startsWith('/reference/') ? {} : securityHeaders(path);
+    res.writeHead(200, { 'content-type': TYPES[extname(file)] || 'application/octet-stream', 'cache-control': 'no-store', ...extra });
     res.end(body);
   } catch {
     res.writeHead(404); res.end('Not found');

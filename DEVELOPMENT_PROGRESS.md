@@ -1202,3 +1202,118 @@ Same as after Phase 6, plus:
 ### Next step
 
 Wait for "go to Phase 9".
+
+---
+
+## Follow-ups (names, local speech) and Phase 9 — Testing (automated and document parts) ✅ (14 Nov 2026)
+
+The team's two follow-up messages (names; local speech) had not reached me before. Both are done here.
+
+### Names (speech recognition is unreliable for Ethiopian names)
+
+- Sign-up now asks only **"What should we call you?"** (`autocomplete="nickname"`). The **full name** moved to
+  **My profile**, as an optional question. Job applications use the full name if it was given, otherwise the name.
+- **Amharic or Latin letters** are accepted (letters, spaces, `' - .` and the Ethiopic word separator). Digits and
+  symbols get "Use letters only. Amharic or English letters are both fine."
+- When voice is used on a name: **"Voice may get names wrong. Please check and correct it."** in the check panel.
+- **"Ask someone to type this for me"** (a button with `aria-expanded`) explains the hand-over. "I have the phone
+  back" returns focus to the name for the learner to check (and reads it out if read aloud is on).
+- **Voice matching for choices tightened:**
+  - whole words only ("no" is not heard inside "know");
+  - Amharic endings accepted (አዎን);
+  - listed words and whole labels count first, and single label words only if nothing else matched ("I agree" no
+    longer also matches "No, I do not agree");
+  - common words alone do not count;
+  - **two answers heard for one choice → "I heard more than one answer", nothing is chosen.**
+- `api-schema.md` (name, full_name, application name) and `docs/audio-script.md` regenerated: **only clip #17
+  (`signup-name-question`) changed**; numbering is unchanged.
+- **"Future: local speech"** section added to `docs/offline-plan.md` and the README: a self-hosted Amharic model on
+  a local server, through the same speech adapter, with no cloud; model licences must be checked (some Amharic models
+  are non-commercial only). Future work, not built.
+
+### Phase 9: automated and document parts
+
+- **Gate dry run** (`tests/gate.spec.mjs`): the main task in the Savanna pages, **keyboard only, 200% zoom, sound
+  off**, on phone and desktop sizes.
+  - Desktop runs at 640×400 CSS px (= 1280×800 at 200%). The phone runs with text at 200%, applied from the start
+    as a phone's own font size setting is.
+  - Result: 12 screens, 61 Tab stops; a visible focus outline at every stop, nothing off screen or hidden under the
+    header, no sideways scrolling, and axe 0 critical / 0 serious on every screen.
+  - **It found and we fixed two real problems:**
+    1. Savanna's Bootstrap replaced our focus outline with a faint shadow on buttons, and Savanna removed it on
+       sidebar links. Ours now wins, drawn inset in the sidebar.
+    2. A multi-line answer box was only partly scrolled into view when focused at 200% zoom. The module now shows
+       it whole.
+  - Two test-only effects were also handled: Bootstrap's smooth scrolling (the test uses reduced motion so it can
+    measure at once), and text enlarged after the page had loaded (not how phones work).
+- **WCAG checks axe does not make** (`tests/wcag.spec.mjs`): 1.4.12 text spacing, 1.3.4 landscape, 2.5.8 target
+  size ≥ 24 px, 2.4.2 page titles, 3.2.3 same menu order, 3.2.6 help in the same place, 1.3.5 autocomplete, and 2.2.1
+  no time-out (an answer after 3 hours is accepted). All pass.
+- **Cheap phone on 3G** (`node tools/perf-3g.cjs`, against the live site at the Phase 7 build):
+  - Profile: Moto G4, Chrome "Slow 3G" (2000 ms latency, 50 KB/s), CPU 4× slower, empty cache, first visit.
+
+  | Measure | Result |
+  |---|---|
+  | First page (`/index.html`): bytes over the network | **606 KB** in 19 requests (compressed by Vercel) |
+  | First page: first text on screen (first contentful paint) | **15.0 s** |
+  | First page: fully loaded | **25.8 s** |
+  | Sign-up: first question on screen | **8.8 s** (after the first page; files reused) |
+  | Whole gate task (automated taps, no reading time) | **22 s**, 610 KB in total |
+
+  - Biggest files: the Noto Sans Ethiopic font 194 KB, Savanna's Font Awesome icons 147 KB (used for 9 menu icons),
+    Savanna's stylesheet 119 KB, Savanna's `app.css` 38 KB, the module 34 KB.
+  - **Recommendations (not done):**
+    1. Subset the Ethiopic font to the characters we use (estimate: well under half the size).
+    2. Replace the icon font with 9 small inline SVG icons (−147 KB).
+    3. Ask ALX about a smaller stylesheet for learner pages.
+    4. After the first visit, the service worker makes later visits fast (files come from the phone).
+  - A real cheapest phone on real 3G is still to do by the team.
+- **Privacy and security review** written as `docs/privacy-security.md`:
+  - what is stored and for how long;
+  - what leaves the device, and the consent needed for each;
+  - delete and withdraw paths;
+  - secrets;
+  - headers;
+  - risks.
+
+  Changes made from it:
+  - **"Delete my data from this phone"** on the dashboard, confirmed on the page. The sign-up consent promised
+    deletion, but the Savanna pages had no way to do it.
+  - **Security headers** in `savanna-onboarding/vercel.json` (new) and `docker/nginx.conf`: Content-Security-Policy
+    (only this site's own scripts; no inline scripts), nosniff, no-referrer, Permissions-Policy (microphone only for
+    this site), COOP, frame protection, `sw.js` no-cache. The test server reads `vercel.json`, so **every test runs
+    under the real policy**.
+  - The test host page's inline script and styles moved to `host.js` and `host.css`.
+  - The policy test found Savanna's stylesheet embeds `data:` fonts; `font-src` allows them.
+- **Security tests** (`tests/security.spec.mjs`):
+  - every page has the headers;
+  - no page breaks the policy;
+  - **nothing is requested from any other site during the whole gate task**;
+  - **no secrets in the repository** (keys, tokens, passwords, `.env`).
+- **Conformance report** filled in for all 55 criteria with the automated evidence (A1–A9). Each criterion lists
+  what a person must still check, and has an empty **Manual result** column for NVDA, TalkBack and the co-designer.
+  **Nothing is marked "Supports".** 4 criteria are "Not applicable" (1.2.2–1.2.5: no video or live media).
+- **Phase 10 prep (drafts):**
+  - `docs/demo-script.md`: a 3-minute pitch around one learner, Selam, timed click by click;
+  - `docs/architecture.md`: one page, with a diagram.
+
+### Tests (one worker, mobile then desktop)
+
+| Project | Passed | Skipped | Failed |
+|---|---|---|---|
+| mobile (Pixel 5) | 211 | 5 | 0 |
+| desktop | 214 | 2 | 0 |
+
+New test files: `names.spec.mjs` (6), `gate.spec.mjs` (2), `wcag.spec.mjs` (8), `security.spec.mjs` (4).
+
+### For the team (manual, tonight and tomorrow)
+
+- Fill in "Manual result" in `docs/conformance-report.md`: NVDA, TalkBack (in a WebView), the co-designer gate
+  session, a person at 200% zoom, sound off.
+- Re-record clip **#17** if it was already recorded (new wording).
+- The cheapest Android phone on 3G, and in flight mode after one visit.
+- Docker: `docker compose up` on a machine with Docker.
+
+### Next step
+
+Wait for "go to Phase 10".

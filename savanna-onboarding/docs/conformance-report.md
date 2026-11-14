@@ -1,148 +1,165 @@
 # WCAG 2.2 AA conformance report — Savanna Accessible Onboarding Module
 
-> **Status: SKELETON. Nothing in this report has been tested yet.** Every result below reads "Not yet tested".
-> The report is filled in during Phase 9 and is a required hackathon deliverable (`CLAUDE.md` §11).
-> No claim of WCAG 2.2 AA conformance is made until every row has a result with evidence.
+> **Status: automated evidence filled in (Phase 9, 14 Nov 2026). Manual checks still to do.**
+> Every criterion below has the automated evidence collected so far. **No criterion is marked "Supports"**, because
+> each one still needs a person to confirm it (NVDA, TalkBack, co-designer). The team fills in the "Manual result"
+> column. **No claim of WCAG 2.2 AA conformance is made** until the manual results are in.
 
 ## 1. About this report
 
 | Item | Value |
 |---|---|
-| Product | Savanna Accessible Onboarding Module (web component + demo host page) |
-| Version / commit | _to fill in_ |
+| Product | Savanna Accessible Onboarding Module (web component, mount API) and its demo hosts |
+| Version / commit | Module 0.11.0; automated results from the Phase 9 commit (see `DEVELOPMENT_PROGRESS.md`) |
 | Standard | WCAG 2.2, Levels A and AA (55 success criteria; 4.1.1 Parsing is obsolete in WCAG 2.2) |
-| Report date | _to fill in_ |
-| Evaluated by | _to fill in (names / roles, including co-designers)_ |
-| Scope | The module (all six journeys and the settings panel) as used in: the Savanna learner journey pages (site root: home, sign-up, simulated log-in, dashboard, profile, Support Passport, takeover, jobs, apply, employer, settings), the test host page (`/test-host/`) and the developer page (`/showroom.html`). Our accessibility fixes to the Savanna page frame are in scope; Savanna's own unchanged stylesheets are not evaluated on their own |
-| Out of scope | The Savanna platform itself; third-party browser speech services |
+| Report date | 14 Nov 2026 (automated part). Manual part: _to fill in_ |
+| Evaluated by | Automated: Playwright + axe-core 4.14, Chromium. Manual: _names / roles, including co-designers_ |
+| Scope | The module (six journeys and the settings panel) as used in: the Savanna learner journey pages (site root: home, sign-up, simulated log-in, dashboard, profile, Support Passport, takeover, jobs, apply, employer, settings), the test host page (`/test-host/`) and the developer page (`/showroom.html`). Our accessibility fixes to the Savanna page frame are in scope; Savanna's own unchanged stylesheets are not evaluated on their own |
+| Out of scope | The Savanna platform itself; the browser's speech services; screen-reader voices |
 
-### Result values
+### Result values used here
 
-- **Supports** — meets the criterion everywhere in scope, with evidence.
-- **Partially supports** — some parts do not meet the criterion; the limitations column says which.
-- **Does not support** — most of it does not meet the criterion.
-- **Not applicable** — nothing in scope that the criterion applies to; the reason is stated.
-- **Not yet tested** — no evidence yet. This is the starting value for every row.
+- **Automated: no failures** — the automated checks listed found no failure. A person must still confirm.
+- **Not applicable** — nothing in scope that the criterion applies to; the reason is given.
+- **Known limitation** — a limitation found and described (see section 5).
+- **Supports / Partially supports / Does not support** — used **only** in the "Manual result" column, by the team.
+
+### Automated evidence (Ev)
+
+| Code | Test file | What it checks |
+|---|---|---|
+| A1 | `tests/a11y.spec.mjs` | axe-core (WCAG 2.0/2.1/2.2 A and AA rules + best practice) on **41 screens × 2 languages × 2 sizes = 164 scans: 0 serious or critical**. Also: one `<main>`, one `<h1>`, no skipped heading levels, only real buttons and links, Amharic/English parts marked with `lang`, no sideways scrolling at 320 px (= 400% zoom) |
+| A2 | `tests/gate.spec.mjs` | The gate task (sign up and save a Support Passport) in the Savanna pages, **keyboard only, 200% zoom, sound off**, phone and desktop: visible focus outline, fully on screen and not hidden at every one of 61 Tab stops; axe 0 serious/critical on all 12 screens; no sideways scrolling |
+| A3 | `tests/keyboard.spec.mjs`, `tests/journey.spec.mjs` | Keyboard-only sign-up; skip link; menu with Escape; the gate task by keyboard in English and Amharic |
+| A4 | `tests/design.spec.mjs` | Contrast of every colour pair in normal and high-contrast modes; focus outline ≥ 3:1; base text size |
+| A5 | `tests/wcag.spec.mjs` | 1.4.12 text spacing, 1.3.4 landscape, 2.5.8 target size, 2.4.2 titles, 3.2.3 navigation order, 3.2.6 help position, 1.3.5 input purpose, 2.2.1 no time-out |
+| A6 | `tests/smoke.spec.mjs`, `tests/engine.spec.mjs` | Error summary and field errors, check your answers and change, autosave and resume, progress |
+| A7 | `tests/voice.spec.mjs`, `tests/readaloud.spec.mjs`, `tests/names.spec.mjs` | Voice consent and review, nothing used before checking; read aloud with pause/stop/Escape; audio never required |
+| A8 | `tests/identity.spec.mjs`, `tests/career.spec.mjs` | ID badges in option names; private card; job board headings, links and announced count |
+| A9 | `tests/offline.spec.mjs`, `tests/security.spec.mjs` | Offline message as a status; security headers; no third-party requests |
 
 ## 2. Judging gate (`CLAUDE.md` §11)
 
-| Gate | Expected | Actual | Pass/fail | Evidence |
-|---|---|---|---|---|
-| Co-designer completes the main task unaided with **NVDA** | Completes without help | Not yet tested | — | |
-| … with **TalkBack** (incl. inside an Android WebView) | Completes without help | Not yet tested | — | |
-| … with **keyboard only** | Completes without help | Not yet tested | — | |
-| … at **200% zoom** | Completes without help | Not yet tested | — | |
-| … with **sound off** | Completes without help | Not yet tested | — | |
-| **axe-core**: zero critical or serious issues | 0 | Not yet tested (for the final build) | — | |
-| Conformance report submitted | This file, completed | Not yet tested | — | |
+Main task (confirmed): **sign up for Savanna and save a Support Passport.**
 
-Main task: _to be agreed by the team (proposed: sign up and save a Support Passport)._
+| Gate | Expected | Automated dry run (A2) | Manual result (co-designer, unaided) | Evidence |
+|---|---|---|---|---|
+| With **NVDA** | Completes without help | — (needs a person) | _to fill in_ | |
+| With **TalkBack** (incl. Android WebView) | Completes without help | — (needs a person) | _to fill in_ | |
+| **Keyboard only** | Completes without help | Completes; focus visible and not hidden at all 61 Tab stops (phone and desktop) | _to fill in_ | A2 |
+| **200% zoom** | Completes without help | Completes at 640×400 CSS px (1280×800 at 200%) and with 200% text on a phone | _to fill in_ | A2 |
+| **Sound off** | Completes without help | Completes with no speech and no audio at all | _to fill in_ | A2, A7 |
+| **axe-core**: 0 critical, 0 serious | 0 | **0** on 164 scans and on every gate screen | n/a | A1, A2 |
+| Conformance report submitted | This file, completed | Automated part done | _manual part to fill in_ | |
 
 ## 2a. The 21 October co-design findings
 
 | Finding | How the module addresses it | Related criteria | Evidence |
 |---|---|---|---|
-| Forms timed out | No time limits; answers saved on the device after every question; "Finish later" | 2.2.1 | Autosave and resume tests (E1); not yet tested with co-designers |
-| Refugees were asked for ID they don't have | Six ID routes incl. refugee ID / proof of registration and "refer me through a partner"; ID number optional; no ID photo; never "verified" | 3.3.2 | Sign-up journey tests (E1) |
-| Help was English only | All text in Amharic and English; language switch and help in the same place on every screen | 3.1.1, 3.1.2, 3.2.6 | Language-of-parts checks (E1); Amharic review pending |
-| Job boards broke under screen readers | Job titles as headings, named "Apply" links, count announced, native checkbox filter | 1.3.1, 2.4.4, 2.4.6, 4.1.3 | Automated (E1); NVDA (E2) and TalkBack (E3) to do |
+| Forms timed out | No time limits; answers saved on the device after every question; "Finish later" | 2.2.1 | A5 (no time-out after 3 hours), A6 (autosave, resume); co-designers to confirm |
+| Refugees were asked for ID they don't have | Six ID routes incl. refugee ID / proof of registration and "refer me through a partner"; ID number optional; no ID photo; honest badges, never "verified" | 3.3.2 | A8, journey tests |
+| Help was English only | All text in Amharic and English; language switch and help in the same place on every screen; screen-reader tip in both languages | 3.1.1, 3.1.2, 3.2.6 | A1 (language of parts), A5 (help position); Amharic review pending; see NVDA limitation |
+| Job boards broke under screen readers | Job titles as headings, named "Apply" links, count announced, native checkbox filter | 1.3.1, 2.4.4, 2.4.6, 4.1.3 | A1, A8; NVDA and TalkBack to do |
 
 ## 3. Test environments
 
 | Assistive technology / setting | Browser / device | Version | Tested by | Date |
 |---|---|---|---|---|
-| NVDA | _e.g. Chrome on Windows 11_ | | | |
-| TalkBack | _e.g. Android WebView inside Telegram, low-cost Android phone_ | | | |
-| Keyboard only | | | | |
-| Zoom 200% / 400% (320px reflow) | | | | |
-| Sound off | | | | |
-| High contrast / forced colours | | | | |
-| axe-core (automated) | Playwright + Chromium | | | |
-| 3G-speed connection, low-cost Android | | | | |
+| axe-core 4.14 (automated) | Playwright 1.65, Chromium, Pixel 5 and desktop profiles | | Automated | 14 Nov 2026 |
+| Keyboard only, 200% zoom, sound off (automated dry run) | Chromium, phone and desktop | | Automated | 14 Nov 2026 |
+| Slow 3G + 4× slower CPU (automated) | Chromium, Moto G4 profile, live site | | Automated | 14 Nov 2026 |
+| NVDA | Windows, default voice | | Team | 14 Nov 2026 (first finding, see §5) |
+| TalkBack | _Android WebView inside Telegram, cheapest Android phone_ | | | |
+| Keyboard only (person) | | | | |
+| Zoom 200% / 400% (person) | | | | |
+| Sound off (person) | | | | |
+| High contrast / forced colours (person) | | | | |
+| Cheapest Android phone, 3G, flight mode after one visit | | | | |
 
 ## 4. Success criteria
 
-Columns: **Result** · **Expected** (what conformance looks like here) · **Actual** · **Evidence** (test name, screenshot,
-recording, tester) · **Limitations / untested parts**.
+Columns: **Automated evidence** (what the checks show) · **Automated result** · **Manual check needed** (what a person
+must confirm) · **Manual result** (team: NVDA / TalkBack / co-designer; Supports, Partially supports or Does not
+support, with who and when) · **Notes / limitations**.
 
 ### Principle 1 — Perceivable
 
-| SC | Name | Level | Result | Expected | Actual | Evidence | Limitations / untested |
+| SC | Name | Level | Automated evidence | Automated result | Manual check needed | Manual result | Notes / limitations |
 |---|---|---|---|---|---|---|---|
-| 1.1.1 | Non-text Content | A | Not yet tested | Icons are decorative (`aria-hidden`) next to visible text; no meaningful image lacks a text alternative | | | |
-| 1.2.1 | Audio-only and Video-only (Prerecorded) | A | Not yet tested | Recorded question audio has the same words on screen | | | Likely only applies once recorded audio is added (Phase 4) |
-| 1.2.2 | Captions (Prerecorded) | A | Not yet tested | — | | | No video in scope yet |
-| 1.2.3 | Audio Description or Media Alternative (Prerecorded) | A | Not yet tested | — | | | No video in scope yet |
-| 1.2.4 | Captions (Live) | AA | Not yet tested | — | | | No live media in scope |
-| 1.2.5 | Audio Description (Prerecorded) | AA | Not yet tested | — | | | No video in scope yet |
-| 1.3.1 | Info and Relationships | A | Not yet tested | Questions as `<h1>`/`<legend>`, options in `<fieldset>`, labels tied to fields, lists and landmarks | | | |
-| 1.3.2 | Meaningful Sequence | A | Not yet tested | Reading order matches the visual order | | | |
-| 1.3.3 | Sensory Characteristics | A | Not yet tested | Instructions do not rely on shape, colour, size, position or sound | | | |
-| 1.3.4 | Orientation | AA | Not yet tested | Works in portrait and landscape | | | |
-| 1.3.5 | Identify Input Purpose | AA | Not yet tested | Name and phone fields have `autocomplete` | | | |
-| 1.4.1 | Use of Color | A | Not yet tested | Selected, current and error states are not shown by colour alone | | | |
-| 1.4.2 | Audio Control | A | Not yet tested | Read-aloud can be stopped; nothing plays for more than 3 seconds without a control | | | Pause/stop arrives in Phase 4 |
-| 1.4.3 | Contrast (Minimum) | AA | Not yet tested | Text ≥ 4.5:1 (large ≥ 3:1) | | | |
-| 1.4.4 | Resize Text | AA | Not yet tested | Usable at 200% text size, with no loss of content | | | |
-| 1.4.5 | Images of Text | AA | Not yet tested | No images of text | | | |
-| 1.4.10 | Reflow | AA | Not yet tested | No sideways scrolling at 320 CSS px (400% zoom) | | | |
-| 1.4.11 | Non-text Contrast | AA | Not yet tested | Control edges, focus outline and states ≥ 3:1 | | | |
-| 1.4.12 | Text Spacing | AA | Not yet tested | No loss of content with increased line, letter and word spacing | | | |
-| 1.4.13 | Content on Hover or Focus | AA | Not yet tested | No hover/focus pop-ups, or they can be dismissed, hovered and stay visible | | | |
+| 1.1.1 | Non-text Content | A | A1: axe image-alt, button-name, link-name; icons `aria-hidden` beside text; logo has alt text "Savanna home" | Automated: no failures | Screen reader: no unlabelled images or icons | _to fill in_ | |
+| 1.2.1 | Audio-only and Video-only (Prerecorded) | A | Every recording has the same words on screen (the script is generated from the screen text, `docs/audio-script.md`) | Automated: no failures | Listen to recordings, compare with the screen | _to fill in_ | Recordings are being made on 14 Nov |
+| 1.2.2 | Captions (Prerecorded) | A | No video in scope | Not applicable | — | — | |
+| 1.2.3 | Audio Description or Media Alternative (Prerecorded) | A | No video in scope | Not applicable | — | — | |
+| 1.2.4 | Captions (Live) | AA | No live media | Not applicable | — | — | |
+| 1.2.5 | Audio Description (Prerecorded) | AA | No video in scope | Not applicable | — | — | |
+| 1.3.1 | Info and Relationships | A | A1: headings, landmarks, lists, labels, fieldset/legend for choices (axe + structure checks) | Automated: no failures | NVDA H/D/F and TalkBack: structure makes sense | _to fill in_ | |
+| 1.3.2 | Meaningful Sequence | A | A2: Tab order follows the visual order through the whole task; tip read before the first answer (A8) | Automated: no failures | Screen reader reading order | _to fill in_ | |
+| 1.3.3 | Sensory Characteristics | A | Content review: instructions never rely on shape, colour, position or sound | Automated: no failures (review) | Confirm by reading | _to fill in_ | |
+| 1.3.4 | Orientation | AA | A5: landscape phone, no sideways scrolling | Automated: no failures | Rotate a real phone | _to fill in_ | |
+| 1.3.5 | Identify Input Purpose | AA | A5: `autocomplete` nickname / name / tel; `type="tel"` | Automated: no failures | — | _to fill in_ | |
+| 1.4.1 | Use of Color | A | A1 axe; selected options also have a thicker border and bold text; errors have text | Automated: no failures | High contrast and greyscale check | _to fill in_ | |
+| 1.4.2 | Audio Control | A | A7: Pause, Stop, Escape; nothing plays until the learner turns read aloud on or presses Listen | Automated: no failures | With a screen reader running | _to fill in_ | |
+| 1.4.3 | Contrast (Minimum) | AA | A4: all text pairs ≥ 4.5:1 in normal and high contrast; A1 axe color-contrast | Automated: no failures | — | _to fill in_ | |
+| 1.4.4 | Resize Text | AA | A2: 200% zoom and 200% text; A1: extra-large text setting | Automated: no failures | Browser zoom and phone font size by a person | _to fill in_ | |
+| 1.4.5 | Images of Text | AA | No images of text (the ALX logo is a logo) | Automated: no failures (review) | — | _to fill in_ | |
+| 1.4.10 | Reflow | AA | A1: no sideways scrolling at 320 CSS px on every screen; A2 at 640 px | Automated: no failures | 400% zoom on a desktop browser | _to fill in_ | |
+| 1.4.11 | Non-text Contrast | AA | A4: control borders 4.10:1, focus outline ≥ 3:1, selected border | Automated: no failures | — | _to fill in_ | |
+| 1.4.12 | Text Spacing | AA | A5: WCAG spacing applied; no sideways scrolling, no clipped text | Automated: no failures | — | _to fill in_ | |
+| 1.4.13 | Content on Hover or Focus | AA | No tooltips or hover pop-ups; help and voice panels are opened by a button and stay | Automated: no failures (review) | — | _to fill in_ | |
 
 ### Principle 2 — Operable
 
-| SC | Name | Level | Result | Expected | Actual | Evidence | Limitations / untested |
+| SC | Name | Level | Automated evidence | Automated result | Manual check needed | Manual result | Notes / limitations |
 |---|---|---|---|---|---|---|---|
-| 2.1.1 | Keyboard | A | Not yet tested | Every function works with the keyboard alone | | | |
-| 2.1.2 | No Keyboard Trap | A | Not yet tested | Focus can always move away | | | |
-| 2.1.4 | Character Key Shortcuts | A | Not yet tested | No single-key shortcuts | | | |
-| 2.2.1 | Timing Adjustable | A | Not yet tested | No time limits | | | |
-| 2.2.2 | Pause, Stop, Hide | A | Not yet tested | No auto-moving content; read-aloud can be stopped | | | |
-| 2.3.1 | Three Flashes or Below Threshold | A | Not yet tested | Nothing flashes | | | |
-| 2.4.1 | Bypass Blocks | A | Not yet tested | Skip link to main content; landmarks | | | |
-| 2.4.2 | Page Titled | A | Not yet tested | Each view has a descriptive title | | | |
-| 2.4.3 | Focus Order | A | Not yet tested | Focus order is logical; focus moves to the question or error summary | | | |
-| 2.4.4 | Link Purpose (In Context) | A | Not yet tested | Every link makes sense (e.g. "Apply" includes the job title) | | | |
-| 2.4.5 | Multiple Ways | AA | Not yet tested | Navigation menu plus links | | | |
-| 2.4.6 | Headings and Labels | AA | Not yet tested | Headings and labels describe their purpose | | | |
-| 2.4.7 | Focus Visible | AA | Not yet tested | Visible focus outline on every control | | | |
-| 2.4.11 | Focus Not Obscured (Minimum) | AA | Not yet tested | Focused item never hidden by sticky content | | | |
-| 2.5.1 | Pointer Gestures | A | Not yet tested | No multi-point or path gestures | | | |
-| 2.5.2 | Pointer Cancellation | A | Not yet tested | Actions happen on release (native controls) | | | |
-| 2.5.3 | Label in Name | A | Not yet tested | Spoken name includes the visible label | | | |
-| 2.5.4 | Motion Actuation | A | Not yet tested | Nothing is triggered by shaking or tilting | | | |
-| 2.5.7 | Dragging Movements | AA | Not yet tested | No dragging needed | | | |
-| 2.5.8 | Target Size (Minimum) | AA | Not yet tested | Targets ≥ 24×24 px (team standard 44–48 px) | | | |
+| 2.1.1 | Keyboard | A | A2, A3: the whole gate task and sign-up by keyboard; arrow keys in choice groups | Automated: no failures | Keyboard-only person; NVDA keys | _to fill in_ | |
+| 2.1.2 | No Keyboard Trap | A | A2: Tab moves through every page and back to the start | Automated: no failures | — | _to fill in_ | |
+| 2.1.4 | Character Key Shortcuts | A | No single-key shortcuts (only Escape to stop audio / close the menu) | Automated: no failures (review) | — | _to fill in_ | |
+| 2.2.1 | Timing Adjustable | A | A5: an answer after 3 hours is accepted; no time limits anywhere | Automated: no failures | — | _to fill in_ | Simulated log-in code has no expiry |
+| 2.2.2 | Pause, Stop, Hide | A | A7: read aloud can be paused and stopped; nothing moves or updates on its own | Automated: no failures | — | _to fill in_ | |
+| 2.3.1 | Three Flashes or Below Threshold | A | No flashing or animation; reduced motion respected | Automated: no failures (review) | — | _to fill in_ | |
+| 2.4.1 | Bypass Blocks | A | A3: "Skip to main content" is the first link and works; landmarks (A1) | Automated: no failures | — | _to fill in_ | |
+| 2.4.2 | Page Titled | A | A5: every Savanna page has its own title "… \| Savanna" | Automated: no failures | — | _to fill in_ | |
+| 2.4.3 | Focus Order | A | A2: logical order; focus moves to the question or the error summary on each screen | Automated: no failures | Screen reader | _to fill in_ | |
+| 2.4.4 | Link Purpose (In Context) | A | A1 axe; "Apply" and "Listen" include the job title in their names (A8) | Automated: no failures | NVDA links list | _to fill in_ | |
+| 2.4.5 | Multiple Ways | AA | Sidebar menu, dashboard cards and links between steps | Automated: no failures (review) | — | _to fill in_ | |
+| 2.4.6 | Headings and Labels | AA | A1: one h1 per screen (the question); labels on every field | Automated: no failures | NVDA H list | _to fill in_ | |
+| 2.4.7 | Focus Visible | AA | A2: visible outline at all 61 Tab stops (phone and desktop, 200% zoom); A3 | Automated: no failures | — | _to fill in_ | Found and fixed in Phase 9: Savanna's Bootstrap hid our outline on buttons and sidebar links |
+| 2.4.11 | Focus Not Obscured (Minimum) | AA | A2: every focused item fully on screen and not hidden under the fixed header | Automated: no failures | — | _to fill in_ | |
+| 2.5.1 | Pointer Gestures | A | No multi-point or path gestures | Automated: no failures (review) | — | _to fill in_ | |
+| 2.5.2 | Pointer Cancellation | A | Native buttons and links (action on release) | Automated: no failures (review) | — | _to fill in_ | |
+| 2.5.3 | Label in Name | A | Accessible names start with the visible label ("Listen: …", "Apply …"), by design and checked in A7 and A8 (axe's label-in-name rule is experimental and not in our rule set) | Automated: no failures | Voice control (if available) | _to fill in_ | |
+| 2.5.4 | Motion Actuation | A | Nothing uses shaking or tilting | Automated: no failures (review) | — | _to fill in_ | |
+| 2.5.7 | Dragging Movements | AA | No dragging | Automated: no failures (review) | — | _to fill in_ | |
+| 2.5.8 | Target Size (Minimum) | AA | A5: every control ≥ 24×24 px (most 44–56 px high); inline text links exempt | Automated: no failures | — | _to fill in_ | |
 
 ### Principle 3 — Understandable
 
-| SC | Name | Level | Result | Expected | Actual | Evidence | Limitations / untested |
+| SC | Name | Level | Automated evidence | Automated result | Manual check needed | Manual result | Notes / limitations |
 |---|---|---|---|---|---|---|---|
-| 3.1.1 | Language of Page | A | Not yet tested | `<html lang>` matches the chosen language | | | |
-| 3.1.2 | Language of Parts | AA | Not yet tested | Amharic and English parts marked with `lang` | | | Amharic is an AI draft pending native review. **Note (manual test, 14 Nov):** NVDA with its default Windows voice spells Amharic letter by letter even though `lang="am"` is correct; see Known limitations |
-| 3.2.1 | On Focus | A | Not yet tested | Focusing never changes the context | | | |
-| 3.2.2 | On Input | A | Not yet tested | Choosing an option never changes the context unexpectedly | | | |
-| 3.2.3 | Consistent Navigation | AA | Not yet tested | Same menu in the same order on every page | | | |
-| 3.2.4 | Consistent Identification | AA | Not yet tested | Same functions have the same names everywhere | | | |
-| 3.2.6 | Consistent Help | A | Not yet tested | "Get help" is in the same place on every screen | | | |
-| 3.3.1 | Error Identification | A | Not yet tested | Errors are described in text and linked to the field | | | |
-| 3.3.2 | Labels or Instructions | A | Not yet tested | Every field has a label and hint where needed | | | |
-| 3.3.3 | Error Suggestion | AA | Not yet tested | Errors say how to fix (e.g. phone format) | | | |
-| 3.3.4 | Error Prevention (Legal, Financial, Data) | AA | Not yet tested | "Check your answers" before submitting; answers can be changed | | | |
-| 3.3.7 | Redundant Entry | A | Not yet tested | Information is never asked for twice (prefill) | | | |
-| 3.3.8 | Accessible Authentication (Minimum) | AA | Not yet tested | No login or puzzles in scope; any future login allows paste and password managers | | | No login in scope yet |
+| 3.1.1 | Language of Page | A | A1: `<html lang>` follows the chosen language | Automated: no failures | — | _to fill in_ | |
+| 3.1.2 | Language of Parts | AA | A1: every Amharic or English part marked with `lang` | Automated: no failures | NVDA / TalkBack switch voice | _to fill in_ | **Known limitation:** NVDA's default Windows voice spells Amharic letter by letter even though `lang="am"` is correct (§5). Amharic is an AI draft pending native review |
+| 3.2.1 | On Focus | A | Focus never changes the page or submits | Automated: no failures (review) | — | _to fill in_ | |
+| 3.2.2 | On Input | A | Choosing an option never moves on by itself; Continue is always a separate step. In Settings, choosing a language or text size applies at once (announced as "Saved"), which is expected for settings | Automated: no failures | Confirm the Settings behaviour is not surprising | _to fill in_ | |
+| 3.2.3 | Consistent Navigation | AA | A5: same menu, same order, on every page | Automated: no failures | — | _to fill in_ | |
+| 3.2.4 | Consistent Identification | AA | Same names for the same functions everywhere (Continue, Change, Get help, Listen) | Automated: no failures (review) | — | _to fill in_ | |
+| 3.2.6 | Consistent Help | A | A5: "Get help" in the same place on every question | Automated: no failures | — | _to fill in_ | |
+| 3.3.1 | Error Identification | A | A6: error summary with link, field error text, `aria-invalid`, `aria-describedby` | Automated: no failures | Screen reader hears the error | _to fill in_ | |
+| 3.3.2 | Labels or Instructions | A | Every field has a visible label and hint where needed (A1 axe label) | Automated: no failures | — | _to fill in_ | |
+| 3.3.3 | Error Suggestion | AA | A6: errors say how to fix (phone format, letters only, date range) | Automated: no failures | — | _to fill in_ | |
+| 3.3.4 | Error Prevention (Legal, Financial, Data) | AA | A6: "Check your answers" with Change before every submit; consent required | Automated: no failures | — | _to fill in_ | |
+| 3.3.7 | Redundant Entry | A | A8, journey tests: application and profile prefilled from earlier answers | Automated: no failures | — | _to fill in_ | |
+| 3.3.8 | Accessible Authentication (Minimum) | AA | Journey test: simulated log-in has no password to remember and no puzzle; the code can be pasted or filled in by the phone; no time limit | Automated: no failures | — | _to fill in_ | The log-in is simulated; Savanna's real sign-in must meet this too |
 
 ### Principle 4 — Robust
 
-| SC | Name | Level | Result | Expected | Actual | Evidence | Limitations / untested |
+| SC | Name | Level | Automated evidence | Automated result | Manual check needed | Manual result | Notes / limitations |
 |---|---|---|---|---|---|---|---|
-| 4.1.2 | Name, Role, Value | A | Not yet tested | Native controls; toggles expose `aria-pressed` / `aria-expanded` | | | |
-| 4.1.3 | Status Messages | AA | Not yet tested | Saved, welcome-back and job-count messages announced via `role="status"` | | | |
+| 4.1.2 | Name, Role, Value | A | A1 axe (aria, button-name, label); toggles expose `aria-pressed` / `aria-expanded` (A7, A8, journey) | Automated: no failures | NVDA / TalkBack announce states | _to fill in_ | |
+| 4.1.3 | Status Messages | AA | Saved, welcome back, job count, offline, voice and download messages in `role="status"` (A6–A9) | Automated: no failures | Screen reader hears them | _to fill in_ | |
 
-## 5. Known limitations (fill in during Phase 9)
+## 5. Known limitations
 
-- **Screen readers and Amharic (found by manual test, 14 Nov).** NVDA on Windows with its default voice reads Amharic
+- **Screen readers and Amharic (manual test, 14 Nov).** NVDA on Windows with its default voice reads Amharic
   text letter by letter ("Amharic letter …") instead of speaking it. The module marks the language correctly
   (`lang="am"`); the screen reader's voice has no Amharic. This affects blind Amharic learners. Mitigations in the
   module: (1) recorded Amharic audio for every question and answer, played by "Listen" (read aloud); (2) a one-tap
@@ -150,16 +167,19 @@ recording, tester) · **Limitations / untested parts**.
   it; (4) a tip on the welcome screen, before the first question, and in Help, in English and Amharic: "If your screen
   reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English."
   Still to check: TalkBack on Android (Google's speech service has Amharic on some phones).
-
-- _List any criterion that is "Partially supports" or "Does not support", with the reason and the plan._
-- _List what was not tested (for example, browsers or screen readers not available)._
-- _Simulated features (SMS) and unavailable features (ID verification, backend) are out of scope for conformance._
+- **Amharic text is an AI draft** until a native speaker reviews it.
+- **Voice input** depends on the browser's speech service (cloud, with consent); it is optional and never required.
+- **Simulated parts** (log-in, SMS, trainer and employer systems) are out of scope for conformance but are built to
+  the same standard.
+- **Not yet tested by people:** everything in the "Manual result" column; forced-colours mode on Windows; real
+  phones on 3G.
 
 ## 6. Evidence index
 
 | ID | What | Where |
 |---|---|---|
-| E1 | Automated test run (Playwright + axe-core) | `savanna-onboarding/tests/`, run output |
-| E2 | NVDA session notes / recording | _to add_ |
-| E3 | TalkBack session notes / recording | _to add_ |
+| E1 | Automated test run (Playwright + axe-core), A1–A9 | `savanna-onboarding/tests/`, results in `DEVELOPMENT_PROGRESS.md` (Phase 9) |
+| E2 | NVDA session notes | `DEVELOPMENT_PROGRESS.md`, "Manual test results from the team" |
+| E3 | TalkBack session notes | _to add_ |
 | E4 | Co-designer gate session | _to add_ |
+| E5 | Slow 3G cheap-phone measurement | `node tools/perf-3g.cjs`; results in `DEVELOPMENT_PROGRESS.md` (Phase 9) |

@@ -111,3 +111,8 @@ html[data-dm-contrast=high] #sidebar a, html[data-dm-contrast=high] #sidebar .ic
 html[data-dm-contrast=high] .sj .form-wrap, html[data-dm-contrast=high] .sj .needs li, html[data-dm-contrast=high] .sj .notice,
 html[data-dm-contrast=high] .sj .card-plain, html[data-dm-contrast=high] .sj .job, html[data-dm-contrast=high] .sj-card { border: 3px solid #000; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+.sj [hidden], #sj-offline[hidden] { display: none !important; }
+/* Focus outline everywhere (found by the Phase 9 gate dry run): Bootstrap replaces the outline on .btn with a faint
+   shadow, and Savanna sets none on sidebar links. Ours wins; inside the scrolling sidebar it is drawn inset so it is not clipped. */
+.sj .btn:focus-visible, .sj a:focus-visible, .sj-header a:focus-visible, .sj-header button:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: var(--so-focus-offset) !important; box-shadow: none !important; }
+#sidebar a:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: -3px !important; box-shadow: none !important; }

@@ -49,6 +49,10 @@
       errCode: 'That code does not match the SMS. Check it and try again. You can paste it.',
       codeSent: 'Code sent (simulated). It is shown below.', loggedOut: 'You have logged out. Your answers stay on this phone.',
       employerIntro: 'For employers', settingsIntro: '',
+      delTitle: 'Delete my data from this phone',
+      delText: 'This deletes your profile, Support Passport, applications and saved answers from this phone. Your settings stay. This cannot be undone.',
+      delBtn: 'Delete my data', delYes: 'Yes, delete everything', delNo: 'No, keep my data', delSure: 'Are you sure?',
+      deleted: 'Your data was deleted from this phone.',
       offline: 'You are offline. Pages you have opened before still work, and your answers stay on this phone.', online: 'You are back online.'
     },
     am: {
@@ -81,6 +85,10 @@
       errCode: 'ኮዱ ከአጭር መልእክቱ ጋር አይመሳሰልም። ያረጋግጡና እንደገና ይሞክሩ። መለጠፍ ይችላሉ።',
       codeSent: 'ኮድ ተልኳል (የተመሰለ)። ከታች ይታያል።', loggedOut: 'ወጥተዋል። መልሶችዎ በዚህ ስልክ ላይ ይቆያሉ።',
       employerIntro: 'ለቀጣሪዎች', settingsIntro: '',
+      delTitle: 'መረጃዬን ከዚህ ስልክ ሰርዝ',
+      delText: 'ይህ መገለጫዎን፣ የድጋፍ ፓስፖርትዎን፣ ማመልከቻዎችዎንና የተቀመጡ መልሶችዎን ከዚህ ስልክ ይሰርዛል። ቅንብሮችዎ ይቆያሉ። ይህ ሊቀለበስ አይችልም።',
+      delBtn: 'መረጃዬን ሰርዝ', delYes: 'አዎ፣ ሁሉንም ሰርዝ', delNo: 'አይ፣ መረጃዬ ይቆይ', delSure: 'እርግጠኛ ነዎት?',
+      deleted: 'መረጃዎ ከዚህ ስልክ ተሰርዟል።',
       offline: 'ከኢንተርኔት ውጪ ነዎት። ከዚህ በፊት የከፈቷቸው ገጾች አሁንም ይሠራሉ፤ መልሶችዎም በዚህ ስልክ ላይ ይቆያሉ።', online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።'
     }
   };
@@ -203,7 +211,21 @@
         card(T('idCard'), H.statusPanel(p), null) +
         card(T('profile'), '<p>' + T('profText') + '</p>', 'profile.html', T('profOpen')) +
         card(T('jobs'), '<p>' + T('jobsText') + '</p>', 'jobs.html', T('jobsOpen')) +
-        card(T('settings'), '<p>' + T('setText') + '</p>', 'settings.html', T('setOpen')) + '</ul>';
+        card(T('settings'), '<p>' + T('setText') + '</p>', 'settings.html', T('setOpen')) +
+        // The consent promises "you can change or delete your answers at any time": this is the delete path.
+        '<li class="card homepage-card rounded-3 sj-card"><h2 class="h5">' + T('delTitle') + '</h2><p>' + T('delText') + '</p>' +
+        '<p class="mb-0"><button type="button" class="btn danger" id="sj-del" aria-expanded="false" aria-controls="sj-del-confirm">' + T('delBtn') + '</button></p>' +
+        '<div id="sj-del-confirm" hidden><p><strong>' + T('delSure') + '</strong></p><p class="actions">' +
+        '<button type="button" class="btn danger" id="sj-del-yes">' + T('delYes') + '</button> <button type="button" class="btn" id="sj-del-no">' + T('delNo') + '</button></p></div></li></ul>';
+      var del = document.getElementById('sj-del'), box = document.getElementById('sj-del-confirm');
+      del.onclick = function () { var open = box.hidden; box.hidden = !open; del.setAttribute('aria-expanded', String(open)); if (open) document.getElementById('sj-del-no').focus(); };
+      document.getElementById('sj-del-no').onclick = function () { box.hidden = true; del.setAttribute('aria-expanded', 'false'); del.focus(); };
+      document.getElementById('sj-del-yes').onclick = function () {
+        store.keys().forEach(function (k) { if (k !== 'prefs' && k !== 'voiceConsent') store.del(k); });
+        setSession(null);
+        try { sessionStorage.setItem('sj-flash', 'deleted'); } catch (e) {}
+        location.href = 'index.html';
+      };
     },
     profile: function () { title('profile'); H.render('profile', view); },
     takeover: function () { title('takeover'); H.render('takeover', view); },

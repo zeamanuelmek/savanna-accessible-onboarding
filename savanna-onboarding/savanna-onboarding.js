@@ -132,6 +132,7 @@
       s_lang: 'Language', s_size: 'Text size', s_contrast: 'Contrast', s_mode: 'How I like to answer', s_read: 'Read aloud',
       s_readHint: 'Questions are read out, and every answer has its own Listen button. Everything is also written on the screen.',
       s_pictures: 'Pictures and bigger buttons',
+      askHelperDone: 'I have the phone back', voiceAmbiguous: 'I heard more than one answer. Please say just one, or tap your answer.',
       srTip: 'If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.',
       s_offlineAudio: 'Amharic audio for offline use',
       oa_intro: 'Recordings are kept on this phone the first time they play. You can also download them all now, so they work with no connection.',
@@ -208,6 +209,7 @@
       s_lang: 'ቋንቋ', s_size: 'የጽሑፍ መጠን', s_contrast: 'ንፅፅር', s_mode: 'መመለስ የምመርጥበት መንገድ', s_read: 'ጮክ ብሎ ማንበብ',
       s_readHint: 'ጥያቄዎች ይነበባሉ፤ እያንዳንዱ መልስም የራሱ «አዳምጥ» አዝራር አለው። ሁሉም ነገር በማያ ገጹ ላይም ተጽፏል።',
       s_pictures: 'ሥዕሎችና ትልልቅ አዝራሮች',
+      askHelperDone: 'ስልኩ ተመልሶልኛል', voiceAmbiguous: 'ከአንድ በላይ መልስ ሰማሁ። እባክዎ አንዱን ብቻ ይናገሩ ወይም መልስዎን ይንኩ።',
       srTip: 'የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «ጮክ ብሎ ማንበብ»ን ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።',
       s_offlineAudio: 'ከኢንተርኔት ውጪ ለመጠቀም የአማርኛ ድምፅ',
       oa_intro: 'ቅጂዎች ለመጀመሪያ ጊዜ ሲጫወቱ በዚህ ስልክ ላይ ይቀመጣሉ። ያለ ግንኙነት እንዲሠሩ ሁሉንም አሁን ማውረድም ይችላሉ።',
@@ -527,21 +529,37 @@
     var words = s.toLowerCase().split(/\s+/);
     return words.map(function (w) { return AM_DIGITS[w] || EN_DIGITS[w] || w.replace(/\D/g, ''); }).join('');
   }
-  function norm(s) { return String(s || '').toLowerCase().replace(/[.,!?።፣፤"'()]/g, ' ').replace(/\s+/g, ' ').trim(); }
-  function matchOptions(transcript, options) {
-    var said = norm(transcript), hits = [];
-    options.forEach(function (o) {
-      var terms = [L(o.label, 'en'), L(o.label, 'am')].concat(o.say || []);
-      var hit = terms.some(function (term) {
-        var n = norm(term);
-        if (!n) return false;
-        if (said.indexOf(n) !== -1) return true;
-        // keyword match: any significant word of the option label
-        return n.split(' ').some(function (w) { return w.length > 3 && said.split(' ').indexOf(w) !== -1; });
+  function norm(s) { return String(s || '').toLowerCase().replace(/[.,!?።፣፤፡"'()/]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  /* Matching speech to a choice. A term counts only as whole words ("no" never matches inside "know" or "not now");
+     Amharic terms may carry a suffix (አዎን, ስልኬ). The learner's own "say" words count first; label words longer
+     than 3 letters count too. The caller treats more than one hit on a single choice as "say it again". */
+  var STOP = ['with', 'this', 'that', 'from', 'have', 'your', 'what', 'about', 'there', 'their', 'want', 'like'];
+  var ETHIOPIC = /[\u1200-\u137f]/;
+  function hasTerm(saidWords, term) {
+    var tw = norm(term).split(' ').filter(Boolean);
+    if (!tw.length) return false;
+    for (var i = 0; i + tw.length <= saidWords.length; i++) {
+      var ok = tw.every(function (w, k) {
+        var s = saidWords[i + k];
+        return s === w || (ETHIOPIC.test(w) && w.length >= 2 && s.indexOf(w) === 0 && s.length - w.length <= 2);
       });
-      if (hit) hits.push(o.value);
+      if (ok) return true;
+    }
+    return false;
+  }
+  function matchOptions(transcript, options) {
+    var words = norm(transcript).split(' ').filter(Boolean);
+    // 1. the option's own "say" words, or its whole label
+    var hits = options.filter(function (o) {
+      return (o.say || []).concat([L(o.label, 'en'), L(o.label, 'am')]).some(function (term) { return hasTerm(words, term); });
     });
-    return hits;
+    // 2. only if nothing matched: a significant single word of a label ("I agree" must not also match "No, I do not agree")
+    if (!hits.length) hits = options.filter(function (o) {
+      return [L(o.label, 'en'), L(o.label, 'am')].some(function (lbl) {
+        return norm(lbl).split(' ').some(function (w) { return w.length > 3 && STOP.indexOf(w) === -1 && hasTerm(words, w); });
+      });
+    });
+    return hits.map(function (o) { return o.value; });
   }
 
   /* =====================================================================================================
@@ -618,7 +636,8 @@
     var ctx = { profile: store.get('profile', {}), passport: store.get('passport', {}) }, self = this;
     this.cfg.fields.forEach(function (f) {
       if (!f.prefill) return;
-      var v = (ctx[f.prefill.from] || {})[f.prefill.key];
+      var src = ctx[f.prefill.from] || {}, keys = [].concat(f.prefill.key), v;
+      for (var k = 0; k < keys.length && isEmpty(v); k++) v = src[keys[k]];
       if (isEmpty(self.answers[f.id]) && !isEmpty(v)) { self.answers[f.id] = v; self.prefilled[f.id] = true; }
     });
     this.cfg.fields.forEach(function (f) {
@@ -858,6 +877,7 @@
     '.dm-heard p{margin:0 0 .6em}',
     '.dm-heard q{font-weight:600;font-size:1.15em}',
     '.dm-heard-label{display:block;font-weight:600;margin:.25em 0}',
+    '.dm-heard-warn{margin:0 0 .5em;color:var(--so-heading)}',
     '.dm-heard .dm-input{margin-bottom:.5em}',
     '.dm-mic-on{background:var(--so-primary)!important;border-color:var(--so-primary)!important;color:var(--so-on-primary)!important}',
     '.dm-status{min-height:1.5em;margin:.5em 0;color:var(--so-heading);font-weight:500}',
@@ -1004,6 +1024,13 @@
       h += '</div>';
       // A learner who chose "speak my answers" is told plainly when this browser (e.g. an app's WebView) cannot listen.
       if (voiceAllowed(f) && !canSpeak && vm.prefsMode === 'speak') h += '<p class="dm-note">' + t('voiceUnsupported', lang) + '</p>';
+      if (f.askHelper) {
+        // A learner who cannot type (or whose name voice gets wrong) can hand the phone to someone, then check the name.
+        var pid = View.id(vm, 'askhelp');
+        h += '<p><button type="button" class="dm-link" data-act="ask-helper" aria-expanded="' + !!vm.askHelperOpen + '" aria-controls="' + pid + '">' + esc(L(f.askHelper.button, lang)) + '</button></p>' +
+          '<div id="' + pid + '" class="dm-note" data-ref="askhelp"' + (vm.askHelperOpen ? '' : ' hidden') + '><p>' + esc(L(f.askHelper.text, lang)) + '</p>' +
+          '<button type="button" class="dm-btn dm-small" data-act="helper-done">' + t('askHelperDone', lang) + '</button></div>';
+      }
       h += '<div id="' + View.id(vm, 'heard') + '" data-ref="heard"></div>';
       h += View.status();
       h += '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button>';
@@ -1091,6 +1118,7 @@
       if (choice) {
         h += '<p>' + t('heardMatch', lang) + ' <strong>' + esc(v.shown) + '</strong></p>';
       } else {
+        if (f.voiceWarning) h += '<p class="dm-heard-warn"><strong>' + esc(L(f.voiceWarning, lang)) + '</strong></p>';
         h += '<p class="dm-hint">' + t('heardCheck', lang) + '</p><label for="' + eid + '" class="dm-heard-label">' + t('heardEdit', lang) + '</label>' +
           (f.type === 'textarea' ? '<textarea id="' + eid + '" data-ref="heard-edit" class="dm-input">' + esc(v.value) + '</textarea>'
             : '<input id="' + eid + '" data-ref="heard-edit" class="dm-input" type="' + (f.type === 'tel' ? 'tel' : 'text') + '"' + (f.type === 'tel' ? ' inputmode="tel"' : '') + ' value="' + esc(v.value) + '">');
@@ -1153,6 +1181,9 @@
       this._listening = true;
       this.addEventListener('click', this.onClick.bind(this));
       this.addEventListener('keydown', function (e) { if (e.key === 'Escape' && Player.state !== 'idle') { Player.stop(); } });
+      // A multi-line answer box is shown whole when it gets focus (browsers only reveal its first line), so a learner
+      // using zoom sees all of it (found by the Phase 9 gate dry run at 200% zoom).
+      this.addEventListener('focusin', function (e) { if (e.target.tagName === 'TEXTAREA' && e.target.scrollIntoView) e.target.scrollIntoView({ block: 'nearest' }); });
       this.addEventListener('submit', this.onSubmit.bind(this));
       this.addEventListener('change', this.onChange.bind(this));
     }
@@ -1200,6 +1231,7 @@
   SavannaOnboardingForm.prototype.vm = function () {
     var s = this.state, mode = getPrefs().mode;
     return {
+      askHelperOpen: !!this.askHelperOpen,
       cfg: this.cfg, s: s, lang: this.lang, easy: this.easy, pictures: getPrefs().pictures, offline: navigator.onLine === false, uid: this.uid, error: this.error, helpOpen: this.helpOpen,
       welcomeOn: this.welcomeOn, startAtReview: this.startAtReview, prefsMode: mode, voiceFirst: mode === 'speak',
       resumeLink: location.href.split('#')[0].split('?')[0] + '?resume=' + s.resumeCode + location.hash
@@ -1253,6 +1285,7 @@
   /* --- events --- */
   SavannaOnboardingForm.prototype.onSubmit = function (e) {
     e.preventDefault();
+    this.askHelperOpen = false;
     this._interacted = true;
     Player.stop();
     var s = this.state;
@@ -1326,6 +1359,20 @@
       this.helpOpen = !this.helpOpen; this.render(false);
       var target = this.helpOpen ? this.querySelector('[data-ref=help] :is(h2,h3,h4,h5)') : this.querySelector('[data-act=help]');
       if (target) { if (this.helpOpen) target.setAttribute('tabindex', '-1'); target.focus(); }
+      return;
+    }
+    if (act === 'ask-helper') {
+      this.collect(); this.askHelperOpen = !this.askHelperOpen; this.render(false);
+      var ah = this.askHelperOpen ? this.querySelector('[data-ref=askhelp] p') : this.querySelector('[data-act=ask-helper]');
+      if (ah) { if (this.askHelperOpen) ah.setAttribute('tabindex', '-1'); ah.focus(); }
+      return;
+    }
+    if (act === 'helper-done') {
+      // the learner checks what the helper typed: focus the answer, and read it out if read aloud is on
+      this.collect(); this.askHelperOpen = false; this.render(false);
+      var hi = this.ref('input'); if (hi) hi.focus();
+      var fv = this.state.answers[this.state.field().id];
+      if (this.easy && fv) Player.play([{ key: null, text: fv }], this.lang, this);
       return;
     }
     if (act === 'listen') { this.readQuestion(); return; }
@@ -1457,7 +1504,8 @@
       var opts = optionsOf(f), hits = [];
       for (var i = 0; i < alts.length && !hits.length; i++) hits = matchOptions(alts[i], opts);
       if (!hits.length) { v.state = 'error'; this.status(t('voiceNoMatch', lang)); return; }
-      if (f.type !== 'multi') hits = [hits[0]];
+      // a single choice never guesses between two answers ("yes ... no")
+      if (f.type !== 'multi' && hits.length > 1) { v.state = 'error'; this.status(t('voiceAmbiguous', lang)); return; }
       v.hits = hits;
       v.shown = hits.map(function (val) { var o = opts.filter(function (x) { return x.value === val; })[0]; return o ? L(o.label, lang) : val; }).join(', ');
     } else {
@@ -1654,11 +1702,11 @@
 
   var API = window.SavannaOnboarding = {
     mount: mount, unmount: unmount,
-    version: '0.10.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
+    version: '0.11.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
-    player: Player, offlineAudio: OfflineAudio, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
+    player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
     prefs: getPrefs, setPrefs: setPrefs
   };
   window.Dimts = API; // deprecated alias

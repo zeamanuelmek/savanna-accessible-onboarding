@@ -90,7 +90,7 @@ test('Continue while a voice answer waits for checking does not skip the check',
   await page.locator('[data-act=speak]').click();
   await expect(page.locator('[data-ref=heard-h]')).toBeFocused();
   await next(page);
-  expect(await heading(page)).toContain('full name'); // still on the same question
+  expect(await heading(page)).toContain('What should we call you'); // still on the same question
   await expect(page.locator('.dm-status')).toContainText('First check the answer from your voice');
   expect(await draftText(page)).not.toContain('Unchecked Words');
 });
@@ -140,7 +140,7 @@ test('no speech engine (e.g. an app WebView): no microphone button, and a clear 
   await pick(page, 'speak'); await next(page);
   await pick(page, 'self'); await next(page);
   await expect(page.locator('[data-act=speak]')).toHaveCount(0);
-  await expect(page.locator('.dm-form .dm-note')).toContainText('Voice answers are not available in this browser');
+  await expect(page.locator('.dm-form .dm-note:not([hidden])')).toContainText('Voice answers are not available in this browser');
   await page.fill('[data-ref=input]', 'Abebe Kebede'); await next(page); // typing still works
   expect(await heading(page)).toContain('phone number');
 });

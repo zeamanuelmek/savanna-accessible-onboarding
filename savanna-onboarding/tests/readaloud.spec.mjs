@@ -142,7 +142,7 @@ test('no recording and no phone voice: a clear message, and everything stays on 
   await expect(page.locator('.dm-status')).toContainText('There is no recording for this yet');
   await expect(page.locator('[data-act=stop-audio]')).toBeHidden();
   await pick(page, 'self'); await next(page); // the form carries on as normal
-  expect(await heading(page)).toContain('full name');
+  expect(await heading(page)).toContain('What should we call you');
 });
 
 test('audio is never required: with no speech and no audio at all, sign-up still completes', async ({ page }) => {

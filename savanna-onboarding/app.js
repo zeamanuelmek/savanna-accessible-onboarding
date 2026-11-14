@@ -233,7 +233,7 @@
     mountForm('profile', null, function (d, slot) {
       var a = d.answers, p = {};
       Object.keys(old).forEach(function (k) { p[k] = old[k]; });
-      p.name = a.name; p.phone = a.phone; p.id_route = a.id_route; p.referral_partner = a.referral_partner || null; p.dob = a.dob || null;
+      p.name = a.name; p.full_name = a.full_name || null; p.phone = a.phone; p.id_route = a.id_route; p.referral_partner = a.referral_partner || null; p.dob = a.dob || null;
       p.assurance_level = assurance(a, old);
       p.updated = new Date().toISOString();
       store.set('profile', p);

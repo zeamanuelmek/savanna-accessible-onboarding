@@ -4,7 +4,7 @@
 > API and no endpoint**. The module sends nothing over the network. It hands data to the host page as browser
 > events; the host decides where the data goes. Privacy rule: **nothing leaves the host without consent.**
 >
-> This page is the contract a developer needs. It matches module version `0.6.0` (Phase 5). The schemas use
+> This page is the contract a developer needs. It matches module version `0.11.0` (Phase 9). The schemas use
 > JSON Schema 2020-12. Amharic labels are a draft pending native-speaker review; stored **values** are always the
 > English codes below, never translated text.
 
@@ -113,7 +113,7 @@ checks it and chooses "Use this answer".
     "partner_org":     { "$ref": "#/$defs/partner", "description": "Only when filler = partner" },
     "staff_name":      { "type": "string", "description": "Only when filler = partner" },
     "learner_consent": { "const": "yes", "description": "Only when filler = partner. The learner must agree" },
-    "name":            { "type": "string" },
+    "name":            { "type": "string", "description": "What the learner wants to be called (\"What should we call you?\"). Amharic (Ethiopic) or Latin letters, spaces, ' - . only. Not necessarily the full legal name" },
     "phone":           { "$ref": "#/$defs/phone" },
     "id_route":        { "$ref": "#/$defs/idRoute" },
     "id_number":       { "type": "string", "description": "Optional; may be empty. Only when id_route is not none. NEVER verified" },
@@ -129,7 +129,8 @@ checks it and chooses "Use this answer".
 
 Starts on the summary, prefilled from the profile the host saved. Same fields and values as `signup`, without the
 partner questions and the consent question: `name`, `phone`, `id_route`, `id_number` (only if the learner typed a new
-one), `referral_partner`, `dob`.
+one), `referral_partner`, `dob` — plus **`full_name`** (optional, string, same letters rule as `name`; the only
+place the full name is asked).
 
 ### 3.2a `takeover`: learner takes over after partner sign-up
 
@@ -159,7 +160,7 @@ host should then remove the staff member's name and keep only the organisation (
   "$id": "savanna-onboarding/answers/apply",
   "type": "object",
   "properties": {
-    "name":           { "type": "string", "description": "Prefilled from the profile" },
+    "name":           { "type": "string", "description": "Prefilled from the profile: the full name if the learner added one, otherwise the name we call them" },
     "phone":          { "$ref": "#/$defs/phone", "description": "Prefilled from the profile" },
     "why":            { "type": "string" },
     "experience":     { "type": "string" },
@@ -207,7 +208,7 @@ The demo page (`app.js`) shows one way a host can use the answers. A real host c
 
 | Record (device key) | Built from | Notes |
 |---|---|---|
-| `profile` | `signup`, then `profile` / `takeover` | `{ name, phone, lang, id_route, assurance_level, referral_partner, registered_by, takeover_pending, dob, updated }`. **The ID number itself is not kept**, only the status. `registered_by` is `{ org, staff }` until the learner takes over, then `{ org }` only. |
+| `profile` | `signup`, then `profile` / `takeover` | `{ name, full_name, phone, lang, id_route, assurance_level, referral_partner, registered_by, takeover_pending, dob, updated }`. **The ID number itself is not kept**, only the status. `registered_by` is `{ org, staff }` until the learner takes over, then `{ org }` only. |
 | `passport` | `passport` | `{ needs, other_need, sharing, updated }`. Stays on the device. `sharing` is `"ask"` (private, the default) or `"trainers"`; the learner can change it on the Support Passport card at any time. |
 | `applications` | `apply` | `{ at, packet, withdrawn? }`. The packet is shown as "What the employer receives" (below). Withdrawing removes `supportThatHelps` and sets `withdrawn`. |
 | `jobs` | `employer` | Shown on the job board and as JSON-LD (section 5). |
