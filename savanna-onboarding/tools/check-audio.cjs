@@ -33,7 +33,7 @@ function kind(file) {
   return 'unknown';
 }
 
-const manifest = {}, found = [], problems = [], extra = [];
+const manifest = {}, found = [], problems = [], extra = [], sizes = {};
 const langs = fs.existsSync(audioDir) ? fs.readdirSync(audioDir).filter(d => fs.statSync(path.join(audioDir, d)).isDirectory()) : [];
 const byName = {};
 for (const lang of langs) {
@@ -47,6 +47,7 @@ for (const lang of langs) {
     if (real !== ext) { problems.push(`${lang}/${f}: the name says ${ext} but the file is ${real === 'unknown' ? 'not a recognised audio format' : real}. Convert it, or rename it to ${real}.`); continue; }
     if (size > 1024 * 1024) problems.push(`${lang}/${f}: ${(size / 1048576).toFixed(1)} MB is large for 3G. Aim for under 300 KB (mono, 64–96 kbps). It is still used.`);
     byName[lang + '/' + key] = f;
+    (sizes[lang] = sizes[lang] || {})[f] = size;
   }
 }
 for (const e of expected) {
@@ -60,6 +61,14 @@ for (const k of Object.keys(byName)) {
   extra.push(lang + '/' + byName[k]);
 }
 const missing = expected.filter(e => !found.includes(e));
+// file sizes of the listed clips, shown in Settings as "Download Amharic audio for offline use (about X MB)"
+let totalBytes = 0;
+for (const lang of Object.keys(manifest)) {
+  for (const f of Object.values(manifest[lang])) {
+    ((manifest.bytes = manifest.bytes || {})[lang] = manifest.bytes[lang] || {})[f] = sizes[lang][f];
+    totalBytes += sizes[lang][f];
+  }
+}
 
 fs.mkdirSync(audioDir, { recursive: true });
 fs.writeFileSync(path.join(audioDir, 'manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
@@ -71,5 +80,5 @@ if (missing.length) {
 }
 if (extra.length) { console.log(`\nNot in the script (used anyway, check the names):`); extra.forEach(x => console.log('  ' + x)); }
 if (problems.length) { console.log(`\nProblems (${problems.length}):`); problems.forEach(p => console.log('  ' + p)); }
-console.log(`\nWrote assets/audio/manifest.json (${found.length + extra.length} clips). Commit the clips and the manifest together.`);
+console.log(`\nWrote assets/audio/manifest.json (${found.length + extra.length} clips, ${(totalBytes / 1048576).toFixed(1)} MB). Commit the clips and the manifest together.`);
 process.exitCode = problems.some(p => !p.includes('still used')) ? 1 : 0;

@@ -7,7 +7,7 @@
    Pages: network first (always fresh when online), the saved copy when offline. Other files: the saved copy at once,
    refreshed in the background. Nothing is sent anywhere; only this site's own files are handled.
    A host such as Savanna can register this file, or copy the CORE list into its own service worker. */
-var CACHE = 'savanna-onboarding-v1';
+var CACHE = 'savanna-onboarding-v2';
 var CORE = [
   './', 'index.html', 'signup.html', 'login.html', 'dashboard.html', 'profile.html', 'passport.html', 'takeover.html',
   'jobs.html', 'apply.html', 'employer.html', 'settings.html', 'showroom.html', 'test-host/',
@@ -30,7 +30,8 @@ self.addEventListener('install', function (e) {
 
 self.addEventListener('activate', function (e) {
   e.waitUntil(caches.keys().then(function (keys) {
-    return Promise.all(keys.filter(function (k) { return k.indexOf('savanna-onboarding-') === 0 && k !== CACHE; })
+    // old versions are removed; the learner's own audio download ('savanna-onboarding-audio') stays
+    return Promise.all(keys.filter(function (k) { return k.indexOf('savanna-onboarding-') === 0 && k !== CACHE && k !== 'savanna-onboarding-audio'; })
       .map(function (k) { return caches.delete(k); }));
   }).then(function () { return self.clients.claim(); }));
 });
@@ -44,8 +45,9 @@ self.addEventListener('fetch', function (e) {
 
   // Recorded clips: the saved copy, or download the whole file once and keep it (media players ask for byte ranges).
   if (isAudio(url)) {
+    if (req.headers.get('X-Savanna-Download')) return; // Settings download: straight to the network, stored by the page
     e.respondWith(caches.open(CACHE).then(function (cache) {
-      return cache.match(url.pathname).then(function (hit) {
+      return caches.match(url.pathname).then(function (hit) { // any store, including the learner's download
         if (hit) return hit;
         return fetch(url.pathname).then(function (res) { if (res.ok) cache.put(url.pathname, res.clone()); return res; });
       });

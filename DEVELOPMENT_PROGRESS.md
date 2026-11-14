@@ -800,10 +800,11 @@ Wait for "go to Phase 5".
 
 ## Manual test results from the team
 
-_Recorded here as they arrive (14 Nov onwards). None received yet at the end of Phase 5._
+_Recorded here as they arrive (14 Nov onwards)._
 
 | Date / time | Tester | Device, browser, assistive technology | What was tested | Result | Follow-up |
 |---|---|---|---|---|---|
+| 14 Nov, evening | Team | Windows, NVDA with its default voice | Amharic screens | **Limitation found:** NVDA reads Amharic text letter by letter ("Amharic letter …") instead of speaking it. This is a limit of the screen reader's voice, not a module bug, but it affects blind Amharic learners | Mitigations: recorded Amharic audio (Phase 4; recordings tonight), one-tap switch to English on every screen, correct `lang` tags. Added a tip on the welcome screen and in Help, in English and Amharic (Phase 7 round). Recorded in the conformance report (3.1.2 and known limitations) |
 
 ---
 
@@ -1125,3 +1126,79 @@ an expected failure.
 ### Next step
 
 Wait for "go to Phase 7".
+
+---
+
+## Phase 6 review follow-ups and Phase 7 — Career gateway polish ✅ (14 Nov 2026)
+
+### Decisions recorded (Phases 4 and 6 review)
+
+- Offline recordings stay "stored once played". The learner can also download all of them from Settings.
+- Listen buttons on answers stay visible only when read aloud is on.
+- **Manual test finding (NVDA):** Amharic is spelled letter by letter by NVDA's default Windows voice. It is recorded
+  in the manual results table above, in the conformance report (3.1.2 and Known limitations) and in the README.
+
+### What changed
+
+- **Screen-reader tip:** shown on the welcome screen (after the question and its hint, before the first answer) and in
+  Help, in English then Amharic, each with its own `lang`: "If your screen reader spells Amharic letters one by one,
+  turn on Read aloud to hear recorded Amharic, or switch to English."
+- **Settings → "Amharic audio for offline use":**
+  - "Download Amharic audio for offline use (about X MB)": one recording at a time, with a progress bar, "N of M
+    recordings (x of y MB)" and announcements at the start and the end;
+  - "Remove downloaded audio";
+  - a plain message when there are no recordings yet, when the browser cannot store audio, or when offline.
+
+  The player uses the downloaded copy even on sites without a service worker. `check-audio.cjs` now records each
+  clip's size in the manifest. `sw.js`: cache version 2, keeps the learner's download, and does not store a second copy.
+- **`tools/convert-audio.cjs` (new):**
+  - converts a folder of WAV, M4A, MP3 (and other phone formats) into mono MP3 at 64–96 kbps (default 80), at an even
+    loudness, keeping the names;
+  - writes them to `assets/audio/am/`, then runs the check;
+  - the original recordings are never changed;
+  - if ffmpeg is missing, it says how to install it.
+
+  **Tested only with a stand-in for ffmpeg** (ffmpeg is not installed on this machine).
+- **Career gateway polish (no new features):**
+  - The application's open-question hint now says you can type, or answer by voice and check the words first (voice
+    with the Phase 3 review step, never on the sharing question).
+  - The employer form's support question has a clear summary label ("Support offered").
+  - The filter is labelled "Only show jobs that offer all the support I need", and explains that it is private and
+    that employers see support only if the learner shares it when applying.
+  - The job board now also publishes **every** job as schema.org JobPosting JSON-LD (Level 3), whatever the private
+    filter shows. `docs/api-schema.md` says so.
+- Docs: README (real vs simulated, the NVDA limitation), `for-developers.md`, `api-schema.md`, the conformance report,
+  `assets/audio/am/README.md` (convert tool), `CLAUDE.md`.
+- Tests: new `tests/career.spec.mjs` (8 tests):
+  - the application, prefilled and with reviewed voice;
+  - the employer form's JobPosting checked field by field against `api-schema.md`;
+  - JSON-LD on the board;
+  - the private filter (count announced, nothing sent);
+  - the tip's place and languages;
+  - download with progress and remove;
+  - a downloaded clip playing with the network failing;
+  - the "no recordings yet" message.
+
+### Tests (one worker, mobile then desktop)
+
+| Project | Passed | Skipped | Failed |
+|---|---|---|---|
+| mobile (Pixel 5) | 191 | 5 | 0 |
+| desktop | 195 | 1 | 0 |
+
+- The first full run had 2 failures on each size, in two older tests that looked for "the" `.dm-note` box: the Help
+  panel now holds a hidden copy of the tip with the same style. The tests now look inside the form; both files then
+  passed 54 of 54 on both sizes. The totals above include that fix.
+- axe-core: 0 serious or critical on every screen (the welcome screen and Settings now include the tip and the
+  download section).
+
+### Real vs simulated after Phase 7
+
+Same as after Phase 6, plus:
+- **Offline download: implemented** (tested with stand-in clips; no real recordings exist yet).
+- **The convert tool is untested with real ffmpeg.**
+- **Employer and trainer systems are still simulated.**
+
+### Next step
+
+Wait for "go to Phase 9".

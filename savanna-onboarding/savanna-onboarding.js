@@ -132,6 +132,16 @@
       s_lang: 'Language', s_size: 'Text size', s_contrast: 'Contrast', s_mode: 'How I like to answer', s_read: 'Read aloud',
       s_readHint: 'Questions are read out, and every answer has its own Listen button. Everything is also written on the screen.',
       s_pictures: 'Pictures and bigger buttons',
+      srTip: 'If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.',
+      s_offlineAudio: 'Amharic audio for offline use',
+      oa_intro: 'Recordings are kept on this phone the first time they play. You can also download them all now, so they work with no connection.',
+      oa_download: 'Download Amharic audio for offline use (about {mb} MB)', oa_remove: 'Remove downloaded audio',
+      oa_progressLabel: 'Download progress', oa_progress: 'Downloading: {done} of {total} recordings ({mbDone} of {mb} MB).',
+      oa_started: 'Downloading Amharic audio.', oa_done: 'Done. {n} recordings are on this phone and work offline.',
+      oa_partial: 'Downloaded {done} of {total}. {failed} could not be downloaded. Check the connection and try again.',
+      oa_stored: '{n} of {total} recordings are on this phone.', oa_notStored: 'No recordings are downloaded yet.',
+      oa_removed: 'Downloaded audio was removed from this phone.', oa_offline: 'You need a connection to download.',
+      oa_none: 'Amharic recordings are not available yet.', oa_unsupported: 'This browser cannot keep audio for offline use.',
       offline: 'You are offline. Your answers are saved on this phone, and you can keep going. Voice answers need a connection.',
       online: 'You are back online.',
       play: 'Listen', pause: 'Pause', resume: 'Resume', stopAudio: 'Stop', replay: 'Play again',
@@ -198,6 +208,16 @@
       s_lang: 'ቋንቋ', s_size: 'የጽሑፍ መጠን', s_contrast: 'ንፅፅር', s_mode: 'መመለስ የምመርጥበት መንገድ', s_read: 'ጮክ ብሎ ማንበብ',
       s_readHint: 'ጥያቄዎች ይነበባሉ፤ እያንዳንዱ መልስም የራሱ «አዳምጥ» አዝራር አለው። ሁሉም ነገር በማያ ገጹ ላይም ተጽፏል።',
       s_pictures: 'ሥዕሎችና ትልልቅ አዝራሮች',
+      srTip: 'የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «ጮክ ብሎ ማንበብ»ን ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።',
+      s_offlineAudio: 'ከኢንተርኔት ውጪ ለመጠቀም የአማርኛ ድምፅ',
+      oa_intro: 'ቅጂዎች ለመጀመሪያ ጊዜ ሲጫወቱ በዚህ ስልክ ላይ ይቀመጣሉ። ያለ ግንኙነት እንዲሠሩ ሁሉንም አሁን ማውረድም ይችላሉ።',
+      oa_download: 'የአማርኛ ድምፅን ከኢንተርኔት ውጪ ለመጠቀም አውርድ (ወደ {mb} ሜባ ገደማ)', oa_remove: 'የወረደውን ድምፅ አስወግድ',
+      oa_progressLabel: 'የማውረድ ሂደት', oa_progress: 'በማውረድ ላይ፦ ከ{total} ቅጂዎች {done} ({mbDone} ከ{mb} ሜባ)።',
+      oa_started: 'የአማርኛ ድምፅ በማውረድ ላይ።', oa_done: 'ተጠናቋል። {n} ቅጂዎች በዚህ ስልክ ላይ አሉ፤ ያለ ግንኙነትም ይሠራሉ።',
+      oa_partial: 'ከ{total} {done} ወርዷል። {failed} ማውረድ አልተቻለም። ግንኙነቱን ያረጋግጡና እንደገና ይሞክሩ።',
+      oa_stored: 'ከ{total} ቅጂዎች {n} በዚህ ስልክ ላይ አሉ።', oa_notStored: 'እስካሁን ምንም ቅጂ አልወረደም።',
+      oa_removed: 'የወረደው ድምፅ ከዚህ ስልክ ተሰርዟል።', oa_offline: 'ለማውረድ የኢንተርኔት ግንኙነት ያስፈልጋል።',
+      oa_none: 'የአማርኛ ቅጂዎች ገና አልተዘጋጁም።', oa_unsupported: 'ይህ ብራውዘር ድምፅን ከኢንተርኔት ውጪ ለመጠቀም ማስቀመጥ አይችልም።',
       offline: 'ከኢንተርኔት ውጪ ነዎት። መልሶችዎ በዚህ ስልክ ላይ ይቀመጣሉ፤ መቀጠልም ይችላሉ። በድምፅ መመለስ ግንኙነት ያስፈልገዋል።',
       online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።',
       play: 'አዳምጥ', pause: 'ለአፍታ አቁም', resume: 'ማጫወት ቀጥል', stopAudio: 'አቁም', replay: 'እንደገና አጫውት',
@@ -367,6 +387,69 @@
   }
   function clipKey() { return Array.prototype.join.call(arguments, '-').replace(/_/g, '-'); }
 
+  /* ---------- learner-controlled download of all recordings for offline use (Settings) ---------- */
+  var AUDIO_CACHE = 'savanna-onboarding-audio';
+  var OfflineAudio = {
+    state: 'idle', done: 0, total: 0, bytes: 0, totalBytes: 0, failed: 0, stored: null, subs: [],
+    on: function (fn) { this.subs.push(fn); }, off: function (fn) { var k = this.subs.indexOf(fn); if (k !== -1) this.subs.splice(k, 1); },
+    emit: function (msg) { var s = this; this.subs.slice().forEach(function (fn) { fn(s, msg); }); },
+    canStore: function () { return !!(window.caches && window.fetch && window.isSecureContext !== false); },
+    list: function (lang) {
+      var m = AUDIO.manifest || {}, files = m[lang] || {}, sizes = (m.bytes && m.bytes[lang]) || {};
+      return Object.keys(files).map(function (k) { return { url: BASE + 'assets/audio/' + lang + '/' + files[k], bytes: sizes[files[k]] || 0 }; });
+    },
+    refresh: function (lang) {
+      var self = this;
+      if (!this.canStore()) return Promise.resolve();
+      return loadAudioManifest().then(function () { return caches.open(AUDIO_CACHE); }).then(function (c) { return c.keys(); })
+        .then(function (keys) {
+          var mine = self.list(lang).map(function (x) { return new URL(x.url, location.href).href; });
+          self.stored = keys.filter(function (r) { return mine.indexOf(r.url) !== -1; }).length;
+          self.emit();
+        }).catch(function () {});
+    },
+    download: function (lang) {
+      var self = this;
+      if (this.state === 'downloading') return;
+      if (navigator.onLine === false) { this.emit('oa_offline'); return; }
+      var list = this.list(lang);
+      this.state = 'downloading'; this.done = 0; this.failed = 0; this.bytes = 0; this.total = list.length;
+      this.totalBytes = list.reduce(function (s, x) { return s + x.bytes; }, 0);
+      this.emit('oa_started');
+      caches.open(AUDIO_CACHE).then(function (cache) {
+        // one at a time: gentle on a slow connection, and the progress is honest
+        return list.reduce(function (p, x) {
+          return p.then(function () {
+            if (self.state !== 'downloading') return;
+            return fetch(x.url, { cache: 'no-store', headers: { 'X-Savanna-Download': '1' } })
+              .then(function (res) { if (!res.ok) throw new Error(res.status); return cache.put(x.url, res); })
+              .then(function () { self.done++; self.bytes += x.bytes; }, function () { self.failed++; })
+              .then(function () { self.emit(); });
+          });
+        }, Promise.resolve());
+      }).then(function () {
+        self.state = 'idle';
+        self.refresh(lang).then(function () { self.emit(self.failed ? 'oa_partial' : 'oa_done'); });
+      }, function () { self.state = 'idle'; self.emit('oa_unsupported'); });
+    },
+    remove: function () {
+      var self = this;
+      this.state = 'idle';
+      // the download store, and any clip kept on first play by the sample service worker
+      return caches.delete(AUDIO_CACHE).then(function () { return caches.keys(); }).then(function (names) {
+        return Promise.all(names.filter(function (n) { return n.indexOf('savanna-onboarding') === 0; }).map(function (n) {
+          return caches.open(n).then(function (c) {
+            return c.keys().then(function (keys) {
+              return Promise.all(keys.filter(function (r) { return /\/assets\/audio\/[a-z]{2}\/[^/]+\.(mp3|m4a)$/.test(new URL(r.url).pathname); })
+                .map(function (r) { return c.delete(r); }));
+            });
+          });
+        }));
+      }).catch(function () {}).then(function () { self.stored = 0; self.emit('oa_removed'); });
+    }
+  };
+  function mb(bytes) { return (bytes / 1048576).toFixed(1); }
+
   /* ---------- the player: one at a time, for every form on the page ----------
      play([{ key, text, url? }], lang) reads a list in order: each piece uses its recording when there is one, otherwise
      the phone's voice. pause / resume / stop / replay. Audio is never required: everything is also on screen. */
@@ -390,7 +473,18 @@
       var it = items[this.i++], url = it.url || (it.key ? clipUrl(it.key, this.lang) : null);
       var done = function () { if (self.items === items) self.next(); };
       if (!url) return this.voice(it, done);
-      var a = this.audio = new Audio(url), failed = false;
+      // a downloaded copy (Settings) plays even where no service worker is installed
+      if (window.caches && !it._checked) {
+        it._checked = true; this.i--;
+        caches.match(url).then(function (hit) { return hit ? hit.blob() : null; }).catch(function () { return null; }).then(function (blob) {
+          if (self.items !== items || self.state !== 'playing') return;
+          it._src = blob ? URL.createObjectURL(blob) : null;
+          self.next();
+        });
+        return;
+      }
+      var src = it._src || url; it._checked = false; it._src = null;
+      var a = this.audio = new Audio(src), failed = false;
       var fail = function () {
         if (failed || self.audio !== a) return;
         failed = true; AUDIO.failed[url] = true; self.audio = null;
@@ -751,6 +845,9 @@
     '.dm a,.dm samp,.dm q{overflow-wrap:anywhere}', // long links (resume link) wrap at 400% zoom
 
     '.dm-tools{display:flex;flex-wrap:wrap;gap:.6em;margin:1em 0}',
+    '.dm-sr-tip p{margin:0 0 .4em}', '.dm-sr-tip p:last-child{margin:0}',
+    '.dm-offline-audio{margin:0 0 1.5em}', '.dm-offline-audio h2{font-size:1.2em;margin:0 0 .4em;color:var(--so-heading)}',
+    '.dm-offline-audio progress{width:100%;height:1.2em;accent-color:var(--so-heading)}',
     '.dm-offline{margin:0 0 1em;padding:.6em .9em;border:var(--so-border-width) solid var(--so-border-strong);border-radius:var(--so-radius);background:var(--so-surface-alt);color:var(--so-heading);font-weight:500}',
     '.dm-player{display:contents}',
     '.dm-player[hidden]{display:none}',
@@ -823,6 +920,9 @@
       return '<span id="' + View.id(vm, 'err') + '" class="dm-err"><span class="dm-vh">Error: </span>' + esc(msg) + '</span>';
     },
     status: function () { return '<p class="dm-status" role="status" aria-live="polite"></p>'; },
+    srTip: function () {
+      return '<div class="dm-note dm-sr-tip"><p lang="en">' + UI.en.srTip + '</p><p lang="am">' + UI.am.srTip + '</p></div>';
+    },
 
     /* "Listen" and the player controls (Pause/Resume, Stop, Play again). Shown and labelled by the controller. */
     listenTools: function (vm) {
@@ -850,7 +950,7 @@
         '<button type="button" class="dm-btn dm-small" data-act="easy" aria-pressed="' + vm.easy + '">🔊 ' + t(vm.easy ? 'easyOn' : 'easyOff', lang) + '</button>' +
         '<button type="button" class="dm-btn dm-small" data-act="help" aria-expanded="' + !!vm.helpOpen + '" aria-controls="' + helpId + '">' + t('help', lang) + '</button>' +
         '</div></div>' +
-        '<div id="' + helpId + '" data-ref="help" class="dm-panel"' + (vm.helpOpen ? '' : ' hidden') + '><h2>' + t('helpTitle', lang) + '</h2><p>' + esc(L(vm.cfg.help, lang) || t('helpText', lang)) + '</p>' +
+        '<div id="' + helpId + '" data-ref="help" class="dm-panel"' + (vm.helpOpen ? '' : ' hidden') + '><h2>' + t('helpTitle', lang) + '</h2><p>' + esc(L(vm.cfg.help, lang) || t('helpText', lang)) + '</p>' + View.srTip() +
         '<button type="button" class="dm-btn dm-small" data-act="help">' + t('helpClose', lang) + '</button></div>';
     },
 
@@ -868,7 +968,7 @@
       var h = View.bar(vm, false);
       if (err) h += View.errorSummary(vm, err);
       h += '<form class="dm-form" novalidate><fieldset aria-describedby="' + hintId + (err ? ' ' + View.id(vm, 'err') : '') + '"><legend><h1 class="dm-q" tabindex="-1">' + t('welcomeTitle', lang) + '</h1></legend>' +
-        '<p id="' + hintId + '" class="dm-hint">' + t('welcomeHint', lang) + '</p>' +
+        '<p id="' + hintId + '" class="dm-hint">' + t('welcomeHint', lang) + '</p>' + View.srTip() +
         (err ? View.errorLine(vm, err) : '') +
         '<div class="dm-opts">' + MODES.map(function (m, i) {
           return View.option(vm, '<label class="dm-opt"><input' + (i === 0 ? ' id="' + View.id(vm, 'input') + '" data-ref="input"' : '') + ' type="radio" name="mode" value="' + m + '"' + (vm.prefsMode === m ? ' checked' : '') + '>' +
@@ -1429,9 +1529,49 @@
       });
       this._onPrefs = function () { if (!self._selfPrefs) self.render(); };
       document.addEventListener('savanna-onboarding:prefs', this._onPrefs);
+      this.addEventListener('click', function (e) {
+        var b = e.target.closest('[data-act]');
+        if (!b) return;
+        if (b.getAttribute('data-act') === 'audio-download') OfflineAudio.download('am');
+        if (b.getAttribute('data-act') === 'audio-remove') OfflineAudio.remove();
+      });
+      this._onAudio = function (s, msg) {
+        self.renderAudio();
+        if (msg) {
+          var st = self.querySelector('[data-ref=audio-status]'), lang = getPrefs().lang;
+          if (st) { st.textContent = ''; setTimeout(function () { st.textContent = t(msg, lang, { n: s.stored, total: s.total, done: s.done, failed: s.failed }); }, 50); }
+          if (msg === 'oa_done' || msg === 'oa_partial' || msg === 'oa_removed') {
+            var nb = self.querySelector('[data-act=audio-download]') || self.querySelector('[data-act=audio-remove]'); if (nb) nb.focus();
+          }
+        }
+      };
+      OfflineAudio.on(this._onAudio);
       this.render();
+      OfflineAudio.refresh('am');
     }
-    disconnectedCallback() { document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; }
+    disconnectedCallback() { document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); OfflineAudio.off(this._onAudio); this._ready = false; }
+    /* "Amharic audio for offline use": size, progress, download and remove. Only the inner part is redrawn. */
+    renderAudio() {
+      var box = this.querySelector('[data-ref=audio-box]');
+      if (!box) return;
+      var lang = getPrefs().lang, s = OfflineAudio, list = s.list('am');
+      var total = list.length, bytes = list.reduce(function (n, x) { return n + x.bytes; }, 0), h = '';
+      if (!s.canStore()) h = '<p>' + t('oa_unsupported', lang) + '</p>';
+      else if (!total) h = '<p>' + t('oa_none', lang) + '</p>';
+      else {
+        h = '<p>' + t('oa_intro', lang) + '</p>';
+        if (s.state === 'downloading') {
+          h += '<p><label for="so-audio-progress">' + t('oa_progressLabel', lang) + '</label></p>' +
+            '<progress id="so-audio-progress" max="' + s.total + '" value="' + (s.done + s.failed) + '"></progress>' +
+            '<p>' + t('oa_progress', lang, { done: s.done, total: s.total, mbDone: mb(s.bytes), mb: mb(s.totalBytes) }) + '</p>';
+        } else {
+          h += '<p>' + (s.stored ? t('oa_stored', lang, { n: s.stored, total: total }) : t('oa_notStored', lang)) + '</p><div class="dm-actions">' +
+            (s.stored < total ? '<button type="button" class="dm-btn dm-primary" data-act="audio-download">' + t('oa_download', lang, { mb: mb(bytes) }) + '</button>' : '') +
+            (s.stored ? '<button type="button" class="dm-btn" data-act="audio-remove">' + t('oa_remove', lang) + '</button>' : '') + '</div>';
+        }
+      }
+      box.innerHTML = h;
+    }
     render() {
       var p = getPrefs(), lang = p.lang;
       function group(name, legend, options, current, hint) {
@@ -1449,7 +1589,10 @@
         group('easy', t('s_read', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.easy ? 'on' : 'off', t('s_readHint', lang)) +
         group('pictures', t('s_pictures', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.pictures ? 'on' : 'off') +
         group('voice', t('s_voice', lang), [['on', t('voice_on', lang)], ['off', t('voice_off', lang)]], store.get('voiceConsent', null) === true ? 'on' : 'off', t('s_voiceHint', lang)) +
-        '<p class="dm-status" role="status" aria-live="polite"></p></form></div>';
+        '<p class="dm-status" role="status" aria-live="polite"></p></form>' +
+        '<section class="dm-offline-audio" aria-labelledby="so-audio-h"><h2 id="so-audio-h">' + t('s_offlineAudio', lang) + '</h2>' +
+        '<div data-ref="audio-box"></div><p class="dm-status" data-ref="audio-status" role="status" aria-live="polite"></p></section></div>';
+      this.renderAudio();
     }
   }
   if (!customElements.get('savanna-onboarding-settings')) customElements.define('savanna-onboarding-settings', SavannaOnboardingSettings);
@@ -1511,11 +1654,11 @@
 
   var API = window.SavannaOnboarding = {
     mount: mount, unmount: unmount,
-    version: '0.9.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
+    version: '0.10.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
-    player: Player, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
+    player: Player, offlineAudio: OfflineAudio, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
     prefs: getPrefs, setPrefs: setPrefs
   };
   window.Dimts = API; // deprecated alias

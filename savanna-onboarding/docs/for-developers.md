@@ -154,6 +154,12 @@ SavannaOnboarding.setSpeech({
   Only listed clips are requested, so missing clips never cause failed downloads (and work offline once cached).
 - **Fallback:** recorded clip → the phone's voice → a status message ("There is no recording for this yet … Everything is
   written on the screen"). A clip that fails to play is marked and the phone's voice reads instead, with a message.
+- **Offline download (Settings):** "Download Amharic audio for offline use (about X MB)" stores every listed clip in the
+  browser's Cache Storage (`savanna-onboarding-audio`), one at a time with progress; "Remove downloaded audio" deletes
+  it (and clips kept on first play). The size comes from `manifest.json` (`bytes`, written by `check-audio.cjs`).
+  The player uses a downloaded copy even on sites without a service worker.
+- **Screen-reader tip:** the welcome screen and Help show, in English then Amharic: "If your screen reader spells Amharic
+  letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English." (NVDA's default voice has no Amharic.)
 - **Speech output adapter:** `output.speak(text, lang, audioUrl, done)` must call `done()` when a piece finishes,
   so the player can continue; `pause()` and `resume()` are optional.
 

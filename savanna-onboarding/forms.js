@@ -130,6 +130,7 @@
           { value: 'hybrid', icon: '🔁', label: { en: 'Both office and home', am: 'በቢሮም በቤትም' }, say: ['both', 'hybrid'] }
         ] },
       { id: 'offers', type: 'multi', options: 'NEEDS',
+        reviewLabel: { en: 'Support offered', am: 'የሚሰጡ ድጋፎች' },
         label: { en: 'Which support does this job offer?', am: 'ይህ ሥራ የትኞቹን ድጋፎች ይሰጣል?' },
         hint: { en: 'Job seekers can find your job by the support they need. They never have to tell you why.', am: 'ሥራ ፈላጊዎች በሚፈልጉት ድጋፍ ሥራዎን ማግኘት ይችላሉ። ምክንያታቸውን ሊነግሩዎ አይገደዱም።' } },
       { id: 'description', type: 'textarea', label: { en: 'Describe the job in a few simple sentences.', am: 'ሥራውን በጥቂት ቀላል ዓረፍተ ነገሮች ይግለጹ።' } },
@@ -148,7 +149,7 @@
       { id: 'name', type: 'text', prefill: { from: 'profile', key: 'name' }, label: { en: 'Your full name', am: 'ሙሉ ስምዎ' } },
       { id: 'phone', type: 'tel', prefill: { from: 'profile', key: 'phone' }, label: { en: 'Your phone number', am: 'ስልክ ቁጥርዎ' } },
       { id: 'why', type: 'textarea', label: { en: 'Why do you want this job?', am: 'ይህን ሥራ ለምን ይፈልጋሉ?' },
-        hint: { en: 'A few sentences are enough. You can answer by voice.', am: 'ጥቂት ዓረፍተ ነገሮች ይበቃሉ። በድምፅ መመለስ ይችላሉ።' } },
+        hint: { en: 'A few sentences are enough. You can type, or answer by voice and check the words before they are used.', am: 'ጥቂት ዓረፍተ ነገሮች ይበቃሉ። መጻፍ፣ ወይም በድምፅ መልሰው ቃላቱን ከመጠቀምዎ በፊት ማረጋገጥ ይችላሉ።' } },
       { id: 'experience', type: 'textarea', label: { en: 'What work or learning have you done before?', am: 'ከዚህ በፊት ምን ዓይነት ሥራ ወይም ትምህርት አከናውነዋል?' },
         hint: { en: 'Paid work, volunteering, courses and family business all count.', am: 'የሚከፈልበት ሥራ፣ በጎ ፈቃድ፣ ኮርሶችና የቤተሰብ ንግድ ሁሉም ይቆጠራሉ።' } },
       { id: 'interview', type: 'multi', optional: true, label: { en: 'How would you like to be interviewed?', am: 'ቃለ መጠይቁ እንዴት እንዲሆን ይፈልጋሉ?' },

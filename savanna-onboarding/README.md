@@ -152,6 +152,8 @@ Also added: a "Skip to main content" link, and focused items never hide under th
 | Text size, high contrast, language settings | implemented |
 | Read-aloud | implemented: "Listen" on every question and a Listen button on every answer, with Pause/Resume, Stop and Play again; Escape stops it. Plays the recorded Amharic clips named in [`docs/audio-script.md`](docs/audio-script.md) when they exist, otherwise the phone's voice, otherwise a short message that everything is on screen. **The recordings are being made by the team; until they are added, Amharic relies on the phone's voice, which most phones do not have.** Audio is never required |
 | Pictures and bigger buttons | implemented: a separate setting from read aloud |
+| Amharic audio for offline use | implemented: Settings offers "Download Amharic audio for offline use (about X MB)" with progress, and "Remove downloaded audio". Otherwise each recording is kept the first time it plays |
+| Screen readers and Amharic | **known limitation:** NVDA with its default Windows voice spells Amharic letter by letter. Mitigations: recorded Amharic (read aloud), one-tap English, correct `lang` tags, and a tip on the welcome screen and in Help |
 | Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Google, so consent is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions, or on the date. Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
 | "Finish later" SMS | **simulated**: a labelled preview, no SMS is sent |
 | ID verification | unavailable: IDs are never verified. Each ID choice shows an honest badge ("Self-declared · not verified", "Partner referral pending"); after sign-up the status is "Self-declared", "Number recorded — not verified" or "Partner referral pending" |
@@ -206,6 +208,7 @@ everywhere the module appears.
 
 **What has been tested:**
 
+- **By a person (14 Nov):** NVDA on Windows with its default voice spells Amharic letter by letter (see the limitation above).
 - **Automated (Playwright + axe-core), on phone and desktop sizes, in Amharic and English:** zero serious or critical
   axe issues on every screen, including the Savanna journey pages and the test host page; keyboard-only sign-up and
   the gate task (sign up and save a Support Passport) with the keyboard only; focus outline contrast; no sideways

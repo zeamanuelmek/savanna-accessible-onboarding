@@ -120,7 +120,7 @@ recording, tester) · **Limitations / untested parts**.
 | SC | Name | Level | Result | Expected | Actual | Evidence | Limitations / untested |
 |---|---|---|---|---|---|---|---|
 | 3.1.1 | Language of Page | A | Not yet tested | `<html lang>` matches the chosen language | | | |
-| 3.1.2 | Language of Parts | AA | Not yet tested | Amharic and English parts marked with `lang` | | | Amharic is an AI draft pending native review |
+| 3.1.2 | Language of Parts | AA | Not yet tested | Amharic and English parts marked with `lang` | | | Amharic is an AI draft pending native review. **Note (manual test, 14 Nov):** NVDA with its default Windows voice spells Amharic letter by letter even though `lang="am"` is correct; see Known limitations |
 | 3.2.1 | On Focus | A | Not yet tested | Focusing never changes the context | | | |
 | 3.2.2 | On Input | A | Not yet tested | Choosing an option never changes the context unexpectedly | | | |
 | 3.2.3 | Consistent Navigation | AA | Not yet tested | Same menu in the same order on every page | | | |
@@ -141,6 +141,15 @@ recording, tester) · **Limitations / untested parts**.
 | 4.1.3 | Status Messages | AA | Not yet tested | Saved, welcome-back and job-count messages announced via `role="status"` | | | |
 
 ## 5. Known limitations (fill in during Phase 9)
+
+- **Screen readers and Amharic (found by manual test, 14 Nov).** NVDA on Windows with its default voice reads Amharic
+  text letter by letter ("Amharic letter …") instead of speaking it. The module marks the language correctly
+  (`lang="am"`); the screen reader's voice has no Amharic. This affects blind Amharic learners. Mitigations in the
+  module: (1) recorded Amharic audio for every question and answer, played by "Listen" (read aloud); (2) a one-tap
+  switch to English on every screen; (3) correct language tags, so a screen reader with an Amharic voice switches to
+  it; (4) a tip on the welcome screen, before the first question, and in Help, in English and Amharic: "If your screen
+  reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English."
+  Still to check: TalkBack on Android (Google's speech service has Amharic on some phones).
 
 - _List any criterion that is "Partially supports" or "Does not support", with the reason and the plan._
 - _List what was not tested (for example, browsers or screen readers not available)._

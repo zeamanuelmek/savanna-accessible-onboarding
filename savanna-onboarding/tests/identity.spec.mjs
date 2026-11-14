@@ -143,7 +143,7 @@ test('job application: the learner sees exactly what would be shared, and nothin
   await signupTo(page, 'END'); await next(page);
   await page.evaluate(() => localStorage.setItem('savanna-onboarding.passport', JSON.stringify({ needs: ['remote', 'captions'], other_need: 'quiet room', sharing: 'ask' })));
   await applyTo(page);
-  await expect(page.locator('.dm-note')).toContainText('the employer sees exactly this list: Work from home; Captions on videos and calls');
+  await expect(page.locator('.dm-form .dm-note')).toContainText('the employer sees exactly this list: Work from home; Captions on videos and calls');
   await expect(page.locator('input[name=v]:checked')).toHaveCount(0); // no default: an explicit choice
   await pick(page, 'keep'); await next(page); await next(page);
   let packet = await page.locator('pre code').innerText();

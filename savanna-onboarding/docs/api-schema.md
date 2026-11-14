@@ -264,6 +264,9 @@ Each job from the `employer` form is published as JSON-LD that other job platfor
 }
 ```
 
+The demo job board also publishes every job on the page as one `<script type="application/ld+json">` array of these
+objects, whatever the learner's private filter shows.
+
 Matching jobs to a learner's needs happens **on the device** by comparing `workplaceSupportOffered` with the Support
 Passport. The job board never learns the learner's needs.
 

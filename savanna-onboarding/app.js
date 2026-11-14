@@ -27,8 +27,8 @@
       c3: 'Find jobs privately', c3t: 'Filter jobs by the support you need. The filter runs on your phone, so the job board never learns your needs.',
       c4: 'Post a job', c4t: 'Employers tick the support a job offers, using the same list. The job is published in the schema.org JobPosting standard.',
       reset: 'Clear all demo data on this phone', resetDone: 'All demo data on this phone was cleared.',
-      jobsTitle: 'Jobs', filterAll: 'Only show jobs that offer everything in my Support Passport',
-      filterNote: 'This filter runs on your phone. The job board never sees your Support Passport.',
+      jobsTitle: 'Jobs', filterAll: 'Only show jobs that offer all the support I need',
+      filterNote: 'Private: this uses your Support Passport on this phone. The job board never sees it, and employers only see it if you choose to share it when you apply.',
       noPassport: 'Create your Support Passport to see which jobs offer the support you need.',
       makePassport: 'Create my Support Passport', offers: 'Support this job offers', match: 'Offers {k} of the {n} kinds of support you chose',
       listen: 'Listen to this job', apply: 'Apply', sample: 'Sample job (demo data)', none: 'No jobs match all of your support needs yet. Turn the filter off to see all jobs.',
@@ -73,8 +73,8 @@
       c3: 'ሥራ በምስጢር ይፈልጉ', c3t: 'በሚፈልጉት ድጋፍ ሥራዎችን ያጣሩ። ማጣሪያው በስልክዎ ላይ ስለሚሠራ የሥራ ጣቢያው ፍላጎትዎን አያውቅም።',
       c4: 'ሥራ ያስተዋውቁ', c4t: 'ቀጣሪዎች ሥራው የሚሰጠውን ድጋፍ ከተመሳሳይ ዝርዝር ይመርጣሉ።',
       reset: 'በዚህ ስልክ ያለውን የሙከራ መረጃ ሁሉ አጥፋ', resetDone: 'በዚህ ስልክ ያለው የሙከራ መረጃ ሁሉ ተሰርዟል።',
-      jobsTitle: 'ሥራዎች', filterAll: 'በድጋፍ ፓስፖርቴ ያለውን ሁሉ የሚሰጡ ሥራዎችን ብቻ አሳይ',
-      filterNote: 'ይህ ማጣሪያ በስልክዎ ላይ ይሠራል። የሥራ ጣቢያው የድጋፍ ፓስፖርትዎን አያይም።',
+      jobsTitle: 'ሥራዎች', filterAll: 'የሚያስፈልገኝን ድጋፍ ሁሉ የሚሰጡ ሥራዎችን ብቻ አሳይ',
+      filterNote: 'የግል፦ ይህ በስልክዎ ላይ ያለውን የድጋፍ ፓስፖርትዎን ይጠቀማል። የሥራ ጣቢያው አያየውም፤ ቀጣሪዎችም የሚያዩት ሲያመለክቱ ለማጋራት ከመረጡ ብቻ ነው።',
       noPassport: 'የትኞቹ ሥራዎች የሚፈልጉትን ድጋፍ እንደሚሰጡ ለማየት የድጋፍ ፓስፖርትዎን ይፍጠሩ።',
       makePassport: 'የድጋፍ ፓስፖርቴን ፍጠር', offers: 'ይህ ሥራ የሚሰጣቸው ድጋፎች', match: 'ከመረጧቸው {n} ድጋፎች {k}ቱን ይሰጣል',
       listen: 'ይህን ሥራ አዳምጥ', apply: 'አመልክት', sample: 'የናሙና ሥራ (የሙከራ መረጃ)', none: 'እስካሁን ሁሉንም የድጋፍ ፍላጎቶችዎን የሚያሟላ ሥራ የለም። ሁሉንም ለማየት ማጣሪያውን ያጥፉ።',
@@ -339,6 +339,7 @@
         '<h3>' + T('offers') + '</h3><ul class="needs small">' + j.offers.map(function (o) { return '<li' + (needs.indexOf(o) !== -1 ? ' class="hit"' : '') + '><span aria-hidden="true">' + needIcon(o) + '</span> ' + esc(needLabel(o)) + '</li>'; }).join('') + '</ul>' +
         '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '">🔊 ' + T('listen') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></button> <a class="btn primary" href="' + R('#/apply/' + j.id) + '">' + T('apply') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></a></p></article></li>';
     }).join('') + '</ul>';
+    h += '<script type="application/ld+json">' + JSON.stringify(jobs().map(jobPostingLd)) /* every job, whatever the private filter shows */.replace(/</g, '\\u003c') + '</' + 'script>';
     view.innerHTML = h;
     // The result count is announced on load and after filtering (status live region, filled after it exists).
     var count = list.length;

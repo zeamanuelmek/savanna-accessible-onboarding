@@ -140,7 +140,7 @@ test('no speech engine (e.g. an app WebView): no microphone button, and a clear 
   await pick(page, 'speak'); await next(page);
   await pick(page, 'self'); await next(page);
   await expect(page.locator('[data-act=speak]')).toHaveCount(0);
-  await expect(page.locator('.dm-note')).toContainText('Voice answers are not available in this browser');
+  await expect(page.locator('.dm-form .dm-note')).toContainText('Voice answers are not available in this browser');
   await page.fill('[data-ref=input]', 'Abebe Kebede'); await next(page); // typing still works
   expect(await heading(page)).toContain('phone number');
 });
