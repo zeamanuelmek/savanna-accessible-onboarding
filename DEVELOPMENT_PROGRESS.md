@@ -956,8 +956,10 @@ Automated, inside the Savanna pages:
 
 | Project | Passed | Skipped | Failed |
 |---|---|---|---|
-| mobile (Pixel 5) | 162 | 5 | 0 |
-| desktop | 166 | 1 | 0 |
+| mobile (Pixel 5) | 161 | 5 | 0 |
+| desktop | 165 | 1 | 0 |
+
+(A temporary screenshot script was counted in the first run and then removed; the numbers above exclude it.)
 
 - axe-core: **152 scans** (38 screens × 2 languages × 2 devices), **0 serious or critical**. Structure, language of
   parts and 320px checks pass on every screen, including 11 new Savanna / test-host screens.
