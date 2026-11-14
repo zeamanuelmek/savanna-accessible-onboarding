@@ -48,7 +48,8 @@
       errNoAccount: 'There is no Savanna account with this phone number on this phone. Check the number, or sign up.',
       errCode: 'That code does not match the SMS. Check it and try again. You can paste it.',
       codeSent: 'Code sent (simulated). It is shown below.', loggedOut: 'You have logged out. Your answers stay on this phone.',
-      employerIntro: 'For employers', settingsIntro: ''
+      employerIntro: 'For employers', settingsIntro: '',
+      offline: 'You are offline. Pages you have opened before still work, and your answers stay on this phone.', online: 'You are back online.'
     },
     am: {
       skip: 'ወደ ዋናው ይዘት ይዝለሉ', menu: 'ምናሌ', logoAlt: 'የሳቫና መነሻ', navLabel: 'ሳቫና',
@@ -79,7 +80,8 @@
       errNoAccount: 'በዚህ ስልክ ላይ በዚህ ስልክ ቁጥር የሳቫና መለያ የለም። ቁጥሩን ያረጋግጡ ወይም ይመዝገቡ።',
       errCode: 'ኮዱ ከአጭር መልእክቱ ጋር አይመሳሰልም። ያረጋግጡና እንደገና ይሞክሩ። መለጠፍ ይችላሉ።',
       codeSent: 'ኮድ ተልኳል (የተመሰለ)። ከታች ይታያል።', loggedOut: 'ወጥተዋል። መልሶችዎ በዚህ ስልክ ላይ ይቆያሉ።',
-      employerIntro: 'ለቀጣሪዎች', settingsIntro: ''
+      employerIntro: 'ለቀጣሪዎች', settingsIntro: '',
+      offline: 'ከኢንተርኔት ውጪ ነዎት። ከዚህ በፊት የከፈቷቸው ገጾች አሁንም ይሠራሉ፤ መልሶችዎም በዚህ ስልክ ላይ ይቆያሉ።', online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።'
     }
   };
   function lang() { return H.lang(); }
@@ -132,7 +134,7 @@
     var main = document.getElementById('content');
     if (!main) {
       main = document.createElement('main'); main.className = 'content'; main.id = 'content'; main.tabIndex = -1;
-      main.innerHTML = '<div class="sj"><div id="sj-view"></div><footer class="sj-foot"><p id="sj-foot"></p><p class="sj-foot-links"></p></footer></div>';
+      main.innerHTML = '<div class="sj"><p id="sj-offline" class="notice" role="status" hidden></p><div id="sj-view"></div><footer class="sj-foot"><p id="sj-foot"></p><p class="sj-foot-links"></p></footer></div>';
       document.body.appendChild(main);
     }
     document.getElementById('sj-foot').innerHTML = T('foot');
@@ -288,6 +290,20 @@
     if (active) document.querySelector('.sj-lang').focus();
   });
 
+  /* Minimum offline mode: the service worker keeps the pages, module, fonts and styles on this phone (sw.js).
+     Pages that show a form get the module's own offline message; the others get this one. */
+  function netNotice() {
+    var n = document.getElementById('sj-offline');
+    if (!n) return;
+    var hasForm = !!view.querySelector('savanna-onboarding-form');
+    if (navigator.onLine === false && !hasForm) { n.hidden = false; n.textContent = T('offline'); }
+    else if (!n.hidden) { n.textContent = T('online'); setTimeout(function () { if (navigator.onLine !== false) n.hidden = true; }, 6000); }
+  }
+  window.addEventListener('online', netNotice);
+  window.addEventListener('offline', netNotice);
+  if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js').catch(function () {}); } catch (e) {} }
+
   frame();
   renderPage(true);
+  if (navigator.onLine === false) netNotice();
 })();

@@ -137,7 +137,7 @@ test('simulated log-in: labelled, no password to remember, code can be pasted, n
   await signUpFromHome(page, { check: 'Check your answers', ready: 'Your account is ready' });
   await page.evaluate(() => localStorage.removeItem('savanna-demo.session'));
   await at(page, '/login.html');
-  await expect(page.locator('.sj .notice')).toContainText('Simulated log-in');
+  await expect(page.locator('#sj-view .notice')).toContainText('Simulated log-in');
   await expect(page.locator('input[type=password]')).toHaveCount(0);
   const phone = page.locator('#sj-phone');
   await expect(phone).toHaveAttribute('autocomplete', 'tel');
@@ -160,7 +160,7 @@ test('simulated log-in: labelled, no password to remember, code can be pasted, n
   await expect(page.locator('.sj h1')).toHaveText('Welcome, Abebe Kebede');
   await page.locator('#sidebar a[data-logout]').evaluate(a => a.click());
   await page.waitForURL('**/index.html');
-  await expect(page.locator('.sj .notice')).toContainText('You have logged out');
+  await expect(page.locator('#sj-view .notice')).toContainText('You have logged out');
 });
 
 test('profile page, jobs with the on-device filter, application and employer form all run inside Savanna', async ({ page }) => {

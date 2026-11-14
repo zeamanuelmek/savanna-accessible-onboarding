@@ -66,6 +66,8 @@
     document.addEventListener('DOMContentLoaded', function () {
       var D = window.SavannaOnboarding, handle = null, log = [];
       document.getElementById('version').textContent = D.version;
+      // Optional for hosts: the module's sample service worker, so this page also opens offline after one visit.
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('../sw.js').catch(function () {});
       function say(msg) { var s = document.getElementById('status'); s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); }
       function record(name, detail) {
         log.unshift({ event: name, at: new Date().toISOString().slice(11, 19), detail: detail });

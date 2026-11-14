@@ -1059,3 +1059,69 @@ page. I removed that click (the test clears the session itself), and the journey
 - **Not done (approved cut 4):** a simplified-wording option.
 
 ---
+
+## Phase 6 (minimum) — Offline ✅ (14 Nov 2026)
+
+Scope agreed: the minimum only (cache the module, fonts and audio; show an offline message). Sync and IndexedDB stay
+cut-first. Encrypting device storage stays cut (approved cut 3), so the "profile stored as plain text" test is still
+an expected failure.
+
+### What changed
+
+- `savanna-onboarding/sw.js` (new): a service worker.
+  - **At install** it keeps on the device: all demo pages, the module, the form recipes, the shared views, our fonts
+    (Poppins and Noto Sans Ethiopic), Savanna's two stylesheets and the audio manifest.
+  - **When used** it keeps other site files (Savanna's fonts and images), and each recorded clip the first time it is
+    played. The whole file is fetched, even when the media player asks for part of it.
+  - **Pages** come from the network when online (so new deploys show), and from the saved copy offline.
+  - It only handles this site's own GET requests, never `tests/` or `tools/`.
+  - Registered by the Savanna pages, the showroom and the test host page. Savanna could instead copy the `CORE` list
+    into its own service worker.
+- `savanna-onboarding.js` (version 0.9.0):
+  - **Offline message** at the top of every form, as a polite `role="status"`, in Amharic and English: "You are
+    offline. Your answers are saved on this phone, and you can keep going. Voice answers need a connection." Then
+    "You are back online."
+  - Voice input says **at once** that it needs a connection when offline, instead of waiting for a browser error.
+- `journey/journey.js`: the same kind of message on Savanna pages without a form (dashboard, jobs).
+- Drafts were already deleted after submit (Phase 2); nothing new is stored.
+- `docs/offline-plan.md` rewritten: what works offline (with test evidence), what does not, and one decision for the team.
+  README offline row and `CLAUDE.md` decision 10 updated.
+- Tests: new `tests/offline.spec.mjs` (6 tests, using the browser's real offline mode):
+  - files are kept on the device;
+  - sign-up opens and saves answers offline;
+  - the message comes and goes with the connection;
+  - pages without a form show it too;
+  - voice says it needs a connection;
+  - a clip is kept when first played and plays again offline (using a temporary test file that is removed afterwards).
+
+  One new accessibility screen (the offline message). The read-aloud tests now run with the service worker turned
+  off, because they replace files on the way to the page.
+
+### Tests (one worker, mobile then desktop)
+
+| Project | Passed | Skipped | Failed |
+|---|---|---|---|
+| mobile (Pixel 5) | 183 | 5 | 0 |
+| desktop | 187 | 1 | 0 |
+
+- axe-core: **164 scans** (41 screens × 2 languages × 2 devices), 0 serious or critical.
+- The first full run had 1 failure on each size (the log-in test). It was not timing: the new hidden offline message
+  uses the same "notice" style as the log-in notice, so the test read the wrong box. The test now looks inside the
+  page content, and the journey and offline tests then passed 32 of 32. The totals above include that fix.
+
+### Real vs simulated after Phase 6
+
+- **Offline (minimum): implemented**, tested in the browser's offline mode.
+- **Not tested yet:** a real phone in flight mode, or 3G speed.
+- **Voice input never works offline** (it needs Google's service), and the learner is told so.
+- **Clips are kept only once played.** The team can decide to download the gate-path clips in advance (about 3–5 MB).
+
+### Decisions needed
+
+1. Download the sign-up and Support Passport clips in advance for offline use (about 3–5 MB per learner), or keep
+   "kept once played" (the default)?
+2. Docker result and tonight's manual test results, when you have them (they go in the table above).
+
+### Next step
+
+Wait for "go to Phase 7".

@@ -132,6 +132,8 @@
       s_lang: 'Language', s_size: 'Text size', s_contrast: 'Contrast', s_mode: 'How I like to answer', s_read: 'Read aloud',
       s_readHint: 'Questions are read out, and every answer has its own Listen button. Everything is also written on the screen.',
       s_pictures: 'Pictures and bigger buttons',
+      offline: 'You are offline. Your answers are saved on this phone, and you can keep going. Voice answers need a connection.',
+      online: 'You are back online.',
       play: 'Listen', pause: 'Pause', resume: 'Resume', stopAudio: 'Stop', replay: 'Play again',
       noAudio: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.',
       clipFailed: 'A recording could not be played, so the phone\'s voice is reading instead.',
@@ -196,6 +198,8 @@
       s_lang: 'ቋንቋ', s_size: 'የጽሑፍ መጠን', s_contrast: 'ንፅፅር', s_mode: 'መመለስ የምመርጥበት መንገድ', s_read: 'ጮክ ብሎ ማንበብ',
       s_readHint: 'ጥያቄዎች ይነበባሉ፤ እያንዳንዱ መልስም የራሱ «አዳምጥ» አዝራር አለው። ሁሉም ነገር በማያ ገጹ ላይም ተጽፏል።',
       s_pictures: 'ሥዕሎችና ትልልቅ አዝራሮች',
+      offline: 'ከኢንተርኔት ውጪ ነዎት። መልሶችዎ በዚህ ስልክ ላይ ይቀመጣሉ፤ መቀጠልም ይችላሉ። በድምፅ መመለስ ግንኙነት ያስፈልገዋል።',
+      online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።',
       play: 'አዳምጥ', pause: 'ለአፍታ አቁም', resume: 'ማጫወት ቀጥል', stopAudio: 'አቁም', replay: 'እንደገና አጫውት',
       noAudio: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
       clipFailed: 'ቅጂው መጫወት አልቻለም፤ ስለዚህ የስልኩ ድምፅ እያነበበ ነው።',
@@ -747,6 +751,7 @@
     '.dm a,.dm samp,.dm q{overflow-wrap:anywhere}', // long links (resume link) wrap at 400% zoom
 
     '.dm-tools{display:flex;flex-wrap:wrap;gap:.6em;margin:1em 0}',
+    '.dm-offline{margin:0 0 1em;padding:.6em .9em;border:var(--so-border-width) solid var(--so-border-strong);border-radius:var(--so-radius);background:var(--so-surface-alt);color:var(--so-heading);font-weight:500}',
     '.dm-player{display:contents}',
     '.dm-player[hidden]{display:none}',
     '.dm-opt-row{display:flex;flex-wrap:wrap;gap:.4em;align-items:stretch}',
@@ -850,7 +855,8 @@
     },
 
     page: function (vm) {
-      var html = '<div class="dm' + (vm.pictures ? ' dm-easy' : '') + (vm.voiceFirst ? ' dm-voice-first' : '') + '" lang="' + vm.lang + '">';
+      var html = '<div class="dm' + (vm.pictures ? ' dm-easy' : '') + (vm.voiceFirst ? ' dm-voice-first' : '') + '" lang="' + vm.lang + '">' +
+        '<p class="dm-offline" data-ref="offline" role="status"' + (vm.offline ? '' : ' hidden') + '>' + (vm.offline ? t('offline', vm.lang) : '') + '</p>';
       var m = vm.s.mode;
       html += m === 'welcome' ? View.welcome(vm) : m === 'question' ? View.question(vm) : m === 'review' ? View.review(vm) :
         m === 'saved' ? View.saved(vm) : m === 'done' ? View.done(vm) : '';
@@ -1064,11 +1070,21 @@
     document.addEventListener('savanna-onboarding:prefs', this._onPrefs);
     this._onPlayer = function () { self.updatePlayer(); };
     Player.on(this._onPlayer);
+    // Minimum offline mode: say so when the connection drops or comes back. Answers are saved on the device either way.
+    this._onNet = function () {
+      var b = self.ref('offline');
+      if (!b) return;
+      if (navigator.onLine === false) { b.hidden = false; b.textContent = t('offline', self.lang); }
+      else { b.textContent = t('online', self.lang); setTimeout(function () { if (navigator.onLine !== false && b.textContent === t('online', self.lang)) b.hidden = true; }, 6000); }
+    };
+    window.addEventListener('online', this._onNet);
+    window.addEventListener('offline', this._onNet);
     if (this.easy) loadAudioManifest();
     this.render(false);
   };
   SavannaOnboardingForm.prototype.disconnectedCallback = function () {
     document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; Player.off(this._onPlayer);
+    window.removeEventListener('online', this._onNet); window.removeEventListener('offline', this._onNet);
     if (Player.owner === this) Player.stop();
     if (this.voice && this.voice.session) this.voice.session.abort();
     this.voice = null;
@@ -1084,7 +1100,7 @@
   SavannaOnboardingForm.prototype.vm = function () {
     var s = this.state, mode = getPrefs().mode;
     return {
-      cfg: this.cfg, s: s, lang: this.lang, easy: this.easy, pictures: getPrefs().pictures, uid: this.uid, error: this.error, helpOpen: this.helpOpen,
+      cfg: this.cfg, s: s, lang: this.lang, easy: this.easy, pictures: getPrefs().pictures, offline: navigator.onLine === false, uid: this.uid, error: this.error, helpOpen: this.helpOpen,
       welcomeOn: this.welcomeOn, startAtReview: this.startAtReview, prefsMode: mode, voiceFirst: mode === 'speak',
       resumeLink: location.href.split('#')[0].split('?')[0] + '?resume=' + s.resumeCode + location.hash
     };
@@ -1302,6 +1318,7 @@
     var lang = this.lang, self = this, f = this.state.field();
     if (!voiceAllowed(f)) return; // never on sensitive questions
     if (!speech.input.supported()) { this.status(t('voiceUnsupported', lang)); return; }
+    if (navigator.onLine === false && speech.input === browserInput) { this.status(t('voiceNetwork', lang)); return; }
     if (store.get('voiceConsent', null) !== true) {
       this.voice = { state: 'consent', field: f };
       this.setHeard(View.voiceConsent(this.vm()));
@@ -1494,7 +1511,7 @@
 
   var API = window.SavannaOnboarding = {
     mount: mount, unmount: unmount,
-    version: '0.8.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
+    version: '0.9.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,

@@ -159,7 +159,7 @@ Also added: a "Skip to main content" link, and focused items never hide under th
 | Partner-assisted sign-up | implemented: learner consent, then a handover and learner takeover step |
 | Amharic text | AI draft: needs native-speaker review |
 | Backend / API | unavailable by design: the module sends nothing; the host page decides where data goes. Data and events: [`docs/api-schema.md`](docs/api-schema.md) |
-| Offline | partial: answers are saved on the phone; opening the page with no connection comes in Phase 6. See [`docs/offline-plan.md`](docs/offline-plan.md) |
+| Offline (minimum) | implemented and tested in the browser's offline mode: after one visit, the pages, module, fonts and styles open with no connection (`sw.js`); answers are saved on the phone; a clear offline message; recordings are kept once played. **Voice input never works offline.** Not yet tested on a real phone in flight mode. See [`docs/offline-plan.md`](docs/offline-plan.md) |
 | Docker Compose | written (`docker compose up`); **not yet run on a machine with Docker** (planned clean-machine check in Phase 10) |
 
 ## Keyboard and screen-reader (ARIA) support

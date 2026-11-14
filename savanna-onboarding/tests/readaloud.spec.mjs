@@ -37,6 +37,8 @@ async function clips(page, manifest, { broken = [] } = {}) {
   });
 }
 
+// These tests replace files on their way to the page; requests through a service worker would skip that.
+test.use({ serviceWorkers: 'block' });
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
 test('every answer has its own Listen button when read aloud is on, named after the answer', async ({ page }) => {

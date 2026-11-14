@@ -1,46 +1,46 @@
 # Offline plan (one page)
 
-Decision (14 Nov training): **a minimum offline mode is never cut.** Everything else about offline (sync, IndexedDB)
-is cut-first. We never claim more than the table below says, and we never claim offline voice input.
+Decision (14 Nov training): **a minimum offline mode is never cut.** Phase 6 (14 Nov) built that minimum. Sync and
+IndexedDB stay cut-first. We never claim more than this page says, and we never claim offline voice input.
 
-## Should work with no internet today (by design; not yet tested with the network switched off)
+## Works with no internet (tested automatically with the browser's offline mode)
 
-| What | Why it works | Evidence so far (online tests) |
+| What | How | Evidence |
 |---|---|---|
-| Answering a form that is already open | No network calls; the module is plain JavaScript in the page | Code review: the module makes no network requests (no fetch, XHR, beacon or socket); an automated check is planned |
-| Answers kept after every question | Saved on the device (`savanna-onboarding.draft.*` in localStorage) before moving on | Autosave and reload tests |
-| Coming back later, on the same phone | The draft is reloaded; "Welcome back" is announced | Resume tests |
-| Ethiopian calendar, validation, check your answers | Worked out on the device | Unit and journey tests |
-| Settings (text size, contrast, language) | Stored on the device | Settings tests |
-| Job filter by Support Passport | Runs on the device | Jobs filter test |
+| Opening the Savanna pages, the showroom and the test host page again, after one visit with a connection | `sw.js` (a service worker) keeps the pages, the module, the form recipes, our fonts, Savanna's two stylesheets and the audio list on the device | `tests/offline.spec.mjs` |
+| Signing up and answering every question | The module is plain JavaScript; it sends nothing over the network | offline sign-up test |
+| Answers kept after every question | Saved on the device (`savanna-onboarding.draft.*`) before moving on | offline sign-up test, autosave tests |
+| Being told | "You are offline. Your answers are saved on this phone, and you can keep going. Voice answers need a connection." at the top of every form, and a similar message on pages without a form. "You are back online." when it returns. Amharic and English, announced politely | offline tests, accessibility sweep |
+| Recorded clips | Each clip is kept the first time it is played, then plays offline | clip test |
+| Ethiopian calendar, validation, check your answers, settings, job filter | Worked out on the device | journey tests |
 
-**Not yet:** opening the page for the first time, or reloading it, without a connection. The browser still needs to
-download the files. That is what we add next.
-
-## What we will add (Phase 6 minimum)
-
-1. **Answers saved on the device first** (done for drafts). Completed records stay on the device until the host
-   sends them; the host is told whether it is online.
-2. **The module cached for offline use:** a small service worker caches `savanna-onboarding.js`, `forms.js`, the
-   fonts (Poppins and Noto Sans Ethiopic, about 260 KB in total) and the demo page, so they open again with no
-   connection.
-3. **Recorded audio cached:** reviewed Amharic and English question recordings (Phase 4) are cached with the module,
-   so read-aloud works offline without depending on a device voice.
-4. **Clear offline status:** a short message such as "You are offline. Your answers are saved on this phone." in a
-   polite status region, in Amharic and English.
-
-Later, only if time allows: IndexedDB instead of localStorage, and background sync to the host.
-
-## Never works offline
+## Not offline, by design or not yet
 
 | What | Why |
 |---|---|
-| **Voice input** (speech to text) | The browser sends the audio to a cloud service (Google). With no connection, the microphone button explains this and the learner types or taps instead. A future local engine (for example Addis AI, if it runs on the device) would be needed to change this. |
-| Device read-aloud in Amharic | Depends on the phone having an Amharic voice, which most do not; recorded audio is the offline path |
-| Sending answers to the host's server | Needs a connection; answers wait on the device |
-| ID checks | Not offered at all, online or offline |
+| **Voice input** (speech to text) | The browser sends the audio to a cloud service. Offline, the microphone says at once that voice needs a connection; typing and tapping work. A local engine (for example Addis AI, if it ever runs on the phone) would be needed to change this |
+| The very first visit | The files must be downloaded once |
+| Clips never played before | Not downloaded in advance: all 73 clips (about 10 minutes of speech) come to roughly 5–7 MB at 64–96 kbps, which costs learners money on 3G. The phone's voice or the on-screen words are used instead. The team can change this (see below) |
+| Device read-aloud in Amharic | Most phones have no Amharic voice; recordings are the offline path |
+| Sending answers to the host's server, ID checks | No server in this project; answers wait on the device |
+| Sync, IndexedDB | Cut-first; drafts use localStorage |
 
-## How we will test it (Phase 9)
+## Updating
 
-Chrome DevTools "Offline" and a 3G-speed profile; the cheapest Android phone the team can borrow, in flight mode
-after one visit. Results go into `docs/conformance-report.md` and `DEVELOPMENT_PROGRESS.md`.
+`sw.js` serves pages fresh from the network when online, so a new deploy shows on the next visit. Other files are
+served from the device and refreshed in the background. Changing `CACHE` in `sw.js` clears old copies.
+
+## For hosts
+
+`sw.js` is a sample for the demo pages. Savanna would normally add the module's files (the `CORE` list in `sw.js`)
+to its own service worker instead.
+
+## Still to test by people (Phase 9)
+
+The cheapest Android phone the team can borrow, in flight mode after one visit, and a 3G-speed connection. Results go
+into `docs/conformance-report.md` and `DEVELOPMENT_PROGRESS.md`.
+
+## Decision for the team
+
+Should the sign-up and Support Passport clips (roughly 3–5 MB) be downloaded in advance, so the gate path has Amharic
+audio offline even on the first offline use? Default now: no (data cost).

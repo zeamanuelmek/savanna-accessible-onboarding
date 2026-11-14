@@ -440,6 +440,8 @@
   document.getElementById('skip').addEventListener('click', function (e) { e.preventDefault(); var m = document.getElementById('main'); m.focus(); });
   document.getElementById('host-lang').addEventListener('click', function () { D.setPrefs({ lang: lang() === 'am' ? 'en' : 'am' }); });
   syncHostLang();
+  // Minimum offline mode (see sw.js): the showroom works without a connection after one visit.
+  if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js').catch(function () {}); } catch (e) {} }
   window.addEventListener('hashchange', route);
   route();
 })();
