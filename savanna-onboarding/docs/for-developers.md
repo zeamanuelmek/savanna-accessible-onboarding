@@ -53,7 +53,13 @@ SavannaOnboarding.register('my-form', {
 
 - **Field types:** `text`, `tel`, `email`, `textarea`, `choice`, `multi`, `consent`, `ethdate` (Ethiopian calendar,
   stored with the Gregorian date).
-- **Field options:** `optional`, `hint`, `body`, `showIf`, `prefill`, `voice: false`, `reviewLabel`, `reviewHide`, `audio`, `validate`.
+- **Field options:** `optional`, `hint`, `body`, `showIf`, `prefill`, `default`, `voice: false`, `reviewLabel`, `reviewHide`, `audio`, `validate`.
+  - Any text (label, hint, body, review texts) can be `{ en, am }` or a function `(lang) => text`, for wording that uses
+    the learner's own data (for example the takeover screen names who helped).
+  - `default`: an answer chosen in advance when there is none yet, for a privacy-first choice (the Support Passport
+    starts as "Only me"). It is not marked as "filled in from your profile".
+  - Option `badge`: a short status shown on the option (and in "Check your answers"), for example the honest ID trust
+    status. It is visible text, so screen readers read it as part of the option.
   - `sensitive: true`: support needs and ID questions. Voice input is never offered on them, so the answer never goes to a
     cloud speech service.
   - `clearIfChanged: 'fieldId'`: throw this answer away when that field's answer changes (an ID number belongs to one ID type).
@@ -63,7 +69,16 @@ SavannaOnboarding.register('my-form', {
 - Answers to questions that are no longer shown (an abandoned route) are deleted from the draft and never sent.
 - Several forms can be on one page: every id inside a form is prefixed with that form's own id.
 
-## 3a. How the engine is organised
+## 3a. Identity and private support (Phase 5)
+
+- **Trust status, never "verified":** `SavannaOnboarding.TRUST` (badge texts) and `trustLevel(answers)` →
+  `self_declared`, `document_number_recorded` or `partner_referral_pending`.
+- **Employer sharing:** `SavannaOnboarding.supportForEmployer(applyAnswers)` returns the Support Passport needs only
+  when the learner said "share" for that application. Never the learner's own words, never a reason.
+- **Learner takeover:** the `takeover` form opens on a summary of what the partner entered; the learner checks it
+  alone and confirms. The host then removes the staff name (the demo keeps only the organisation).
+
+## 3a-2. How the engine is organised
 
 One file, `savanna-onboarding.js`, in clear layers:
 

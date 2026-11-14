@@ -795,3 +795,101 @@ them) and I will put them into the code and regenerate the script before recordi
 ### Next step
 
 Wait for "go to Phase 5".
+
+---
+
+## Manual test results from the team
+
+_Recorded here as they arrive (14 Nov onwards). None received yet at the end of Phase 5._
+
+| Date / time | Tester | Device, browser, assistive technology | What was tested | Result | Follow-up |
+|---|---|---|---|---|---|
+
+---
+
+## Phase 5 — Identity and private support ✅ (14 Nov 2026)
+
+### What changed
+
+- `savanna-onboarding/savanna-onboarding.js` (version 0.6.0):
+  - **Honest trust vocabulary:** `SavannaOnboarding.TRUST` and `trustLevel(answers)`: "Self-declared", "Number recorded
+    — not verified", "Partner referral pending" (Amharic too). Nothing anywhere says "verified".
+  - **Option badges:** any choice can carry a visible `badge`; it is read as part of the option and repeated on "Check
+    your answers".
+  - **`supportForEmployer(applyAnswers)`:** the only way support data reaches an employer: the Support Passport needs,
+    and only when the learner said "share" for that application. Never the learner's own words.
+  - Field `default` (privacy-first preselection) and text that can be a function of the language (wording that uses
+    the learner's own data).
+  - **Focus outline always fully on screen:** controls keep a 24px gap when the browser scrolls them into view (found by
+    the keyboard test: on the longer "Check your answers" page a Change button sat flush with the bottom edge and its
+    outline was cut off).
+- `savanna-onboarding/forms.js`:
+  - badges on all six ID choices; a hint that nobody checks IDs automatically;
+  - the ID-number hint explains the status it gives;
+  - the staff-name hint says the name is removed at takeover;
+  - the Support Passport defaults to "Only me";
+  - the job application shows the exact list that would be shared;
+  - new **`takeover`** form.
+- `savanna-onboarding/app.js` / `app.css`:
+  - an ID status badge after sign-up, profile update and takeover;
+  - **handover** screen after partner sign-up;
+  - **takeover** page (`#/takeover`);
+  - the Support Passport waits until takeover is done;
+  - **private Support Passport card** ("Who can see this", trainer sharing on and off, "Shared with employers" with
+    **Withdraw**, "Never shared" note);
+  - applications use `supportForEmployer`.
+- Docs: `api-schema.md` (trust values, takeover, consent helper, records), `for-developers.md` (badges, default,
+  identity section), `README.md` (real vs simulated). `docs/audio-script.md` regenerated (4 hints changed).
+- Tests: new `tests/identity.spec.mjs` (11 tests); 3 new screens in the accessibility sweep (private card, handover,
+  takeover). The voice-consent test now waits for the saved value (it read storage too early once under load).
+
+### Track 1 requirements
+
+| Requirement | Status |
+|---|---|
+| ID routes: Fayda, kebele, passport, refugee ID / proof of registration, another document, partner referral | implemented (since the prototype) |
+| Honest trust badges on each choice | **implemented** |
+| Private support card: no diagnosis, private by default, explicit and revocable consent, clear "who can see this" | **implemented** (on the device; trainer and employer systems simulated) |
+| Partner-assisted flow with learner consent and **learner takeover** | **implemented** |
+| Staff name not kept in the learner's profile | **fixed:** kept only until takeover, then removed |
+| Sharing choice enforced | **fixed:** employer data only via `supportForEmployer`, per application; trainer sharing never means employers |
+
+### Tests (one worker, mobile then desktop)
+
+| Project | Passed | Skipped | Failed |
+|---|---|---|---|
+| mobile (Pixel 5) | 129 | 5 | 0 |
+| desktop | 133 | 1 | 0 |
+
+- axe-core: **108 scans** (27 screens × 2 languages × 2 devices), **0 serious or critical**; structure, language of
+  parts and 320px checks pass on all of them, including the badges, private card, handover and takeover screens.
+- Found and fixed by the tests: the focus outline cut off at the bottom of the screen (module fix, above).
+- Only one expected failure left: profile stored as plain text (Phase 6 decision).
+
+### Section 8 routine
+
+Keyboard, axe, 320px: automated, pass. **NVDA and TalkBack: by the team** (results go in the table above). Suggested
+checks for this phase: ID choices with NVDA (the badge should be read with each option), and the takeover screen.
+
+### Real vs simulated after Phase 5
+
+- **ID:** never verified (no service), and honest about it everywhere.
+- **Trainer sharing and employer sharing: simulated.** There is no trainer or employer system, so nothing is sent.
+  Withdrawing changes the copy on the phone, and the screen says so.
+- **Partner takeover:** implemented on one phone (the handover happens on the same device).
+
+### Known issues still open
+
+- **Phase 4:** read-aloud is silent when there are no voices; no pause/stop; the read-aloud and picture settings are combined.
+- **Phase 6:** plain-text storage; the page doesn't yet open offline.
+- **Phase 8:** realistic journey inside the starter pages, simulated log-in, mount API, Docker Compose.
+- **Team:** NVDA/TalkBack checks by a person; Amharic review and recording.
+
+### Decisions needed
+
+None blocking Phase 8. Note for the Amharic review: `docs/audio-script.md` was regenerated after four hint changes in
+this phase (ID question, ID number, staff name, "who can see this").
+
+### Next step
+
+Wait for "go to Phase 8".

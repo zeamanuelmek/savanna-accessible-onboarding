@@ -151,7 +151,8 @@ test('voice consent can be withdrawn in Settings, and is asked again afterwards'
   await expect(page.locator('input[name=voice][value=on]')).toBeChecked();
   await expect(page.locator('fieldset', { hasText: 'Voice answers' })).toContainText('sends your recording to Google');
   await page.locator('.dm-opt:has(input[name=voice][value=off])').click();
-  expect(await page.evaluate(() => localStorage.getItem('savanna-onboarding.voiceConsent'))).toBe('false');
+  await expect(page.locator('input[name=voice][value=off]')).toBeChecked();
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('savanna-onboarding.voiceConsent'))).toBe('false');
   await signupTo(page, 'name');
   await page.locator('[data-act=speak]').click();
   await expect(page.locator('[data-ref=vc]')).toBeVisible();

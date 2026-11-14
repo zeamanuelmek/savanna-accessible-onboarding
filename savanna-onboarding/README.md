@@ -18,6 +18,7 @@ mode) without ever stating or proving a disability.
 | `employer` | Employers tick the support a job offers, from the same list. Output as schema.org `JobPosting` |
 | `apply` | Job application prefilled from the profile (no asking twice), with opt-in sharing of the Support Passport |
 | `profile` | Profile update: opens on a summary of the learner's details, prefilled; "Change" only what needs updating |
+| `takeover` | After a partner signs a learner up, the learner checks the details alone and takes over the account; the staff name is then removed |
 
 ## How we address the 21 October co-design findings
 
@@ -38,7 +39,9 @@ mode) without ever stating or proving a disability.
 | Read-aloud | partial: uses the device voice; most phones have no Amharic voice; no recorded audio yet |
 | Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Google, so consent is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions, or on the date. Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
 | "Finish later" SMS | **simulated**: a labelled preview, no SMS is sent |
-| ID verification | unavailable: IDs are never verified |
+| ID verification | unavailable: IDs are never verified. Each ID choice shows an honest badge ("Self-declared · not verified", "Partner referral pending"); after sign-up the status is "Self-declared", "Number recorded — not verified" or "Partner referral pending" |
+| Private Support Passport | implemented on the device: private by default, "who can see this" on the card, trainer sharing can be turned on and off, sharing with an employer only per application (the learner sees exactly what would be shared) and can be withdrawn. **Simulated:** there is no trainer or employer system, so nothing is actually sent; withdrawing changes only the copy on the phone |
+| Partner-assisted sign-up | implemented: learner consent, then a handover and learner takeover step |
 | Amharic text | AI draft: needs native-speaker review |
 | Backend / API | unavailable by design: the module sends nothing; the host page decides where data goes. Data and events: [`docs/api-schema.md`](docs/api-schema.md) |
 | Offline | partial: answers are saved on the phone; opening the page with no connection comes in Phase 6. See [`docs/offline-plan.md`](docs/offline-plan.md) |

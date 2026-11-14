@@ -26,11 +26,27 @@
       listen: 'Listen to this job', apply: 'Apply', sample: 'Sample job (demo data)', none: 'No jobs match all of your support needs yet. Turn the filter off to see all jobs.',
       myPassport: 'My Support Passport', edit: 'Change my Support Passport', del: 'Delete my Support Passport', deleted: 'Your Support Passport was deleted.',
       onlyYou: 'Only you can see this. It is stored on this phone.', nothing: 'You chose not to share anything for now.',
-      nextPassport: 'Next: tell us what helps you (optional)', nextJobs: 'Find jobs', level: 'Your ID level:',
-      lv_partner_assisted: 'Registered with a partner. You can start learning now.',
-      lv_partner_referral_pending: 'Waiting for a partner to confirm who you are. You can start learning now.',
-      lv_document_number_recorded: 'ID number recorded. It can be checked later. You can start learning now.',
-      lv_self_declared: 'Self-declared. You can add an ID number at any time. You can start learning now.',
+      nextPassport: 'Next: tell us what helps you (optional)', nextJobs: 'Find jobs', level: 'Your ID status:',
+      lv_partner_referral_pending: 'A partner organisation will contact you to confirm who you are. You can start learning now.',
+      lv_document_number_recorded: 'We keep the number you gave. Nobody checks it automatically. You can start learning now.',
+      lv_self_declared: 'Nobody has checked your ID. You can add the number at any time. You can start learning now.',
+      assisted: 'Signed up with help from {org}.',
+      handTitle: 'Please hand the phone to the learner now',
+      handText: 'The learner checks what was entered and takes over the account. The Support Passport is private: the learner fills it in alone, later.',
+      handBtn: 'I am the learner: take over my account',
+      takeTitle: 'Take over your account', nothingToTake: 'There is nothing to take over. This account is already yours.',
+      takeFirst: 'First, take over your account from the person who helped you. Your Support Passport is private, so only you should fill it in.',
+      whoSees: 'Who can see this',
+      who_ask: 'Only you. When you apply for a job, we ask you each time. An employer sees your support list only if you say yes for that job.',
+      who_trainers: 'You and your trainers at ALX. Employers still see it only if you say yes for a job.',
+      allowTrainers: 'Let my ALX trainers see it', stopTrainers: 'Stop sharing with my trainers',
+      sharingSaved: 'Saved. Who can see this: {who}',
+      trainersDemo: 'Demo: there is no trainer system yet, so nothing is sent to anyone.',
+      sharedWith: 'Shared with employers', sharedNone: 'You have not shared it with any employer.',
+      sharedOn: 'shared on {date}', withdraw: 'Withdraw', withdrawnOn: 'withdrawn on {date}',
+      withdrawDone: 'Withdrawn. This demo has no employer system, so only the copy on this phone changed. A live system must tell the employer to delete it.',
+      neverShared: 'Never shared with anyone: a reason, a condition, or what you wrote in your own words.',
+      ownWords: 'In your own words (only you see this):',
       jsonTitle: 'What other job platforms receive (schema.org JobPosting)', receives: 'What the employer receives',
       notShared: 'Support Passport: not shared', seeJobs: 'See it on the job board', applyFor: 'Applying for:',
       notFound: 'This job was not found.', back: 'Back to jobs',
@@ -56,11 +72,27 @@
       listen: 'ይህን ሥራ አዳምጥ', apply: 'አመልክት', sample: 'የናሙና ሥራ (የሙከራ መረጃ)', none: 'እስካሁን ሁሉንም የድጋፍ ፍላጎቶችዎን የሚያሟላ ሥራ የለም። ሁሉንም ለማየት ማጣሪያውን ያጥፉ።',
       myPassport: 'የድጋፍ ፓስፖርቴ', edit: 'የድጋፍ ፓስፖርቴን ቀይር', del: 'የድጋፍ ፓስፖርቴን ሰርዝ', deleted: 'የድጋፍ ፓስፖርትዎ ተሰርዟል።',
       onlyYou: 'ይህን ማየት የሚችሉት እርስዎ ብቻ ነዎት። በዚህ ስልክ ላይ ተቀምጧል።', nothing: 'ለአሁን ምንም ላለማጋራት መርጠዋል።',
-      nextPassport: 'ቀጣይ፦ የሚረዳዎትን ይንገሩን (አማራጭ)', nextJobs: 'ሥራ ፈልግ', level: 'የመታወቂያ ደረጃዎ፦',
-      lv_partner_assisted: 'በአጋር ድርጅት ተመዝግበዋል። አሁን መማር መጀመር ይችላሉ።',
-      lv_partner_referral_pending: 'አጋር ድርጅት ማንነትዎን እስኪያረጋግጥ በመጠበቅ ላይ። አሁን መማር መጀመር ይችላሉ።',
-      lv_document_number_recorded: 'የመታወቂያ ቁጥር ተመዝግቧል። በኋላ ሊረጋገጥ ይችላል። አሁን መማር መጀመር ይችላሉ።',
-      lv_self_declared: 'በራስ የተገለጸ። በማንኛውም ጊዜ የመታወቂያ ቁጥር መጨመር ይችላሉ። አሁን መማር መጀመር ይችላሉ።',
+      nextPassport: 'ቀጣይ፦ የሚረዳዎትን ይንገሩን (አማራጭ)', nextJobs: 'ሥራ ፈልግ', level: 'የመታወቂያዎ ሁኔታ፦',
+      lv_partner_referral_pending: 'ማንነትዎን ለማረጋገጥ አጋር ድርጅት ያገኝዎታል። አሁን መማር መጀመር ይችላሉ።',
+      lv_document_number_recorded: 'የሰጡትን ቁጥር እንይዛለን። ማንም በራስ-ሰር አያረጋግጠውም። አሁን መማር መጀመር ይችላሉ።',
+      lv_self_declared: 'መታወቂያዎን ማንም አላረጋገጠም። ቁጥሩን በማንኛውም ጊዜ መጨመር ይችላሉ። አሁን መማር መጀመር ይችላሉ።',
+      assisted: 'በ{org} እርዳታ ተመዝግበዋል።',
+      handTitle: 'እባክዎ አሁን ስልኩን ለተማሪው ይስጡ',
+      handText: 'ተማሪው የገባውን ያረጋግጣል፤ መለያውንም ይረከባል። የድጋፍ ፓስፖርቱ የግል ነው፤ ተማሪው በኋላ ብቻውን ይሞላዋል።',
+      handBtn: 'እኔ ተማሪው ነኝ፦ መለያዬን ልረከብ',
+      takeTitle: 'መለያዎን ይረከቡ', nothingToTake: 'የሚረከቡት ነገር የለም። ይህ መለያ አስቀድሞ የእርስዎ ነው።',
+      takeFirst: 'መጀመሪያ መለያዎን ከረዳዎት ሰው ይረከቡ። የድጋፍ ፓስፖርትዎ የግል ስለሆነ መሙላት ያለብዎት እርስዎ ብቻ ነዎት።',
+      whoSees: 'ይህን ማን ማየት ይችላል',
+      who_ask: 'እርስዎ ብቻ። ለሥራ ሲያመለክቱ በእያንዳንዱ ጊዜ እንጠይቅዎታለን። ቀጣሪ የድጋፍ ዝርዝርዎን የሚያየው ለዚያ ሥራ «አዎ» ካሉ ብቻ ነው።',
+      who_trainers: 'እርስዎና በALX ያሉ አሰልጣኞችዎ። ቀጣሪዎች አሁንም የሚያዩት ለአንድ ሥራ «አዎ» ካሉ ብቻ ነው።',
+      allowTrainers: 'የALX አሰልጣኞቼ እንዲያዩት ፍቀድ', stopTrainers: 'ከአሰልጣኞቼ ጋር ማጋራት አቁም',
+      sharingSaved: 'ተቀምጧል። ይህን ማየት የሚችለው፦ {who}',
+      trainersDemo: 'ማሳያ፦ የአሰልጣኝ ሥርዓት ገና የለም፤ ስለዚህ ለማንም ምንም አይላክም።',
+      sharedWith: 'ከቀጣሪዎች ጋር የተጋራ', sharedNone: 'ከማንኛውም ቀጣሪ ጋር አላጋሩትም።',
+      sharedOn: '{date} ተጋርቷል', withdraw: 'መልስ', withdrawnOn: '{date} ተመልሷል',
+      withdrawDone: 'ተመልሷል። ይህ ማሳያ የቀጣሪ ሥርዓት የለውም፤ ስለዚህ የተቀየረው በዚህ ስልክ ያለው ቅጂ ብቻ ነው። እውነተኛ ሥርዓት ቀጣሪው እንዲሰርዘው መንገር አለበት።',
+      neverShared: 'ለማንም በፍጹም አይጋራም፦ ምክንያት፣ ሁኔታ ወይም በራስዎ ቃላት የጻፉት።',
+      ownWords: 'በራስዎ ቃላት (እርስዎ ብቻ ያዩታል)፦',
       jsonTitle: 'ሌሎች የሥራ ጣቢያዎች የሚቀበሉት (schema.org JobPosting)', receives: 'ቀጣሪው የሚቀበለው',
       notShared: 'የድጋፍ ፓስፖርት፦ አልተጋራም', seeJobs: 'በሥራ ገጹ ላይ ይመልከቱት', applyFor: 'የሚያመለክቱበት፦',
       notFound: 'ይህ ሥራ አልተገኘም።', back: 'ወደ ሥራዎች ተመለስ',
@@ -158,23 +190,33 @@
   function signup() {
     mountForm('signup', null, function (d, slot) {
       var a = d.answers;
-      var level = assurance(a, null, a.filler === 'partner');
-      // The ID number itself is not kept by this demo host (data minimisation); only the fact that one was given.
-      store.set('profile', { name: a.name, phone: a.phone, lang: d.lang, id_route: a.id_route, assurance_level: level,
-        referral_partner: a.referral_partner || null, registered_by: a.filler === 'partner' ? { org: a.partner_org, staff: a.staff_name } : null, dob: a.dob || null });
-      if (slot) slot.innerHTML = '<div class="notice"><p><strong>' + T('level') + '</strong> ' + T('lv_' + level) + '</p></div>' +
+      var partner = a.filler === 'partner';
+      // The ID number itself is not kept by this demo host (data minimisation); only the status it gives.
+      // The staff member's name is kept only until the learner takes over the account.
+      var p = { name: a.name, phone: a.phone, lang: d.lang, id_route: a.id_route, assurance_level: assurance(a, null),
+        referral_partner: a.referral_partner || null, registered_by: partner ? { org: a.partner_org, staff: a.staff_name } : null,
+        takeover_pending: partner, dob: a.dob || null };
+      store.set('profile', p);
+      if (!slot) return;
+      if (partner) slot.innerHTML = statusPanel(p) + '<div class="notice handover"><h2>' + T('handTitle') + '</h2><p>' + T('handText') + '</p>' +
+        '<p class="actions"><a class="btn primary" href="#/takeover">' + T('handBtn') + '</a></p></div>';
+      else slot.innerHTML = statusPanel(p) +
         '<p class="actions"><a class="btn primary" href="#/passport">' + T('nextPassport') + '</a> <a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
     });
   }
 
-  /* Honest ID level: never "verified" (there is no verification service). */
-  function assurance(a, old, partner) {
-    if (partner) return 'partner_assisted';
-    if (a.id_route === 'none') return 'partner_referral_pending';
-    if (a.id_number) return 'document_number_recorded';
-    // profile update with the same ID and no new number: keep what was recorded before
-    if (old && old.id_route === a.id_route && old.assurance_level !== 'partner_referral_pending') return old.assurance_level;
-    return old && old.registered_by ? 'partner_assisted' : 'self_declared';
+  /* Honest ID status from the module (SavannaOnboarding.trustLevel): never "verified". */
+  function assurance(a, old) {
+    var lv = D.trustLevel(a);
+    // profile update with the same ID and no new number: keep "number recorded"
+    if (lv === 'self_declared' && old && old.id_route === a.id_route && old.assurance_level === 'document_number_recorded') return old.assurance_level;
+    return lv;
+  }
+  var ORG = { aaapd: 'AAAPD', tib: 'Tomorrow is Better' };
+  function statusPanel(p) {
+    return '<div class="notice"><p><strong>' + T('level') + '</strong> <span class="badge">' + esc(L(D.TRUST[p.assurance_level], lang())) + '</span></p>' +
+      '<p>' + T('lv_' + p.assurance_level) + '</p>' +
+      (p.registered_by ? '<p>' + T('assisted', { org: esc(ORG[p.registered_by.org] || (lang() === 'am' ? 'አጋር ድርጅት' : 'a partner organisation')) }) + '</p>' : '') + '</div>';
   }
 
   function profileView() {
@@ -187,24 +229,79 @@
       var a = d.answers, p = {};
       Object.keys(old).forEach(function (k) { p[k] = old[k]; });
       p.name = a.name; p.phone = a.phone; p.id_route = a.id_route; p.referral_partner = a.referral_partner || null; p.dob = a.dob || null;
-      p.assurance_level = assurance(a, old, false);
+      p.assurance_level = assurance(a, old);
       p.updated = new Date().toISOString();
       store.set('profile', p);
-      if (slot) slot.innerHTML = '<div class="notice"><p><strong>' + T('level') + '</strong> ' + T('lv_' + p.assurance_level) + '</p></div>' +
-        '<p class="actions"><a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
+      if (slot) slot.innerHTML = statusPanel(p) + '<p class="actions"><a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
     });
   }
 
+  /* Learner takeover after partner sign-up: the learner checks the details alone; the staff name is then removed. */
+  function takeoverView() {
+    var old = store.get('profile', null);
+    if (!old || !old.takeover_pending) {
+      view.innerHTML = '<h1 tabindex="-1">' + T('takeTitle') + '</h1><p>' + T('nothingToTake') + '</p><p><a class="btn" href="#/profile">' + T('profile') + '</a></p>';
+      focusH1(); return;
+    }
+    mountForm('takeover', null, function (d, slot) {
+      var a = d.answers, p = {};
+      Object.keys(old).forEach(function (k) { p[k] = old[k]; });
+      p.name = a.name; p.phone = a.phone; p.id_route = a.id_route; p.referral_partner = a.referral_partner || null; p.dob = a.dob || null;
+      p.assurance_level = assurance(a, old);
+      p.registered_by = old.registered_by ? { org: old.registered_by.org } : null; // staff name removed
+      p.takeover_pending = false; p.taken_over = new Date().toISOString();
+      store.set('profile', p);
+      if (slot) slot.innerHTML = statusPanel(p) +
+        '<p class="actions"><a class="btn primary" href="#/passport">' + T('nextPassport') + '</a> <a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
+    });
+  }
+
+  function fmtDate(iso) { try { return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return iso.slice(0, 10); } }
+  function sayStatus(id, msg) { setTimeout(function () { var s = document.getElementById(id); if (s) { s.textContent = ''; s.textContent = msg; } }, 80); }
+
   function passportView() {
-    var p = store.get('passport', null);
+    var p = store.get('passport', null), prof = store.get('profile', null);
+    if (prof && prof.takeover_pending) { // a helper may still be there: the Support Passport is for the learner alone
+      view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1><div class="notice"><p>' + T('takeFirst') + '</p><p><a class="btn primary" href="#/takeover">' + T('handBtn') + '</a></p></div>';
+      focusH1(); return;
+    }
     if (p && !window.__editPassport) {
-      var list = (p.needs || []);
-      view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1><p class="muted">' + T('onlyYou') + '</p>' +
+      var list = (p.needs || []), sharing = p.sharing === 'trainers' ? 'trainers' : 'ask';
+      var shared = store.get('applications', []).filter(function (x) { return x.packet && (x.packet.supportThatHelps || x.withdrawn); });
+      view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1>' +
         (list.length ? '<ul class="needs">' + list.map(function (n) { return '<li><span aria-hidden="true">' + needIcon(n) + '</span> ' + esc(needLabel(n)) + '</li>'; }).join('') + '</ul>' : '<p>' + T('nothing') + '</p>') +
-        (p.other_need ? '<p>' + esc(p.other_need) + '</p>' : '') +
+        (p.other_need ? '<p><strong>' + T('ownWords') + '</strong> ' + esc(p.other_need) + '</p>' : '') +
+        '<section class="card-plain" aria-labelledby="who-h"><h2 id="who-h">' + T('whoSees') + '</h2><p>🔒 ' + T('who_' + sharing) + '</p>' +
+        '<p class="muted">' + T('neverShared') + '</p>' +
+        '<p><button type="button" class="btn" id="sharing">' + T(sharing === 'trainers' ? 'stopTrainers' : 'allowTrainers') + '</button></p>' +
+        (sharing === 'trainers' ? '<p class="muted">' + T('trainersDemo') + '</p>' : '') + '</section>' +
+        '<section class="card-plain" aria-labelledby="shared-h"><h2 id="shared-h">' + T('sharedWith') + '</h2>' +
+        (shared.length ? '<ul class="plain">' + shared.map(function (x) {
+          var en = x.packet.sample && lang() !== 'en' ? ' lang="en"' : '';
+          return '<li><span' + en + '>' + esc(x.packet.job) + ' · ' + esc(x.packet.employer) + '</span>: ' +
+            (x.withdrawn ? T('withdrawnOn', { date: fmtDate(x.withdrawn) }) : T('sharedOn', { date: fmtDate(x.at) }) +
+              ' <button type="button" class="btn small" data-withdraw="' + esc(x.at) + '">' + T('withdraw') + '<span class="vh"' + en + '> ' + esc(x.packet.job) + '</span></button>') + '</li>';
+        }).join('') + '</ul>' : '<p>' + T('sharedNone') + '</p>') + '</section>' +
         '<p class="actions"><button type="button" class="btn primary" id="edit">' + T('edit') + '</button> <a class="btn" href="#/jobs">' + T('nextJobs') + '</a> <button type="button" class="btn danger" id="del">' + T('del') + '</button></p><p role="status" id="pp-status"></p>';
       document.getElementById('edit').onclick = function () { window.__editPassport = true; document.getElementById('host-lang').hidden = true; passportView(); };
-      document.getElementById('del').onclick = function () { store.del('passport'); window.__editPassport = false; passportView(); setTimeout(function () { var s = document.getElementById('pp-status'); if (s) s.textContent = T('deleted'); }, 100); };
+      document.getElementById('del').onclick = function () { store.del('passport'); window.__editPassport = false; passportView(); sayStatus('pp-status', T('deleted')); };
+      document.getElementById('sharing').onclick = function () {
+        var next = sharing === 'trainers' ? 'ask' : 'trainers';
+        p.sharing = next; p.updated = new Date().toISOString(); store.set('passport', p);
+        passportView();
+        var b = document.getElementById('sharing'); if (b) b.focus();
+        sayStatus('pp-status', T('sharingSaved', { who: T('who_' + next) }));
+      };
+      view.querySelectorAll('[data-withdraw]').forEach(function (b) {
+        b.onclick = function () {
+          var apps = store.get('applications', []);
+          apps.forEach(function (x) { if (x.at === b.getAttribute('data-withdraw')) { delete x.packet.supportThatHelps; x.withdrawn = new Date().toISOString(); } });
+          store.set('applications', apps);
+          passportView();
+          var h = document.getElementById('shared-h'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
+          sayStatus('pp-status', T('withdrawDone'));
+        };
+      });
       focusH1();
       return;
     }
@@ -270,9 +367,10 @@
     var j = jobs().filter(function (x) { return x.id === id; })[0];
     if (!j) { view.innerHTML = '<h1 tabindex="-1">' + T('notFound') + '</h1><p><a href="#/jobs">' + T('back') + '</a></p>'; focusH1(); return; }
     var el = mountForm('apply', id, function (d, slot) {
-      var a = d.answers, p = store.get('passport', null);
-      var packet = { job: j.title, employer: j.org, name: a.name, phone: a.phone, why: a.why, experience: a.experience, interview: a.interview || [] };
-      if (a.share_passport === 'share' && p) packet.supportThatHelps = p.needs.map(function (n) { return D.NEEDS.filter(function (x) { return x.value === n; })[0].label.en; });
+      var a = d.answers;
+      var packet = { job: j.title, employer: j.org, sample: !!j.sample, name: a.name, phone: a.phone, why: a.why, experience: a.experience, interview: a.interview || [] };
+      var support = D.supportForEmployer(a); // empty unless the learner said "share" for this job
+      if (support.length) packet.supportThatHelps = support.map(function (n) { return n.label.en; });
       var apps = store.get('applications', []); apps.unshift({ at: new Date().toISOString(), packet: packet }); store.set('applications', apps);
       if (slot) slot.innerHTML = '<h2>' + T('receives') + '</h2><pre tabindex="0"><code>' + esc(JSON.stringify(packet, null, 2)) + '</code></pre>' +
         (packet.supportThatHelps ? '' : '<p class="muted">' + T('notShared') + '</p>') +
@@ -292,13 +390,13 @@
 
   function focusH1() { var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); } }
 
-  var TITLES = { '#/': 'home', '#/signup': 'join', '#/profile': 'profile', '#/passport': 'passport', '#/jobs': 'jobs', '#/employer': 'post', '#/settings': 'settings' };
+  var TITLES = { '#/': 'home', '#/signup': 'join', '#/profile': 'profile', '#/takeover': 'takeTitle', '#/passport': 'passport', '#/jobs': 'jobs', '#/employer': 'post', '#/settings': 'settings' };
   function route() {
     var r = location.hash || '#/';
     if (r.indexOf('#/') !== 0) return; // in-page anchors such as the skip link
     D.stopSpeaking();
     nav(r);
-    var isForm = r === '#/signup' || r === '#/employer' || r === '#/settings' || (r === '#/profile' && !!store.get('profile', null)) || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('passport', null) || window.__editPassport));
+    var isForm = r === '#/signup' || r === '#/employer' || r === '#/settings' || (r === '#/profile' && !!store.get('profile', null)) || (r === '#/takeover' && !!(store.get('profile', {}) || {}).takeover_pending) || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('passport', null) || window.__editPassport));
     document.getElementById('host-lang').hidden = isForm;
     var base = r.indexOf('#/apply/') === 0 ? '#/apply' : r;
     document.title = (base === '#/apply' ? T('apply') : T(TITLES[base] || 'home')) + ' · ' + T('product');
@@ -306,6 +404,7 @@
     if (r === '#/' || r === '#') home();
     else if (r === '#/signup') signup();
     else if (r === '#/profile') profileView();
+    else if (r === '#/takeover') takeoverView();
     else if (r === '#/passport') passportView();
     else if (r === '#/jobs') jobsView();
     else if (r === '#/employer') employer();
@@ -320,7 +419,7 @@
   document.addEventListener('savanna-onboarding:prefs', function () {
     var r = location.hash || '#/';
     nav(r); syncHostLang();
-    var formPage = r === '#/signup' || r === '#/employer' || r === '#/settings' || (r === '#/profile' && !!store.get('profile', null)) || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('passport', null) || window.__editPassport));
+    var formPage = r === '#/signup' || r === '#/employer' || r === '#/settings' || (r === '#/profile' && !!store.get('profile', null)) || (r === '#/takeover' && !!(store.get('profile', {}) || {}).takeover_pending) || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('passport', null) || window.__editPassport));
     if (!formPage) { var active = document.activeElement && document.activeElement.id; route(); if (active) { var el = document.getElementById(active); if (el) el.focus(); } }
   });
   document.getElementById('skip').addEventListener('click', function (e) { e.preventDefault(); var m = document.getElementById('main'); m.focus(); });

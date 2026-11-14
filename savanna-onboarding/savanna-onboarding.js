@@ -197,7 +197,12 @@
     if (vars) Object.keys(vars).forEach(function (k) { s = s.split('{' + k + '}').join(vars[k]); });
     return s;
   }
-  function L(v, lang) { if (v == null) return ''; if (typeof v === 'string') return v; return v[lang] || v.en || ''; }
+  function L(v, lang) {
+    if (v == null) return '';
+    if (typeof v === 'function') return v(lang) || '';
+    if (typeof v === 'string') return v;
+    return v[lang] || v.en || '';
+  }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
   /* ---------- shared support vocabulary (used by learners AND employers) ---------- */
@@ -214,6 +219,28 @@
     { value: 'remote', icon: '🏠', label: { en: 'Work from home', am: 'ከቤት መሥራት' } },
     { value: 'helper', icon: '🤝', label: { en: 'Someone to help with forms', am: 'ቅጽ ለመሙላት የሚረዳ ሰው' } }
   ];
+
+  /* ---------- honest ID trust status. Nothing is ever "verified": there is no verification service. ---------- */
+  var TRUST = {
+    self_declared: { en: 'Self-declared', am: 'በራስ የተገለጸ' },
+    document_number_recorded: { en: 'Number recorded — not verified', am: 'ቁጥር ተመዝግቧል — አልተረጋገጠም' },
+    partner_referral_pending: { en: 'Partner referral pending', am: 'የአጋር ድርጅት ማረጋገጫ በመጠበቅ ላይ' }
+  };
+  /** Trust status from sign-up or profile answers: the ID route and whether a number was given. */
+  function trustLevel(a) {
+    if (!a || !a.id_route) return 'self_declared';
+    if (a.id_route === 'none') return 'partner_referral_pending';
+    return a.id_number ? 'document_number_recorded' : 'self_declared';
+  }
+
+  /** The ONLY support data an employer may receive: the Support Passport needs, and only when the learner said
+      "share" in THIS application. Never other_need, never a reason or condition. Returns NEEDS entries. */
+  function supportForEmployer(applyAnswers) {
+    if (!applyAnswers || applyAnswers.share_passport !== 'share') return [];
+    var p = store.get('passport', null);
+    if (!p || !Array.isArray(p.needs)) return [];
+    return p.needs.map(function (v) { return NEEDS.filter(function (n) { return n.value === v; })[0]; }).filter(Boolean);
+  }
 
   /* ---------- Ethiopian calendar ---------- */
   var ETH_MONTHS = {
@@ -391,6 +418,9 @@
       var v = (ctx[f.prefill.from] || {})[f.prefill.key];
       if (isEmpty(self.answers[f.id]) && !isEmpty(v)) { self.answers[f.id] = v; self.prefilled[f.id] = true; }
     });
+    this.cfg.fields.forEach(function (f) {
+      if (f.default !== undefined && self.answers[f.id] === undefined) self.answers[f.id] = f.default;
+    });
   };
   FormState.prototype.visible = function () {
     var a = this.answers;
@@ -565,6 +595,8 @@
     '.dm *{box-sizing:border-box}',
     '.dm button,.dm input,.dm select,.dm textarea{font:inherit}',
     '.dm :focus-visible{outline:var(--so-focus-width) solid var(--so-focus);outline-offset:var(--so-focus-offset);box-shadow:none}',
+    // keep a gap when the browser scrolls a control into view, so the whole focus outline stays on screen (2.4.7, 2.4.11)
+    '.dm a,.dm button,.dm input,.dm select,.dm textarea,.dm [tabindex]{scroll-margin:24px}',
     '.dm-q:focus,.dm-q:focus-visible{outline:none}',
 
     '.dm-bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.5em;margin-bottom:1em;padding-bottom:.75em;border-bottom:1px solid var(--so-border-subtle)}',
@@ -576,6 +608,7 @@
     '.dm-q{font-size:1.75em;line-height:1.3;margin:.25em 0 .5em;font-weight:600;color:var(--so-heading)}',
     '.dm-q label{display:block}',
     '.dm-opt-tag{font-weight:400;font-size:.6em;color:var(--so-text-muted)}',
+    '.dm-badge{display:inline-block;margin:.2em 0 0;padding:.05em .6em;border:1px solid var(--so-border);border-radius:var(--so-radius-pill);font-size:.8em;font-weight:500;color:var(--so-text-muted);background:var(--so-surface)}',
     '.dm-hint{color:var(--so-text-muted);margin:0 0 1em}',
     '.dm fieldset{border:none;padding:0;margin:0;min-width:0}',
     '.dm legend{padding:0;max-width:100%}',
@@ -759,7 +792,8 @@
         return '<div class="dm-opts">' + optionsOf(f).map(function (o, i) {
           var checked = sel.indexOf(o.value) !== -1 ? ' checked' : '';
           return '<label class="dm-opt"><input' + (i === 0 ? ' id="' + inputId + '" data-ref="input"' : '') + ' type="' + (multi ? 'checkbox' : 'radio') + '" name="v" value="' + esc(o.value) + '"' + checked + '>' +
-            (o.icon ? '<span class="dm-ico" aria-hidden="true">' + o.icon + '</span>' : '') + '<span>' + esc(L(o.label, lang)) + '</span></label>';
+            (o.icon ? '<span class="dm-ico" aria-hidden="true">' + o.icon + '</span>' : '') + '<span>' + esc(L(o.label, lang)) +
+            (o.badge ? ' <span class="dm-badge">' + esc(L(o.badge, lang)) + '</span>' : '') + '</span></label>';
         }).join('') + '</div>';
       }
       if (f.type === 'ethdate') {
@@ -777,7 +811,7 @@
     display: function (vm, f, v) {
       var lang = vm.lang, opts = optionsOf(f);
       if (isEmpty(v)) return t('notGiven', lang);
-      if (f.type === 'choice' || f.type === 'consent') { var o = opts.filter(function (x) { return x.value === v; })[0]; return o ? L(o.label, lang) : v; }
+      if (f.type === 'choice' || f.type === 'consent') { var o = opts.filter(function (x) { return x.value === v; })[0]; return o ? L(o.label, lang) + (o.badge ? ' (' + L(o.badge, lang) + ')' : '') : v; }
       if (f.type === 'multi') return v.map(function (x) { var o = opts.filter(function (y) { return y.value === x; })[0]; return o ? L(o.label, lang) : x; }).join(', ');
       if (f.type === 'ethdate') return v.d + ' ' + (ETH_MONTHS[lang] || ETH_MONTHS.en)[v.m - 1] + ' ' + v.y + ' (' + fmtGregorian(new Date(v.gregorian), lang) + ')';
       return String(v);
@@ -1218,8 +1252,8 @@
      A code that is not on this device (the link was opened on another phone) is explained by the form. */
 
   var API = window.SavannaOnboarding = {
-    version: '0.5.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
-    FormState: FormState, validate: validateAnswer,
+    version: '0.6.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
+    FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: stopSpeaking, label: L,
     prefs: getPrefs, setPrefs: setPrefs

@@ -1,4 +1,4 @@
-/* Savanna Accessible Onboarding Module: form "recipes". Each form is plain data: the same engine renders all five.
+/* Savanna Accessible Onboarding Module: form "recipes". Each form is plain data: the same engine renders all six.
    Amharic wording is a first draft: a native speaker must review it before testing with learners.
    Field flags used here (full list in docs/for-developers.md):
    - sensitive: true      support needs and ID questions. The engine never offers voice input on them, so that data is
@@ -7,6 +7,10 @@
    - prefill              fill from the learner's profile or Support Passport, so nothing is asked twice. */
 (function () {
   var D = window.SavannaOnboarding;
+  // Honest trust badges shown on each ID choice. Nothing is ever "verified".
+  var NOT_CHECKED = { en: 'Self-declared · not verified', am: 'በራስ የተገለጸ · አልተረጋገጠም' };
+  var ORGS = { aaapd: 'AAAPD', tib: 'Tomorrow is Better', other: { en: 'a partner organisation', am: 'አጋር ድርጅት' } };
+  function orgName(v, lang) { var o = ORGS[v] || ORGS.other; return D.label(o, lang); }
 
   /* 1. SIGN-UP (with ID ladder and partner-assisted mode) */
   D.register('signup', {
@@ -27,7 +31,7 @@
         ] },
       { id: 'staff_name', type: 'text', showIf: { field: 'filler', equals: 'partner' }, autocomplete: 'off',
         label: { en: 'What is your name? (staff member)', am: 'የእርስዎ ስም ማን ነው? (ሠራተኛ)' },
-        hint: { en: 'We record who helped, so the learner can see it later.', am: 'ተማሪው በኋላ እንዲያየው ማን እንደረዳ እንመዘግባለን።' } },
+        hint: { en: 'The learner sees your name when they take over the account. After that it is removed; only your organisation is kept.', am: 'ተማሪው መለያውን ሲረከብ ስምዎን ያያል። ከዚያ በኋላ ይሰረዛል፤ የድርጅትዎ ስም ብቻ ይቀመጣል።' } },
       { id: 'learner_consent', type: 'consent', requiredValue: 'yes', showIf: { field: 'filler', equals: 'partner' },
         reviewLabel: { en: 'Learner agreed to partner help', am: 'ተማሪው በአጋር እርዳታ ተስማምቷል' },
         label: { en: 'Learner: do you agree that this person fills in the form with you?', am: 'ተማሪ፦ ይህ ሰው ቅጹን አብሮዎት እንዲሞላ ይስማማሉ?' },
@@ -44,18 +48,18 @@
         hint: { en: 'We use it only to send you a link to continue. For example 0911 234 567.', am: 'ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።' } },
       { id: 'id_route', type: 'choice', sensitive: true, reviewLabel: { en: 'ID', am: 'መታወቂያ' },
         label: { en: 'Which ID do you have?', am: 'የትኛው መታወቂያ አለዎት?' },
-        hint: { en: 'Any of these is fine. You can start learning even without an ID.', am: 'ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ።' },
+        hint: { en: 'Any of these is fine. You can start learning even without an ID. Nobody checks IDs automatically: we record what you tell us.', am: 'ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ። መታወቂያዎች በራስ-ሰር አይረጋገጡም፤ የሚነግሩንን እንመዘግባለን።' },
         options: [
-          { value: 'fayda', icon: '🪪', label: { en: 'Fayda national ID', am: 'ፋይዳ ብሔራዊ መታወቂያ' }, say: ['fayda', 'ፋይዳ'] },
-          { value: 'kebele', icon: '🏘️', label: { en: 'Kebele ID', am: 'የቀበሌ መታወቂያ' }, say: ['kebele', 'ቀበሌ'] },
-          { value: 'passport', icon: '📘', label: { en: 'Passport', am: 'ፓስፖርት' }, say: ['passport', 'ፓስፖርት'] },
-          { value: 'refugee', icon: '📄', label: { en: 'Refugee ID or proof of registration (RRS / UNHCR)', am: 'የስደተኛ መታወቂያ ወይም የምዝገባ ማረጋገጫ' }, say: ['refugee', 'ስደተኛ'] },
-          { value: 'other', icon: '🗂️', label: { en: 'Another document', am: 'ሌላ ሰነድ' }, say: ['another', 'document', 'ሰነድ'] },
-          { value: 'none', icon: '🤝', label: { en: 'I have none of these. Refer me through a partner.', am: 'ምንም የለኝም። በአጋር ድርጅት በኩል ይመዝግቡኝ።' }, say: ['none', 'refer', 'ምንም', 'የለኝም'] }
+          { value: 'fayda', icon: '🪪', label: { en: 'Fayda national ID', am: 'ፋይዳ ብሔራዊ መታወቂያ' }, say: ['fayda', 'ፋይዳ'], badge: NOT_CHECKED },
+          { value: 'kebele', icon: '🏘️', label: { en: 'Kebele ID', am: 'የቀበሌ መታወቂያ' }, say: ['kebele', 'ቀበሌ'], badge: NOT_CHECKED },
+          { value: 'passport', icon: '📘', label: { en: 'Passport', am: 'ፓስፖርት' }, say: ['passport', 'ፓስፖርት'], badge: NOT_CHECKED },
+          { value: 'refugee', icon: '📄', label: { en: 'Refugee ID or proof of registration (RRS / UNHCR)', am: 'የስደተኛ መታወቂያ ወይም የምዝገባ ማረጋገጫ' }, say: ['refugee', 'ስደተኛ'], badge: NOT_CHECKED },
+          { value: 'other', icon: '🗂️', label: { en: 'Another document', am: 'ሌላ ሰነድ' }, say: ['another', 'document', 'ሰነድ'], badge: NOT_CHECKED },
+          { value: 'none', icon: '🤝', label: { en: 'I have none of these. Refer me through a partner.', am: 'ምንም የለኝም። በአጋር ድርጅት በኩል ይመዝግቡኝ።' }, say: ['none', 'refer', 'ምንም', 'የለኝም'], badge: D.TRUST.partner_referral_pending }
         ] },
       { id: 'id_number', type: 'text', optional: true, sensitive: true, clearIfChanged: 'id_route', showIf: { field: 'id_route', in: ['fayda', 'kebele', 'passport', 'refugee', 'other'] },
         label: { en: 'What is the number on your ID?', am: 'በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው?' },
-        hint: { en: 'You can skip this and add it later. We never ask for a photo of your ID.', am: 'ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም።' } },
+        hint: { en: 'You can skip this and add it later. We never ask for a photo of your ID. If you add the number, your status becomes "Number recorded — not verified".', am: 'ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል።' } },
       { id: 'referral_partner', type: 'choice', sensitive: true, showIf: { field: 'id_route', equals: 'none' },
         label: { en: 'Which organisation can confirm who you are?', am: 'ማንነትዎን የትኛው ድርጅት ሊያረጋግጥ ይችላል?' },
         hint: { en: 'They will contact you. You can start learning while you wait.', am: 'እነሱ ያገኙዎታል። እየጠበቁ መማር መጀመር ይችላሉ።' },
@@ -98,8 +102,9 @@
       { id: 'other_need', type: 'textarea', optional: true, sensitive: true, showIf: { field: 'want', equals: 'yes' },
         label: { en: 'Is there anything else that helps you?', am: 'የሚረዳዎት ሌላ ነገር አለ?' },
         hint: { en: 'Write it in your own words.', am: 'በራስዎ ቃላት ይጻፉ።' } },
-      { id: 'sharing', type: 'choice', sensitive: true, showIf: { field: 'want', equals: 'yes' },
+      { id: 'sharing', type: 'choice', sensitive: true, default: 'ask', showIf: { field: 'want', equals: 'yes' },
         label: { en: 'Who can see this?', am: 'ይህን ማን ማየት ይችላል?' },
+        hint: { en: 'Private is chosen for you. You can change this at any time.', am: 'ለእርስዎ «የግል» ተመርጧል። በማንኛውም ጊዜ መቀየር ይችላሉ።' },
         options: [
           { value: 'ask', icon: '🔒', label: { en: 'Only me. Ask me every time I apply for a job.', am: 'እኔ ብቻ። ለሥራ ባመለከትኩ ቁጥር ጠይቁኝ።' }, say: ['only me', 'ask', 'እኔ ብቻ', 'ጠይቁኝ'] },
           { value: 'trainers', icon: '👩‍🏫', label: { en: 'Me and my trainers at ALX', am: 'እኔና በALX ያሉ አሰልጣኞቼ' }, say: ['trainers', 'alx', 'አሰልጣኞቼ'] }
@@ -155,7 +160,12 @@
         ] },
       { id: 'share_passport', type: 'choice', sensitive: true, showIf: function () { var p = D.store.get('passport', null); return !!(p && p.needs && p.needs.length); },
         label: { en: 'Do you want to share your Support Passport with this employer?', am: 'የድጋፍ ፓስፖርትዎን ለዚህ ቀጣሪ ማጋራት ይፈልጋሉ?' },
-        hint: { en: 'If you share, the employer sees only the list of support that helps you. Never a reason or condition.', am: 'ካጋሩ ቀጣሪው የሚያየው የሚረዳዎትን የድጋፍ ዝርዝር ብቻ ነው። ምክንያት ወይም ሁኔታ በፍጹም አይታይም።' },
+        hint: { en: 'You decide for each job. Saying no never affects your application.', am: 'ለእያንዳንዱ ሥራ እርስዎ ይወስናሉ። «አይ» ማለት ማመልከቻዎን አይጎዳም።' },
+        body: function (lang) {
+          var list = D.supportForEmployer({ share_passport: 'share' }).map(function (n) { return D.label(n.label, lang); }).join('; ');
+          return lang === 'am' ? 'ካጋሩ ቀጣሪው የሚያየው ይህን ዝርዝር ብቻ ነው፦ ' + list + '። ምክንያት፣ ሁኔታ ወይም በራስዎ ቃላት የጻፉት በፍጹም አይጋራም።'
+            : 'If you share, the employer sees exactly this list: ' + list + '. Never a reason, a condition, or what you wrote in your own words.';
+        },
         options: [
           { value: 'share', icon: '📤', label: { en: 'Yes, share my support list', am: 'አዎ፣ የድጋፍ ዝርዝሬን አጋራ' }, say: ['yes', 'share', 'አዎ', 'አጋራ'] },
           { value: 'keep', icon: '🔒', label: { en: 'No, keep it private', am: 'አይ፣ በምስጢር ይቆይ' }, say: ['no', 'private', 'keep', 'አይ'] }
@@ -174,6 +184,31 @@
     Object.keys(extra || {}).forEach(function (k) { copy[k] = extra[k]; });
     return copy;
   }
+  /* 6. LEARNER TAKEOVER: after a partner signs a learner up, the learner checks the details alone and takes over the
+     account. The staff member's name is shown here once, then removed (only the organisation is kept). */
+  function helper(lang) {
+    var p = D.store.get('profile', {}) || {}, r = p.registered_by || {};
+    var org = orgName(r.org, lang);
+    if (lang === 'am') return (r.staff ? r.staff + ' ከ' + org : org) + ' ለመመዝገብ ረድቶዎታል።';
+    return (r.staff ? r.staff + ' from ' + org : org) + ' helped you sign up.';
+  }
+  var takeoverFields = ['name', 'phone', 'id_route', 'id_number', 'referral_partner', 'dob'];
+  D.register('takeover', {
+    title: { en: 'Take over your account', am: 'መለያዎን ይረከቡ' },
+    startAt: 'review',
+    allowLater: false,
+    fields: [], // filled in below, from the profile form
+    reviewTitle: { en: 'Take over your account', am: 'መለያዎን ይረከቡ' },
+    reviewHint: function (lang) {
+      return helper(lang) + (lang === 'am' ? ' ያስገቡትን ያረጋግጡ፤ የተሳሳተውን ይቀይሩ። ከዚህ በኋላ መለያውን የሚጠቀሙት እርስዎ ብቻ ነዎት።'
+        : ' Check what they entered and change anything that is wrong. After this, only you use this account.');
+    },
+    reviewNote: { en: 'When you finish, your helper\'s name is removed from your profile; only the organisation is kept. Your helper cannot see your Support Passport: fill it in yourself, when you are ready.', am: 'ሲጨርሱ የረዳዎት ሰው ስም ከመገለጫዎ ይሰረዛል፤ የድርጅቱ ስም ብቻ ይቀመጣል። የረዳዎት ሰው የድጋፍ ፓስፖርትዎን ማየት አይችልም፤ ሲዘጋጁ ራስዎ ይሙሉት።' },
+    submitLabel: { en: 'This is my account now', am: 'ይህ አሁን የእኔ መለያ ነው' },
+    doneTitle: { en: 'Your account is now yours', am: 'መለያው አሁን የእርስዎ ነው' },
+    doneText: { en: 'Only you use it from now on. Your helper\'s name has been removed.', am: 'ከአሁን ጀምሮ የሚጠቀሙት እርስዎ ብቻ ነዎት። የረዳዎት ሰው ስም ተሰርዟል።' }
+  });
+
   D.register('profile', {
     title: { en: 'My profile', am: 'የእኔ መገለጫ' },
     startAt: 'review',
@@ -192,4 +227,5 @@
     doneTitle: { en: 'Your profile is updated', am: 'መገለጫዎ ተዘምኗል' },
     doneText: { en: 'Forms will now be filled in with your new details.', am: 'ቅጾች ከአሁን ጀምሮ በአዲሱ ዝርዝርዎ ይሞላሉ።' }
   });
+  D.forms.takeover.fields = D.forms.profile.fields.filter(function (f) { return takeoverFields.indexOf(f.id) !== -1; });
 })();

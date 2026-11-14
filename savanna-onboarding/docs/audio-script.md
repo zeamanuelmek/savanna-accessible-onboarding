@@ -40,20 +40,20 @@
 | 10 | `am/signup-partner-org-option-aaapd.mp3` | <span lang="am">AAAPD (የአዲስ አበባ አካል ጉዳተኞች ማኅበር)</span> | 6 s |  |
 | 11 | `am/signup-partner-org-option-tib.mp3` | <span lang="am">Tomorrow is Better</span> | 3 s |  |
 | 12 | `am/signup-partner-org-option-other.mp3` | <span lang="am">ሌላ ድርጅት</span> | 3 s |  |
-| 13 | `am/signup-staff-name-question.mp3` | <span lang="am">የእርስዎ ስም ማን ነው? (ሠራተኛ) ተማሪው በኋላ እንዲያየው ማን እንደረዳ እንመዘግባለን።</span> | 12 s | Only when filler = partner |
+| 13 | `am/signup-staff-name-question.mp3` | <span lang="am">የእርስዎ ስም ማን ነው? (ሠራተኛ) ተማሪው መለያውን ሲረከብ ስምዎን ያያል። ከዚያ በኋላ ይሰረዛል፤ የድርጅትዎ ስም ብቻ ይቀመጣል።</span> | 17 s | Only when filler = partner |
 | 14 | `am/signup-learner-consent-question.mp3` | <span lang="am">ተማሪ፦ ይህ ሰው ቅጹን አብሮዎት እንዲሞላ ይስማማሉ? እባክዎ ይህን ለተማሪው ጮክ ብለው ያንብቡ። ተማሪው በድምፅ ወይም በመንካት ይመልሳል።</span> | 19 s | Only when filler = partner |
 | 15 | `am/signup-learner-consent-option-yes.mp3` | <span lang="am">አዎ፣ እስማማለሁ</span> | 3 s |  |
 | 16 | `am/signup-learner-consent-option-no.mp3` | <span lang="am">አልስማማም</span> | 3 s |  |
 | 17 | `am/signup-name-question.mp3` | <span lang="am">ሙሉ ስምዎ ማን ነው? መጠራት በሚፈልጉት መንገድ ይጻፉት።</span> | 8 s |  |
 | 18 | `am/signup-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ ስንት ነው? ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።</span> | 14 s |  |
-| 19 | `am/signup-id-route-question.mp3` | <span lang="am">የትኛው መታወቂያ አለዎት? ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ።</span> | 13 s |  |
+| 19 | `am/signup-id-route-question.mp3` | <span lang="am">የትኛው መታወቂያ አለዎት? ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ። መታወቂያዎች በራስ-ሰር አይረጋገጡም፤ የሚነግሩንን እንመዘግባለን።</span> | 22 s |  |
 | 20 | `am/signup-id-route-option-fayda.mp3` | <span lang="am">ፋይዳ ብሔራዊ መታወቂያ</span> | 4 s |  |
 | 21 | `am/signup-id-route-option-kebele.mp3` | <span lang="am">የቀበሌ መታወቂያ</span> | 3 s |  |
 | 22 | `am/signup-id-route-option-passport.mp3` | <span lang="am">ፓስፖርት</span> | 2 s |  |
 | 23 | `am/signup-id-route-option-refugee.mp3` | <span lang="am">የስደተኛ መታወቂያ ወይም የምዝገባ ማረጋገጫ</span> | 7 s |  |
 | 24 | `am/signup-id-route-option-other.mp3` | <span lang="am">ሌላ ሰነድ</span> | 2 s |  |
 | 25 | `am/signup-id-route-option-none.mp3` | <span lang="am">ምንም የለኝም። በአጋር ድርጅት በኩል ይመዝግቡኝ።</span> | 8 s |  |
-| 26 | `am/signup-id-number-question.mp3` | <span lang="am">በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው? ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም።</span> | 16 s | Only when id_route is one of fayda, kebele, passport, refugee, other |
+| 26 | `am/signup-id-number-question.mp3` | <span lang="am">በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው? ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል።</span> | 25 s | Only when id_route is one of fayda, kebele, passport, refugee, other |
 | 27 | `am/signup-referral-partner-question.mp3` | <span lang="am">ማንነትዎን የትኛው ድርጅት ሊያረጋግጥ ይችላል? እነሱ ያገኙዎታል። እየጠበቁ መማር መጀመር ይችላሉ።</span> | 14 s | Only when id_route = none |
 | 28 | `am/signup-referral-partner-option-aaapd.mp3` | <span lang="am">AAAPD</span> | 2 s |  |
 | 29 | `am/signup-referral-partner-option-tib.mp3` | <span lang="am">Tomorrow is Better</span> | 3 s |  |
@@ -86,7 +86,7 @@
 | 51 | `am/passport-needs-option-remote.mp3` | <span lang="am">ከቤት መሥራት</span> | 3 s |  |
 | 52 | `am/passport-needs-option-helper.mp3` | <span lang="am">ቅጽ ለመሙላት የሚረዳ ሰው</span> | 4 s |  |
 | 53 | `am/passport-other-need-question.mp3` | <span lang="am">የሚረዳዎት ሌላ ነገር አለ? በራስዎ ቃላት ይጻፉ።</span> | 7 s | Only when want = yes |
-| 54 | `am/passport-sharing-question.mp3` | <span lang="am">ይህን ማን ማየት ይችላል?</span> | 4 s | Only when want = yes |
+| 54 | `am/passport-sharing-question.mp3` | <span lang="am">ይህን ማን ማየት ይችላል? ለእርስዎ «የግል» ተመርጧል። በማንኛውም ጊዜ መቀየር ይችላሉ።</span> | 12 s | Only when want = yes |
 | 55 | `am/passport-sharing-option-ask.mp3` | <span lang="am">እኔ ብቻ። ለሥራ ባመለከትኩ ቁጥር ጠይቁኝ።</span> | 7 s |  |
 | 56 | `am/passport-sharing-option-trainers.mp3` | <span lang="am">እኔና በALX ያሉ አሰልጣኞቼ</span> | 5 s |  |
 | 57 | `am/passport-check-answers.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ። ከመላክዎ በፊት ሁሉም ትክክል መሆኑን ያረጋግጡ።</span> | 10 s |  |

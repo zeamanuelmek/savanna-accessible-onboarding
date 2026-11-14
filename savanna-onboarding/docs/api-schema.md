@@ -4,7 +4,7 @@
 > API and no endpoint**. The module sends nothing over the network. It hands data to the host page as browser
 > events; the host decides where the data goes. Privacy rule: **nothing leaves the host without consent.**
 >
-> This page is the contract a developer needs. It matches module version `0.5.0` (Phase 3). The schemas use
+> This page is the contract a developer needs. It matches module version `0.6.0` (Phase 5). The schemas use
 > JSON Schema 2020-12. Amharic labels are a draft pending native-speaker review; stored **values** are always the
 > English codes below, never translated text.
 
@@ -62,7 +62,7 @@ checks it and chooses "Use this answer".
   "$id": "savanna-onboarding/complete",
   "type": "object",
   "properties": {
-    "form":     { "enum": ["signup", "profile", "passport", "employer", "apply"], "description": "Or the id of a form the host registered itself" },
+    "form":     { "enum": ["signup", "profile", "takeover", "passport", "employer", "apply"], "description": "Or the id of a form the host registered itself" },
     "instance": { "type": ["string", "null"], "description": "The element's instance attribute (for example the job id on apply)" },
     "lang":     { "enum": ["am", "en"], "description": "Language the learner used" },
     "answers":  { "type": "object", "description": "One of the answer schemas below, chosen by `form`" }
@@ -131,6 +131,11 @@ Starts on the summary, prefilled from the profile the host saved. Same fields an
 partner questions and the consent question: `name`, `phone`, `id_route`, `id_number` (only if the learner typed a new
 one), `referral_partner`, `dob`.
 
+### 3.2a `takeover`: learner takes over after partner sign-up
+
+Same fields and values as `profile`. Shown to the learner (alone) after a partner organisation signed them up. The
+host should then remove the staff member's name and keep only the organisation (the demo does this).
+
 ### 3.3 `passport`: Support Passport
 
 ```json
@@ -167,7 +172,15 @@ one), `referral_partner`, `dob`.
 
 **Consent rule:** the host may add Support Passport needs to what an employer receives **only** when
 `share_passport` is `"share"` for **this** application. Then it sends the list of needs only: never `other_need`,
-never a reason or condition.
+never a reason or condition. Use the module's helper, which applies the rule for you:
+
+```js
+var support = SavannaOnboarding.supportForEmployer(e.detail.answers); // [] unless "share" for this application
+packet.supportThatHelps = support.map(function (n) { return n.label.en; });
+```
+
+The learner's Support Passport setting "me and my ALX trainers" never means employers. Before answering, the learner
+sees exactly the list that would be shared.
 
 ### 3.5 `employer`: post a job and the support it offers (employer accommodation form)
 
@@ -194,13 +207,22 @@ The demo page (`app.js`) shows one way a host can use the answers. A real host c
 
 | Record (device key) | Built from | Notes |
 |---|---|---|
-| `profile` | `signup`, then `profile` | `{ name, phone, lang, id_route, assurance_level, referral_partner, registered_by, dob, updated }`. **The ID number itself is not kept**, only the level. |
-| `passport` | `passport` | `{ needs, other_need, sharing, updated }`. Stays on the device. |
-| `applications` | `apply` | The packet shown on screen as "What the employer receives" (below). |
+| `profile` | `signup`, then `profile` / `takeover` | `{ name, phone, lang, id_route, assurance_level, referral_partner, registered_by, takeover_pending, dob, updated }`. **The ID number itself is not kept**, only the status. `registered_by` is `{ org, staff }` until the learner takes over, then `{ org }` only. |
+| `passport` | `passport` | `{ needs, other_need, sharing, updated }`. Stays on the device. `sharing` is `"ask"` (private, the default) or `"trainers"`; the learner can change it on the Support Passport card at any time. |
+| `applications` | `apply` | `{ at, packet, withdrawn? }`. The packet is shown as "What the employer receives" (below). Withdrawing removes `supportThatHelps` and sets `withdrawn`. |
 | `jobs` | `employer` | Shown on the job board and as JSON-LD (section 5). |
 
-`assurance_level` is honest and never says "verified": `partner_assisted`, `partner_referral_pending`,
-`document_number_recorded` or `self_declared`.
+`assurance_level` is the honest ID trust status from `SavannaOnboarding.trustLevel(answers)`. It never says
+"verified", because there is no verification service:
+
+| Value | Badge (en / am) | When |
+|---|---|---|
+| `self_declared` | Self-declared / በራስ የተገለጸ | An ID type was chosen, no number given |
+| `document_number_recorded` | Number recorded — not verified / ቁጥር ተመዝግቧል — አልተረጋገጠም | A number was given (not checked) |
+| `partner_referral_pending` | Partner referral pending / የአጋር ድርጅት ማረጋገጫ በመጠበቅ ላይ | "I have none of these, refer me" |
+
+Badge texts: `SavannaOnboarding.TRUST`. Partner help is recorded separately in `registered_by` (it says who helped,
+not how trustworthy the ID is). The old value `partner_assisted` is no longer produced.
 
 Application packet (what the employer receives in the demo):
 

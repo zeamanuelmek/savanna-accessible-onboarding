@@ -112,3 +112,11 @@ html[data-dm-contrast="high"] .card, html[data-dm-contrast="high"] .job, html[da
 html[data-dm-contrast="high"] .form-wrap, html[data-dm-contrast="high"] .needs li, html[data-dm-contrast="high"] .notice { border: 3px solid #000; }
 html[data-dm-contrast="high"] .brand-mark { background: #000; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+/* Phase 5: ID status badge, private support card, shared-with list */
+.badge { display: inline-block; padding: .1em .7em; border: 2px solid var(--so-navy); border-radius: var(--so-radius-pill); font-weight: 600; color: var(--so-heading); background: var(--so-surface); }
+.notice h2 { margin: 0 0 .4rem; font-size: 1.2rem; }
+.card-plain { border: 1px solid var(--so-border-subtle); border-radius: var(--so-radius-card); padding: 1rem 1.1rem; margin: 1rem 0; }
+.card-plain h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+ul.plain { list-style: none; padding: 0; margin: 0; }
+ul.plain li { padding: .5rem 0; border-bottom: 1px solid var(--so-border-subtle); overflow-wrap: anywhere; }
+html[data-dm-contrast="high"] .card-plain { border: 3px solid #000; }
