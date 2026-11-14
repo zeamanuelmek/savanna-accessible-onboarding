@@ -1,5 +1,10 @@
-/* Savanna Accessible Onboarding Module: form "recipes". Each form is plain data: the same engine renders all four.
-   Amharic wording is a first draft: a native speaker must review it before testing with learners. */
+/* Savanna Accessible Onboarding Module: form "recipes". Each form is plain data: the same engine renders all five.
+   Amharic wording is a first draft: a native speaker must review it before testing with learners.
+   Field flags used here (full list in docs/for-developers.md):
+   - sensitive: true      support needs and ID questions. The engine never offers voice input on them, so that data is
+                          never sent to a cloud speech service (CLAUDE.md decision 9).
+   - clearIfChanged: 'x'  throw this answer away when the answer to field x changes (an ID number belongs to one ID).
+   - prefill              fill from the learner's profile or Support Passport, so nothing is asked twice. */
 (function () {
   var D = window.SavannaOnboarding;
 
@@ -37,7 +42,7 @@
       { id: 'phone', type: 'tel', autocomplete: 'tel',
         label: { en: 'What is your phone number?', am: 'ስልክ ቁጥርዎ ስንት ነው?' },
         hint: { en: 'We use it only to send you a link to continue. For example 0911 234 567.', am: 'ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።' } },
-      { id: 'id_route', type: 'choice', reviewLabel: { en: 'ID', am: 'መታወቂያ' },
+      { id: 'id_route', type: 'choice', sensitive: true, reviewLabel: { en: 'ID', am: 'መታወቂያ' },
         label: { en: 'Which ID do you have?', am: 'የትኛው መታወቂያ አለዎት?' },
         hint: { en: 'Any of these is fine. You can start learning even without an ID.', am: 'ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ።' },
         options: [
@@ -48,10 +53,10 @@
           { value: 'other', icon: '🗂️', label: { en: 'Another document', am: 'ሌላ ሰነድ' }, say: ['another', 'document', 'ሰነድ'] },
           { value: 'none', icon: '🤝', label: { en: 'I have none of these. Refer me through a partner.', am: 'ምንም የለኝም። በአጋር ድርጅት በኩል ይመዝግቡኝ።' }, say: ['none', 'refer', 'ምንም', 'የለኝም'] }
         ] },
-      { id: 'id_number', type: 'text', optional: true, showIf: { field: 'id_route', in: ['fayda', 'kebele', 'passport', 'refugee', 'other'] },
+      { id: 'id_number', type: 'text', optional: true, sensitive: true, clearIfChanged: 'id_route', showIf: { field: 'id_route', in: ['fayda', 'kebele', 'passport', 'refugee', 'other'] },
         label: { en: 'What is the number on your ID?', am: 'በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው?' },
         hint: { en: 'You can skip this and add it later. We never ask for a photo of your ID.', am: 'ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም።' } },
-      { id: 'referral_partner', type: 'choice', showIf: { field: 'id_route', equals: 'none' },
+      { id: 'referral_partner', type: 'choice', sensitive: true, showIf: { field: 'id_route', equals: 'none' },
         label: { en: 'Which organisation can confirm who you are?', am: 'ማንነትዎን የትኛው ድርጅት ሊያረጋግጥ ይችላል?' },
         hint: { en: 'They will contact you. You can start learning while you wait.', am: 'እነሱ ያገኙዎታል። እየጠበቁ መማር መጀመር ይችላሉ።' },
         options: [
@@ -80,20 +85,20 @@
   D.register('passport', {
     title: { en: 'My Support Passport', am: 'የድጋፍ ፓስፖርቴ' },
     fields: [
-      { id: 'want', type: 'choice', reviewLabel: { en: 'Share what helps you', am: 'የሚረዳዎትን ማጋራት' },
+      { id: 'want', type: 'choice', sensitive: true, reviewLabel: { en: 'Share what helps you', am: 'የሚረዳዎትን ማጋራት' },
         label: { en: 'Would you like to tell us what helps you learn and work?', am: 'ለመማርና ለመሥራት የሚረዳዎትን ሊነግሩን ይፈልጋሉ?' },
         hint: { en: "You don't have to. We never ask about a condition or for medical papers.", am: 'ግዴታ አይደለም። ስለ ጤና ሁኔታ ወይም የሕክምና ወረቀት በፍጹም አንጠይቅም።' },
         options: [
           { value: 'yes', icon: '✅', label: { en: 'Yes', am: 'አዎ' }, say: ['yes', 'አዎ'] },
           { value: 'later', icon: '⏭️', label: { en: 'Not now', am: 'አሁን አይደለም' }, say: ['not now', 'later', 'no', 'አሁን አይደለም', 'በኋላ'] }
         ] },
-      { id: 'needs', type: 'multi', options: 'NEEDS', showIf: { field: 'want', equals: 'yes' },
+      { id: 'needs', type: 'multi', options: 'NEEDS', sensitive: true, showIf: { field: 'want', equals: 'yes' },
         prefill: { from: 'passport', key: 'needs' },
         label: { en: 'What would help you? Choose all that fit.', am: 'ምን ይረዳዎታል? የሚስማሙትን ሁሉ ይምረጡ።' } },
-      { id: 'other_need', type: 'textarea', optional: true, showIf: { field: 'want', equals: 'yes' },
+      { id: 'other_need', type: 'textarea', optional: true, sensitive: true, showIf: { field: 'want', equals: 'yes' },
         label: { en: 'Is there anything else that helps you?', am: 'የሚረዳዎት ሌላ ነገር አለ?' },
-        hint: { en: 'Say it or write it in your own words.', am: 'በራስዎ ቃላት ይናገሩ ወይም ይጻፉ።' } },
-      { id: 'sharing', type: 'choice', showIf: { field: 'want', equals: 'yes' },
+        hint: { en: 'Write it in your own words.', am: 'በራስዎ ቃላት ይጻፉ።' } },
+      { id: 'sharing', type: 'choice', sensitive: true, showIf: { field: 'want', equals: 'yes' },
         label: { en: 'Who can see this?', am: 'ይህን ማን ማየት ይችላል?' },
         options: [
           { value: 'ask', icon: '🔒', label: { en: 'Only me. Ask me every time I apply for a job.', am: 'እኔ ብቻ። ለሥራ ባመለከትኩ ቁጥር ጠይቁኝ።' }, say: ['only me', 'ask', 'እኔ ብቻ', 'ጠይቁኝ'] },
@@ -148,7 +153,7 @@
           { value: 'written', icon: '📝', label: { en: 'Written questions', am: 'በጽሑፍ ጥያቄዎች' }, say: ['written', 'ጽሑፍ'] },
           { value: 'interpreter', icon: '🤟', label: { en: 'With a sign language interpreter', am: 'ከምልክት ቋንቋ አስተርጓሚ ጋር' }, say: ['interpreter', 'sign', 'አስተርጓሚ'] }
         ] },
-      { id: 'share_passport', type: 'choice', showIf: function () { var p = D.store.get('dimts.passport', null); return !!(p && p.needs && p.needs.length); },
+      { id: 'share_passport', type: 'choice', sensitive: true, showIf: function () { var p = D.store.get('passport', null); return !!(p && p.needs && p.needs.length); },
         label: { en: 'Do you want to share your Support Passport with this employer?', am: 'የድጋፍ ፓስፖርትዎን ለዚህ ቀጣሪ ማጋራት ይፈልጋሉ?' },
         hint: { en: 'If you share, the employer sees only the list of support that helps you. Never a reason or condition.', am: 'ካጋሩ ቀጣሪው የሚያየው የሚረዳዎትን የድጋፍ ዝርዝር ብቻ ነው። ምክንያት ወይም ሁኔታ በፍጹም አይታይም።' },
         options: [
@@ -159,5 +164,32 @@
     submitLabel: { en: 'Send my application', am: 'ማመልከቻዬን ላክ' },
     doneTitle: { en: 'Your application is sent', am: 'ማመልከቻዎ ተልኳል' },
     doneText: { en: 'Below is exactly what the employer receives.', am: 'ከዚህ በታች ቀጣሪው በትክክል የሚቀበለው ይታያል።' }
+  });
+
+  /* 5. PROFILE UPDATE: the sign-up questions again, prefilled from the profile. Starts on the summary; the learner
+     chooses "Change" only for what they want to update. */
+  function fromSignup(id, extra) {
+    var f = D.forms.signup.fields.filter(function (x) { return x.id === id; })[0], copy = {};
+    Object.keys(f).forEach(function (k) { copy[k] = f[k]; });
+    Object.keys(extra || {}).forEach(function (k) { copy[k] = extra[k]; });
+    return copy;
+  }
+  D.register('profile', {
+    title: { en: 'My profile', am: 'የእኔ መገለጫ' },
+    startAt: 'review',
+    fields: [
+      fromSignup('name', { prefill: { from: 'profile', key: 'name' }, reviewLabel: { en: 'Name', am: 'ስም' } }),
+      fromSignup('phone', { prefill: { from: 'profile', key: 'phone' }, reviewLabel: { en: 'Phone number', am: 'ስልክ ቁጥር' } }),
+      fromSignup('id_route', { prefill: { from: 'profile', key: 'id_route' } }),
+      fromSignup('id_number', { reviewLabel: { en: 'ID number (only if you want to add or change it)', am: 'የመታወቂያ ቁጥር (መጨመር ወይም መቀየር ከፈለጉ ብቻ)' } }),
+      fromSignup('referral_partner', { prefill: { from: 'profile', key: 'referral_partner' }, reviewLabel: { en: 'Organisation that can confirm who you are', am: 'ማንነትዎን የሚያረጋግጥ ድርጅት' } }),
+      fromSignup('dob', { prefill: { from: 'profile', key: 'dob' }, reviewLabel: { en: 'Date of birth', am: 'የትውልድ ቀን' } })
+    ],
+    reviewTitle: { en: 'My profile', am: 'የእኔ መገለጫ' },
+    reviewHint: { en: 'These are the details you gave us. Choose "Change" to update one, then save.', am: 'እነዚህ የሰጡን ዝርዝሮች ናቸው። አንዱን ለማዘመን "ቀይር"ን ይምረጡ፣ ከዚያ ያስቀምጡ።' },
+    reviewNote: { en: 'Your profile is stored on this phone. We never ask for a photo of your ID, and IDs are never checked automatically.', am: 'መገለጫዎ በዚህ ስልክ ላይ ተቀምጧል። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም፤ መታወቂያዎችም በራስ-ሰር አይረጋገጡም።' },
+    submitLabel: { en: 'Save my changes', am: 'ለውጦቼን አስቀምጥ' },
+    doneTitle: { en: 'Your profile is updated', am: 'መገለጫዎ ተዘምኗል' },
+    doneText: { en: 'Forms will now be filled in with your new details.', am: 'ቅጾች ከአሁን ጀምሮ በአዲሱ ዝርዝርዎ ይሞላሉ።' }
   });
 })();

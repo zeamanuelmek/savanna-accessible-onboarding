@@ -33,11 +33,11 @@ test('complete sign-up with the keyboard only', async ({ page }) => {
   expect(await heading(page)).toBe('Who is filling in this form?');
   await tabTo(page, 'input[name=v]'); await page.keyboard.press('Space'); // "Me, for myself"
   await tabTo(page, 'button[type=submit]'); await page.keyboard.press('Enter');
-  await tabTo(page, '#dm-input'); await page.keyboard.type('Abebe Kebede'); await page.keyboard.press('Enter');
-  await tabTo(page, '#dm-input'); await page.keyboard.type('0911234567'); await page.keyboard.press('Enter');
+  await tabTo(page, '[data-ref=input]'); await page.keyboard.type('Abebe Kebede'); await page.keyboard.press('Enter');
+  await tabTo(page, '[data-ref=input]'); await page.keyboard.type('0911234567'); await page.keyboard.press('Enter');
   await tabTo(page, 'input[name=v]'); await page.keyboard.press('Space'); // Fayda
   await tabTo(page, 'button[type=submit]'); await page.keyboard.press('Enter');
-  await tabTo(page, '#dm-input'); await page.keyboard.press('Enter'); // ID number is optional
+  await tabTo(page, '[data-ref=input]'); await page.keyboard.press('Enter'); // ID number is optional
   await tabTo(page, 'button[type=submit]'); await page.keyboard.press('Enter'); // date is optional
   await tabTo(page, 'input[name=v]'); await page.keyboard.press('Space'); // consent: yes
   await tabTo(page, 'button[type=submit]'); await page.keyboard.press('Enter');

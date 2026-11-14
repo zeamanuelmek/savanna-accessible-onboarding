@@ -557,8 +557,7 @@ No code was changed, so no tests were run.
 
 ### Decisions needed from the team
 
-1. **Offline:** it earns points under "Built for Ethiopia", but Phase 6 is still marked "cut first". Keep it cut-first,
-   or protect a minimal offline version (cache the app so it reopens without a connection)?
+1. ~~**Offline:**~~ Answered 14 Nov: a minimum offline mode is never cut (see below).
 2. **The "main task" for the co-designer gate:** proposed as "sign up and save a Support Passport". Please confirm.
 3. **3G performance:** the Amharic font file is ~198 KB and loads only when Amharic text is on screen. A throttled-3G
    test is planned for Phase 9. Do we also want a size budget for the page?
@@ -567,3 +566,132 @@ No code was changed, so no tests were run.
 ### Next step
 
 Wait for "go to Phase 2".
+
+---
+
+## Hackathon day 1: opening deck and training decisions (recorded 14 Nov 2026)
+
+Recorded in `CLAUDE.md` §2 (decisions 8–13), §5, §6 and the new §12.
+
+- **Deliverables (from 13 Nov), unchanged:** code under the open licence, a README that gets a judge installed in an
+  hour, Docker Compose (required), the WCAG 2.2 AA conformance report. Gate and scoring as in §11.
+- **Integration levels:** Level 1 script tag (minimum), Level 2 REST + OpenAPI, Level 3 open standard. **We target
+  Level 1 + Level 3 (JobPosting).** No server, no invented endpoints. Written up in `savanna-onboarding/docs/api-schema.md`.
+- **Privacy rule:** "nothing leaves the host without consent". Browser voice input needs a consent step first.
+  **Voice is never offered on support-needs or ID questions** (done in Phase 2, see below).
+- **Offline:** a minimum is never cut (answers saved on the device first; module and recorded audio available offline).
+  Plan: `savanna-onboarding/docs/offline-plan.md`.
+- **Speech adapter:** one interface for speech in and out; **Addis AI** noted as an optional future engine, not a dependency.
+- **Testing:** includes the cheapest Android phone we can borrow, and a 3G-speed connection.
+- **21 Oct co-design findings** (time-outs, ID refugees don't have, English-only help, job boards breaking under
+  screen readers): shown with our answer to each in the README and the conformance report (§2a).
+- **Panel:** a certified accessibility specialist, two co-designers, a senior ALX engineer, a platform representative.
+  The gate's 200% zoom is covered by our automated 400% / 320px checks (a person still checks it in Phase 9).
+- **Starter kit:** it is `alx-africa/Savanna-static-pages`, the same repo as our reference clone (`9e83ac7`, unchanged
+  at 11:30). Phase 8 is not blocked: pull it again at the start of Phase 8, then mount the module inside those pages
+  from our repo or a copy, never changing ALX's files.
+
+---
+
+## Phase 2 — Form engine tidy-up ✅ (14 Nov 2026)
+
+### What changed
+
+- `savanna-onboarding/savanna-onboarding.js`: split into clear layers in the same single file (no build step needed):
+  storage adapter → config (registry, `showIf`, validation) → **state** (`FormState`, no page elements) →
+  **presentation** (`View`, HTML only) → component (wires them together). Version 0.4.0.
+- `savanna-onboarding/forms.js`: `sensitive` flags on ID and support questions; `clearIfChanged` on the ID number; new
+  **`profile`** form built from the sign-up questions.
+- `savanna-onboarding/app.js`: new "My profile" page (`#/profile`); storage keys moved; honest ID level shared by
+  sign-up and profile update.
+- `savanna-onboarding/docs/api-schema.md` (new), `docs/offline-plan.md` (new), `docs/for-developers.md`, `README.md`,
+  `docs/conformance-report.md` (co-design findings table): updated.
+- Tests: new `tests/engine.spec.mjs` (13 tests); profile screens added to the accessibility sweep; selectors moved from
+  fixed ids to `data-ref`; the button-colour test now moves the mouse away first (it was catching the hover fade).
+- `CLAUDE.md`: day-1 decisions and the starter-kit news.
+
+### Fixed
+
+| Problem | Fix | Test |
+|---|---|---|
+| Two forms on one page clashed (same ids) | Every id is prefixed with the form's own id (`so1-input`, `so2-input`…) | known-issues (now a normal test) + engine: labels, errors and focus stay in their own form |
+| Stale ID number | Answers to questions no longer shown are deleted from the draft; changing the ID type empties the ID number and asks it again (also after "Change" on the summary) | known-issues + 2 engine tests |
+| Question count jumped ("of 6" → "of 7" at the ID question; "of 7" → "of 10" for partner help) | The count includes the shortest route a pending choice can open, so it stays at 7 for the whole "for myself" route. It only grows right after a choice that adds questions, and the learner hears "Your answer changed the number of questions. There are now 10 questions." | 2 engine tests |
+| Resume screen | Leaving on "Check your answers" comes back there; one resume code per draft (no pile-up); the code is deleted on submit; a link opened on another phone explains that answers stay on the phone where you started; "Welcome back" is now announced (filled into the live region after it appears) | 3 engine tests |
+| Storage keys `dimts.` | Keys are now `savanna-onboarding.*` through a replaceable storage adapter; old `dimts.*` data is moved automatically once | engine test |
+| Saved draft `mode` not restored | Restored (review or question) | engine test |
+
+### Added
+
+- **Profile-update journey** (`profile` form, "My profile" page): opens on a summary of the learner's details,
+  prefilled from the profile; "Change" only what needs updating; nothing else is asked; later forms (job application)
+  use the new details. Without a profile, the page explains and links to sign-up. The demo host keeps only the honest
+  ID level, not the ID number.
+- **No voice on sensitive questions:** the microphone is not shown on ID type, ID number, referral partner, any Support
+  Passport question or the "share my Support Passport" question (CLAUDE.md decision 9). The "other need" hint no
+  longer says "Say it".
+
+### Tests (one worker, mobile then desktop)
+
+| Project | Passed | Skipped | Failed |
+|---|---|---|---|
+| mobile (Pixel 5) | 92 | 5 | 0 |
+| desktop | 96 | 1 | 0 |
+
+- axe-core: **88 scans** (22 screens × 2 languages × 2 devices), **0 serious or critical**. Structure, language of
+  parts and 320px (400% zoom) checks pass on every screen, including the two new profile screens.
+- Expected failures still marked `test.fail()` (fixed in later phases): unconfirmed speech saved, "Say it again" keeps
+  the old words, no mic on the date (Phase 3); profile stored as plain text (Phase 6 decision).
+- Behaviour kept the same: all Phase 0–1 journey, keyboard, design and accessibility tests pass, with only selectors
+  changed. One deliberate difference: "Finish later" now reuses the same resume code.
+
+### Section 8 routine
+
+Keyboard, axe, 320px: automated, pass. **NVDA and TalkBack: still to do by the team** (checklist in the Phase 1 section).
+
+### Real vs simulated after Phase 2
+
+Same as Phase 1, plus: profile update **implemented**; resume link **partial** (same phone only; the SMS is still a
+labelled simulation); no voice on sensitive questions **implemented**; offline **partial** (drafts on the device; the
+page does not yet open offline).
+
+### Known issues still open
+
+Unconfirmed speech saved, "Say it again", date mic, voice consent not withdrawable (Phase 3); silent read-aloud with no
+voices, no pause/stop, combined read-aloud/picture setting (Phase 4); no trust badges, no learner takeover, staff name
+in the profile, sharing choice not enforced (Phase 5); plain-text storage, offline app shell (Phase 6); mount API, test
+host page inside the starter, Docker Compose (Phase 8); NVDA/TalkBack by a person; Amharic review.
+
+### Proposed schedule for Phases 3–10 (now Sat 11:45 → submit Sun 16:30)
+
+| When | Phase | Scope (gate and Track 1 must-haves first) |
+|---|---|---|
+| Sat 12:00–13:30 | 3 Voice with review | Speech state machine behind one adapter; never save unreviewed speech; editable transcript; withdraw consent; WebView / unsupported fallback |
+| Sat 13:30–15:00 | 5 Identity and private support | Trust badges on every ID route; private-by-default support card; consent per application enforced; learner takeover after partner sign-up |
+| Sat 15:00–16:15 | 4 Low-literacy | Play button per option; pause / stop / replay (WCAG 1.4.2); separate read-aloud and picture mode; audio adapter ready for recordings |
+| Sat 16:15–18:00 | 8 Integration (+ D2, D3) | Pull the starter; `mount()`/`unmount()`; mount inside the Savanna pages from our repo; test host page; **Docker Compose**; README install guide draft |
+| Sat 18:00–19:00 | 6 Minimum offline | Service worker caches module, fonts, audio; offline status; drafts cleared after submit |
+| Sat evening (team) | — | Amharic review; record audio clips; first NVDA / TalkBack pass on the deployed demo |
+| Sun 08:30–09:30 | 7 Career gateway | Polish only: apply prefill, consent to share, employer form, JobPosting (mostly exists) |
+| Sun 09:30–12:30 | 9 Testing (gate) | Co-designer main task with NVDA, TalkBack, keyboard, 200% zoom, sound off; cheapest phone on 3G; fix what breaks |
+| Sun 12:30–14:30 | 9 / 10 | Conformance report filled in; README timed install by a newcomer; `docker compose up` on a clean machine |
+| Sun 14:30–16:00 | 10 Submission | Licence, evidence, demo script, architecture overview, real vs simulated list. **Submit by 16:00** (30 min buffer) |
+
+Phase stops stay, but reviews need to be quick (about 10 minutes each).
+
+**Cut first, in this order:** (1) microphone on the date field (document why); (2) offline beyond the minimum
+(IndexedDB, sync); (3) encrypting device storage (minimise and delete instead); (4) simplified-wording toggle and
+picture-mode polish (keep pause/stop); (5) new Phase 7 features beyond polish; (6) removing the old `dimts` aliases.
+**Never cut:** gate items, voice review fix, private support and consent, ID routes and badges, Docker Compose, README,
+conformance report, minimum offline.
+
+### Decisions needed
+
+1. Approve the schedule and cut order above.
+2. Confirm the gate's main task (proposed: sign up and save a Support Passport).
+3. Who records Amharic audio tonight, and who reviews the Amharic text.
+4. Vercel (open since Phase 1): set Root Directory to `savanna-onboarding`; `dimts-track1.vercel.app` still shows the old version.
+
+### Next step
+
+Wait for "go to Phase 3".

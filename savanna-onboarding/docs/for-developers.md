@@ -20,7 +20,7 @@ islands) and on any other site, such as a job board.
 
 - Keep the `assets/fonts/` folder next to `savanna-onboarding.js`. The script finds the fonts relative to its own
   address.
-- Built-in forms: `signup`, `passport`, `employer`, `apply`.
+- Built-in forms: `signup`, `profile`, `passport`, `employer`, `apply`.
 - Add `lang="en"` or `lang="am"` to choose the starting language, and `welcome` to show the "how would you like to
   answer?" screen first.
 - Settings panel: `<savanna-onboarding-settings></savanna-onboarding-settings>`.
@@ -29,7 +29,7 @@ islands) and on any other site, such as a job board.
 
 ```js
 document.addEventListener('savanna-onboarding:complete', function (e) {
-  // e.detail = { form, instance, lang, answers }
+  // e.detail = { form, instance, lang, answers }. Exact schemas: docs/api-schema.md
   // Send it to your own API here. The module itself sends nothing anywhere.
 });
 ```
@@ -53,7 +53,27 @@ SavannaOnboarding.register('my-form', {
 
 - **Field types:** `text`, `tel`, `email`, `textarea`, `choice`, `multi`, `consent`, `ethdate` (Ethiopian calendar,
   stored with the Gregorian date).
-- **Field options:** `optional`, `hint`, `showIf`, `prefill`, `voice: false`.
+- **Field options:** `optional`, `hint`, `body`, `showIf`, `prefill`, `voice: false`, `reviewLabel`, `reviewHide`, `audio`, `validate`.
+  - `sensitive: true`: support needs and ID questions. Voice input is never offered on them, so the answer never goes to a
+    cloud speech service.
+  - `clearIfChanged: 'fieldId'`: throw this answer away when that field's answer changes (an ID number belongs to one ID type).
+    After "Change" on the summary, the learner is asked the emptied or newly opened question before returning.
+- **Form options:** `startAt: 'review'` (open on the summary, for "update my details"), `reviewTitle`, `reviewHint`,
+  `reviewNote`, `submitLabel`, `doneTitle`, `doneText`, `help`, `allowLater`, `welcome`.
+- Answers to questions that are no longer shown (an abandoned route) are deleted from the draft and never sent.
+- Several forms can be on one page: every id inside a form is prefixed with that form's own id.
+
+## 3a. How the engine is organised
+
+One file, `savanna-onboarding.js`, in clear layers:
+
+| Layer | What it does |
+|---|---|
+| Storage adapter (`store`) | Everything kept on the device, under keys starting `savanna-onboarding.`. Replace it with `SavannaOnboarding.setStorage({ getItem, setItem, removeItem, keys })` |
+| Config | The form registry (`register`), `showIf`, `validate` |
+| State (`SavannaOnboarding.FormState`) | One form's answers, position, pruning, prefill, saving. No page elements, so it can be tested on its own |
+| Presentation (`View`) | Turns the state into HTML |
+| Component | Reads the page, updates the state, asks the view to draw |
 
 ## 4. Styling
 
@@ -72,7 +92,7 @@ SavannaOnboarding.register('my-form', {
 | `window.Dimts` | `window.SavannaOnboarding` |
 | `dimts:complete`, `dimts:prefs`, `dimts:ready` | `savanna-onboarding:complete`, `…:prefs`, `…:ready` (both are sent) |
 
-Browser storage keys still start with `dimts.`. They will move to the new storage adapter in Phase 2.
+Browser storage keys now start with `savanna-onboarding.`. Data saved under the old `dimts.` keys is moved automatically the first time the new script loads.
 
 ## Built in
 

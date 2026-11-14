@@ -3,11 +3,11 @@
   var D = window.SavannaOnboarding, store = D.store, L = D.label;
   var view = document.getElementById('view');
 
-  function lang() { return (store.get('dimts.prefs', {}).lang) || 'am'; }
+  function lang() { return (store.get('prefs', {}).lang) || 'am'; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   var TX = {
     en: {
-      home: 'Home', join: 'Join', passport: 'Support Passport', jobs: 'Jobs', post: 'Post a job', settings: 'Settings', menu: 'Menu',
+      home: 'Home', join: 'Join', profile: 'My profile', passport: 'Support Passport', jobs: 'Jobs', post: 'Post a job', settings: 'Settings', menu: 'Menu',
       product: 'Savanna Accessible Onboarding Module', brandSub: 'Accessible onboarding',
       foot: 'Demo for the Accessibility Hackathon 2026 (Track 1: accessible onboarding). All data stays in this browser. Sample jobs are fictional. Amharic wording is a draft for native-speaker review.',
       jobsShown: '{n} jobs shown', jobShown: '1 job shown',
@@ -33,10 +33,11 @@
       lv_self_declared: 'Self-declared. You can add an ID number at any time. You can start learning now.',
       jsonTitle: 'What other job platforms receive (schema.org JobPosting)', receives: 'What the employer receives',
       notShared: 'Support Passport: not shared', seeJobs: 'See it on the job board', applyFor: 'Applying for:',
-      notFound: 'This job was not found.', back: 'Back to jobs'
+      notFound: 'This job was not found.', back: 'Back to jobs',
+      noProfile: 'You have not joined yet, so there is no profile on this phone.', joinFirst: 'Join Savanna', backProfile: 'Back to my profile'
     },
     am: {
-      home: 'መነሻ', join: 'ይመዝገቡ', passport: 'የድጋፍ ፓስፖርት', jobs: 'ሥራዎች', post: 'ሥራ ያስተዋውቁ', settings: 'ቅንብሮች', menu: 'ምናሌ',
+      home: 'መነሻ', join: 'ይመዝገቡ', profile: 'የእኔ መገለጫ', passport: 'የድጋፍ ፓስፖርት', jobs: 'ሥራዎች', post: 'ሥራ ያስተዋውቁ', settings: 'ቅንብሮች', menu: 'ምናሌ',
       product: 'Savanna Accessible Onboarding Module', brandSub: 'ተደራሽ ምዝገባ',
       foot: 'ለተደራሽነት ሃካቶን 2026 (ትራክ 1፦ ተደራሽ ምዝገባ) የተዘጋጀ ማሳያ። ሁሉም መረጃ በዚህ ብራውዘር ውስጥ ይቆያል። የናሙና ሥራዎቹ ልብ ወለድ ናቸው። የአማርኛው ጽሑፍ በአፍ መፍቻ ተናጋሪ የሚገመገም ረቂቅ ነው።',
       jobsShown: '{n} ሥራዎች ይታያሉ', jobShown: '1 ሥራ ይታያል',
@@ -62,7 +63,8 @@
       lv_self_declared: 'በራስ የተገለጸ። በማንኛውም ጊዜ የመታወቂያ ቁጥር መጨመር ይችላሉ። አሁን መማር መጀመር ይችላሉ።',
       jsonTitle: 'ሌሎች የሥራ ጣቢያዎች የሚቀበሉት (schema.org JobPosting)', receives: 'ቀጣሪው የሚቀበለው',
       notShared: 'የድጋፍ ፓስፖርት፦ አልተጋራም', seeJobs: 'በሥራ ገጹ ላይ ይመልከቱት', applyFor: 'የሚያመለክቱበት፦',
-      notFound: 'ይህ ሥራ አልተገኘም።', back: 'ወደ ሥራዎች ተመለስ'
+      notFound: 'ይህ ሥራ አልተገኘም።', back: 'ወደ ሥራዎች ተመለስ',
+      noProfile: 'እስካሁን አልተመዘገቡም፤ ስለዚህ በዚህ ስልክ ላይ መገለጫ የለም።', joinFirst: 'ሳቫናን ይቀላቀሉ', backProfile: 'ወደ መገለጫዬ ተመለስ'
     }
   };
   function T(k, vars) { var s = (TX[lang()] || TX.en)[k] || TX.en[k] || k; if (vars) Object.keys(vars).forEach(function (v) { s = s.split('{' + v + '}').join(vars[v]); }); return s; }
@@ -80,7 +82,7 @@
     { id: 's4', sample: true, title: 'Junior web developer', org: 'Entoto Tech', location: 'Lideta, Addis Ababa', mode: 'hybrid',
       offers: ['sign_language', 'captions', 'written', 'remote', 'extra_time', 'step_free'], description: 'Build and fix web pages with a senior mentor.' }
   ];
-  function jobs() { return store.get('dimts.jobs', []).concat(SAMPLE); }
+  function jobs() { return store.get('jobs', []).concat(SAMPLE); }
   var MODE = { onsite: { en: 'At the office', am: 'በቢሮ' }, remote: { en: 'From home', am: 'ከቤት' }, hybrid: { en: 'Office and home', am: 'በቢሮና በቤት' } };
 
   function jobPostingLd(j) {
@@ -98,7 +100,7 @@
 
   /* ---- views ---- */
   function nav(route) {
-    var items = [['#/', 'home'], ['#/signup', 'join'], ['#/passport', 'passport'], ['#/jobs', 'jobs'], ['#/employer', 'post'], ['#/settings', 'settings']];
+    var items = [['#/', 'home'], ['#/signup', 'join'], ['#/profile', 'profile'], ['#/passport', 'passport'], ['#/jobs', 'jobs'], ['#/employer', 'post'], ['#/settings', 'settings']];
     document.getElementById('nav').innerHTML = items.map(function (i) {
       var cur = route === i[0] || (i[0] === '#/jobs' && route.indexOf('#/apply') === 0);
       return '<li><a href="' + i[0] + '"' + (cur ? ' aria-current="page"' : '') + '>' + T(i[1]) + '</a></li>';
@@ -147,7 +149,7 @@
       }).join('') + '</ul>' +
       '<p><button type="button" class="btn" id="reset">' + T('reset') + '</button></p><p role="status" id="reset-status"></p>';
     document.getElementById('reset').addEventListener('click', function () {
-      Object.keys(localStorage).forEach(function (k) { if (k.indexOf('dimts.') === 0 && k !== 'dimts.prefs') store.del(k); });
+      store.keys().forEach(function (k) { if (k !== 'prefs') store.del(k); });
       document.getElementById('reset-status').textContent = T('resetDone');
     });
     focusH1();
@@ -156,16 +158,45 @@
   function signup() {
     mountForm('signup', null, function (d, slot) {
       var a = d.answers;
-      var level = a.filler === 'partner' ? 'partner_assisted' : a.id_route === 'none' ? 'partner_referral_pending' : a.id_number ? 'document_number_recorded' : 'self_declared';
-      store.set('dimts.profile', { name: a.name, phone: a.phone, lang: d.lang, id_route: a.id_route, assurance_level: level,
+      var level = assurance(a, null, a.filler === 'partner');
+      // The ID number itself is not kept by this demo host (data minimisation); only the fact that one was given.
+      store.set('profile', { name: a.name, phone: a.phone, lang: d.lang, id_route: a.id_route, assurance_level: level,
         referral_partner: a.referral_partner || null, registered_by: a.filler === 'partner' ? { org: a.partner_org, staff: a.staff_name } : null, dob: a.dob || null });
       if (slot) slot.innerHTML = '<div class="notice"><p><strong>' + T('level') + '</strong> ' + T('lv_' + level) + '</p></div>' +
         '<p class="actions"><a class="btn primary" href="#/passport">' + T('nextPassport') + '</a> <a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
     });
   }
 
+  /* Honest ID level: never "verified" (there is no verification service). */
+  function assurance(a, old, partner) {
+    if (partner) return 'partner_assisted';
+    if (a.id_route === 'none') return 'partner_referral_pending';
+    if (a.id_number) return 'document_number_recorded';
+    // profile update with the same ID and no new number: keep what was recorded before
+    if (old && old.id_route === a.id_route && old.assurance_level !== 'partner_referral_pending') return old.assurance_level;
+    return old && old.registered_by ? 'partner_assisted' : 'self_declared';
+  }
+
+  function profileView() {
+    var old = store.get('profile', null);
+    if (!old) {
+      view.innerHTML = '<h1 tabindex="-1">' + T('profile') + '</h1><p>' + T('noProfile') + '</p><p><a class="btn primary" href="#/signup">' + T('joinFirst') + '</a></p>';
+      focusH1(); return;
+    }
+    mountForm('profile', null, function (d, slot) {
+      var a = d.answers, p = {};
+      Object.keys(old).forEach(function (k) { p[k] = old[k]; });
+      p.name = a.name; p.phone = a.phone; p.id_route = a.id_route; p.referral_partner = a.referral_partner || null; p.dob = a.dob || null;
+      p.assurance_level = assurance(a, old, false);
+      p.updated = new Date().toISOString();
+      store.set('profile', p);
+      if (slot) slot.innerHTML = '<div class="notice"><p><strong>' + T('level') + '</strong> ' + T('lv_' + p.assurance_level) + '</p></div>' +
+        '<p class="actions"><a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
+    });
+  }
+
   function passportView() {
-    var p = store.get('dimts.passport', null);
+    var p = store.get('passport', null);
     if (p && !window.__editPassport) {
       var list = (p.needs || []);
       view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1><p class="muted">' + T('onlyYou') + '</p>' +
@@ -173,7 +204,7 @@
         (p.other_need ? '<p>' + esc(p.other_need) + '</p>' : '') +
         '<p class="actions"><button type="button" class="btn primary" id="edit">' + T('edit') + '</button> <a class="btn" href="#/jobs">' + T('nextJobs') + '</a> <button type="button" class="btn danger" id="del">' + T('del') + '</button></p><p role="status" id="pp-status"></p>';
       document.getElementById('edit').onclick = function () { window.__editPassport = true; document.getElementById('host-lang').hidden = true; passportView(); };
-      document.getElementById('del').onclick = function () { store.del('dimts.passport'); window.__editPassport = false; passportView(); setTimeout(function () { var s = document.getElementById('pp-status'); if (s) s.textContent = T('deleted'); }, 100); };
+      document.getElementById('del').onclick = function () { store.del('passport'); window.__editPassport = false; passportView(); setTimeout(function () { var s = document.getElementById('pp-status'); if (s) s.textContent = T('deleted'); }, 100); };
       focusH1();
       return;
     }
@@ -181,14 +212,14 @@
     mountForm('passport', null, function (d, slot) {
       window.__editPassport = false;
       var a = d.answers;
-      store.set('dimts.passport', { needs: a.want === 'yes' ? (a.needs || []) : [], other_need: a.other_need || '', sharing: a.sharing || 'ask', updated: new Date().toISOString() });
+      store.set('passport', { needs: a.want === 'yes' ? (a.needs || []) : [], other_need: a.other_need || '', sharing: a.sharing || 'ask', updated: new Date().toISOString() });
       if (slot) slot.innerHTML = '<p class="actions"><a class="btn primary" href="#/jobs">' + T('nextJobs') + '</a></p>';
     });
   }
 
   function jobsView() {
-    var p = store.get('dimts.passport', null), needs = (p && p.needs) || [];
-    var filterOn = needs.length && store.get('dimts.jobFilter', false);
+    var p = store.get('passport', null), needs = (p && p.needs) || [];
+    var filterOn = needs.length && store.get('jobFilter', false);
     var list = jobs().map(function (j) { var k = needs.filter(function (n) { return j.offers.indexOf(n) !== -1; }).length; return { j: j, k: k }; });
     if (needs.length) list.sort(function (a, b) { return b.k - a.k; });
     if (filterOn) list = list.filter(function (x) { return x.k === needs.length; });
@@ -212,7 +243,7 @@
     setTimeout(function () { var s = document.getElementById('jobs-status'); if (s) s.textContent = count === 1 ? T('jobShown') : T('jobsShown', { n: count }); }, 60);
     var flt = document.getElementById('flt');
     if (flt) flt.addEventListener('change', function () {
-      store.set('dimts.jobFilter', flt.checked); jobsView();
+      store.set('jobFilter', flt.checked); jobsView();
       var f = document.getElementById('flt'); if (f) f.focus();
     });
     view.querySelectorAll('[data-listen]').forEach(function (b) {
@@ -229,7 +260,7 @@
     mountForm('employer', null, function (d, slot) {
       var a = d.answers;
       var job = { id: 'j' + Date.now().toString(36), title: a.title, org: a.org, location: a.location, mode: a.mode, offers: a.offers || [], description: a.description, contact: a.contact, datePosted: new Date().toISOString().slice(0, 10) };
-      store.set('dimts.jobs', [job].concat(store.get('dimts.jobs', [])));
+      store.set('jobs', [job].concat(store.get('jobs', [])));
       if (slot) slot.innerHTML = '<p class="actions"><a class="btn primary" href="#/jobs">' + T('seeJobs') + '</a></p>' +
         '<details><summary>' + T('jsonTitle') + '</summary><pre tabindex="0"><code>' + esc(JSON.stringify(jobPostingLd(job), null, 2)) + '</code></pre></details>';
     });
@@ -239,10 +270,10 @@
     var j = jobs().filter(function (x) { return x.id === id; })[0];
     if (!j) { view.innerHTML = '<h1 tabindex="-1">' + T('notFound') + '</h1><p><a href="#/jobs">' + T('back') + '</a></p>'; focusH1(); return; }
     var el = mountForm('apply', id, function (d, slot) {
-      var a = d.answers, p = store.get('dimts.passport', null);
+      var a = d.answers, p = store.get('passport', null);
       var packet = { job: j.title, employer: j.org, name: a.name, phone: a.phone, why: a.why, experience: a.experience, interview: a.interview || [] };
       if (a.share_passport === 'share' && p) packet.supportThatHelps = p.needs.map(function (n) { return D.NEEDS.filter(function (x) { return x.value === n; })[0].label.en; });
-      var apps = store.get('dimts.applications', []); apps.unshift({ at: new Date().toISOString(), packet: packet }); store.set('dimts.applications', apps);
+      var apps = store.get('applications', []); apps.unshift({ at: new Date().toISOString(), packet: packet }); store.set('applications', apps);
       if (slot) slot.innerHTML = '<h2>' + T('receives') + '</h2><pre tabindex="0"><code>' + esc(JSON.stringify(packet, null, 2)) + '</code></pre>' +
         (packet.supportThatHelps ? '' : '<p class="muted">' + T('notShared') + '</p>') +
         '<p><a class="btn" href="#/jobs">' + T('back') + '</a></p>';
@@ -261,19 +292,20 @@
 
   function focusH1() { var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); } }
 
-  var TITLES = { '#/': 'home', '#/signup': 'join', '#/passport': 'passport', '#/jobs': 'jobs', '#/employer': 'post', '#/settings': 'settings' };
+  var TITLES = { '#/': 'home', '#/signup': 'join', '#/profile': 'profile', '#/passport': 'passport', '#/jobs': 'jobs', '#/employer': 'post', '#/settings': 'settings' };
   function route() {
     var r = location.hash || '#/';
     if (r.indexOf('#/') !== 0) return; // in-page anchors such as the skip link
     D.stopSpeaking();
     nav(r);
-    var isForm = r === '#/signup' || r === '#/employer' || r === '#/settings' || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('dimts.passport', null) || window.__editPassport));
+    var isForm = r === '#/signup' || r === '#/employer' || r === '#/settings' || (r === '#/profile' && !!store.get('profile', null)) || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('passport', null) || window.__editPassport));
     document.getElementById('host-lang').hidden = isForm;
     var base = r.indexOf('#/apply/') === 0 ? '#/apply' : r;
     document.title = (base === '#/apply' ? T('apply') : T(TITLES[base] || 'home')) + ' · ' + T('product');
     if (base !== '#/passport') window.__editPassport = false;
     if (r === '#/' || r === '#') home();
     else if (r === '#/signup') signup();
+    else if (r === '#/profile') profileView();
     else if (r === '#/passport') passportView();
     else if (r === '#/jobs') jobsView();
     else if (r === '#/employer') employer();
@@ -288,7 +320,7 @@
   document.addEventListener('savanna-onboarding:prefs', function () {
     var r = location.hash || '#/';
     nav(r); syncHostLang();
-    var formPage = r === '#/signup' || r === '#/employer' || r === '#/settings' || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('dimts.passport', null) || window.__editPassport));
+    var formPage = r === '#/signup' || r === '#/employer' || r === '#/settings' || (r === '#/profile' && !!store.get('profile', null)) || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('passport', null) || window.__editPassport));
     if (!formPage) { var active = document.activeElement && document.activeElement.id; route(); if (active) { var el = document.getElementById(active); if (el) el.focus(); } }
   });
   document.getElementById('skip').addEventListener('click', function (e) { e.preventDefault(); var m = document.getElementById('main'); m.focus(); });

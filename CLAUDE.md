@@ -32,11 +32,20 @@ Event: 14–15 November 2026, ALX Tech Hub, Lideta, Addis Ababa. Submission dead
 
 1. **Stop after every phase** for team review (section 0).
 2. **Keep the existing framework-free Web Component core.** Do NOT rewrite in React now. Add a `SavannaOnboarding.mount(selector, options)` / `unmount()` API on top of it. Revisit React only after the official ALX starter is inspected at kickoff (14 Nov).
-3. **Scope and order** follow section 6. Offline sync and API work come after the core phases and are cut first if time runs out. **Docker Compose is a required deliverable (section 11) and is never cut.** Note: offline also earns points under "Built for Ethiopia" (section 11); the team decides whether it stays cut-first.
+3. **Scope and order** follow section 6. API work and offline *sync* come after the core phases and are cut first if time runs out. **Docker Compose is a required deliverable (section 11) and is never cut.** **A minimum offline mode is never cut** (decision 9).
 4. **Own repository** (Phase 0.5, 12 Nov): https://github.com/zeamanuelmek/savanna-accessible-onboarding. The module lives in `savanna-onboarding/` inside it. The Savanna reference is a separate, untouched clone next to it at `../Savanna-static-pages` (tests read it from there, or from `REFERENCE_DIR`). **Ask before resetting or deleting anything in the reference folder.**
 5. **Names:** folder `savanna-onboarding/`, element `<savanna-onboarding-form>` (and `<savanna-onboarding-settings>`); `<dimts-form>` stays as an alias for now.
 6. **Colour:** primary actions use Savanna red `#db3e3e`, darkened only as much as needed to reach 4.5:1 for text and buttons. Headings and text use navy `#002b56`. Green is for success states only, never for text. The focus outline must meet 3:1.
 7. **Base text size:** the module sets its own base size so it does not shrink inside Savanna's 14px pages, and it respects the learner's text-size setting.
+
+Decisions from the 13 Nov deliverables and the 14 Nov training and opening deck (see sections 11 and 12):
+
+8. **Privacy rule: "nothing leaves the host without consent".** The module itself sends nothing over the network. Browser voice input sends audio to Google, so it needs a clear consent step before first use, and that consent can be withdrawn.
+9. **No voice on sensitive questions.** Voice input is never offered on support-needs questions or ID questions (ID route, ID number), so that data is never sent to a cloud speech service. Mark these fields `sensitive: true` in the form config; the engine then hides the microphone.
+10. **Minimum offline mode (Phase 6 is not cut entirely).** Answers are saved on the device first, and the module plus recorded audio stay available offline. Sync and anything beyond that stay cut-first. Plan: `savanna-onboarding/docs/offline-plan.md`. Cloud voice input never works offline.
+11. **One speech adapter.** Speech input and speech output sit behind one adapter interface. **Addis AI** (Amharic speech-to-text and text-to-speech) is noted as an optional future engine, **not a dependency**. The default stays the free browser engine plus recorded audio.
+12. **Testing on the cheapest phone.** Manual testing includes the cheapest Android phone the team can borrow (in addition to the 3G-speed test).
+13. **Integration target: Level 1 (script tag) + Level 3 (schema.org JobPosting).** No server and no invented endpoints. The data and events the module gives the host are documented in `savanna-onboarding/docs/api-schema.md` as JSON Schema.
 
 ## 3. Starting point (what already exists)
 
@@ -60,7 +69,7 @@ The prototype (files `dimts.js`, `forms.js`, `app.js`, `app.css`, `index.html`, 
 
 ## 4. Savanna reference and branding (high priority)
 
-- Reference repo: https://github.com/alx-africa/Savanna-static-pages — three frozen learner pages (plain HTML/CSS), Sprockets-served `application_alx.css`, esbuild `app.css`, Bootstrap bundle + Popper, React/TypeScript islands, Google Fonts and Typekit, Rive animations. It is a visual/technical reference, **not** the real backend or starter. **Never modify it.** Local clone: `../Savanna-static-pages` (next to this repo).
+- Reference repo: https://github.com/alx-africa/Savanna-static-pages — three frozen learner pages (plain HTML/CSS), Sprockets-served `application_alx.css`, esbuild `app.css`, Bootstrap bundle + Popper, React/TypeScript islands, Google Fonts and Typekit, Rive animations. It is also the **official starter kit** (confirmed 14 Nov), but not a backend. **Never modify it.** Local clone: `../Savanna-static-pages` (next to this repo).
 - Extract the **real** colours, fonts, weights, sizes, radii, spacing, buttons, form controls and breakpoints from its CSS. Do not guess values from memory or screenshots.
 - **Fonts:** check which fonts come from Typekit (Adobe, licensed, usually locked to ALX domains) vs Google Fonts. Test whether they actually load on localhost and on Vercel. If a licensed font cannot load, use the closest permitted alternative and document why. Always add an Ethiopic fallback (e.g. Noto Sans Ethiopic) for Amharic without replacing the Latin font.
 - Check colour contrast (WCAG AA: 4.5:1 text, 3:1 large text and UI). If a brand colour fails, use an accessible variant for that use only.
@@ -73,7 +82,7 @@ The prototype (files `dimts.js`, `forms.js`, `app.js`, `app.css`, `index.html`, 
 - Separate: presentation · form engine · question configs · answer state · accessibility services · voice service · audio service · identity and support logic · profile and career journeys · storage · API adapter · host integration adapter.
 - Voice, audio and storage sit behind **replaceable adapters** (so Addis AI, recorded Amharic audio or a backend can be plugged in later).
 - One shared answer state for typing, speaking and tapping.
-- Integration levels: **Level 1 script tag first** (`<script src="savanna-onboarding.js">` + `SavannaOnboarding.mount(...)`). Level 2 (REST + OpenAPI) only when a real contract exists — never invent endpoints. Level 3: keep schema.org/JobPosting for jobs; add LTI 1.3 or Open Badges only with a real use case.
+- Integration levels (opening deck, 14 Nov): **Level 1** = script tag (the minimum). **Level 2** = REST API with an OpenAPI spec. **Level 3** = an open standard (schema.org/JobPosting, LTI 1.3, Open Badges 3.0). The test: a judge installs the module in one hour from our docs alone. **We target Level 1 + Level 3 (JobPosting).** Level 2 only when a real contract exists — never invent endpoints or build a server. LTI 1.3 / Open Badges only with a real use case.
 - The module emits events (e.g. `savanna:complete`) and lets the host decide where data goes.
 - Dependencies: smallest set possible. Don't install a tool just because it is listed; record why each one is needed in `DEVELOPMENT_PROGRESS.md`. Candidates if useful: a small bundler (esbuild/Vite), `idb`, Lucide SVG icons, Playwright, axe-core, Vitest, ESLint (+ a11y lint).
 
@@ -100,17 +109,17 @@ Play button on every option, plus replay / pause / stop. Icons always with text.
 **Phase 5 — Identity and private support.**
 ID routes: Fayda, kebele ID, passport, refugee ID / proof of registration, other document, partner referral. **Honest trust-status badges** on each choice (e.g. "Self-declared", "Number recorded — not verified", "Partner referral pending"). Private support card: no diagnosis, private by default, explicit and **revocable** consent, clear "who can see this". Partner-assisted flow with learner consent and a **learner takeover** step.
 
-**Phase 6 — Settings, saving and offline (cut-first if short of time).**
-Persistent text size, contrast, audio-first, language, interaction mode. Minimise stored personal data; clear drafts after submit; decide with the team what sensitive data may be kept locally. IndexedDB drafts + service-worker app-shell caching + offline/sync status only if time allows. Never claim offline speech.
+**Phase 6 — Settings, saving and offline (minimum offline is never cut; the rest is cut-first).**
+Persistent text size, contrast, audio-first, language, interaction mode. Minimise stored personal data; clear drafts after submit; decide with the team what sensitive data may be kept locally. **Required minimum:** answers saved on the device first, and a service worker that caches the module, fonts and recorded audio so it reopens without a connection, with a clear offline status (see `docs/offline-plan.md`). IndexedDB drafts and sync only if time allows. Never claim offline speech input.
 
 **Phase 7 — Career journeys.**
 Job application reuses the engine, prefilled from the profile, voice for open questions; employer accommodation form; on-device matching that never reveals disability; JobPosting output.
 
-**Phase 8 — Savanna integration (needs the official starter, 14 Nov).**
-Script-tag build, mount/unmount API, host configuration, scoped styles, integration guide, a **separate test host page** proving it works outside the demo site. **Docker Compose (required):** one command, `docker compose up`, serves the demo and the test host page locally, using only free images and no paid services. First draft of the README install guide, aimed at a developer installing the module in about an hour. Reassess when the starter arrives; stop and ask if the contract is unclear.
+**Phase 8 — Savanna integration (no longer blocked).** The official starter kit is https://github.com/alx-africa/Savanna-static-pages, the same repo as our reference clone `../Savanna-static-pages` (commit `9e83ac7`, unchanged as of 11:30 on 14 Nov). **At the start of Phase 8, pull it again** in case ALX updates it during the event. Then mount the module inside those pages **without changing ALX's files**: do the integration in our repo (or in a copy), never in the reference clone.
+Script-tag build, mount/unmount API, host configuration, scoped styles, integration guide, a **separate test host page** proving it works outside the demo site. **Docker Compose (required):** one command, `docker compose up`, serves the demo and the test host page locally, using only free images and no paid services. First draft of the README install guide, aimed at a developer installing the module in about an hour. Stop and ask if the integration contract is unclear.
 
 **Phase 9 — Accessibility, privacy and security testing.**
-axe-core, keyboard-only, NVDA, TalkBack (incl. Android WebView), 200% and 400% zoom, 320px reflow, sound off, large text, high contrast, transcript editing, error handling. Privacy and security review. Fill in the **WCAG 2.2 AA conformance report** in `savanna-onboarding/docs/conformance-report.md` (test · expected · actual · pass/fail · evidence · limitations · untested). Run the **judging gate** with a co-designer (section 11): the main task completed unaided with NVDA, TalkBack, keyboard only, 200% zoom and sound off. Test on a low-cost Android phone over a 3G-speed connection. Map the official ALX 35-feature checklist when provided — never invent it.
+axe-core, keyboard-only, NVDA, TalkBack (incl. Android WebView), 200% and 400% zoom, 320px reflow, sound off, large text, high contrast, transcript editing, error handling. Privacy and security review. Fill in the **WCAG 2.2 AA conformance report** in `savanna-onboarding/docs/conformance-report.md` (test · expected · actual · pass/fail · evidence · limitations · untested). Run the **judging gate** with a co-designer (section 11): the main task completed unaided with NVDA, TalkBack, keyboard only, 200% zoom and sound off. Test on the cheapest Android phone the team can borrow, and over a 3G-speed connection. Map the official ALX 35-feature checklist when provided — never invent it.
 
 **Phase 10 — Submission.**
 Submit by **16:30 on 15 Nov**. Includes:
@@ -170,6 +179,8 @@ Verify a clean setup works.
 - `README.md` — what it is, setup, run, install on another site, configuration.
 - `savanna-onboarding/docs/conformance-report.md` — WCAG 2.2 AA conformance report (required deliverable). The skeleton exists now; fill it in during Phase 9, collecting evidence earlier.
 - `LICENSE` — placeholder until the open licence is announced at kickoff (14 Nov).
+- `savanna-onboarding/docs/api-schema.md` — the data and events the module gives the host, as JSON Schema, plus the JobPosting mapping. Update it whenever a form's output changes.
+- `savanna-onboarding/docs/offline-plan.md` — one page: what works offline today, what we add, what never works offline.
 
 ## 10. Deployment
 
@@ -220,3 +231,35 @@ Verify a clean setup works.
 | S3 Built for Ethiopia | 1, 3, 4, 6, 9 | Amharic font (1), Amharic voice (3), recorded Amharic audio (4), offline (6), cheap Android on 3G test (9). The Ethiopian calendar already exists; a native-speaker review of the Amharic is needed |
 | S4 Quality, security, privacy | 2, 3, 5, 6, 9 | Privacy bug fixes (2, 3), consent and data minimising (5, 6), security review (9) |
 | S5 Cheap to keep running | all, checked in 8 and 10 | Static files, no paid APIs, voice and audio behind replaceable adapters, free Docker images |
+
+## 12. Opening deck and training (hackathon day 1, 14 Nov)
+
+### Who judges
+
+A certified accessibility specialist, two co-designers, a senior ALX engineer and a platform representative.
+The gate uses **200% zoom**; our automated 320px / 400% zoom tests already cover it (400% is stricter).
+
+### Integration test
+
+A judge installs the module **in one hour, from our docs alone**. We target **Level 1** (script tag) **+ Level 3**
+(schema.org JobPosting). What the host receives is specified in `savanna-onboarding/docs/api-schema.md`.
+
+### 21 October co-design findings — we must show how we address each one (README and conformance report)
+
+| Finding | How the module addresses it | Where it is checked |
+|---|---|---|
+| **Forms timed out** | No time limits anywhere; answers saved on the device after every question; "Finish later" | WCAG 2.2.1, autosave test |
+| **Refugees were asked for ID they don't have** | Six ID routes incl. refugee ID / proof of registration, another document and "I have none — refer me through a partner"; ID number optional; learning can start without ID; honest trust badges (Phase 5) | Sign-up journey tests |
+| **Help was English only** | Every screen, error and help panel in Amharic and English; language switch on every screen; help in the same place on every screen | WCAG 3.1.2, 3.2.6 |
+| **Job boards broke under screen readers** | Job titles are headings, links name the job, result count announced on load and after filtering, filter is a native checkbox | Career gateway tests, NVDA/TalkBack gate |
+
+### Training decisions (offline-first and local AI)
+
+Recorded as decisions 8–12 in section 2: no voice on sensitive questions; a minimum offline mode is never cut; one
+speech adapter with Addis AI as an optional future engine; manual testing on the cheapest Android phone we can borrow.
+
+### Savanna starter kit
+
+The starter kit **is** https://github.com/alx-africa/Savanna-static-pages, the same repo as our reference clone
+`../Savanna-static-pages` (commit `9e83ac7`, unchanged at 11:30 on 14 Nov). Phase 8 is not blocked. At the start of Phase 8: pull it again, then
+mount the module inside those pages from our repo (or a copy). ALX's files are never changed.

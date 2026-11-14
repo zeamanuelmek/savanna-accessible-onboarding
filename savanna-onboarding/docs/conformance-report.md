@@ -38,6 +38,15 @@
 
 Main task: _to be agreed by the team (proposed: sign up and save a Support Passport)._
 
+## 2a. The 21 October co-design findings
+
+| Finding | How the module addresses it | Related criteria | Evidence |
+|---|---|---|---|
+| Forms timed out | No time limits; answers saved on the device after every question; "Finish later" | 2.2.1 | Autosave and resume tests (E1); not yet tested with co-designers |
+| Refugees were asked for ID they don't have | Six ID routes incl. refugee ID / proof of registration and "refer me through a partner"; ID number optional; no ID photo; never "verified" | 3.3.2 | Sign-up journey tests (E1) |
+| Help was English only | All text in Amharic and English; language switch and help in the same place on every screen | 3.1.1, 3.1.2, 3.2.6 | Language-of-parts checks (E1); Amharic review pending |
+| Job boards broke under screen readers | Job titles as headings, named "Apply" links, count announced, native checkbox filter | 1.3.1, 2.4.4, 2.4.6, 4.1.3 | Automated (E1); NVDA (E2) and TalkBack (E3) to do |
+
 ## 3. Test environments
 
 | Assistive technology / setting | Browser / device | Version | Tested by | Date |

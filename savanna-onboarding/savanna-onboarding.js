@@ -7,16 +7,45 @@
 (function () {
   'use strict';
 
-  /* ---------- tiny storage helper (never throws) ---------- */
-  var store = {
-    get: function (k, d) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
-    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
-    del: function (k) { try { localStorage.removeItem(k); } catch (e) {} }
+  /* =====================================================================================================
+     STORAGE ADAPTER
+     Everything the module keeps on the device goes through `store`. Keys are namespaced "savanna-onboarding.".
+     The default backend is localStorage; a host can replace it with SavannaOnboarding.setStorage(adapter),
+     where adapter = { getItem(key), setItem(key, string), removeItem(key), keys() }. Never throws.
+     ===================================================================================================== */
+  var NS = 'savanna-onboarding.';
+  var LEGACY_NS = 'dimts.';
+  var localBackend = {
+    getItem: function (k) { return localStorage.getItem(k); },
+    setItem: function (k, v) { localStorage.setItem(k, v); },
+    removeItem: function (k) { localStorage.removeItem(k); },
+    keys: function () { return Object.keys(localStorage); }
   };
+  var backend = localBackend;
+  var store = {
+    get: function (k, d) { try { var v = backend.getItem(NS + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+    set: function (k, v) { try { backend.setItem(NS + k, JSON.stringify(v)); } catch (e) {} },
+    del: function (k) { try { backend.removeItem(NS + k); } catch (e) {} },
+    /** Names (without the namespace) of everything the module has stored. */
+    keys: function () { try { return backend.keys().filter(function (k) { return k.indexOf(NS) === 0; }).map(function (k) { return k.slice(NS.length); }); } catch (e) { return []; } }
+  };
+  function setStorage(adapter) { backend = adapter || localBackend; }
+  // One-time move of data saved by the old prototype under "dimts." keys. Existing new keys are never overwritten.
+  function migrateLegacyKeys() {
+    try {
+      Object.keys(localStorage).forEach(function (k) {
+        if (k.indexOf(LEGACY_NS) !== 0) return;
+        var nk = NS + k.slice(LEGACY_NS.length);
+        if (localStorage.getItem(nk) === null) localStorage.setItem(nk, localStorage.getItem(k));
+        localStorage.removeItem(k);
+      });
+    } catch (e) {}
+  }
+  migrateLegacyKeys();
 
   /* ---------- learner preferences: saved once, applied everywhere the component is embedded ---------- */
   var MODES = ['read_type', 'listen', 'speak', 'simple'];
-  function getPrefs() { var p = store.get('dimts.prefs', {}); return { lang: p.lang || 'am', easy: !!p.easy, mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal' }; }
+  function getPrefs() { var p = store.get('prefs', {}); return { lang: p.lang || 'am', easy: !!p.easy, mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal' }; }
   function applyPrefs() {
     var p = getPrefs(), root = document.documentElement;
     root.setAttribute('data-dm-size', p.size);
@@ -30,7 +59,7 @@
   function setPrefs(patch) {
     var p = getPrefs();
     Object.keys(patch).forEach(function (k) { p[k] = patch[k]; });
-    store.set('dimts.prefs', p);
+    store.set('prefs', p);
     applyPrefs();
     emit(document, 'prefs', p);
     return p;
@@ -85,7 +114,9 @@
       size_normal: 'Normal', size_large: 'Large', size_xlarge: 'Extra large',
       contrast_normal: 'Standard', contrast_high: 'High contrast',
       on: 'On', off: 'Off',
-      settingsSaved: 'Saved. This setting now applies everywhere this tool is used on this phone.'
+      settingsSaved: 'Saved. This setting now applies everywhere this tool is used on this phone.',
+      countChanged: 'Your answer changed the number of questions. There are now {total} questions.',
+      resumeMissing: 'We could not find saved answers for this link on this phone. Answers are saved only on the phone where you started. You can start again here.'
     },
     am: {
       back: 'ተመለስ', next: 'ቀጥል', submit: 'ላክ', listen: 'ጥያቄውን አዳምጥ',
@@ -128,7 +159,9 @@
       size_normal: 'መደበኛ', size_large: 'ትልቅ', size_xlarge: 'በጣም ትልቅ',
       contrast_normal: 'መደበኛ', contrast_high: 'ከፍተኛ ንፅፅር',
       on: 'በርቷል', off: 'ጠፍቷል',
-      settingsSaved: 'ተቀምጧል። ይህ ቅንብር ይህ መሣሪያ በዚህ ስልክ በሚሠራበት ቦታ ሁሉ ይተገበራል።'
+      settingsSaved: 'ተቀምጧል። ይህ ቅንብር ይህ መሣሪያ በዚህ ስልክ በሚሠራበት ቦታ ሁሉ ይተገበራል።',
+      countChanged: 'መልስዎ የጥያቄዎቹን ብዛት ቀይሯል። አሁን {total} ጥያቄዎች አሉ።',
+      resumeMissing: 'ለዚህ ሊንክ የተቀመጡ መልሶችን በዚህ ስልክ ላይ ማግኘት አልቻልንም። መልሶች የሚቀመጡት በጀመሩበት ስልክ ላይ ብቻ ነው። እዚህ እንደገና መጀመር ይችላሉ።'
     }
   };
   function t(key, lang, vars) {
@@ -222,11 +255,21 @@
     return hits;
   }
 
-  /* ---------- form registry ---------- */
+  /* =====================================================================================================
+     CONFIG: the form registry and what a field config means. Plain data in, plain answers out.
+     ===================================================================================================== */
   var FORMS = {};
+  var FIELD_TYPES = ['text', 'tel', 'email', 'textarea', 'choice', 'multi', 'consent', 'ethdate'];
+  var PENDING = []; // elements waiting for their form config to be registered
   function register(id, config) {
+    var seen = {};
+    (config.fields || []).forEach(function (f) {
+      if (seen[f.id]) console.warn('[savanna-onboarding] form "' + id + '": duplicate field id "' + f.id + '"');
+      if (FIELD_TYPES.indexOf(f.type) === -1) console.warn('[savanna-onboarding] form "' + id + '": unknown field type "' + f.type + '"');
+      seen[f.id] = true;
+    });
     FORMS[id] = config;
-    (typeof PENDING !== 'undefined' ? PENDING : []).slice().forEach(function (el) {
+    PENDING.slice().forEach(function (el) {
       if (el.getAttribute('form') === id && el.isConnected) { PENDING.splice(PENDING.indexOf(el), 1); el.connectedCallback(); }
     });
   }
@@ -240,6 +283,157 @@
     if (cond.notEmpty) return v != null && v !== '' && !(Array.isArray(v) && !v.length);
     return true;
   }
+  function optionsOf(f) { return f.options === 'NEEDS' ? NEEDS : (f.options || []); }
+  function isGroupField(f) { return f.type === 'choice' || f.type === 'multi' || f.type === 'consent' || f.type === 'ethdate'; }
+  function isEmpty(v) { return v == null || v === '' || (Array.isArray(v) && !v.length); }
+  // Voice input is never offered on sensitive questions (support needs, ID), so that data never reaches a cloud speech service.
+  function voiceAllowed(f) { return f.voice !== false && !f.sensitive && f.type !== 'ethdate'; }
+
+  /** Checks one answer. Returns '' when it is fine, otherwise the error message in the given language. */
+  function validateAnswer(f, v, answers, lang) {
+    if (isEmpty(v)) {
+      if (f.optional) return '';
+      return f.type === 'choice' ? t('errChoice', lang) : f.type === 'multi' ? t('errMulti', lang) : f.type === 'consent' ? t('errConsent', lang) : t('errRequired', lang);
+    }
+    if (f.type === 'tel') { var digits = String(v).replace(/\D/g, ''); if (digits.indexOf('251') === 0) digits = '0' + digits.slice(3); if (digits.length !== 10) return t('errPhone', lang); }
+    if (f.type === 'ethdate' && !v.gregorian) return t('errDate', lang);
+    if (f.type === 'consent' && f.requiredValue && v !== f.requiredValue) return t('errConsent', lang);
+    if (f.validate) { var msg = f.validate(v, answers); if (msg) return L(msg, lang); }
+    return '';
+  }
+
+  /* =====================================================================================================
+     STATE: one form's answers and position. No page elements here, so it can be tested on its own.
+     Typing, tapping and (confirmed) speech all end up in the same `answers` object.
+     ===================================================================================================== */
+  function FormState(cfg, key) {
+    this.cfg = cfg; this.key = key;
+    this.answers = {}; this.prefilled = {};
+    this.step = 0; this.mode = 'question'; this.returnToReview = false;
+    this.resumeCode = null;
+    this.changed = {}; // answers changed since the last "Change" from the summary
+  }
+  /** Loads the saved draft. Returns true when it held answers. */
+  FormState.prototype.load = function () {
+    var d = store.get(this.key, null);
+    if (!d) return false;
+    this.answers = d.answers || {};
+    this.step = d.step || 0;
+    this.resumeCode = d.resumeCode || null;
+    // come back to the screen the learner left: the check-your-answers page, or the question
+    this.mode = d.mode === 'review' ? 'review' : 'question';
+    return Object.keys(this.answers).length > 0;
+  };
+  /** Fills empty answers from data the learner already gave (profile, Support Passport): never ask twice. */
+  FormState.prototype.applyPrefill = function () {
+    var ctx = { profile: store.get('profile', {}), passport: store.get('passport', {}) }, self = this;
+    this.cfg.fields.forEach(function (f) {
+      if (!f.prefill) return;
+      var v = (ctx[f.prefill.from] || {})[f.prefill.key];
+      if (isEmpty(self.answers[f.id]) && !isEmpty(v)) { self.answers[f.id] = v; self.prefilled[f.id] = true; }
+    });
+  };
+  FormState.prototype.visible = function () {
+    var a = this.answers;
+    return this.cfg.fields.filter(function (f) { return evalShowIf(f.showIf, a); });
+  };
+  FormState.prototype.field = function () {
+    var vis = this.visible();
+    if (this.step >= vis.length) this.step = vis.length - 1;
+    if (this.step < 0) this.step = 0;
+    return vis[this.step];
+  };
+  /** "Question n of total". Questions that depend on a choice not made yet are counted for the shortest route
+      that choice can open, so the total only grows right after a choice that adds questions (and the view says so). */
+  FormState.prototype.progress = function () {
+    var a = this.answers, vis = this.visible(), shown = {}, extra = 0;
+    vis.forEach(function (f) { shown[f.id] = true; });
+    vis.forEach(function (c) {
+      if (!isEmpty(a[c.id]) || !c.options) return;
+      var deps = this.cfg.fields.filter(function (f) { return !shown[f.id] && f.showIf && f.showIf.field === c.id; });
+      if (!deps.length) return;
+      var counts = optionsOf(c).map(function (o) {
+        var trial = {}; Object.keys(a).forEach(function (k) { trial[k] = a[k]; }); trial[c.id] = o.value;
+        return deps.filter(function (f) { return evalShowIf(f.showIf, trial); }).length;
+      });
+      extra += Math.min.apply(null, counts);
+    }, this);
+    return { n: this.step + 1, total: vis.length + extra };
+  };
+  /** Records an answer. If it changed, answers that depended on it (clearIfChanged) are thrown away. */
+  FormState.prototype.setAnswer = function (id, value) {
+    var before = JSON.stringify(this.answers[id]), self = this;
+    this.answers[id] = value;
+    delete this.prefilled[id];
+    if (before === undefined || before === JSON.stringify(value)) return false;
+    this.changed[id] = true;
+    this.cfg.fields.forEach(function (f) {
+      if (f.clearIfChanged === id) { delete self.answers[f.id]; delete self.prefilled[f.id]; }
+    });
+    return true;
+  };
+  /** Drops answers to questions that are no longer shown (an abandoned route), so they are never kept or sent. */
+  FormState.prototype.prune = function () {
+    var self = this, changed = true;
+    while (changed) { // hiding one question can hide others that depended on it
+      changed = false;
+      var shown = {}; this.visible().forEach(function (f) { shown[f.id] = true; });
+      Object.keys(this.answers).forEach(function (id) {
+        if (!shown[id]) { delete self.answers[id]; delete self.prefilled[id]; changed = true; }
+      });
+    }
+  };
+  /** Moves on after a valid answer. Returns { total, changed } so the view can explain a changed question count. */
+  FormState.prototype.advance = function (shownTotal) {
+    var before = shownTotal != null ? shownTotal : this.progress().total; // the total the learner saw on screen
+    this.applyPrefill(); this.prune();
+    var vis = this.visible(), self = this;
+    if (this.returnToReview) {
+      // after "Change", ask any question the new answer opened up (or emptied) before going back to the summary
+      var next = -1, before = this.beforeChange || {};
+      for (var j = this.step + 1; j < vis.length; j++) {
+        var id = vis[j].id, opened = !(id in before), emptied = before[id] && self.answers[id] === undefined;
+        var dependsOnChange = vis[j].clearIfChanged && this.changed[vis[j].clearIfChanged] && self.answers[id] === undefined;
+        if (opened || emptied || dependsOnChange) { next = j; break; }
+      }
+      if (next !== -1) this.step = next; else { this.mode = 'review'; this.returnToReview = false; }
+    } else if (this.step >= vis.length - 1) this.mode = 'review';
+    else this.step++;
+    var total = this.progress().total;
+    return { total: total, changed: this.mode === 'question' && total !== before };
+  };
+  FormState.prototype.back = function (welcomeOn) {
+    if (this.mode === 'review') { this.mode = 'question'; this.step = this.visible().length - 1; }
+    else if (this.returnToReview) { this.mode = 'review'; this.returnToReview = false; }
+    else if (this.step > 0) this.step--;
+    else if (welcomeOn && this.mode === 'question') this.mode = 'welcome';
+  };
+  FormState.prototype.change = function (step) {
+    var self = this;
+    // remember which questions were shown (and answered) before the change
+    this.beforeChange = {}; this.changed = {};
+    this.visible().forEach(function (f) { self.beforeChange[f.id] = self.answers[f.id] !== undefined; });
+    this.mode = 'question'; this.step = step; this.returnToReview = true;
+  };
+  FormState.prototype.save = function () {
+    this.prune();
+    store.set(this.key, { answers: this.answers, step: this.step, mode: this.mode, resumeCode: this.resumeCode, at: Date.now() });
+  };
+  /** A short code for the "finish later" link. The same draft keeps the same code. */
+  FormState.prototype.makeResumeCode = function () {
+    if (!this.resumeCode) this.resumeCode = Math.random().toString(36).slice(2, 8).toUpperCase();
+    store.set('resume.' + this.resumeCode, this.key);
+    return this.resumeCode;
+  };
+  /** The answers to send: only questions that were actually shown (minimum data). Clears the draft. */
+  FormState.prototype.finish = function () {
+    this.prune();
+    var out = JSON.parse(JSON.stringify(this.answers));
+    if (this.resumeCode) store.del('resume.' + this.resumeCode);
+    store.del(this.key);
+    this.mode = 'done';
+    return out;
+  };
 
   /* ---------- where this script was loaded from (the fonts folder sits next to it) ---------- */
   var BASE = (function () {
@@ -402,9 +596,181 @@
     (document.head || document.documentElement).appendChild(s);
   }
 
-  /* ---------- the web component ---------- */
+  /* =====================================================================================================
+     PRESENTATION: turns a view model into HTML. Reads the state, never changes it.
+     Every id is prefixed with the element's own uid, so several forms can share one page.
+     Elements the controller needs are also marked data-ref="…" (stable hooks for code and tests).
+     ===================================================================================================== */
+  var MODE_ICONS = { read_type: '⌨️', listen: '🎧', speak: '🎤', simple: '🖼️' };
+  var View = {
+    id: function (vm, name) { return vm.uid + '-' + name; },
+
+    errorSummary: function (vm, msg) {
+      return '<div class="dm-errors" role="alert" tabindex="-1"><h2>' + t('problem', vm.lang) + '</h2><ul><li><a href="#' + View.id(vm, 'input') + '" data-act="focus-input">' + esc(msg) + '</a></li></ul></div>';
+    },
+    errorLine: function (vm, msg) {
+      return '<span id="' + View.id(vm, 'err') + '" class="dm-err"><span class="dm-vh">Error: </span>' + esc(msg) + '</span>';
+    },
+    status: function () { return '<p class="dm-status" role="status" aria-live="polite"></p>'; },
+
+    bar: function (vm, showBack) {
+      var lang = vm.lang, helpId = View.id(vm, 'help');
+      return '<div class="dm-bar">' +
+        '<div>' + (showBack ? '<button type="button" class="dm-link" data-act="back">← ' + t('back', lang) + '</button>' : '') + '</div>' +
+        '<div class="dm-bar-r">' +
+        '<button type="button" class="dm-btn dm-small" data-act="lang" lang="' + (lang === 'am' ? 'en' : 'am') + '">' + t('langSwitch', lang) + '</button>' +
+        '<button type="button" class="dm-btn dm-small" data-act="easy" aria-pressed="' + vm.easy + '">🔊 ' + t(vm.easy ? 'easyOn' : 'easyOff', lang) + '</button>' +
+        '<button type="button" class="dm-btn dm-small" data-act="help" aria-expanded="' + !!vm.helpOpen + '" aria-controls="' + helpId + '">' + t('help', lang) + '</button>' +
+        '</div></div>' +
+        '<div id="' + helpId + '" data-ref="help" class="dm-panel"' + (vm.helpOpen ? '' : ' hidden') + '><h2>' + t('helpTitle', lang) + '</h2><p>' + esc(L(vm.cfg.help, lang) || t('helpText', lang)) + '</p>' +
+        '<button type="button" class="dm-btn dm-small" data-act="help">' + t('helpClose', lang) + '</button></div>';
+    },
+
+    page: function (vm) {
+      var html = '<div class="dm' + (vm.easy ? ' dm-easy' : '') + (vm.voiceFirst ? ' dm-voice-first' : '') + '" lang="' + vm.lang + '">';
+      var m = vm.s.mode;
+      html += m === 'welcome' ? View.welcome(vm) : m === 'question' ? View.question(vm) : m === 'review' ? View.review(vm) :
+        m === 'saved' ? View.saved(vm) : m === 'done' ? View.done(vm) : '';
+      return html + '</div>';
+    },
+
+    welcome: function (vm) {
+      var lang = vm.lang, err = vm.error, hintId = View.id(vm, 'hint');
+      var h = View.bar(vm, false);
+      if (err) h += View.errorSummary(vm, err);
+      h += '<form class="dm-form" novalidate><fieldset aria-describedby="' + hintId + (err ? ' ' + View.id(vm, 'err') : '') + '"><legend><h1 class="dm-q" tabindex="-1">' + t('welcomeTitle', lang) + '</h1></legend>' +
+        '<p id="' + hintId + '" class="dm-hint">' + t('welcomeHint', lang) + '</p>' +
+        (err ? View.errorLine(vm, err) : '') +
+        '<div class="dm-opts">' + MODES.map(function (m, i) {
+          return '<label class="dm-opt"><input' + (i === 0 ? ' id="' + View.id(vm, 'input') + '" data-ref="input"' : '') + ' type="radio" name="mode" value="' + m + '"' + (vm.prefsMode === m ? ' checked' : '') + '>' +
+            '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span><span>' + t('m_' + m, lang) + '</span></label>';
+        }).join('') + '</div></fieldset>' +
+        '<div class="dm-tools"><button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button></div>' +
+        View.status() +
+        '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button></div></form>';
+      return h;
+    },
+
+    question: function (vm) {
+      var s = vm.s, f = s.field(), lang = vm.lang, p = s.progress(), v = s.answers[f.id];
+      var label = L(f.label, lang), hint = L(f.hint, lang), group = isGroupField(f);
+      var describedBy = [hint ? View.id(vm, 'hint') : '', vm.error ? View.id(vm, 'err') : '', s.prefilled[f.id] ? View.id(vm, 'pre') : ''].filter(Boolean).join(' ');
+      var opt = f.optional ? ' <span class="dm-opt-tag">' + t('optional', lang) + '</span>' : '';
+      var h = View.bar(vm, s.step > 0 || s.returnToReview || !!vm.welcomeOn);
+      h += '<p class="dm-progress">' + t('progress', lang, { n: p.n, total: p.total }) + '</p>';
+      h += '<div class="dm-meter" aria-hidden="true"><span style="width:' + Math.round(p.n / p.total * 100) + '%"></span></div>';
+      if (vm.error) h += View.errorSummary(vm, vm.error);
+      h += '<form class="dm-form" novalidate>';
+      if (group) h += '<fieldset' + (describedBy ? ' aria-describedby="' + describedBy + '"' : '') + '><legend><h1 class="dm-q" tabindex="-1">' + esc(label) + opt + '</h1></legend>';
+      else h += '<h1 class="dm-q" tabindex="-1"><label for="' + View.id(vm, 'input') + '">' + esc(label) + opt + '</label></h1>';
+      if (f.body) h += '<div class="dm-note">' + esc(L(f.body, lang)) + '</div>';
+      if (hint) h += '<p id="' + View.id(vm, 'hint') + '" class="dm-hint">' + esc(hint) + '</p>';
+      if (s.prefilled[f.id]) h += '<p id="' + View.id(vm, 'pre') + '" class="dm-hint">' + t('prefilled', lang) + '</p>';
+      if (vm.error) h += View.errorLine(vm, vm.error);
+      h += View.input(vm, f, v, group ? '' : describedBy);
+      if (group) h += '</fieldset>';
+      h += '<div class="dm-tools"><button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button>';
+      if (voiceAllowed(f)) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">🎤 ' + t('speak', lang) + '</button>';
+      h += '</div>';
+      h += '<div id="' + View.id(vm, 'heard') + '" data-ref="heard"></div>';
+      h += View.status();
+      h += '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button>';
+      if (vm.cfg.allowLater !== false) h += '<button type="button" class="dm-link" data-act="later">' + t('later', lang) + '</button>';
+      return h + '</div></form>';
+    },
+
+    input: function (vm, f, v, describedBy) {
+      var lang = vm.lang, inputId = View.id(vm, 'input');
+      var aria = describedBy ? ' aria-describedby="' + describedBy + '"' : '';
+      var inv = vm.error ? ' aria-invalid="true"' : '';
+      if (f.type === 'text' || f.type === 'tel' || f.type === 'email') {
+        return '<input id="' + inputId + '" data-ref="input" class="dm-input" name="v" type="' + (f.type === 'tel' ? 'tel' : f.type === 'email' ? 'email' : 'text') + '"' +
+          (f.type === 'tel' ? ' inputmode="tel"' : '') + (f.autocomplete ? ' autocomplete="' + f.autocomplete + '"' : '') +
+          ' value="' + esc(v || '') + '"' + aria + inv + '>';
+      }
+      if (f.type === 'textarea') return '<textarea id="' + inputId + '" data-ref="input" class="dm-input" name="v"' + aria + inv + '>' + esc(v || '') + '</textarea>';
+      if (f.type === 'choice' || f.type === 'consent' || f.type === 'multi') {
+        var multi = f.type === 'multi', sel = multi ? (v || []) : [v];
+        return '<div class="dm-opts">' + optionsOf(f).map(function (o, i) {
+          var checked = sel.indexOf(o.value) !== -1 ? ' checked' : '';
+          return '<label class="dm-opt"><input' + (i === 0 ? ' id="' + inputId + '" data-ref="input"' : '') + ' type="' + (multi ? 'checkbox' : 'radio') + '" name="v" value="' + esc(o.value) + '"' + checked + '>' +
+            (o.icon ? '<span class="dm-ico" aria-hidden="true">' + o.icon + '</span>' : '') + '<span>' + esc(L(o.label, lang)) + '</span></label>';
+        }).join('') + '</div>';
+      }
+      if (f.type === 'ethdate') {
+        var d = v || {}, months = ETH_MONTHS[lang] || ETH_MONTHS.en, mId = View.id(vm, 'm'), yId = View.id(vm, 'y');
+        return '<div class="dm-date">' +
+          '<div><label for="' + inputId + '">' + t('day', lang) + '</label><input id="' + inputId + '" data-ref="input" class="dm-input" name="d" inputmode="numeric" size="3" value="' + esc(d.d || '') + '"' + inv + '></div>' +
+          '<div><label for="' + mId + '">' + t('month', lang) + '</label><select id="' + mId + '" data-ref="m" class="dm-input" name="m"' + inv + '><option value="">' + t('chooseMonth', lang) + '</option>' +
+          months.map(function (m, i) { return '<option value="' + (i + 1) + '"' + (Number(d.m) === i + 1 ? ' selected' : '') + '>' + m + '</option>'; }).join('') + '</select></div>' +
+          '<div><label for="' + yId + '">' + t('year', lang) + '</label><input id="' + yId + '" data-ref="y" class="dm-input" name="y" inputmode="numeric" size="5" value="' + esc(d.y || '') + '"' + inv + '></div>' +
+          '</div>' + (d.gregorian ? '<p class="dm-hint">' + t('gregorian', lang, { date: fmtGregorian(new Date(d.gregorian), lang) }) + '</p>' : '');
+      }
+      return '';
+    },
+
+    display: function (vm, f, v) {
+      var lang = vm.lang, opts = optionsOf(f);
+      if (isEmpty(v)) return t('notGiven', lang);
+      if (f.type === 'choice' || f.type === 'consent') { var o = opts.filter(function (x) { return x.value === v; })[0]; return o ? L(o.label, lang) : v; }
+      if (f.type === 'multi') return v.map(function (x) { var o = opts.filter(function (y) { return y.value === x; })[0]; return o ? L(o.label, lang) : x; }).join(', ');
+      if (f.type === 'ethdate') return v.d + ' ' + (ETH_MONTHS[lang] || ETH_MONTHS.en)[v.m - 1] + ' ' + v.y + ' (' + fmtGregorian(new Date(v.gregorian), lang) + ')';
+      return String(v);
+    },
+
+    review: function (vm) {
+      var lang = vm.lang, s = vm.s, cfg = vm.cfg;
+      var h = View.bar(vm, !vm.startAtReview) + '<form class="dm-form" novalidate><h1 class="dm-q" tabindex="-1">' + esc(L(cfg.reviewTitle, lang) || t('review', lang)) + '</h1>' +
+        '<p class="dm-hint">' + esc(L(cfg.reviewHint, lang) || t('reviewHint', lang)) + '</p><dl class="dm-review">';
+      s.visible().forEach(function (f, i) {
+        if (f.reviewHide) return;
+        var name = esc(L(f.reviewLabel || f.label, lang));
+        h += '<div><dt>' + name + '</dt><dd>' + esc(View.display(vm, f, s.answers[f.id])) + '</dd>' +
+          '<dd><button type="button" class="dm-link" data-act="change" data-step="' + i + '">' + t('change', lang) + '<span class="dm-vh"> ' + name + '</span></button></dd></div>';
+      });
+      h += '</dl>';
+      if (cfg.reviewNote) h += '<div class="dm-note">' + esc(L(cfg.reviewNote, lang)) + '</div>';
+      return h + View.status() + '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + esc(L(cfg.submitLabel, lang) || t('submit', lang)) + '</button></div></form>';
+    },
+
+    saved: function (vm) {
+      var lang = vm.lang, link = vm.resumeLink;
+      var sms = lang === 'am' ? 'ምዝገባዎን ለመቀጠል፦ ' + link : 'Continue your form: ' + link;
+      return View.bar(vm, false) + '<h1 class="dm-q" tabindex="-1">' + t('savedTitle', lang) + '</h1><p>' + t('savedText', lang) + '</p>' +
+        '<p><a href="' + esc(link) + '">' + esc(link) + '</a></p>' +
+        '<div class="dm-panel"><h2>' + t('smsPreview', lang) + '</h2><p lang="' + lang + '"><samp>' + esc(sms) + '</samp></p></div>' +
+        '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="resume">' + t('next', lang) + '</button></div>';
+    },
+
+    done: function (vm) {
+      var lang = vm.lang;
+      // Help stays in the same place on every screen (WCAG 3.2.6); the result is shown as a success panel.
+      return View.bar(vm, false) + '<div class="dm-success"><h1 class="dm-q" tabindex="-1"><span aria-hidden="true">✓ </span>' + esc(L(vm.cfg.doneTitle, lang)) + '</h1><p>' + esc(L(vm.cfg.doneText, lang)) + '</p></div><div class="dm-done-slot"></div>';
+    },
+
+    voiceConsent: function (vm) {
+      var lang = vm.lang, hid = View.id(vm, 'vc');
+      return '<div class="dm-panel" role="group" aria-labelledby="' + hid + '"><h2 id="' + hid + '" data-ref="vc" tabindex="-1">' + t('voiceConsentTitle', lang) + '</h2><p>' + t('voiceConsent', lang) + '</p>' +
+        '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="voice-allow">' + t('voiceAllow', lang) + '</button><button type="button" class="dm-btn" data-act="voice-deny">' + t('voiceDeny', lang) + '</button></div></div>';
+    },
+
+    heard: function (vm, shown, others) {
+      var lang = vm.lang, hid = View.id(vm, 'heard-h');
+      return '<div class="dm-heard" role="group" aria-labelledby="' + hid + '"><p id="' + hid + '" data-ref="heard-h" tabindex="-1">' + t('heard', lang) + ' <q>' + esc(shown) + '</q></p>' +
+        '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="heard-yes">' + t('yes', lang) + '</button>' +
+        '<button type="button" class="dm-btn" data-act="heard-again">' + t('again', lang) + '</button>' +
+        '<button type="button" class="dm-btn" data-act="heard-type">' + t('type', lang) + '</button></div>' +
+        (others.length ? '<p class="dm-hint">' + others.map(esc).join(' · ') + '</p>' : '') + '</div>';
+    }
+  };
+
+  /* =====================================================================================================
+     THE WEB COMPONENT (controller): reads the page, updates the state, asks the view to draw.
+     ===================================================================================================== */
+  var UID = 0;
+  function resumeParam() { try { return new URLSearchParams(location.search).get('resume'); } catch (e) { return null; } }
+
   class SavannaOnboardingForm extends HTMLElement {}
-  var PENDING = [];
 
   SavannaOnboardingForm.prototype.connectedCallback = function () {
     if (this._ready) return;
@@ -414,256 +780,95 @@
     // Form config may be registered after the element appears: wait for it.
     if (!this.cfg) { if (PENDING.indexOf(this) === -1) PENDING.push(this); return; }
     this._ready = true;
+    if (!this.uid) this.uid = 'so' + (++UID);
     applyPrefs();
-    var prefs = getPrefs();
+    var prefs = getPrefs(), self = this;
     this.lang = this.getAttribute('lang') || prefs.lang;
     this.easy = prefs.easy;
-    this.draftKey = 'dimts.draft.' + id + (this.getAttribute('instance') ? '.' + this.getAttribute('instance') : '');
-    var draft = store.get(this.draftKey, null);
-    this.answers = (draft && draft.answers) || {};
-    this.step = (draft && draft.step) || 0;
-    this.mode = 'question';
-    this.returnToReview = false;
-    this.flash = draft && Object.keys(this.answers).length ? t('resumed', this.lang) : '';
-    this.applyPrefill();
-    this.addEventListener('click', this.onClick.bind(this));
-    this.addEventListener('submit', this.onSubmit.bind(this));
-    this.addEventListener('change', this.onChange.bind(this));
-    // A welcome screen lets the learner choose how to answer before the first question.
+    this.error = ''; this.flash = ''; this.helpOpen = false;
+    var key = 'draft.' + id + (this.getAttribute('instance') ? '.' + this.getAttribute('instance') : '');
+    var s = this.state = new FormState(this.cfg, key);
+    var resumed = s.load();
+    var code = resumeParam();
+    if (resumed) this.flash = t('resumed', this.lang);
+    else if (code && !store.get('resume.' + code, null)) this.flash = t('resumeMissing', this.lang); // link opened on another phone
+    s.applyPrefill();
+    this.startAtReview = this.cfg.startAt === 'review';
     this.welcomeOn = !!(this.cfg.welcome || this.hasAttribute('welcome'));
-    if (this.welcomeOn && !Object.keys(this.answers).length) this.mode = 'welcome';
-    var self = this;
+    if (!resumed || this.startAtReview) s.mode = this.startAtReview ? 'review' : (this.welcomeOn ? 'welcome' : 'question');
+    if (!this._listening) {
+      this._listening = true;
+      this.addEventListener('click', this.onClick.bind(this));
+      this.addEventListener('submit', this.onSubmit.bind(this));
+      this.addEventListener('change', this.onChange.bind(this));
+    }
     this._onPrefs = function (e) {
       if (self._selfPrefs) return;
       self.lang = e.detail.lang; self.easy = e.detail.easy;
-      if (self.mode === 'done') return; // keep the host's content in the done slot
-      if (self.mode === 'question') {
+      if (self.state.mode === 'done') return; // keep the host's content in the done slot
+      if (self.state.mode === 'question') {
         self.collect();
         // an error on screen is re-worded in the new language, never left in the old one
-        if (self.error) { var ef = self.field(); self.error = self.validate(ef, self.answers[ef.id]); }
-      } else if (self.mode === 'welcome' && self.error) self.error = t('errMode', self.lang);
+        if (self.error) { var ef = self.state.field(); self.error = validateAnswer(ef, self.state.answers[ef.id], self.state.answers, self.lang); }
+      } else if (self.state.mode === 'welcome' && self.error) self.error = t('errMode', self.lang);
       self.render(false);
     };
     document.addEventListener('savanna-onboarding:prefs', this._onPrefs);
     this.render(false);
   };
-  SavannaOnboardingForm.prototype.disconnectedCallback = function () { document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; stopSpeaking(); if (this.rec) try { this.rec.abort(); } catch (e) {} };
-
-  SavannaOnboardingForm.prototype.applyPrefill = function () {
-    var ctx = { profile: store.get('dimts.profile', {}), passport: store.get('dimts.passport', {}) };
-    var self = this;
-    this.prefilled = {};
-    this.cfg.fields.forEach(function (f) {
-      if (!f.prefill) return;
-      var src = ctx[f.prefill.from] || {};
-      var v = src[f.prefill.key];
-      if ((self.answers[f.id] === undefined || self.answers[f.id] === '') && v !== undefined && v !== '') {
-        self.answers[f.id] = v; self.prefilled[f.id] = true;
-      }
-    });
+  SavannaOnboardingForm.prototype.disconnectedCallback = function () {
+    document.removeEventListener('savanna-onboarding:prefs', this._onPrefs); this._ready = false; stopSpeaking();
+    if (this.rec) try { this.rec.abort(); } catch (e) {}
   };
 
-  SavannaOnboardingForm.prototype.visible = function () {
-    var a = this.answers;
-    return this.cfg.fields.filter(function (f) { return evalShowIf(f.showIf, a); });
+  SavannaOnboardingForm.prototype.ref = function (name) { return this.querySelector('[data-ref="' + name + '"]'); };
+  SavannaOnboardingForm.prototype.vm = function () {
+    var s = this.state, mode = getPrefs().mode;
+    return {
+      cfg: this.cfg, s: s, lang: this.lang, easy: this.easy, uid: this.uid, error: this.error, helpOpen: this.helpOpen,
+      welcomeOn: this.welcomeOn, startAtReview: this.startAtReview, prefsMode: mode, voiceFirst: mode === 'speak',
+      resumeLink: location.href.split('#')[0].split('?')[0] + '?resume=' + s.resumeCode + location.hash
+    };
   };
-  SavannaOnboardingForm.prototype.field = function () {
-    var vis = this.visible();
-    if (this.step >= vis.length) this.step = vis.length - 1;
-    if (this.step < 0) this.step = 0;
-    return vis[this.step];
-  };
-  SavannaOnboardingForm.prototype.save = function () { store.set(this.draftKey, { answers: this.answers, step: this.step, mode: this.mode, at: Date.now() }); };
+  SavannaOnboardingForm.prototype.save = function () { this.state.save(); };
   SavannaOnboardingForm.prototype.savePrefs = function (extra) {
     var patch = { lang: this.lang, easy: this.easy };
     if (extra) Object.keys(extra).forEach(function (k) { patch[k] = extra[k]; });
     this._selfPrefs = true; setPrefs(patch); this._selfPrefs = false;
   };
 
-  /* --- rendering --- */
-  SavannaOnboardingForm.prototype.bar = function (showBack) {
-    var lang = this.lang;
-    return '<div class="dm-bar">' +
-      '<div>' + (showBack ? '<button type="button" class="dm-link" data-act="back">← ' + t('back', lang) + '</button>' : '') + '</div>' +
-      '<div class="dm-bar-r">' +
-      '<button type="button" class="dm-btn dm-small" data-act="lang" lang="' + (lang === 'am' ? 'en' : 'am') + '">' + t('langSwitch', lang) + '</button>' +
-      '<button type="button" class="dm-btn dm-small" data-act="easy" aria-pressed="' + this.easy + '">🔊 ' + t(this.easy ? 'easyOn' : 'easyOff', lang) + '</button>' +
-      '<button type="button" class="dm-btn dm-small" data-act="help" aria-expanded="' + !!this.helpOpen + '" aria-controls="dm-help">' + t('help', lang) + '</button>' +
-      '</div></div>' +
-      '<div id="dm-help" class="dm-panel"' + (this.helpOpen ? '' : ' hidden') + '><h2>' + t('helpTitle', lang) + '</h2><p>' + esc(L(this.cfg.help, lang) || t('helpText', lang)) + '</p>' +
-      '<button type="button" class="dm-btn dm-small" data-act="help">' + t('helpClose', lang) + '</button></div>';
-  };
-
   SavannaOnboardingForm.prototype.render = function (moveFocus) {
-    var lang = this.lang;
+    var flash = this.flash; this.flash = '';
     this.className = '';
-    var html = '<div class="dm' + (this.easy ? ' dm-easy' : '') + (getPrefs().mode === 'speak' ? ' dm-voice-first' : '') + '" lang="' + lang + '">';
-    if (this.mode === 'welcome') html += this.renderWelcome();
-    else if (this.mode === 'question') html += this.renderQuestion();
-    else if (this.mode === 'review') html += this.renderReview();
-    else if (this.mode === 'saved') html += this.renderSaved();
-    else if (this.mode === 'done') html += this.renderDone();
-    html += '</div>';
-    this.innerHTML = html;
-    if (moveFocus !== false || this.flash) {
+    this.innerHTML = View.page(this.vm());
+    if (moveFocus !== false) {
       var target = this.querySelector('.dm-errors') || this.querySelector('.dm-q');
-      if (target && moveFocus !== false) target.focus();
+      if (target) target.focus();
     }
-    if ((this.mode === 'question' || this.mode === 'welcome') && this.easy && this._interacted) this.readQuestion();
+    // Filled in after the live region exists, so screen readers announce it.
+    if (flash) this.status(flash);
+    var m = this.state.mode;
+    if ((m === 'question' || m === 'welcome') && this.easy && this._interacted) this.readQuestion();
   };
 
-  var MODE_ICONS = { read_type: '⌨️', listen: '🎧', speak: '🎤', simple: '🖼️' };
-  SavannaOnboardingForm.prototype.renderWelcome = function () {
-    var lang = this.lang, cur = getPrefs().mode, err = this.error;
-    var h = this.bar(false);
-    if (err) h += '<div class="dm-errors" role="alert" tabindex="-1"><h2>' + t('problem', lang) + '</h2><ul><li><a href="#dm-input" data-act="focus-input">' + esc(err) + '</a></li></ul></div>';
-    h += '<form class="dm-form" novalidate><fieldset aria-describedby="dm-hint' + (err ? ' dm-err' : '') + '"><legend><h1 class="dm-q" tabindex="-1">' + t('welcomeTitle', lang) + '</h1></legend>' +
-      '<p id="dm-hint" class="dm-hint">' + t('welcomeHint', lang) + '</p>' +
-      (err ? '<span id="dm-err" class="dm-err"><span class="dm-vh">Error: </span>' + esc(err) + '</span>' : '') +
-      '<div class="dm-opts">' + MODES.map(function (m, i) {
-        return '<label class="dm-opt"><input' + (i === 0 ? ' id="dm-input"' : '') + ' type="radio" name="mode" value="' + m + '"' + (cur === m ? ' checked' : '') + '>' +
-          '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span><span>' + t('m_' + m, lang) + '</span></label>';
-      }).join('') + '</div></fieldset>' +
-      '<div class="dm-tools"><button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button></div>' +
-      '<p class="dm-status" role="status" aria-live="polite">' + esc(this.flash || '') + '</p>' +
-      '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button></div></form>';
-    this.flash = '';
-    return h;
-  };
-
-  SavannaOnboardingForm.prototype.renderQuestion = function () {
-    var f = this.field(), lang = this.lang, vis = this.visible(), v = this.answers[f.id];
-    var label = L(f.label, lang), hint = L(f.hint, lang);
-    var describedBy = [hint ? 'dm-hint' : '', this.error ? 'dm-err' : '', this.prefilled[f.id] ? 'dm-pre' : ''].filter(Boolean).join(' ');
-    var opt = f.optional ? ' <span class="dm-opt-tag">' + t('optional', lang) + '</span>' : '';
-    var err = this.error ? '<span id="dm-err" class="dm-err"><span class="dm-vh">Error: </span>' + esc(this.error) + '</span>' : '';
-    var h = this.bar(this.step > 0 || this.returnToReview || !!this.welcomeOn);
-    h += '<p class="dm-progress">' + t('progress', lang, { n: this.step + 1, total: vis.length }) + '</p>';
-    h += '<div class="dm-meter" aria-hidden="true"><span style="width:' + Math.round((this.step + 1) / vis.length * 100) + '%"></span></div>';
-    if (this.error) h += '<div class="dm-errors" role="alert" tabindex="-1"><h2>' + t('problem', lang) + '</h2><ul><li><a href="#dm-input" data-act="focus-input">' + esc(this.error) + '</a></li></ul></div>';
-    h += '<form class="dm-form" novalidate>';
-    var isGroup = f.type === 'choice' || f.type === 'multi' || f.type === 'consent' || f.type === 'ethdate';
-    if (isGroup) {
-      h += '<fieldset' + (describedBy ? ' aria-describedby="' + describedBy + '"' : '') + '><legend><h1 class="dm-q" tabindex="-1">' + esc(label) + opt + '</h1></legend>';
-    } else {
-      h += '<h1 class="dm-q" tabindex="-1"><label for="dm-input">' + esc(label) + opt + '</label></h1>';
-    }
-    if (f.body) h += '<div class="dm-note">' + esc(L(f.body, lang)) + '</div>';
-    if (hint) h += '<p id="dm-hint" class="dm-hint">' + esc(hint) + '</p>';
-    if (this.prefilled[f.id]) h += '<p id="dm-pre" class="dm-hint">' + t('prefilled', lang) + '</p>';
-    h += err;
-    h += this.renderInput(f, v, describedBy);
-    if (isGroup) h += '</fieldset>';
-    h += '<div class="dm-tools"><button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button>';
-    if (f.voice !== false && f.type !== 'ethdate') h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">🎤 ' + t('speak', lang) + '</button>';
-    h += '</div>';
-    h += '<div id="dm-heard"></div>';
-    h += '<p class="dm-status" role="status" aria-live="polite">' + esc(this.flash || '') + '</p>';
-    h += '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button>';
-    if (this.cfg.allowLater !== false) h += '<button type="button" class="dm-link" data-act="later">' + t('later', lang) + '</button>';
-    h += '</div></form>';
-    this.flash = '';
-    return h;
-  };
-
-  SavannaOnboardingForm.prototype.renderInput = function (f, v, describedBy) {
-    var lang = this.lang, aria = (describedBy && f.type !== 'choice' && f.type !== 'multi' && f.type !== 'consent' && f.type !== 'ethdate') ? ' aria-describedby="' + describedBy + '"' : '';
-    var inv = this.error ? ' aria-invalid="true"' : '';
-    if (f.type === 'text' || f.type === 'tel' || f.type === 'email') {
-      return '<input id="dm-input" class="dm-input" name="v" type="' + (f.type === 'tel' ? 'tel' : f.type === 'email' ? 'email' : 'text') + '"' +
-        (f.type === 'tel' ? ' inputmode="tel"' : '') + (f.autocomplete ? ' autocomplete="' + f.autocomplete + '"' : '') +
-        ' value="' + esc(v || '') + '"' + aria + inv + '>';
-    }
-    if (f.type === 'textarea') return '<textarea id="dm-input" class="dm-input" name="v"' + aria + inv + '>' + esc(v || '') + '</textarea>';
-    if (f.type === 'choice' || f.type === 'consent' || f.type === 'multi') {
-      var multi = f.type === 'multi', sel = multi ? (v || []) : [v];
-      var opts = f.options === 'NEEDS' ? NEEDS : f.options;
-      return '<div class="dm-opts">' + opts.map(function (o, i) {
-        var checked = sel.indexOf(o.value) !== -1 ? ' checked' : '';
-        return '<label class="dm-opt"><input' + (i === 0 ? ' id="dm-input"' : '') + ' type="' + (multi ? 'checkbox' : 'radio') + '" name="v" value="' + esc(o.value) + '"' + checked + '>' +
-          (o.icon ? '<span class="dm-ico" aria-hidden="true">' + o.icon + '</span>' : '') + '<span>' + esc(L(o.label, lang)) + '</span></label>';
-      }).join('') + '</div>';
-    }
+  /* --- reading the current value out of the page into the state --- */
+  SavannaOnboardingForm.prototype.readField = function (f) {
+    var form = this.querySelector('.dm-form');
+    if (!form) return undefined;
+    if (f.type === 'multi') return Array.prototype.map.call(form.querySelectorAll('input[name=v]:checked'), function (i) { return i.value; });
+    if (f.type === 'choice' || f.type === 'consent') { var c = form.querySelector('input[name=v]:checked'); return c ? c.value : ''; }
     if (f.type === 'ethdate') {
-      var d = v || {};
-      var months = ETH_MONTHS[lang] || ETH_MONTHS.en;
-      return '<div class="dm-date">' +
-        '<div><label for="dm-input">' + t('day', lang) + '</label><input id="dm-input" class="dm-input" name="d" inputmode="numeric" size="3" value="' + esc(d.d || '') + '"' + inv + '></div>' +
-        '<div><label for="dm-m">' + t('month', lang) + '</label><select id="dm-m" class="dm-input" name="m"' + inv + '><option value="">' + t('chooseMonth', lang) + '</option>' +
-        months.map(function (m, i) { return '<option value="' + (i + 1) + '"' + (Number(d.m) === i + 1 ? ' selected' : '') + '>' + m + '</option>'; }).join('') + '</select></div>' +
-        '<div><label for="dm-y">' + t('year', lang) + '</label><input id="dm-y" class="dm-input" name="y" inputmode="numeric" size="5" value="' + esc(d.y || '') + '"' + inv + '></div>' +
-        '</div>' + (d.gregorian ? '<p class="dm-hint">' + t('gregorian', lang, { date: fmtGregorian(new Date(d.gregorian), lang) }) + '</p>' : '');
-    }
-    return '';
-  };
-
-  SavannaOnboardingForm.prototype.display = function (f, v) {
-    var lang = this.lang;
-    if (v == null || v === '' || (Array.isArray(v) && !v.length)) return t('notGiven', lang);
-    var opts = f.options === 'NEEDS' ? NEEDS : f.options;
-    if (f.type === 'choice' || f.type === 'consent') { var o = opts.filter(function (x) { return x.value === v; })[0]; return o ? L(o.label, lang) : v; }
-    if (f.type === 'multi') return v.map(function (x) { var o = opts.filter(function (y) { return y.value === x; })[0]; return o ? L(o.label, lang) : x; }).join(', ');
-    if (f.type === 'ethdate') return v.d + ' ' + (ETH_MONTHS[lang] || ETH_MONTHS.en)[v.m - 1] + ' ' + v.y + ' (' + fmtGregorian(new Date(v.gregorian), lang) + ')';
-    return String(v);
-  };
-
-  SavannaOnboardingForm.prototype.renderReview = function () {
-    var lang = this.lang, self = this;
-    var h = this.bar(true) + '<form class="dm-form" novalidate><h1 class="dm-q" tabindex="-1">' + t('review', lang) + '</h1><p class="dm-hint">' + t('reviewHint', lang) + '</p><dl class="dm-review">';
-    this.visible().forEach(function (f, i) {
-      if (f.reviewHide) return;
-      h += '<div><dt>' + esc(L(f.reviewLabel || f.label, lang)) + '</dt><dd>' + esc(self.display(f, self.answers[f.id])) + '</dd>' +
-        '<dd><button type="button" class="dm-link" data-act="change" data-step="' + i + '">' + t('change', lang) + '<span class="dm-vh"> ' + esc(L(f.reviewLabel || f.label, lang)) + '</span></button></dd></div>';
-    });
-    h += '</dl>';
-    if (this.cfg.reviewNote) h += '<div class="dm-note">' + esc(L(this.cfg.reviewNote, lang)) + '</div>';
-    h += '<p class="dm-status" role="status" aria-live="polite"></p><div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + esc(L(this.cfg.submitLabel, lang) || t('submit', lang)) + '</button></div></form>';
-    return h;
-  };
-
-  SavannaOnboardingForm.prototype.renderSaved = function () {
-    var lang = this.lang;
-    var link = location.href.split('#')[0].split('?')[0] + '?resume=' + this.resumeCode + location.hash;
-    var sms = lang === 'am' ? 'ምዝገባዎን ለመቀጠል፦ ' + link : 'Continue your form: ' + link;
-    return this.bar(false) + '<h1 class="dm-q" tabindex="-1">' + t('savedTitle', lang) + '</h1><p>' + t('savedText', lang) + '</p>' +
-      '<p><a href="' + esc(link) + '">' + esc(link) + '</a></p>' +
-      '<div class="dm-panel"><h2>' + t('smsPreview', lang) + '</h2><p lang="' + lang + '"><samp>' + esc(sms) + '</samp></p></div>' +
-      '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="resume">' + t('next', lang) + '</button></div>';
-  };
-
-  SavannaOnboardingForm.prototype.renderDone = function () {
-    var lang = this.lang;
-    // Help stays in the same place on every screen (WCAG 3.2.6); the result is shown as a success panel.
-    return this.bar(false) + '<div class="dm-success"><h1 class="dm-q" tabindex="-1"><span aria-hidden="true">✓ </span>' + esc(L(this.cfg.doneTitle, lang)) + '</h1><p>' + esc(L(this.cfg.doneText, lang)) + '</p></div><div class="dm-done-slot"></div>';
-  };
-
-  /* --- reading the current value out of the DOM --- */
-  SavannaOnboardingForm.prototype.collect = function () {
-    if (this.mode !== 'question') return;
-    var f = this.field(), form = this.querySelector('.dm-form');
-    if (!form) return;
-    if (f.type === 'multi') this.answers[f.id] = Array.prototype.map.call(form.querySelectorAll('input[name=v]:checked'), function (i) { return i.value; });
-    else if (f.type === 'choice' || f.type === 'consent') { var c = form.querySelector('input[name=v]:checked'); this.answers[f.id] = c ? c.value : ''; }
-    else if (f.type === 'ethdate') {
       var d = parseInt(form.d.value, 10), m = parseInt(form.m.value, 10), y = parseInt(form.y.value, 10);
       var val = { d: form.d.value.trim(), m: form.m.value, y: form.y.value.trim() };
-      if (ethValid(y, m, d)) { val = { d: d, m: m, y: y, gregorian: ethToGregorian(y, m, d).toISOString().slice(0, 10) }; }
-      this.answers[f.id] = (val.d || val.m || val.y) ? val : '';
-    } else { var inp = form.querySelector('#dm-input'); this.answers[f.id] = inp ? inp.value.trim() : ''; }
-    if (this.answers[f.id] !== undefined) delete this.prefilled[f.id];
-  };
-
-  SavannaOnboardingForm.prototype.validate = function (f, v) {
-    var lang = this.lang, empty = v == null || v === '' || (Array.isArray(v) && !v.length);
-    if (empty) {
-      if (f.optional) return '';
-      return f.type === 'choice' ? t('errChoice', lang) : f.type === 'multi' ? t('errMulti', lang) : f.type === 'consent' ? t('errConsent', lang) : t('errRequired', lang);
+      if (ethValid(y, m, d)) val = { d: d, m: m, y: y, gregorian: ethToGregorian(y, m, d).toISOString().slice(0, 10) };
+      return (val.d || val.m || val.y) ? val : '';
     }
-    if (f.type === 'tel') { var digits = String(v).replace(/\D/g, ''); if (digits.indexOf('251') === 0) digits = '0' + digits.slice(3); if (digits.length !== 10) return t('errPhone', lang); }
-    if (f.type === 'ethdate' && !v.gregorian) return t('errDate', lang);
-    if (f.type === 'consent' && f.requiredValue && v !== f.requiredValue) return t('errConsent', lang);
-    if (f.validate) { var msg = f.validate(v, this.answers); if (msg) return L(msg, lang); }
-    return '';
+    var inp = this.ref('input'); return inp ? inp.value.trim() : '';
+  };
+  SavannaOnboardingForm.prototype.collect = function () {
+    if (this.state.mode !== 'question') return;
+    var f = this.state.field(), v = this.readField(f);
+    if (v !== undefined) this.state.setAnswer(f.id, v);
   };
 
   /* --- events --- */
@@ -671,34 +876,34 @@
     e.preventDefault();
     this._interacted = true;
     stopSpeaking();
-    if (this.mode === 'review') return this.finish();
-    if (this.mode === 'welcome') {
+    var s = this.state;
+    if (s.mode === 'review') return this.finish();
+    if (s.mode === 'welcome') {
       var c = this.querySelector('input[name=mode]:checked');
       if (!c) { this.error = t('errMode', this.lang); this.render(true); return; }
       this.error = '';
       var patch = prefsForMode(c.value); this.easy = patch.easy;
       this.savePrefs(patch);
-      this.mode = 'question'; this.render(true); return;
+      s.mode = 'question'; this.render(true); return;
     }
-    if (this.mode !== 'question') return;
+    if (s.mode !== 'question') return;
+    var shownTotal = s.progress().total;
     this.collect();
-    var f = this.field();
-    this.error = this.validate(f, this.answers[f.id]);
+    var f = s.field();
+    this.error = validateAnswer(f, s.answers[f.id], s.answers, this.lang);
     if (this.error) { this.render(true); return; }
-    var vis = this.visible();
-    if (this.returnToReview || this.step >= vis.length - 1) { this.mode = 'review'; this.returnToReview = false; }
-    else this.step++;
+    var r = s.advance(shownTotal);
+    if (r.changed) this.flash = t('countChanged', this.lang, { total: r.total });
     this.save();
     this.render(true);
   };
 
   SavannaOnboardingForm.prototype.onChange = function (e) {
-    var f = this.mode === 'question' && this.field();
+    var f = this.state.mode === 'question' && this.state.field();
     if (!f) return;
     if (f.type === 'ethdate') {
       this.collect();
-      var v = this.answers[f.id];
-      var st = this.querySelector('.dm-status');
+      var v = this.state.answers[f.id], st = this.querySelector('.dm-status');
       if (st) st.textContent = v && v.gregorian ? t('gregorian', this.lang, { date: fmtGregorian(new Date(v.gregorian), this.lang) }) : '';
     }
     if (this.easy && (f.type === 'choice' || f.type === 'multi' || f.type === 'consent') && e.target.closest) {
@@ -711,62 +916,58 @@
     var b = e.target.closest('[data-act]');
     if (!b || !this.contains(b)) return;
     this._interacted = true;
-    var act = b.getAttribute('data-act');
-    if (act === 'focus-input') { e.preventDefault(); var i = this.querySelector('#dm-input'); if (i) i.focus(); return; }
+    var act = b.getAttribute('data-act'), s = this.state;
+    if (act === 'focus-input') { e.preventDefault(); var i = this.ref('input'); if (i) i.focus(); return; }
     if (act === 'back') {
       stopSpeaking(); this.error = '';
-      if (this.mode === 'review') { this.mode = 'question'; this.step = this.visible().length - 1; }
-      else if (this.returnToReview) { this.mode = 'review'; this.returnToReview = false; }
-      else if (this.step > 0) { this.collect(); this.step--; }
-      else if (this.welcomeOn && this.mode === 'question') { this.collect(); this.mode = 'welcome'; }
+      if (!s.returnToReview) this.collect(); // Back from a "Change" discards the unsaved edit, as before
+      s.back(this.welcomeOn);
       this.save(); this.render(true); return;
     }
     if (act === 'lang') {
-      if (this.mode === 'question') this.collect();
+      this.collect();
       this.lang = this.lang === 'am' ? 'en' : 'am'; this.error = ''; this.savePrefs(); this.render(true); return;
     }
     if (act === 'easy') {
-      if (this.mode === 'question') this.collect();
+      this.collect();
       this.easy = !this.easy; this.savePrefs(); stopSpeaking(); this.render(false);
       var eb = this.querySelector('[data-act=easy]'); if (eb) eb.focus();
       return;
     }
     if (act === 'help') {
-      if (this.mode === 'question') this.collect();
+      this.collect();
       this.helpOpen = !this.helpOpen; this.render(false);
-      var target = this.helpOpen ? this.querySelector('#dm-help h2') : this.querySelector('[data-act=help]');
+      var target = this.helpOpen ? this.querySelector('[data-ref=help] h2') : this.querySelector('[data-act=help]');
       if (target) { if (this.helpOpen) target.setAttribute('tabindex', '-1'); target.focus(); }
       return;
     }
     if (act === 'listen') { this.readQuestion(); return; }
     if (act === 'speak') { this.startVoice(); return; }
-    if (act === 'change') { this.mode = 'question'; this.step = parseInt(b.getAttribute('data-step'), 10); this.returnToReview = true; this.render(true); return; }
+    if (act === 'change') { s.change(parseInt(b.getAttribute('data-step'), 10)); this.render(true); return; }
     if (act === 'later') {
-      this.collect(); this.save();
-      this.resumeCode = Math.random().toString(36).slice(2, 8).toUpperCase();
-      store.set('dimts.resume.' + this.resumeCode, this.draftKey);
-      this.mode = 'saved'; this.render(true); return;
+      this.collect(); s.makeResumeCode(); this.save();
+      s.mode = 'saved'; this.render(true); return;
     }
-    if (act === 'resume') { this.mode = 'question'; this.render(true); return; }
-    if (act === 'voice-allow') { store.set('dimts.voiceConsent', true); this.startVoice(); return; }
-    if (act === 'voice-deny') { store.set('dimts.voiceConsent', false); this.setHeard(''); var inp = this.querySelector('#dm-input'); if (inp) inp.focus(); return; }
+    if (act === 'resume') { s.mode = 'question'; this.render(true); return; }
+    if (act === 'voice-allow') { store.set('voiceConsent', true); this.startVoice(); return; }
+    if (act === 'voice-deny') { store.set('voiceConsent', false); this.setHeard(''); var inp = this.ref('input'); if (inp) inp.focus(); return; }
     if (act === 'heard-yes') { this.setHeard(''); this.status(t('saved', this.lang)); var nb = this.querySelector('.dm-primary'); if (nb) nb.focus(); return; }
     if (act === 'heard-again') { this.setHeard(''); this.startVoice(); return; }
-    if (act === 'heard-type') { this.setHeard(''); var ti = this.querySelector('#dm-input'); if (ti) { ti.focus(); if (ti.select) ti.select(); } return; }
+    if (act === 'heard-type') { this.setHeard(''); var ti = this.ref('input'); if (ti) { ti.focus(); if (ti.select) ti.select(); } return; }
   };
 
   SavannaOnboardingForm.prototype.status = function (msg) { var s = this.querySelector('.dm-status'); if (s) { s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); } };
-  SavannaOnboardingForm.prototype.setHeard = function (html) { var h = this.querySelector('#dm-heard'); if (h) h.innerHTML = html; };
+  SavannaOnboardingForm.prototype.setHeard = function (html) { var h = this.ref('heard'); if (h) h.innerHTML = html; };
 
   SavannaOnboardingForm.prototype.readQuestion = function () {
-    var lang = this.lang, text, audio;
-    if (this.mode === 'question') {
-      var f = this.field();
+    var lang = this.lang, text, audio, mode = this.state.mode;
+    if (mode === 'question') {
+      var f = this.state.field();
       text = L(f.label, lang) + '. ' + (f.body ? L(f.body, lang) + '. ' : '') + (f.hint ? L(f.hint, lang) + '. ' : '');
-      var opts = f.options === 'NEEDS' ? NEEDS : f.options;
-      if (opts && opts.map) text += opts.map(function (o) { return L(o.label, lang); }).join('. ');
+      var opts = optionsOf(f);
+      if (opts.length) text += opts.map(function (o) { return L(o.label, lang); }).join('. ');
       audio = f.audio && f.audio[lang];
-    } else if (this.mode === 'welcome') {
+    } else if (mode === 'welcome') {
       text = t('welcomeTitle', lang) + '. ' + t('welcomeHint', lang) + '. ' + MODES.map(function (m) { return t('m_' + m, lang); }).join('. ');
     } else {
       var q = this.querySelector('.dm-q'); text = q ? q.textContent : '';
@@ -775,12 +976,12 @@
   };
 
   SavannaOnboardingForm.prototype.startVoice = function () {
-    var lang = this.lang, self = this, f = this.field();
+    var lang = this.lang, self = this, f = this.state.field();
+    if (!voiceAllowed(f)) return; // never on sensitive questions
     if (!SR) { this.status(t('voiceUnsupported', lang)); return; }
-    if (store.get('dimts.voiceConsent', null) !== true) {
-      this.setHeard('<div class="dm-panel" role="group" aria-labelledby="dm-vc"><h2 id="dm-vc" tabindex="-1">' + t('voiceConsentTitle', lang) + '</h2><p>' + t('voiceConsent', lang) + '</p>' +
-        '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="voice-allow">' + t('voiceAllow', lang) + '</button><button type="button" class="dm-btn" data-act="voice-deny">' + t('voiceDeny', lang) + '</button></div></div>');
-      var h = this.querySelector('#dm-vc'); if (h) h.focus();
+    if (store.get('voiceConsent', null) !== true) {
+      this.setHeard(View.voiceConsent(this.vm()));
+      var h = this.ref('vc'); if (h) h.focus();
       return;
     }
     if (this.rec) { try { this.rec.stop(); } catch (e) {} this.rec = null; return; }
@@ -793,7 +994,7 @@
     if (btn) { btn.setAttribute('aria-pressed', 'true'); btn.textContent = '⏹ ' + t('stop', lang); }
     this.status(t('listening', lang));
     rec.onresult = function (ev) {
-      var alts = []; var r = ev.results[0];
+      var alts = [], r = ev.results[0];
       for (var i = 0; i < r.length; i++) alts.push(r[i].transcript);
       self.handleTranscript(f, alts);
     };
@@ -803,43 +1004,32 @@
     try { rec.start(); } catch (e) { this.rec = null; this.status(t('voiceError', lang)); }
   };
 
+  // KNOWN BUG (fixed in Phase 3): the transcript is written into the answer and saved before the learner confirms it.
   SavannaOnboardingForm.prototype.handleTranscript = function (f, alts) {
-    var lang = this.lang, said = alts[0] || '', shown = said;
-    var form = this.querySelector('.dm-form');
+    var lang = this.lang, said = alts[0] || '', shown = said, form = this.querySelector('.dm-form');
     if (f.type === 'choice' || f.type === 'consent' || f.type === 'multi') {
-      var opts = f.options === 'NEEDS' ? NEEDS : f.options, hits = [];
+      var opts = optionsOf(f), hits = [];
       for (var i = 0; i < alts.length && !hits.length; i++) hits = matchOptions(alts[i], opts);
       if (!hits.length) { this.status(t('voiceNoMatch', lang)); return; }
       if (f.type !== 'multi') hits = [hits[0]];
       hits.forEach(function (val) { var inp = form.querySelector('input[name=v][value="' + val + '"]'); if (inp) inp.checked = true; });
       shown = hits.map(function (val) { var o = opts.filter(function (x) { return x.value === val; })[0]; return o ? L(o.label, lang) : val; }).join(', ');
     } else {
-      var val = f.type === 'tel' ? spokenDigits(said) : said;
-      var inp = form.querySelector('#dm-input');
+      var val = f.type === 'tel' ? spokenDigits(said) : said, inp = this.ref('input');
       if (inp) inp.value = val;
       shown = val;
     }
     this.collect(); this.save();
     var others = f.type === 'text' || f.type === 'textarea' ? alts.slice(1).filter(function (a) { return a && a !== said; }) : [];
-    this.setHeard('<div class="dm-heard" role="group" aria-labelledby="dm-heard-h"><p id="dm-heard-h" tabindex="-1">' + t('heard', lang) + ' <q>' + esc(shown) + '</q></p>' +
-      '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="heard-yes">' + t('yes', lang) + '</button>' +
-      '<button type="button" class="dm-btn" data-act="heard-again">' + t('again', lang) + '</button>' +
-      '<button type="button" class="dm-btn" data-act="heard-type">' + t('type', lang) + '</button></div>' +
-      (others.length ? '<p class="dm-hint">' + others.map(esc).join(' · ') + '</p>' : '') + '</div>');
-    var hh = this.querySelector('#dm-heard-h'); if (hh) hh.focus();
+    this.setHeard(View.heard(this.vm(), shown, others));
+    var hh = this.ref('heard-h'); if (hh) hh.focus();
     speak(t('heard', lang) + ' ' + shown, lang);
   };
 
   SavannaOnboardingForm.prototype.finish = function () {
-    var detail = { form: this.getAttribute('form'), instance: this.getAttribute('instance') || null, lang: this.lang, answers: JSON.parse(JSON.stringify(this.answers)) };
-    var self = this;
-    // keep only answers for questions that were actually shown (minimum data)
-    var shown = {}; this.visible().forEach(function (f) { if (self.answers[f.id] !== undefined) shown[f.id] = self.answers[f.id]; });
-    detail.answers = shown;
-    store.del(this.draftKey);
-    this.mode = 'done';
+    var answers = this.state.finish(); // only questions that were shown; the draft is deleted
     this.render(true);
-    emit(this, 'complete', detail, true);
+    emit(this, 'complete', { form: this.getAttribute('form'), instance: this.getAttribute('instance') || null, lang: this.lang, answers: answers }, true);
   };
 
   if (!customElements.get('savanna-onboarding-form')) customElements.define('savanna-onboarding-form', SavannaOnboardingForm);
@@ -893,14 +1083,12 @@
   injectCss(); // tokens are available to the host page as soon as the script runs
   applyPrefs();
 
-  /* ---------- resume links (?resume=CODE) ---------- */
-  try {
-    var code = new URLSearchParams(location.search).get('resume');
-    if (code && store.get('dimts.resume.' + code, null)) { /* draft is already keyed by form; nothing else to do */ }
-  } catch (e) {}
+  /* Resume links (?resume=CODE): the draft is stored on this device under its form, so the form finds it by itself.
+     A code that is not on this device (the link was opened on another phone) is explained by the form. */
 
   var API = window.SavannaOnboarding = {
-    version: '0.3.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store,
+    version: '0.4.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage,
+    FormState: FormState, validate: validateAnswer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: stopSpeaking, label: L,
     prefs: getPrefs, setPrefs: setPrefs

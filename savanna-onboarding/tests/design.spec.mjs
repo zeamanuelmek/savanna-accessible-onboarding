@@ -77,6 +77,8 @@ test('green is never used for text', async ({ page }) => {
 test('primary button uses the darkened Savanna red with white text', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await signupTo(page, 'filler');
+  await page.mouse.move(0, 0); // not hovered (hover fades over 0.15s)
+  await page.waitForTimeout(300);
   const s = await page.locator('.dm-form button[type=submit]').evaluate(el => ({ bg: getComputedStyle(el).backgroundColor, fg: getComputedStyle(el).color }));
   expect(s).toEqual({ bg: 'rgb(218, 58, 58)', fg: 'rgb(255, 255, 255)' });
   expect(contrast(s.fg, s.bg)).toBeGreaterThanOrEqual(4.5);

@@ -8,7 +8,7 @@ export async function freshStart(page, { lang = 'en', prefs = {}, extra = {} } =
   await page.addInitScript(([p, x]) => {
     if (sessionStorage.getItem('__seeded')) return; // seed once per test, keep data across reloads
     localStorage.clear();
-    localStorage.setItem('dimts.prefs', JSON.stringify(p));
+    localStorage.setItem('savanna-onboarding.prefs', JSON.stringify(p));
     for (const [k, v] of Object.entries(x)) localStorage.setItem(k, JSON.stringify(v));
     sessionStorage.setItem('__seeded', '1');
   }, [{ lang, ...prefs }, extra]);
@@ -47,8 +47,8 @@ export async function signupTo(page, stopAt) {
   await pick(page, 'read_type'); await next(page);
   const steps = [
     ['filler', async () => pick(page, 'self')],
-    ['name', async () => page.fill('#dm-input', 'Abebe Kebede')],
-    ['phone', async () => page.fill('#dm-input', '0911234567')],
+    ['name', async () => page.fill('[data-ref=input]', 'Abebe Kebede')],
+    ['phone', async () => page.fill('[data-ref=input]', '0911234567')],
     ['id_route', async () => pick(page, 'fayda')],
     ['id_number', async () => {}],
     ['dob', async () => {}],

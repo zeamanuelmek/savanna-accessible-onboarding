@@ -15,6 +15,16 @@ mode) without ever stating or proving a disability.
 | `passport` | Support Passport: "What would help you?", never a diagnosis. Stays on the device |
 | `employer` | Employers tick the support a job offers, from the same list. Output as schema.org `JobPosting` |
 | `apply` | Job application prefilled from the profile (no asking twice), with opt-in sharing of the Support Passport |
+| `profile` | Profile update: opens on a summary of the learner's details, prefilled; "Change" only what needs updating |
+
+## How we address the 21 October co-design findings
+
+| What co-designers found | What this module does |
+|---|---|
+| **Forms timed out** | There are no time limits anywhere. Answers are saved on the phone after every question, and "Finish later" gives a link to continue on the same phone. |
+| **Refugees were asked for ID they don't have** | Six ID routes: Fayda, kebele ID, passport, refugee ID or proof of registration (RRS / UNHCR), another document, or "I have none of these, refer me through a partner". The ID number is optional, nobody is asked for a photo of their ID, and learning can start without any ID. IDs are never claimed to be verified. |
+| **Help was English only** | Every question, hint, error and help panel is in Amharic and English (the Amharic is a draft for native-speaker review). A language switch and "Get help" are in the same place on every screen. |
+| **Job boards broke under screen readers** | Job titles are headings, every "Apply" link names its job, the number of jobs is announced on load and after filtering, and the filter is a normal checkbox. Tested automatically; NVDA and TalkBack checks by a person are still to do. |
 
 ## What is real and what is not
 
@@ -24,11 +34,12 @@ mode) without ever stating or proving a disability.
 | Savanna look: Poppins, navy text, Savanna red actions, Noto Sans Ethiopic for Amharic | implemented (Phase 1) |
 | Text size, high contrast, language settings | implemented |
 | Read-aloud | partial: uses the device voice; most phones have no Amharic voice; no recorded audio yet |
-| Voice answers | partial: Chrome only, sends audio to Google. **Known bug:** unconfirmed speech is saved (fix in Phase 3) |
+| Voice answers | partial: Chrome only, sends audio to Google, consent asked first. **Never offered on ID or support-needs questions.** **Known bug:** unconfirmed speech is saved (fix in Phase 3) |
 | "Finish later" SMS | **simulated**: a labelled preview, no SMS is sent |
 | ID verification | unavailable: IDs are never verified |
 | Amharic text | AI draft: needs native-speaker review |
-| Backend / API | unavailable: the module sends nothing; the host page decides where data goes |
+| Backend / API | unavailable by design: the module sends nothing; the host page decides where data goes. Data and events: [`docs/api-schema.md`](docs/api-schema.md) |
+| Offline | partial: answers are saved on the phone; opening the page with no connection comes in Phase 6. See [`docs/offline-plan.md`](docs/offline-plan.md) |
 
 ## Run the demo
 
@@ -48,7 +59,7 @@ python -m http.server 8080        # or: node tests/static-server.mjs  (port 4173
 <savanna-onboarding-form form="signup" lang="am"></savanna-onboarding-form>
 <script>
   document.addEventListener('savanna-onboarding:complete', e => {
-    // e.detail = { form, instance, lang, answers } -> send to your own API
+    // e.detail = { form, instance, lang, answers } -> send to your own API (schemas: docs/api-schema.md)
   });
 </script>
 ```
@@ -118,9 +129,9 @@ audit test is skipped if they are not there.
 ## Files
 
 - `savanna-onboarding.js`: the engine (web component, design tokens, no dependencies)
-- `forms.js`: the four form recipes (plain data)
+- `forms.js`: the five form recipes (plain data)
 - `assets/fonts/`: Poppins and Noto Sans Ethiopic (SIL Open Font Licence, licence files included)
 - `index.html`, `app.js`, `app.css`: demo host page standing in for Savanna or a job platform
-- `docs/`: developer documentation
+- `docs/`: developer guide, data and events (`api-schema.md`), offline plan, conformance report
 - `tests/`: Playwright + axe-core tests
 - Design tokens and their sources: [`../DESIGN_TOKENS.md`](../DESIGN_TOKENS.md). Progress: [`../DEVELOPMENT_PROGRESS.md`](../DEVELOPMENT_PROGRESS.md)
