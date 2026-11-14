@@ -1,0 +1,113 @@
+/* Savanna learner journey: our additions on top of Savanna's own stylesheets (vendor/savanna-static-pages, unchanged).
+   1. Accessibility fixes to Savanna's header and sidebar (documented in README "Savanna starter: what we changed in our copy").
+   2. The demo view classes (buttons, notices, job cards…), scoped to .sj so they never touch Savanna's own components.
+   All colours come from the module's --so-* tokens, so high contrast and text size apply here too. */
+
+html { scroll-padding-top: 88px; } /* focused items never hide under the fixed 72px header (WCAG 2.4.11) */
+body.signed_in { background: #f8f9fa; color: var(--so-text); font-family: var(--so-font); font-size: calc(var(--so-base-size) * var(--so-scale)); }
+html[data-dm-contrast=high] body.signed_in { background: #fff; }
+:focus-visible { outline: var(--so-focus-width) solid var(--so-focus); outline-offset: var(--so-focus-offset); }
+main.content:focus, .sj h1:focus { outline: none; }
+
+/* skip link */
+.sj-skip { position: absolute; left: -9999px; top: 0; z-index: 2000; background: var(--so-heading); color: #fff; padding: .75rem 1rem; font-weight: 600; border-radius: var(--so-radius-sm); }
+.sj-skip:focus { left: 1rem; top: .75rem; color: #fff; }
+
+/* header: Savanna's .header (fixed, 72px, white, bottom border) */
+.sj-header { z-index: 1000; font-family: var(--so-font); }
+.sj-header .header-left { gap: .25rem; min-width: 0; }
+.header .sj-menu, .sj-menu { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; min-width: 44px; padding: .25rem .6rem; background: none; border: 0; border-radius: var(--so-radius-sm); color: var(--so-navy); font: inherit; font-weight: 500; cursor: pointer; }
+.sj-menu .fa-bars { font-size: 1.4rem; }
+.header .sj-menu:hover, .sj-menu:hover { color: var(--so-primary-hover); background: #fdf7f7; }
+.sj-logo { display: block; height: 34px; width: auto; max-width: 42vw; }
+.sj-lang { min-height: 44px; padding: .3rem .9rem; border: 2px solid var(--so-navy); border-radius: var(--so-radius-sm); background: #fff; color: var(--so-navy); font: inherit; font-weight: 500; cursor: pointer; }
+.sj-lang:hover { background: var(--so-surface-alt); }
+@media (max-width: 420px) { .sj-menu-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } .sj-header .header-right { padding-right: .5rem !important; } }
+
+/* sidebar: Savanna's #sidebar, as a real <nav>; text in navy (Savanna's grey #98a3ae is 2.6:1, too low) */
+#sidebar { font-family: var(--so-font); }
+#sidebar ul { list-style: none; margin: .5rem 0 2rem; }
+#sidebar li { margin: .15rem 0; }
+#sidebar a { display: flex; align-items: center; min-height: 48px; padding: .25rem .5rem; color: var(--so-navy); text-decoration: none; border-radius: 12px; font-weight: 500; }
+#sidebar .icon { width: 2.25rem; flex: none; text-align: center; font-size: 1.15rem; color: var(--so-navy); }
+#sidebar > ul > li:hover a, #sidebar > ul > li:hover a .icon { color: var(--so-primary-hover); }
+#sidebar a[aria-current="page"] { background: #fdf7f7; box-shadow: inset 4px 0 0 var(--so-primary); font-weight: 600; }
+#sidebar .sj-label { white-space: normal; overflow-wrap: anywhere; }
+#sidebar .sj-sep { border-top: 1px solid var(--so-border-subtle); margin-top: .75rem; padding-top: .75rem; }
+/* Collapsed to the 70px icon rail (desktop): labels stay available to screen readers */
+body.sidebar-collapsed #sidebar .sj-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 767.98px) {
+  body.signed_in .content { padding-top: 72px !important; }
+  #sidebar.expanded { top: 72px; }
+}
+html[data-dm-contrast=high] #sidebar a, html[data-dm-contrast=high] #sidebar .icon, html[data-dm-contrast=high] .sj-menu { color: #000; }
+
+/* content */
+.sj, .sj p, .sj .lead, .sj li, .sj label { font-family: var(--so-font); }
+.sj { max-width: 62rem; margin: 0 auto; padding: 1.5rem 1rem 3rem; line-height: 1.5; }
+.sj h1 { font-size: 1.75em; font-weight: 600; line-height: 1.25; color: var(--so-heading); margin: .5rem 0 .75rem; }
+.sj h2 { font-size: 1.3em; font-weight: 600; line-height: 1.3; color: var(--so-heading); margin: 1.25rem 0 .5rem; }
+.sj h3 { color: var(--so-heading); font-size: 1.05em; }
+.sj a { color: var(--so-heading); text-underline-offset: 3px; }
+.sj .lead { font-size: 1.1em; max-width: 42rem; }
+.sj .muted, .sj .meta { color: var(--so-text-muted); }
+.sj .vh { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sj-hero { background: #fff; border-radius: var(--so-radius-card); border: 1px solid var(--so-border-subtle); padding: 1.5rem 1.25rem; }
+.sj-hero h1 { font-size: clamp(1.6em, 5vw, 2.3em); }
+.sj-cards { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.sj-card { padding: 1.1rem 1.2rem; background: #fff; border: 1px solid var(--so-border-subtle); }
+.sj-card h2 { margin-top: 0; }
+.sj-foot { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--so-border-subtle); color: var(--so-text-muted); font-size: .95em; }
+.sj-foot a { color: var(--so-heading); }
+
+/* buttons: the module's shape; Bootstrap's .btn is overridden inside .sj only */
+.sj .btn { display: inline-flex; align-items: center; justify-content: center; gap: .4em; min-height: var(--so-target); padding: .6rem 1.2rem; border: var(--so-border-width) solid var(--so-border-strong); border-radius: var(--so-radius-sm); background: var(--so-surface); color: var(--so-heading); font: inherit; font-weight: 500; text-decoration: none; cursor: pointer; line-height: 1.3; }
+.sj .btn:hover { background: var(--so-surface-alt); }
+.sj .btn.primary { background: var(--so-primary); border-color: var(--so-primary); color: var(--so-on-primary); }
+.sj .btn.primary:hover { background: var(--so-primary-hover); border-color: var(--so-primary-hover); }
+.sj .btn.danger { border-color: var(--so-error); color: var(--so-error); }
+.sj .btn.small { min-height: var(--so-target-sm); padding: .4rem .8rem; }
+.sj .btn.big { min-height: 52px; padding: .75rem 1.3rem; font-size: 1.05em; }
+.sj .actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+
+/* shared demo views (same look as the showroom) */
+.sj .form-wrap { background: var(--so-surface); border: 1px solid var(--so-border-subtle); border-radius: var(--so-radius-card); padding: 1.25rem 1rem; }
+@media (min-width: 48em) { .sj .form-wrap { padding: 2rem 2.25rem; } }
+.sj .notice { position: relative; background: var(--so-surface-alt); border-radius: var(--so-radius); padding: .75rem 1rem .75rem 1.4rem; margin: 1rem 0; overflow: hidden; }
+.sj .notice::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 8px; background: var(--so-accent); }
+.sj .notice h2 { margin: 0 0 .4rem; font-size: 1.2rem; }
+.sj .badge { display: inline-block; padding: .1em .7em; border: 2px solid var(--so-navy); border-radius: var(--so-radius-pill); font-size: 1em; font-weight: 600; color: var(--so-heading); background: var(--so-surface); white-space: normal; text-align: left; }
+.sj .card-plain { border: 1px solid var(--so-border-subtle); border-radius: var(--so-radius-card); padding: 1rem 1.1rem; margin: 1rem 0; background: #fff; }
+.sj .card-plain h2 { margin: 0 0 .5rem; font-size: 1.2rem; }
+.sj ul.plain { list-style: none; padding: 0; margin: 0; }
+.sj ul.plain li { padding: .5rem 0; border-bottom: 1px solid var(--so-border-subtle); overflow-wrap: anywhere; }
+.sj .jobs { list-style: none; padding: 0; display: grid; gap: 1rem; }
+.sj .job { position: relative; background: var(--so-surface); border: 1px solid var(--so-border-subtle); border-radius: var(--so-radius-card); padding: 1.1rem 1.2rem; }
+.sj .job h2 { margin: 0 0 .25rem; font-size: 1.3em; }
+.sj .job h3 { font-size: 1em; margin: .75rem 0 .25rem; }
+.sj .tag { background: var(--so-surface-alt); border: 1px solid var(--so-border); border-radius: var(--so-radius-sm); padding: 0 .4rem; font-size: .9em; color: var(--so-heading); }
+.sj .match { font-weight: 600; color: var(--so-heading); }
+.sj .needs { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.sj .needs li { border: var(--so-border-width) solid var(--so-border); border-radius: var(--so-radius-pill); padding: .35rem .85rem; background: var(--so-surface); }
+.sj .needs.small li { font-size: .95em; padding: .2rem .7rem; }
+.sj .needs li.hit { border-color: var(--so-selected-border); background: var(--so-selected-bg); font-weight: 600; }
+.sj .filter { background: var(--so-surface); border: var(--so-border-width) solid var(--so-border-strong); border-radius: var(--so-radius-card); padding: .75rem 1rem; }
+.sj .filter label { display: flex; gap: .6rem; align-items: center; min-height: 44px; font-weight: 600; }
+.sj .filter input { width: 1.5rem; height: 1.5rem; flex: none; accent-color: var(--so-heading); }
+.sj pre { background: var(--so-navy); color: #fff; padding: 1rem; border-radius: var(--so-radius); overflow: auto; font-size: .9em; }
+.sj details { margin: 1rem 0; }
+.sj summary { cursor: pointer; font-weight: 600; min-height: 44px; padding: .5rem 0; }
+
+/* simulated log-in */
+.sj-label-big { font-weight: 600; font-size: 1.15em; color: var(--so-heading); margin: 0; }
+.sj-input { width: 100%; max-width: 20em; min-height: 52px; padding: .6em .8em; border: var(--so-border-width) solid var(--so-border); border-radius: var(--so-radius); background: #fff; color: var(--so-text); font: inherit; font-size: 1.1em; }
+.sj-input[aria-invalid=true] { border-color: var(--so-error); border-width: 3px; }
+.sj-errors { border: 4px solid var(--so-error); border-radius: var(--so-radius); padding: 1em 1.1em; margin: 0 0 1.25em; background: #fff; }
+.sj-errors h2 { margin: 0 0 .5em; font-size: 1.25em; }
+.sj-errors a { color: var(--so-error); font-weight: 600; }
+.sj-err { color: var(--so-error); font-weight: 600; }
+.sj-sms samp { font-size: 1.1em; font-weight: 600; }
+
+html[data-dm-contrast=high] .sj .form-wrap, html[data-dm-contrast=high] .sj .needs li, html[data-dm-contrast=high] .sj .notice,
+html[data-dm-contrast=high] .sj .card-plain, html[data-dm-contrast=high] .sj .job, html[data-dm-contrast=high] .sj-card { border: 3px solid #000; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

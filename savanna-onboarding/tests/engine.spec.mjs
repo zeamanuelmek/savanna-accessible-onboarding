@@ -118,7 +118,7 @@ test('resume: "Finish later" keeps one code per draft, and the link brings the a
 });
 
 test('resume: a link opened on a phone without the answers explains why', async ({ page }) => {
-  await page.goto('/index.html?resume=NOTHERE#/signup');
+  await page.goto('/showroom.html?resume=NOTHERE#/signup');
   await page.waitForSelector('.dm-q');
   await expect(page.locator('.dm-status')).toContainText('saved only on the phone where you started');
 });

@@ -651,13 +651,13 @@
     '.dm-actions{display:flex;flex-wrap:wrap;gap:.75em;margin-top:1.5em;align-items:center}',
 
     '.dm-errors{border:4px solid var(--so-error);border-radius:var(--so-radius);padding:1em 1.1em;margin:0 0 1.25em;background:var(--so-surface)}',
-    '.dm-errors h2{margin:0 0 .5em;font-size:1.25em;color:var(--so-heading)}',
+    '.dm-errors :is(h2,h3,h4,h5){margin:0 0 .5em;font-size:1.25em;color:var(--so-heading)}',
     '.dm-errors ul{margin:0;padding-left:1.2em}',
     '.dm-errors a{color:var(--so-error);font-weight:600}',
     '.dm-err{display:block;color:var(--so-error);font-weight:600;margin:.25em 0 .5em}',
 
     '.dm-panel{border:1px solid var(--so-border-subtle);border-radius:var(--so-radius-card);padding:1em 1.1em;margin:1em 0;background:var(--so-surface-alt)}',
-    '.dm-panel h2{margin:0 0 .5em;font-size:1.2em;color:var(--so-heading)}',
+    '.dm-panel :is(h2,h3,h4,h5){margin:0 0 .5em;font-size:1.2em;color:var(--so-heading)}',
     '.dm-note,.dm-success{position:relative;padding:.85em 1em .85em 1.4em;margin:1em 0;border-radius:var(--so-radius);overflow:hidden}',
     '.dm-note{background:var(--so-surface-alt)}',
     '.dm-success{background:var(--so-success-bg)}',
@@ -874,6 +874,13 @@
     }
   };
 
+  /** Moves every heading in module-made HTML down by (level - 1). Learner text is escaped, so only our tags match. */
+  function shiftHeadings(html, level) {
+    var by = level - 1;
+    if (!by) return html;
+    return html.replace(/<(\/?)h([1-5])\b/g, function (m, slash, n) { return '<' + slash + 'h' + Math.min(6, +n + by); });
+  }
+
   /* =====================================================================================================
      THE WEB COMPONENT (controller): reads the page, updates the state, asks the view to draw.
      ===================================================================================================== */
@@ -932,6 +939,12 @@
     this.voice = null;
   };
 
+  /* The question is the page's <h1> by default. A host page that has its own <h1> sets heading-level="2" (or 3):
+     every heading inside the module moves down by the same amount, so the outline stays in order. */
+  SavannaOnboardingForm.prototype.headingLevel = function () {
+    var n = parseInt(this.getAttribute('heading-level'), 10);
+    return n >= 1 && n <= 4 ? n : 1;
+  };
   SavannaOnboardingForm.prototype.ref = function (name) { return this.querySelector('[data-ref="' + name + '"]'); };
   SavannaOnboardingForm.prototype.vm = function () {
     var s = this.state, mode = getPrefs().mode;
@@ -952,7 +965,7 @@
     var flash = this.flash; this.flash = '';
     if (this.voice) { if (this.voice.session) this.voice.session.abort(); this.voice = null; } // unconfirmed speech is thrown away
     this.className = '';
-    this.innerHTML = View.page(this.vm());
+    this.innerHTML = shiftHeadings(View.page(this.vm()), this.headingLevel());
     if (moveFocus !== false) {
       var target = this.querySelector('.dm-errors') || this.querySelector('.dm-q');
       if (target) target.focus();
@@ -1054,7 +1067,7 @@
     if (act === 'help') {
       this.collect();
       this.helpOpen = !this.helpOpen; this.render(false);
-      var target = this.helpOpen ? this.querySelector('[data-ref=help] h2') : this.querySelector('[data-act=help]');
+      var target = this.helpOpen ? this.querySelector('[data-ref=help] :is(h2,h3,h4,h5)') : this.querySelector('[data-act=help]');
       if (target) { if (this.helpOpen) target.setAttribute('tabindex', '-1'); target.focus(); }
       return;
     }
@@ -1075,7 +1088,7 @@
   };
 
   SavannaOnboardingForm.prototype.status = function (msg) { var s = this.querySelector('.dm-status'); if (s) { s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); } };
-  SavannaOnboardingForm.prototype.setHeard = function (html) { var h = this.ref('heard'); if (h) h.innerHTML = html; };
+  SavannaOnboardingForm.prototype.setHeard = function (html) { var h = this.ref('heard'); if (h) h.innerHTML = shiftHeadings(html, this.headingLevel()); };
 
   SavannaOnboardingForm.prototype.readQuestion = function () {
     var lang = this.lang, text, audio, mode = this.state.mode;
@@ -1251,8 +1264,58 @@
   /* Resume links (?resume=CODE): the draft is stored on this device under its form, so the form finds it by itself.
      A code that is not on this device (the link was opened on another phone) is explained by the form. */
 
+  /* ---------- host integration: mount / unmount ----------
+     SavannaOnboarding.mount(target, options) puts a form (or the settings panel) inside a host element and returns a
+     handle. target: a CSS selector or an element. options:
+       form: 'signup' | 'profile' | 'takeover' | 'passport' | 'apply' | 'employer' | a form you registered
+       settings: true            show the settings panel instead of a form
+       lang: 'am' | 'en'         starting language (otherwise the learner's saved choice)
+       instance: 'id'            keeps a separate draft (for example one per job)
+       welcome: true             start with the "how would you like to answer?" screen
+       focus: true               move focus to the question (default true)
+       headingLevel: 2           when the host page has its own <h1>: the question becomes an <h2>
+       onComplete(detail, slot)  called with the same detail as the savanna-onboarding:complete event, and the
+                                 element where the host can add its own "what next" content
+     handle = { element, host, unmount() }. SavannaOnboarding.unmount(target or handle) removes it; speech and
+     listeners stop, and the learner's saved draft stays on the device. */
+  var MOUNTS = [];
+  function resolveTarget(target) { return typeof target === 'string' ? document.querySelector(target) : target; }
+  function unmount(targetOrHandle) {
+    var h = targetOrHandle && targetOrHandle.element ? targetOrHandle : null;
+    var host = h ? null : resolveTarget(targetOrHandle);
+    MOUNTS.slice().forEach(function (m) {
+      if (m === h || (host && m.host === host)) {
+        if (m.element.parentNode) m.element.parentNode.removeChild(m.element); // disconnectedCallback stops speech
+        MOUNTS.splice(MOUNTS.indexOf(m), 1);
+      }
+    });
+  }
+  function mount(target, options) {
+    var host = resolveTarget(target), o = options || {};
+    if (!host) throw new Error('[savanna-onboarding] mount: no element matches ' + target);
+    unmount(host); // one module per host element
+    var el = document.createElement(o.settings ? 'savanna-onboarding-settings' : 'savanna-onboarding-form');
+    if (!o.settings) {
+      if (!o.form) throw new Error('[savanna-onboarding] mount: options.form is required');
+      el.setAttribute('form', o.form);
+      if (o.instance) el.setAttribute('instance', o.instance);
+      if (o.welcome) el.setAttribute('welcome', '');
+      if (o.headingLevel) el.setAttribute('heading-level', String(o.headingLevel));
+    }
+    if (o.lang) el.setAttribute('lang', o.lang);
+    if (typeof o.onComplete === 'function') {
+      el.addEventListener('savanna-onboarding:complete', function (e) { o.onComplete(e.detail, el.querySelector('.dm-done-slot')); });
+    }
+    host.appendChild(el);
+    if (o.focus !== false) { var q = el.querySelector('.dm-q'); if (q) q.focus(); }
+    var handle = { element: el, host: host, unmount: function () { unmount(handle); } };
+    MOUNTS.push(handle);
+    return handle;
+  }
+
   var API = window.SavannaOnboarding = {
-    version: '0.6.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
+    mount: mount, unmount: unmount,
+    version: '0.7.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: stopSpeaking, label: L,

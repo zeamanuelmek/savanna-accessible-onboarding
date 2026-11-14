@@ -1,5 +1,5 @@
 // Tiny static file server for tests (no dependencies).
-//   /             -> this module folder (the demo is /index.html)
+//   /             -> this module folder (Savanna journey: /index.html; showroom: /showroom.html; test host: /test-host/)
 //   /reference/   -> the frozen Savanna reference clone, served read only.
 //                    Default location: next to this repository (../Savanna-static-pages).
 //                    Override with REFERENCE_DIR=/path/to/Savanna-static-pages.

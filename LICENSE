@@ -6,5 +6,8 @@ announced at kickoff on 14 November 2026. Replace this note with the full text o
 Until then, no licence is granted.
 
 Third-party files included in this repository keep their own licences:
+- savanna-onboarding/vendor/savanna-static-pages/: Savanna stylesheets, fonts and images copied unchanged from the
+  official hackathon starter (github.com/alx-africa/Savanna-static-pages). They belong to ALX and are NOT covered by
+  this project's licence. See vendor/savanna-static-pages/VENDOR.md.
 - savanna-onboarding/assets/fonts/poppins-*.woff2: SIL Open Font License 1.1 (see OFL-Poppins.txt)
 - savanna-onboarding/assets/fonts/noto-sans-ethiopic-*.woff2: SIL Open Font License 1.1 (see OFL-NotoSansEthiopic.txt)

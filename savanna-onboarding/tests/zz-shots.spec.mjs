@@ -1,0 +1,27 @@
+import { test } from '@playwright/test';
+import { freshStart, pick, next } from './helpers.mjs';
+test('shots', async ({ page }, info) => {
+  const errs = [];
+  page.on('console', m => { if (m.type() === 'error') errs.push(m.text()); });
+  page.on('pageerror', e => errs.push('PAGEERROR ' + e.message));
+  await freshStart(page, { lang: 'en' });
+  const p = info.project.name;
+  await page.goto('/index.html'); await page.waitForSelector('.sj h1');
+  await page.screenshot({ path: 'C:/Users/zeame/AppData/Local/Temp/claude/f4f336f25f80558b/ec6727a8-2e42-4831-911f-60933225f252/scratchpad/shots8/' + p + '-1-home.png', fullPage: true });
+  await page.goto('/signup.html'); await page.waitForSelector('.dm-q');
+  await page.screenshot({ path: 'C:/Users/zeame/AppData/Local/Temp/claude/f4f336f25f80558b/ec6727a8-2e42-4831-911f-60933225f252/scratchpad/shots8/' + p + '-2-signup.png', fullPage: true });
+  await pick(page, 'read_type'); await next(page);
+  await pick(page, 'self'); await next(page);
+  await page.fill('[data-ref=input]', 'Abebe Kebede'); await next(page);
+  await page.fill('[data-ref=input]', '0911234567'); await next(page);
+  await pick(page, 'kebele'); await next(page); await next(page); await next(page);
+  await pick(page, 'yes'); await next(page); await next(page);
+  await page.screenshot({ path: 'C:/Users/zeame/AppData/Local/Temp/claude/f4f336f25f80558b/ec6727a8-2e42-4831-911f-60933225f252/scratchpad/shots8/' + p + '-3-done.png', fullPage: true });
+  await page.goto('/dashboard.html'); await page.waitForSelector('.sj h1');
+  await page.screenshot({ path: 'C:/Users/zeame/AppData/Local/Temp/claude/f4f336f25f80558b/ec6727a8-2e42-4831-911f-60933225f252/scratchpad/shots8/' + p + '-4-dashboard.png', fullPage: true });
+  await page.goto('/jobs.html'); await page.waitForSelector('.sj h1');
+  await page.screenshot({ path: 'C:/Users/zeame/AppData/Local/Temp/claude/f4f336f25f80558b/ec6727a8-2e42-4831-911f-60933225f252/scratchpad/shots8/' + p + '-5-jobs.png' });
+  await page.goto('/login.html'); await page.waitForSelector('.sj h1');
+  await page.screenshot({ path: 'C:/Users/zeame/AppData/Local/Temp/claude/f4f336f25f80558b/ec6727a8-2e42-4831-911f-60933225f252/scratchpad/shots8/' + p + '-6-login.png', fullPage: true });
+  console.log('ERRORS', JSON.stringify(errs));
+});

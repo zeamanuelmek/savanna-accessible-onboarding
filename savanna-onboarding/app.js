@@ -1,7 +1,15 @@
-/* Demo host page: plays the role of Savanna / a job platform around the <savanna-onboarding-form> component. */
+/* Demo host views: play the role of Savanna / a job platform around the <savanna-onboarding-form> component.
+   Used by two hosts:
+   - the showroom (showroom.html): developer and test page, with its own hash router (#/signup, #/jobs...);
+   - the Savanna journey pages (index.html, signup.html, ...): Savanna's own page frame, one page per step,
+     calling window.SavannaDemoHost.render(name, container, arg) with page links instead of hash routes. */
 (function () {
   var D = window.SavannaOnboarding, store = D.store, L = D.label;
   var view = document.getElementById('view');
+  // Route names stay '#/…' inside the views; a host can map them to its own URLs.
+  var linkFor = function (r) { return r; };
+  function R(r) { return linkFor(r); }
+  function hideHostLang() { var b = document.getElementById('host-lang'); if (b) b.hidden = true; }
 
   function lang() { return (store.get('prefs', {}).lang) || 'am'; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
@@ -143,7 +151,9 @@
     document.getElementById('foot-text').textContent = T('foot');
   }
 
+  var SHOWROOM = !!document.getElementById('nav');
   /* ---- mobile menu: a disclosure button; links stay a plain list for screen readers ---- */
+  if (SHOWROOM) (function () {
   var menuBtn = document.getElementById('menu-btn'), siteNav = document.getElementById('site-nav');
   var narrow = window.matchMedia('(max-width: 47.99em)');
   function setMenu(open, focusBtn) {
@@ -158,23 +168,18 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menuBtn.getAttribute('aria-expanded') === 'true') setMenu(false, true); });
   siteNav.addEventListener('click', function (e) { if (e.target.closest('a') && narrow.matches) setMenu(false); });
+  })();
 
+  // Every host form goes through the module's public mount() API.
   function mountForm(formId, instance, onDone) {
     view.innerHTML = '<div class="form-wrap"></div>';
-    var el = document.createElement('savanna-onboarding-form');
-    el.setAttribute('form', formId);
-    if (instance) el.setAttribute('instance', instance);
-    if (formId === 'signup') el.setAttribute('welcome', '');
-    el.addEventListener('savanna-onboarding:complete', function (e) { onDone(e.detail, el.querySelector('.dm-done-slot')); });
-    view.firstChild.appendChild(el);
-    var q = el.querySelector('.dm-q'); if (q) q.focus();
-    return el;
+    return D.mount(view.firstChild, { form: formId, instance: instance || null, welcome: formId === 'signup', onComplete: onDone }).element;
   }
 
   function home() {
     view.innerHTML =
       '<section class="hero"><p class="eyebrow" lang="en">Accessibility Hackathon 2026 · Track 1</p><h1 tabindex="-1">' + T('heroTitle') + '</h1><p class="lead">' + T('heroText') + '</p>' +
-      '<p class="actions"><a class="btn primary big" href="#/signup">' + T('start') + ' →</a> <a class="btn big ghost" href="#/settings">⚙️ ' + T('settings') + '</a></p></section>' +
+      '<p class="actions"><a class="btn primary big" href="' + R('#/signup') + '">' + T('start') + ' →</a> <a class="btn big ghost" href="' + R('#/settings') + '">⚙️ ' + T('settings') + '</a></p></section>' +
       '<h2>' + T('cards') + '</h2><ul class="cards">' +
       [['#/signup', 'c1', '🪪'], ['#/passport', 'c2', '🔒'], ['#/jobs', 'c3', '💼'], ['#/employer', 'c4', '🏢']].map(function (c) {
         return '<li class="card"><span class="card-ico" aria-hidden="true">' + c[2] + '</span><h3><a href="' + c[0] + '">' + T(c[1]) + '</a></h3><p>' + T(c[1] + 't') + '</p></li>';
@@ -199,9 +204,9 @@
       store.set('profile', p);
       if (!slot) return;
       if (partner) slot.innerHTML = statusPanel(p) + '<div class="notice handover"><h2>' + T('handTitle') + '</h2><p>' + T('handText') + '</p>' +
-        '<p class="actions"><a class="btn primary" href="#/takeover">' + T('handBtn') + '</a></p></div>';
+        '<p class="actions"><a class="btn primary" href="' + R('#/takeover') + '">' + T('handBtn') + '</a></p></div>';
       else slot.innerHTML = statusPanel(p) +
-        '<p class="actions"><a class="btn primary" href="#/passport">' + T('nextPassport') + '</a> <a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
+        '<p class="actions"><a class="btn primary" href="' + R('#/passport') + '">' + T('nextPassport') + '</a> <a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
     });
   }
 
@@ -222,7 +227,7 @@
   function profileView() {
     var old = store.get('profile', null);
     if (!old) {
-      view.innerHTML = '<h1 tabindex="-1">' + T('profile') + '</h1><p>' + T('noProfile') + '</p><p><a class="btn primary" href="#/signup">' + T('joinFirst') + '</a></p>';
+      view.innerHTML = '<h1 tabindex="-1">' + T('profile') + '</h1><p>' + T('noProfile') + '</p><p><a class="btn primary" href="' + R('#/signup') + '">' + T('joinFirst') + '</a></p>';
       focusH1(); return;
     }
     mountForm('profile', null, function (d, slot) {
@@ -232,7 +237,7 @@
       p.assurance_level = assurance(a, old);
       p.updated = new Date().toISOString();
       store.set('profile', p);
-      if (slot) slot.innerHTML = statusPanel(p) + '<p class="actions"><a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
+      if (slot) slot.innerHTML = statusPanel(p) + '<p class="actions"><a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
     });
   }
 
@@ -240,7 +245,7 @@
   function takeoverView() {
     var old = store.get('profile', null);
     if (!old || !old.takeover_pending) {
-      view.innerHTML = '<h1 tabindex="-1">' + T('takeTitle') + '</h1><p>' + T('nothingToTake') + '</p><p><a class="btn" href="#/profile">' + T('profile') + '</a></p>';
+      view.innerHTML = '<h1 tabindex="-1">' + T('takeTitle') + '</h1><p>' + T('nothingToTake') + '</p><p><a class="btn" href="' + R('#/profile') + '">' + T('profile') + '</a></p>';
       focusH1(); return;
     }
     mountForm('takeover', null, function (d, slot) {
@@ -252,7 +257,7 @@
       p.takeover_pending = false; p.taken_over = new Date().toISOString();
       store.set('profile', p);
       if (slot) slot.innerHTML = statusPanel(p) +
-        '<p class="actions"><a class="btn primary" href="#/passport">' + T('nextPassport') + '</a> <a class="btn" href="#/jobs">' + T('nextJobs') + '</a></p>';
+        '<p class="actions"><a class="btn primary" href="' + R('#/passport') + '">' + T('nextPassport') + '</a> <a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
     });
   }
 
@@ -262,7 +267,7 @@
   function passportView() {
     var p = store.get('passport', null), prof = store.get('profile', null);
     if (prof && prof.takeover_pending) { // a helper may still be there: the Support Passport is for the learner alone
-      view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1><div class="notice"><p>' + T('takeFirst') + '</p><p><a class="btn primary" href="#/takeover">' + T('handBtn') + '</a></p></div>';
+      view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1><div class="notice"><p>' + T('takeFirst') + '</p><p><a class="btn primary" href="' + R('#/takeover') + '">' + T('handBtn') + '</a></p></div>';
       focusH1(); return;
     }
     if (p && !window.__editPassport) {
@@ -282,8 +287,8 @@
             (x.withdrawn ? T('withdrawnOn', { date: fmtDate(x.withdrawn) }) : T('sharedOn', { date: fmtDate(x.at) }) +
               ' <button type="button" class="btn small" data-withdraw="' + esc(x.at) + '">' + T('withdraw') + '<span class="vh"' + en + '> ' + esc(x.packet.job) + '</span></button>') + '</li>';
         }).join('') + '</ul>' : '<p>' + T('sharedNone') + '</p>') + '</section>' +
-        '<p class="actions"><button type="button" class="btn primary" id="edit">' + T('edit') + '</button> <a class="btn" href="#/jobs">' + T('nextJobs') + '</a> <button type="button" class="btn danger" id="del">' + T('del') + '</button></p><p role="status" id="pp-status"></p>';
-      document.getElementById('edit').onclick = function () { window.__editPassport = true; document.getElementById('host-lang').hidden = true; passportView(); };
+        '<p class="actions"><button type="button" class="btn primary" id="edit">' + T('edit') + '</button> <a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a> <button type="button" class="btn danger" id="del">' + T('del') + '</button></p><p role="status" id="pp-status"></p>';
+      document.getElementById('edit').onclick = function () { window.__editPassport = true; hideHostLang(); passportView(); };
       document.getElementById('del').onclick = function () { store.del('passport'); window.__editPassport = false; passportView(); sayStatus('pp-status', T('deleted')); };
       document.getElementById('sharing').onclick = function () {
         var next = sharing === 'trainers' ? 'ask' : 'trainers';
@@ -305,12 +310,12 @@
       focusH1();
       return;
     }
-    document.getElementById('host-lang').hidden = true;
+    hideHostLang();
     mountForm('passport', null, function (d, slot) {
       window.__editPassport = false;
       var a = d.answers;
       store.set('passport', { needs: a.want === 'yes' ? (a.needs || []) : [], other_need: a.other_need || '', sharing: a.sharing || 'ask', updated: new Date().toISOString() });
-      if (slot) slot.innerHTML = '<p class="actions"><a class="btn primary" href="#/jobs">' + T('nextJobs') + '</a></p>';
+      if (slot) slot.innerHTML = '<p class="actions"><a class="btn primary" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
     });
   }
 
@@ -322,7 +327,7 @@
     if (filterOn) list = list.filter(function (x) { return x.k === needs.length; });
     var h = '<h1 tabindex="-1">' + T('jobsTitle') + '</h1>';
     if (needs.length) h += '<div class="filter"><label><input type="checkbox" id="flt"' + (filterOn ? ' checked' : '') + '> ' + T('filterAll') + '</label><p class="muted">🔒 ' + T('filterNote') + '</p></div>';
-    else h += '<div class="notice"><p>' + T('noPassport') + '</p><p><a class="btn" href="#/passport">' + T('makePassport') + '</a></p></div>';
+    else h += '<div class="notice"><p>' + T('noPassport') + '</p><p><a class="btn" href="' + R('#/passport') + '">' + T('makePassport') + '</a></p></div>';
     h += '<p role="status" id="jobs-status" class="muted"></p>';
     if (!list.length) h += '<p>' + T('none') + '</p>';
     h += '<ul class="jobs">' + list.map(function (x) {
@@ -332,7 +337,7 @@
         '<p' + en + '>' + esc(j.description) + '</p>' +
         (needs.length ? '<p class="match">' + T('match', { k: x.k, n: needs.length }) + '</p>' : '') +
         '<h3>' + T('offers') + '</h3><ul class="needs small">' + j.offers.map(function (o) { return '<li' + (needs.indexOf(o) !== -1 ? ' class="hit"' : '') + '><span aria-hidden="true">' + needIcon(o) + '</span> ' + esc(needLabel(o)) + '</li>'; }).join('') + '</ul>' +
-        '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '">🔊 ' + T('listen') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></button> <a class="btn primary" href="#/apply/' + j.id + '">' + T('apply') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></a></p></article></li>';
+        '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '">🔊 ' + T('listen') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></button> <a class="btn primary" href="' + R('#/apply/' + j.id) + '">' + T('apply') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></a></p></article></li>';
     }).join('') + '</ul>';
     view.innerHTML = h;
     // The result count is announced on load and after filtering (status live region, filled after it exists).
@@ -358,14 +363,14 @@
       var a = d.answers;
       var job = { id: 'j' + Date.now().toString(36), title: a.title, org: a.org, location: a.location, mode: a.mode, offers: a.offers || [], description: a.description, contact: a.contact, datePosted: new Date().toISOString().slice(0, 10) };
       store.set('jobs', [job].concat(store.get('jobs', [])));
-      if (slot) slot.innerHTML = '<p class="actions"><a class="btn primary" href="#/jobs">' + T('seeJobs') + '</a></p>' +
+      if (slot) slot.innerHTML = '<p class="actions"><a class="btn primary" href="' + R('#/jobs') + '">' + T('seeJobs') + '</a></p>' +
         '<details><summary>' + T('jsonTitle') + '</summary><pre tabindex="0"><code>' + esc(JSON.stringify(jobPostingLd(job), null, 2)) + '</code></pre></details>';
     });
   }
 
   function apply(id) {
     var j = jobs().filter(function (x) { return x.id === id; })[0];
-    if (!j) { view.innerHTML = '<h1 tabindex="-1">' + T('notFound') + '</h1><p><a href="#/jobs">' + T('back') + '</a></p>'; focusH1(); return; }
+    if (!j) { view.innerHTML = '<h1 tabindex="-1">' + T('notFound') + '</h1><p><a href="' + R('#/jobs') + '">' + T('back') + '</a></p>'; focusH1(); return; }
     var el = mountForm('apply', id, function (d, slot) {
       var a = d.answers;
       var packet = { job: j.title, employer: j.org, sample: !!j.sample, name: a.name, phone: a.phone, why: a.why, experience: a.experience, interview: a.interview || [] };
@@ -374,7 +379,7 @@
       var apps = store.get('applications', []); apps.unshift({ at: new Date().toISOString(), packet: packet }); store.set('applications', apps);
       if (slot) slot.innerHTML = '<h2>' + T('receives') + '</h2><pre tabindex="0"><code>' + esc(JSON.stringify(packet, null, 2)) + '</code></pre>' +
         (packet.supportThatHelps ? '' : '<p class="muted">' + T('notShared') + '</p>') +
-        '<p><a class="btn" href="#/jobs">' + T('back') + '</a></p>';
+        '<p><a class="btn" href="' + R('#/jobs') + '">' + T('back') + '</a></p>';
     });
     var banner = document.createElement('p'); banner.className = 'muted';
     var en = j.sample && lang() !== 'en' ? ' lang="en"' : ''; // sample jobs are written in English
@@ -413,6 +418,16 @@
     else home();
     window.scrollTo(0, 0);
   }
+
+  /* ---- shared views for other hosts (the Savanna journey pages) ---- */
+  var VIEWS = { signup: signup, profile: profileView, takeover: takeoverView, passport: passportView, jobs: jobsView,
+    employer: employer, apply: apply, settings: settingsView };
+  window.SavannaDemoHost = {
+    T: T, lang: lang, esc: esc, jobs: jobs, statusPanel: statusPanel,
+    setLinks: function (fn) { linkFor = fn; },
+    render: function (name, container, arg) { view = container; window.__editPassport = false; VIEWS[name](arg); }
+  };
+  if (!SHOWROOM) return;
 
   function syncHostLang() { var b = document.getElementById('host-lang'); b.textContent = lang() === 'am' ? 'English' : 'አማርኛ'; b.setAttribute('lang', lang() === 'am' ? 'en' : 'am'); }
   // Preferences can change from any component (language switch, Settings): keep the host page in step.

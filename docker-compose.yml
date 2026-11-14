@@ -1,0 +1,24 @@
+# Savanna Accessible Onboarding Module: run everything locally with one command.
+#
+#   docker compose up            then open http://localhost:8080
+#
+# Serves the static files in savanna-onboarding/ with the free official nginx image. No build step, no database,
+# no accounts, no paid services. Pages:
+#   http://localhost:8080/                 Savanna learner journey (the module inside Savanna's starter pages)
+#   http://localhost:8080/test-host/       test host page (any site: script tags + mount/unmount)
+#   http://localhost:8080/showroom.html    developer and test page
+# Use another port with:  PORT=9000 docker compose up
+services:
+  savanna-onboarding:
+    image: nginx:1.27-alpine
+    ports:
+      - "${PORT:-8080}:80"
+    volumes:
+      - ./savanna-onboarding:/usr/share/nginx/html:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped

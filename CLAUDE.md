@@ -199,9 +199,10 @@ Verify a clean setup works.
 
 ## 10. Deployment
 
+- **Since Phase 8 the site root (`/`) is the learner journey inside the Savanna starter pages**; the developer and test page is `/showroom.html` and the test host page is `/test-host/`. Local equivalent: `docker compose up` → http://localhost:8080.
 - **Live demo: https://savanna-accessible-onboarding.vercel.app** (Vercel project `savanna-accessible-onboarding`, connected to this GitHub repo; each push to `main` deploys). Fixed by the team on 13 Nov: Root Directory `savanna-onboarding`, so only the module folder is published (CLAUDE.md and the tests are not). Checked 14 Nov: it served commit `45bac8a` (module 0.4.0).
 - The duplicate project `savanna-accessible-onboarding-7fbn` is being deleted by the team. The old `dimts-track1` site (old "Dimts" version) stays as it is for now.
-- Settings: Framework Preset "Other", no build command, output directory `.`. `savanna-onboarding/.vercelignore` keeps tests and tools out of the deploy. Revisit when Phase 8 adds a build step. Ask the user before renaming a Vercel project or changing its domain.
+- Settings: Framework Preset "Other", no build command, output directory `.`. `savanna-onboarding/.vercelignore` keeps tests and tools out of the deploy. `vendor/` (Savanna's unchanged starter files) is deployed, because the journey pages need it. Revisit when Phase 8 adds a build step. Ask the user before renaming a Vercel project or changing its domain.
 - Users may see a cached old version; remind the user to refresh after deploys.
 
 ## 11. Official deliverables and judging (digitalbridge.et, recorded 13 Nov)
@@ -279,3 +280,7 @@ speech adapter with Addis AI as an optional future engine; manual testing on the
 The starter kit **is** https://github.com/alx-africa/Savanna-static-pages, the same repo as our reference clone
 `../Savanna-static-pages` (commit `9e83ac7`, unchanged at 11:30 on 14 Nov). Phase 8 is not blocked. At the start of Phase 8: pull it again, then
 mount the module inside those pages from our repo (or a copy). ALX's files are never changed.
+
+**Done in Phase 8 (14 Nov):** pulled again (still `9e83ac7`); the files our pages need are copied unchanged into
+`savanna-onboarding/vendor/savanna-static-pages/` by `tools/vendor-savanna.cjs` (re-run it after pulling, if ALX
+updates the starter). Adobe Typekit fonts are not copied (licensed to ALX's domains).

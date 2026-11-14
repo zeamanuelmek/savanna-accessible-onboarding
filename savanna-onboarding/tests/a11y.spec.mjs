@@ -9,7 +9,26 @@ import { freshStart, go, next, signupTo, axe, summarise } from './helpers.mjs';
 
 const fakeVoice = (p, consent) => p.evaluate(c => { window.SavannaOnboarding.setSpeech({ input: { supported: () => true, start: (l, h) => { setTimeout(() => { h.result(['Abebe Kebede', 'Abebe Kebedde']); h.end(); }, 10); return { stop() {}, abort() {} }; } } }); if (c) localStorage.setItem('savanna-onboarding.voiceConsent', 'true'); }, consent);
 
+// Savanna journey pages (Phase 8): Savanna's own frame around the module.
+const at = (p, path) => p.goto(path).then(() => p.waitForFunction(() => !!window.SavannaOnboarding));
+const learner = p => p.evaluate(() => {
+  localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: 'kebele', assurance_level: 'self_declared', registered_by: null }));
+  localStorage.setItem('savanna-onboarding.passport', JSON.stringify({ needs: ['remote', 'captions'], sharing: 'ask' }));
+  localStorage.setItem('savanna-demo.session', JSON.stringify({ at: 'x' }));
+});
+
 const screens = {
+  'savanna: home': async p => at(p, '/index.html'),
+  'savanna: sign-up welcome': async p => at(p, '/signup.html'),
+  'savanna: sign-up question with error': async p => { await at(p, '/signup.html'); await p.locator('.dm-opt:has(input[value=read_type])').click(); await next(p); await next(p); },
+  'savanna: dashboard': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/dashboard.html'); },
+  'savanna: menu open': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/dashboard.html'); if (await p.locator('.sj-menu').getAttribute('aria-expanded') === 'false') await p.locator('.sj-menu').click(); },
+  'savanna: log-in': async p => at(p, '/login.html'),
+  'savanna: log-in code with error': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/login.html'); await p.fill('#sj-phone', '0911234567'); await p.locator('#sj-login button[type=submit]').click(); await p.fill('#sj-code', '1'); await p.locator('#sj-login button[type=submit]').click(); await p.locator('.sj-errors').waitFor(); },
+  'savanna: Support Passport card': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/passport.html'); },
+  'savanna: jobs': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/jobs.html'); },
+  'savanna: employer form': async p => at(p, '/employer.html'),
+  'test host: form mounted': async p => { await at(p, '/test-host/'); await p.locator('#mount').click(); await p.locator('#slot .dm-q').waitFor(); },
   'home': async p => go(p, '#/'),
   'signup: welcome': async p => go(p, '#/signup'),
   'signup: welcome error': async p => { await go(p, '#/signup'); await next(p); },

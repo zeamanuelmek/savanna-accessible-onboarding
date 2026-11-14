@@ -1,0 +1,96 @@
+<!doctype html>
+<!-- TEST HOST PAGE: proves the module works on any site, outside the demo and outside Savanna.
+     It uses ONLY what a developer gets: two script tags, SavannaOnboarding.mount() / unmount(), and the events.
+     No app.js, no Savanna CSS, no build step. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test host page · Savanna Accessible Onboarding Module</title>
+  <style>
+    /* This host's own look: deliberately different from Savanna, to show the module keeps its own styles. */
+    body { margin: 0; font: 16px/1.5 Georgia, "Times New Roman", serif; color: #1b1b1b; background: #fbfaf7; }
+    header, main, footer { max-width: 52rem; margin: 0 auto; padding: 1rem; }
+    header { border-bottom: 3px solid #1b1b1b; }
+    h1 { font-size: 1.6rem; margin: .25rem 0; }
+    h2 { font-size: 1.25rem; margin-top: 1.5rem; }
+    a { color: #00406b; }
+    :focus-visible { outline: 3px solid #00406b; outline-offset: 2px; }
+    fieldset { border: 1px solid #767676; padding: .75rem 1rem; }
+    legend { font-weight: 700; padding: 0 .25rem; }
+    .row { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; }
+    .row label { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; }
+    .row input { width: 1.25rem; height: 1.25rem; }
+    button { font: inherit; min-height: 44px; padding: .4rem 1rem; border: 2px solid #1b1b1b; background: #fff; color: #1b1b1b; border-radius: 4px; cursor: pointer; }
+    button.go { background: #1b1b1b; color: #fff; }
+    #slot { margin-top: 1rem; padding: 1rem; border: 2px dashed #767676; min-height: 4rem; background: #fff; }
+    pre { background: #1b1b1b; color: #fff; padding: 1rem; overflow: auto; font-size: .85rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .note { background: #fff6d6; border-left: 6px solid #8a6d00; padding: .5rem .75rem; }
+  </style>
+  <script src="../savanna-onboarding.js" defer></script>
+  <script src="../forms.js" defer></script>
+</head>
+<body>
+  <header>
+    <p><a href="../index.html">Savanna learner journey</a> · <a href="../showroom.html">Developer and test page</a></p>
+    <h1>Test host page</h1>
+    <p>An ordinary web page (not Savanna) that adds the module with two script tags and <code>SavannaOnboarding.mount()</code>.</p>
+  </header>
+  <main id="main">
+    <p class="note">For developers and testers. Everything stays in this browser. The page shows exactly what the module hands to the host.</p>
+    <form id="controls" onsubmit="return false">
+      <fieldset>
+        <legend>Which journey?</legend>
+        <div class="row">
+          <label><input type="radio" name="form" value="signup" checked> Sign-up</label>
+          <label><input type="radio" name="form" value="passport"> Support Passport</label>
+          <label><input type="radio" name="form" value="profile"> Profile update</label>
+          <label><input type="radio" name="form" value="apply"> Job application</label>
+          <label><input type="radio" name="form" value="employer"> Employer form</label>
+          <label><input type="radio" name="form" value="settings"> Settings panel</label>
+        </div>
+      </fieldset>
+      <p class="row">
+        <button type="button" class="go" id="mount">Mount</button>
+        <button type="button" id="unmount">Unmount</button>
+      </p>
+    </form>
+    <p role="status" id="status"></p>
+    <h2>The module</h2>
+    <div id="slot"></div>
+    <h2>Events the host received</h2>
+    <pre id="log" tabindex="0">(nothing yet)</pre>
+  </main>
+  <footer><p>Module version <span id="version"></span>. Source and install guide: README.md.</p></footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var D = window.SavannaOnboarding, handle = null, log = [];
+      document.getElementById('version').textContent = D.version;
+      function say(msg) { var s = document.getElementById('status'); s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); }
+      function record(name, detail) {
+        log.unshift({ event: name, at: new Date().toISOString().slice(11, 19), detail: detail });
+        document.getElementById('log').textContent = JSON.stringify(log, null, 2);
+      }
+      document.addEventListener('savanna-onboarding:complete', function (e) { record('savanna-onboarding:complete', e.detail); say('The host received the answers (see "Events the host received").'); });
+      document.addEventListener('savanna-onboarding:prefs', function (e) { record('savanna-onboarding:prefs', e.detail); });
+      document.getElementById('mount').onclick = function () {
+        var form = document.querySelector('input[name=form]:checked').value;
+        handle = D.mount('#slot', form === 'settings' ? { settings: true, focus: false } : {
+          form: form, instance: form === 'apply' ? 'test-job' : null, headingLevel: 2,
+          onComplete: function (detail, doneSlot) {
+            if (form === 'apply' && doneSlot) {
+              var support = D.supportForEmployer(detail.answers); // only with "share" for this application
+              doneSlot.innerHTML = '<p>Support the employer may see: ' + (support.length ? support.map(function (n) { return n.label.en; }).join(', ') : 'none (not shared)') + '</p>';
+            }
+          }
+        });
+        say('Mounted: ' + form + '.');
+      };
+      document.getElementById('unmount').onclick = function () {
+        D.unmount('#slot'); handle = null;
+        say('Unmounted. The learner\'s draft stays saved on this device.');
+      };
+    });
+  </script>
+</body>
+</html>

@@ -1,13 +1,13 @@
 # For developers: add the Savanna Accessible Onboarding Module to a site
 
-This page used to sit inside the learner demo. It now lives in the docs so learners never see developer
-controls. A separate test host page that proves the module works outside the demo comes in Phase 8.
+The step-by-step install guide (under an hour) is in [`../README.md`](../README.md). This page is the reference.
+The test host page (`/test-host/`) proves the module works on any site using only what is described here.
 
 The module is a framework-free web component. It works inside Savanna (server-rendered pages, Bootstrap, React
 islands) and on any other site, such as a job board.
 
-> **Status:** Level 1 (script tag) only. There is no REST API yet. `SavannaOnboarding.mount()` / `unmount()` arrive
-> in Phase 8. Amharic text is an AI draft awaiting native-speaker review.
+> **Integration:** Level 1 (script tag) + Level 3 (schema.org `JobPosting`). There is no REST API and no endpoint.
+> Amharic text is an AI draft awaiting native-speaker review.
 
 ## 1. Install with a script tag
 
@@ -20,10 +20,30 @@ islands) and on any other site, such as a job board.
 
 - Keep the `assets/fonts/` folder next to `savanna-onboarding.js`. The script finds the fonts relative to its own
   address.
-- Built-in forms: `signup`, `profile`, `passport`, `employer`, `apply`.
+- Built-in forms: `signup`, `profile`, `takeover`, `passport`, `employer`, `apply`.
 - Add `lang="en"` or `lang="am"` to choose the starting language, and `welcome` to show the "how would you like to
   answer?" screen first.
 - Settings panel: `<savanna-onboarding-settings></savanna-onboarding-settings>`.
+- Host page with its own `<h1>`: add `heading-level="2"` so the question becomes an `<h2>` (all module headings move down).
+
+### 1a. Or mount it from JavaScript
+
+```js
+var handle = SavannaOnboarding.mount('#where', {
+  form: 'signup',            // or settings: true for the settings panel
+  lang: 'am',                // optional: otherwise the learner's saved language
+  instance: 'job-42',        // optional: a separate draft per instance
+  welcome: true,             // optional: "how would you like to answer?" first
+  headingLevel: 2,           // optional: when your page has its own <h1>
+  focus: true,               // optional: move focus to the question (default)
+  onComplete: function (detail, doneSlot) { /* save detail.answers; put your next steps into doneSlot */ }
+});
+handle.unmount();            // or SavannaOnboarding.unmount('#where')
+```
+
+- Mounting into the same element again replaces the form; it never adds a second one.
+- Unmounting stops any speech and listeners. The learner's draft stays saved on the device, so mounting again resumes it.
+- A wrong selector throws `[savanna-onboarding] mount: no element matches …`.
 
 ## 2. Listen for the result
 

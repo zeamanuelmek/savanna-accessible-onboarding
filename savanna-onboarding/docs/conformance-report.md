@@ -13,7 +13,7 @@
 | Standard | WCAG 2.2, Levels A and AA (55 success criteria; 4.1.1 Parsing is obsolete in WCAG 2.2) |
 | Report date | _to fill in_ |
 | Evaluated by | _to fill in (names / roles, including co-designers)_ |
-| Scope | Learner journeys: welcome, sign-up, Support Passport, jobs, job application, settings. Employer form. Test host page (Phase 8) |
+| Scope | The module (all six journeys and the settings panel) as used in: the Savanna learner journey pages (site root: home, sign-up, simulated log-in, dashboard, profile, Support Passport, takeover, jobs, apply, employer, settings), the test host page (`/test-host/`) and the developer page (`/showroom.html`). Our accessibility fixes to the Savanna page frame are in scope; Savanna's own unchanged stylesheets are not evaluated on their own |
 | Out of scope | The Savanna platform itself; third-party browser speech services |
 
 ### Result values
