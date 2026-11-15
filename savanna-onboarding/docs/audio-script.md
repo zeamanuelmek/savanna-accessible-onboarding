@@ -29,7 +29,7 @@
 - **Names stay as written:** AAAPD, Tomorrow is Better, RRS / UNHCR, Fayda, ALX, Google.
 - Read numbers as the learner will see them (for example "0911 234 567" digit by digit).
 
-**79 clips, about 11 minutes of audio in total.**
+**89 clips, about 12 minutes of audio in total.**
 
 ## Start
 
@@ -134,6 +134,21 @@
 | 77 | `am/voice-check.mp3` | <span lang="am">ያረጋግጡት፤ ካስፈለገም ያስተካክሉት። «ይህን መልስ ተጠቀም»ን እስኪመርጡ ድረስ ምንም አይቀመጥም።</span> | 14 s |  |
 | 78 | `am/voice-used.mp3` | <span lang="am">ከድምፅዎ መልስ ተጨምሯል። ያረጋግጡት፤ ከዚያ «ቀጥል»ን ይምረጡ።</span> | 9 s |  |
 | 79 | `am/saved-for-later.mp3` | <span lang="am">መልሶችዎ ተቀምጠዋል። ምንም አልጠፋም። ለመቀጠል ይህን ሊንክ በዚህ ስልክ ይክፈቱ፦</span> | 12 s |  |
+
+## Digits (ID number read back, on the phone only)
+
+| # | File | Exact Amharic text | About | Note |
+|---|---|---|---|---|
+| 80 | `am/digit-0.mp3` | <span lang="am">ዜሮ</span> | 2 s |  |
+| 81 | `am/digit-1.mp3` | <span lang="am">አንድ</span> | 2 s |  |
+| 82 | `am/digit-2.mp3` | <span lang="am">ሁለት</span> | 2 s |  |
+| 83 | `am/digit-3.mp3` | <span lang="am">ሶስት</span> | 2 s |  |
+| 84 | `am/digit-4.mp3` | <span lang="am">አራት</span> | 2 s |  |
+| 85 | `am/digit-5.mp3` | <span lang="am">አምስት</span> | 2 s |  |
+| 86 | `am/digit-6.mp3` | <span lang="am">ስድስት</span> | 2 s |  |
+| 87 | `am/digit-7.mp3` | <span lang="am">ሰባት</span> | 2 s |  |
+| 88 | `am/digit-8.mp3` | <span lang="am">ስምንት</span> | 2 s |  |
+| 89 | `am/digit-9.mp3` | <span lang="am">ዘጠኝ</span> | 2 s |  |
 
 ## Not in this list (later, if time allows)
 

@@ -37,6 +37,8 @@ const screens = {
   'signup: text question with error': async p => { await signupTo(p, 'name'); await next(p); },
   'add your ID: ID choice': async p => identityTo(p, 'id_route'),
   'add your ID: ID number': async p => identityTo(p, 'id_number'),
+  'add your ID: read-back note open': async p => { await identityTo(p, 'id_number'); await p.fill('[data-ref=input]', '12'); await p.locator('[data-act=readback-id]').click(); },
+  'add your ID: read all, ID question open': async p => { await identityTo(p, 'id_number'); await p.fill('[data-ref=input]', '12'); await next(p); await p.locator('[data-act=readall]').click(); },
   'signup: Ethiopian date': async p => signupTo(p, 'dob'),
   'signup: date error': async p => { await signupTo(p, 'dob'); await p.selectOption('[data-ref=input]', '30'); await p.selectOption('[data-ref=m]', '13'); await p.selectOption('[data-ref=y]', '2017'); await next(p); }, // 30 Pagume does not exist
   'signup: date typed, with voice (speak)': async p => { await signupTo(p, 'dob', 'speak'); },

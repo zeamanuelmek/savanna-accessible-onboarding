@@ -1590,3 +1590,35 @@ errors 401 (key), 402 (balance), 429 (busy). **Afaan Oromo is supported in both 
   tracked by git); journey/gate/keyboard/wcag/design 80 passed, 4 skipped; a11y 180 scans, 0 serious or critical.
 - **Not yet done: a real call to Addis AI** (needs the key; tests never call it). Local proxy without a key answers
   `not_configured`, other origins `origin`, GET 405 (checked).
+
+---
+
+## Five fixes (15 Nov evening, on `addis-ai`, not pushed)
+
+1. **Job cards:** at least 16px between the support pills and the buttons, and at least 8-10px between pill rows
+   (`journey/journey.css`, `app.css`). Checked at 1280px, 640px (200% zoom) and 320px (400%): no sideways scrolling.
+2. **Reading order:** recorded clip → Addis AI (through the proxy) → the phone's own voice. "Amharic voice is not
+   installed" is gone; only when every source fails: "Reading aloud isn't available right now. Everything is written
+   on the screen." (three languages), once, and reading carries on with the next piece. Each piece has its own
+   language (`lang` per item), so mixed content is read part by part: English job text with the English voice,
+   Amharic or Oromo labels with a clip or Addis AI.
+3. **Automatic reading every time a page or step opens** (it read only once): the Savanna pages now decide what is
+   read when a page or step opens (summary, then a form's question and answers), also on revisits, Back
+   (`pageshow`), and in every language; the forms no longer read on their own there (`SavannaOnboarding.hostReads`).
+   Turning reading on reads the current page at once; off stops at once. The "Tap anywhere…" prompt is translated.
+   Identical online-voice requests in flight are shared (never paid twice).
+4. **"Listen to this job"** uses the shared player: the bottom bar, Escape, "Stop listening" with `aria-pressed`,
+   another job or leaving the page stops it; same order of sources.
+5. **Reading back** (shared player, three languages): after a voice answer, "I heard: …" (names in their own
+   script's language; phone numbers digit by digit in groups, for now), then "Choose Use this answer, Say it again,
+   or Type it instead"; "Spell it" (letters; Ethiopic syllable by syllable); "Read back my answer" on typed names and
+   phone numbers; the ID number only on request after "People near you may hear this", digit by digit, **only on the
+   phone** (recorded Amharic digits `digit-0…9`, Mekdes; otherwise a voice that runs on the phone; never the online
+   voice); "Read all my answers" on Check your answers (the ID number only if the learner confirms).
+- Tests: `tests/readback.spec.mjs` (new), 3 new tests in `summaries.spec.mjs` (revisit, Back, off/on), updated
+  messages in `readaloud.spec.mjs` and `addis.spec.mjs`, two new a11y screens. All affected files, one worker, both
+  sizes: summaries + readback 52 passed; readaloud/addis/voice/names/career 118 passed (after the clip list was put
+  back, see below); readaloud/journey/date-language/smoke/engine/offline 164 passed; identity/gate/keyboard/wcag/
+  design/security/known-issues 84 passed, 4 skipped; **a11y 180 + 28 scans, 0 serious or critical**.
+- Note: a command for the next fix (phone number format) was stopped by the team but had partly run; its changes
+  were undone before testing this batch.

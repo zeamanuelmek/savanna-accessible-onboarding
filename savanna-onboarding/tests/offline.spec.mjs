@@ -11,7 +11,7 @@ async function swReady(page) {
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   // wait until the install step has saved the core files
   await expect.poll(() => page.evaluate(async () => {
-    const c = await caches.open('savanna-onboarding-v7');
+    const c = await caches.open('savanna-onboarding-v8');
     return (await c.keys()).map(r => new URL(r.url).pathname);
   }), { timeout: 15000 }).toEqual(expect.arrayContaining(['/savanna-onboarding.js', '/forms.js', '/signup.html', '/assets/fonts/noto-sans-ethiopic-ethiopic.woff2', '/vendor/savanna-static-pages/assets/css/application_alx.css', '/assets/audio/manifest.json']));
 }
@@ -85,7 +85,7 @@ test('a recorded clip is kept for offline use the first time it is played', asyn
     await swReady(page);
     const first = await page.evaluate(async () => (await fetch('assets/audio/zz/test-clip.mp3', { headers: { Range: 'bytes=0-' } })).status);
     expect(first).toBe(200); // the whole file, even when a media player asks for a byte range
-    await expect.poll(() => page.evaluate(async () => !!(await (await caches.open('savanna-onboarding-v7')).match('/assets/audio/zz/test-clip.mp3')))).toBe(true);
+    await expect.poll(() => page.evaluate(async () => !!(await (await caches.open('savanna-onboarding-v8')).match('/assets/audio/zz/test-clip.mp3')))).toBe(true);
     await context.setOffline(true);
     const again = await page.evaluate(async () => { const r = await fetch('assets/audio/zz/test-clip.mp3'); return [r.status, (await r.text()).slice(0, 3)]; });
     expect(again).toEqual([200, 'ID3']);

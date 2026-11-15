@@ -317,3 +317,8 @@ html[data-dm-contrast=high] .sj-hear { background: #fff; color: #000; border-bot
 }
 html[data-dm-contrast=high] .sj-hbtn, html[data-dm-contrast=high] .sj-a11y-panel, html[data-dm-contrast=high] .sj-more-panel { border-color: #000; color: #000; }
 html[data-dm-contrast=high] .sj-more-panel a, html[data-dm-contrast=high] .sj-more-panel button, html[data-dm-contrast=high] .sj-a11y-all a { color: #000; }
+
+/* Job cards: clear space between the support pills and the buttons (at least 16px), and between pill rows */
+.sj .job .needs { row-gap: max(.6rem, 10px); column-gap: .5rem; margin: .35rem 0 max(1.25rem, 16px); }
+.sj .job .needs li { line-height: 1.35; }
+.sj .job .actions { margin: 0; }

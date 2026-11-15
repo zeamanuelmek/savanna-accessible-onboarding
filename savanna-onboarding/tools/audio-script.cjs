@@ -65,6 +65,8 @@ const ROOT = require('path').join(__dirname, '..').split('\\').join('/') + '/';
     ['voice-consent', S('voiceConsentTitle') + '። ' + S('voiceConsent')], ['voice-check', S('heardCheck')], ['voice-used', S('voiceUsed')],
     ['saved-for-later', S('savedTitle') + '። ' + S('savedText')]];
   common.forEach(([f, txt]) => add('On every screen when needed', f, txt));
+  // Digits, for reading an ID number back on the phone only (never through an online voice)
+  ['ዜሮ', 'አንድ', 'ሁለት', 'ሶስት', 'አራት', 'አምስት', 'ስድስት', 'ሰባት', 'ስምንት', 'ዘጠኝ'].forEach((w, d) => add('Digits (ID number read back, on the phone only)', 'digit-' + d, w));
 
   const total = rows.reduce((a, r) => a + r.s, 0);
   let md = `# Amharic audio script: sign-up, Add your ID and Support Passport

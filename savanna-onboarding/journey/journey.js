@@ -112,6 +112,7 @@
       modeTitle: 'እንዴት መመዝገብ ይፈልጋሉ?',
       modeHint: 'ይህ ቅጹን መሙላት የሚመርጡበትን መንገድ ብቻ ነው። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።',
       m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
+      hearPage: 'ይህን ገጽ ለመስማት የትም ቦታ ይንኩ ወይም ማንኛውንም ቁልፍ ይጫኑ',
       a11y: 'ተደራሽነት', autoRead: 'በራስ-ሰር ማንበብ', allSettings: 'ሁሉም የተደራሽነት ቅንብሮች', menuLabel: 'ምናሌ',
       listenQ: 'ጥያቄውን አዳምጥ', stopAudio: 'አቁም', cont: 'ቀጥል', errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
       acctTitle: 'ይመዝገቡ ወይም ይግቡ', acctChosen: 'የመረጡት፦ {mode}።', acctChange: 'የምመዘገብበትን መንገድ ቀይር',
@@ -212,6 +213,7 @@
       m_simple: 'Tarkaanfii salphaa fakkii fi barreeffama gurguddaa wajjin',
       listenQ: 'Gaaffii dhaggeeffadhu',
       stopAudio: 'Dhaabi',
+      hearPage: 'Fuula kana dhaggeeffachuuf bakka kamiyyuu tuqi ykn furtuu kamiyyuu cuqaasi',
       a11y: 'Dhaqqabummaa', autoRead: 'Ofumaan dubbisuu', allSettings: 'Qindaa\'ina dhaqqabummaa hunda', menuLabel: 'Baafata',
       cont: 'Itti fufi',
       errMode: 'Itti fufuuf karaa tokko filadhu.',
@@ -338,7 +340,7 @@
     document.body.classList.toggle('sj-noside', !side);
     var html =
       '<a class="sj-skip" href="#content">' + T('skip') + '</a>' +
-      (needPrompt && lang() === 'en' ? '<button type="button" class="sj-hear" id="sj-hear" lang="en">' + T('hearPage') + '</button>' : '') +
+      (needPrompt ? '<button type="button" class="sj-hear" id="sj-hear" lang="' + lang() + '">' + T('hearPage') + '</button>' : '') +
       // one header bar: Home on the left; Language, Accessibility and Log in (or the account menu) on the right
       '<header class="header d-flex align-items-center w-100 sj-header">' +
         '<div class="header-left align-items-center d-flex px-2">' +
@@ -370,7 +372,13 @@
     else if (key === 'contrast') D.setPrefs({ contrast: p.contrast === 'high' ? 'normal' : 'high' });
     else if (key === 'motion') D.setPrefs({ motion: p.motion === 'reduce' ? 'normal' : 'reduce' });
     // one switch for all reading: page summaries and questions
-    else if (key === 'reading') { var on = !D.readingOn(p); if (!on) D.stopSpeaking(); needPrompt = false; D.setPrefs({ autoRead: on ? 'on' : 'off', easy: on }); }
+    else if (key === 'reading') {
+      var on = !D.readingOn(p);
+      if (!on) D.stopSpeaking(); // off: silence at once
+      needPrompt = false; interacted = true; lastRead = '';
+      D.setPrefs({ autoRead: on ? 'on' : 'off', easy: on });
+      if (on) readCurrent(); // on: read this page now
+    }
     else if (D.languages.indexOf(key) !== -1 && key !== lang()) D.setPrefs({ lang: key });
   }
   /* The header scrolls with the page until it reaches the top, then stays (sticky); the toolbar above it scrolls
@@ -525,13 +533,27 @@
     el.hidden = !summaryText;
     if (force || summaryText !== lastRead) autoRead();
   }
-  function readSummary() { if (summaryText && lang() === 'en') { lastRead = summaryText; try { D.player.play([{ key: null, text: summaryText }], 'en', summaryOwner); } catch (e) {} } }
+  function currentForm() { return view ? view.querySelector('savanna-onboarding-form') : null; }
+  /* What a page or step says when it opens: its summary (English for now), then a form's question and answers (any
+     language: recorded clips first, then Addis AI, then the phone's voice). The page decides this, every time a page
+     or step opens (also on revisits and Back), so it is never read twice or only once. */
+  function readCurrent() {
+    var items = [], form = currentForm();
+    if (summaryText) items.push({ key: null, text: summaryText, lang: 'en' });
+    if (form && form.readItems && form.state && (form.state.mode === 'question' || form.state.mode === 'welcome')) {
+      try { items = items.concat(form.readItems()); } catch (e) {}
+    }
+    lastRead = summaryText;
+    if (!items.length) return;
+    try { D.player.play(items, lang(), form || summaryOwner); } catch (e) {}
+  }
+  function readSummary() { readCurrent(); }
   function showPrompt(on) {
     needPrompt = on;
     var b = document.getElementById('sj-hear');
-    if (on && !b && lang() === 'en') {
+    if (on && !b) {
       var skip = document.querySelector('.sj-skip');
-      if (skip) skip.insertAdjacentHTML('afterend', '<button type="button" class="sj-hear" id="sj-hear" lang="en">' + T('hearPage') + '</button>');
+      if (skip) skip.insertAdjacentHTML('afterend', '<button type="button" class="sj-hear" id="sj-hear" lang="' + lang() + '">' + T('hearPage') + '</button>');
     } else if (!on && b) {
       var had = document.activeElement === b;
       b.parentNode.removeChild(b);
@@ -539,16 +561,19 @@
     }
   }
   function autoRead() {
-    var pr = D.prefs();
-    if (!summaryText || pr.autoRead === 'off') { showPrompt(false); return; }
-    // a form in "read aloud" mode reads each question itself; the summary is then not read on top of it
-    if (pr.easy && view && view.querySelector('savanna-onboarding-form')) return;
-    if (pr.autoRead === 'on' && interacted) readSummary(); else showPrompt(true);
+    var pr = D.prefs(), on = D.readingOn(pr), something = !!summaryText || !!currentForm();
+    if (!something || (pr.autoRead === 'off' && !on)) { showPrompt(false); return; }
+    if (on && interacted) { showPrompt(false); readCurrent(); return; }
+    showPrompt(true); // first visit ("ask"), or the browser needs a tap on this page first
   }
   // the browser refused to play: ask for a tap or key press, then read
   document.addEventListener('savanna-onboarding:audioblocked', function () {
-    if (summaryText && D.prefs().autoRead !== 'off' && lang() === 'en') { lastRead = ''; showPrompt(true); }
+    if (D.prefs().autoRead !== 'off' && (summaryText || currentForm())) { lastRead = ''; showPrompt(true); }
   });
+  // Back and Forward can bring a page back from the browser's memory without running it again: read it again
+  window.addEventListener('pageshow', function (e) { if (e.persisted) { interacted = interacted || sessionInteracted(); lastRead = ''; autoRead(); } });
+  // leaving the page stops what it was reading
+  window.addEventListener('pagehide', function () { try { D.stopSpeaking(); } catch (e) {} });
   // The first tap or key press (not Shift, Control, Escape...) turns automatic reading on and reads this page.
   // Done after the browser has handled the press, so the page never moves under the learner's finger.
   // Tab is not "a key" here: keyboard and screen reader users move with it, and must be able to reach the prompt
@@ -560,20 +585,20 @@
     try { sessionStorage.setItem(INTERACTED, '1'); } catch (x) {}
     if (!needPrompt) return;
     var pr = D.prefs();
-    if (pr.autoRead === 'off' || lang() !== 'en') return;
+    if (pr.autoRead === 'off' && !D.readingOn(pr)) return;
     // one switch for all reading: page summaries and questions (written quietly, so the page does not redraw under the finger)
     if (pr.autoRead === 'ask') { try { var raw = D.store.get('prefs', {}) || {}; raw.autoRead = 'on'; raw.easy = true; D.store.set('prefs', raw); } catch (x) {} }
     var tg = document.querySelector('[data-tog="reading"]'); if (tg) tg.setAttribute('aria-pressed', 'true');
-    setTimeout(function () { showPrompt(false); readSummary(); }, 0);
+    setTimeout(function () { showPrompt(false); readCurrent(); }, 0);
   }
   document.addEventListener('click', firstInteraction, true);
   document.addEventListener('keydown', firstInteraction, true);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && D.player.state !== 'idle') D.stopSpeaking(); }); // Escape stops at once
-  // each new form step brings its own summary
+  // each new form step brings its own summary (and is read when reading is on)
+  D.hostReads = true; // these pages decide what is read when a step opens; the forms do not read on their own
   document.addEventListener('savanna-onboarding:step', function (e) {
     var d = e.detail || {};
-    if (!d.summary) { setSummary(''); return; }
-    setSummary([FORM_PRE[d.form] || '', d.summary, (d.mode === 'review' && FORM_POST[d.form]) || ''].join(' ').trim(), true);
+    setSummary(d.summary ? [FORM_PRE[d.form] || '', d.summary, (d.mode === 'review' && FORM_POST[d.form]) || ''].join(' ').trim() : '', true);
   });
 
   /* ---------- pages ---------- */
@@ -659,7 +684,7 @@
      The choice is saved as the learner's preference, so the sign-up form starts straight at its first question. */
   var MODES = ['read_type', 'listen', 'speak', 'simple'], MODE_ICONS = { read_type: '⌨️', listen: '🎧', speak: '🎤', simple: '🖼️' };
   var home = { step: new URLSearchParams(location.search).get('step') === 'account' ? 'account' : 'mode', mode: D.prefs().mode || '', error: '' };
-  var homeAudio = { audioIssue: function (code) { var st = document.getElementById('sj-mode-status'); if (st && code === 'noAudio') st.textContent = D.label({ en: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.', am: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', om: 'Kanaaf ammaaf waraabbiin hin jiru, bilbilli kun immoo afaan kanaaf sagalee hin qabu. Wanti hundi iskiriinii irratti barreeffameera.' }, lang()); } };
+  var homeAudio = { audioIssue: function (code) { var st = document.getElementById('sj-mode-status'); if (st && code === 'readFail') st.textContent = D.label({ en: 'Reading aloud isn\'t available right now. Everything is written on the screen.', am: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', om: 'Sagaleen dubbisuun amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.' }, lang()); } };
   function homePage() {
     D.styles(); // the module's option, button and error styles
     var right;

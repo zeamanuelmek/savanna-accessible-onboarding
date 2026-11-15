@@ -78,7 +78,17 @@
     "voice-consent": "voice-consent.mp3",
     "voice-check": "voice-check.mp3",
     "voice-used": "voice-used.mp3",
-    "saved-for-later": "saved-for-later.mp3"
+    "saved-for-later": "saved-for-later.mp3",
+    "digit-0": "digit-0.mp3",
+    "digit-1": "digit-1.mp3",
+    "digit-2": "digit-2.mp3",
+    "digit-3": "digit-3.mp3",
+    "digit-4": "digit-4.mp3",
+    "digit-5": "digit-5.mp3",
+    "digit-6": "digit-6.mp3",
+    "digit-7": "digit-7.mp3",
+    "digit-8": "digit-8.mp3",
+    "digit-9": "digit-9.mp3"
   },
   "bytes": {
     "am": {
@@ -160,7 +170,17 @@
       "voice-consent.mp3": 202232,
       "voice-check.mp3": 64566,
       "voice-used.mp3": 48371,
-      "saved-for-later.mp3": 56991
+      "saved-for-later.mp3": 56991,
+      "digit-0.mp3": 16501,
+      "digit-1.mp3": 16240,
+      "digit-2.mp3": 16762,
+      "digit-3.mp3": 16501,
+      "digit-4.mp3": 17024,
+      "digit-5.mp3": 17807,
+      "digit-6.mp3": 18330,
+      "digit-7.mp3": 17285,
+      "digit-8.mp3": 17807,
+      "digit-9.mp3": 17285
     }
   }
 }

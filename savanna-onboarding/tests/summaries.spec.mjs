@@ -184,3 +184,57 @@ test('English only for now: no summary and no prompt in Amharic', async ({ page 
   await expect(page.locator('#sj-hear')).toHaveCount(0);
   await expect(summary(page)).toBeHidden();
 });
+
+// ---- Fix 3 (15 Nov evening): automatic reading every time a page or step opens, not only once per page
+test('a page is read every time it opens, also when the learner comes back to it', async ({ page }) => {
+  await freshStart(page, { lang: 'en', prefs: { autoRead: 'on', easy: true } });
+  await interactedThisSession(page);
+  await browserSpeech(page);
+  await at(page, '/jobs.html');
+  await expect.poll(() => said(page)).toEqual([expect.stringContaining('Jobs. First a checkbox')]);
+  await at(page, '/settings.html');
+  await expect.poll(() => said(page)).toEqual([expect.stringContaining('Accessibility settings:')]);
+  await page.goBack(); await page.waitForFunction(() => !!window.SavannaOnboarding);
+  await expect.poll(() => said(page)).toContainEqual(expect.stringContaining('Jobs. First a checkbox')); // read again on return
+  await at(page, '/jobs.html'); // and again on a fresh visit
+  await expect.poll(() => said(page)).toEqual([expect.stringContaining('Jobs. First a checkbox')]);
+});
+
+test('every form step is read when it opens, also after Back', async ({ page }) => {
+  await freshStart(page, { lang: 'en', prefs: { autoRead: 'on', easy: true, mode: 'read_type' } });
+  await interactedThisSession(page);
+  await browserSpeech(page);
+  await at(page, '/signup.html');
+  await page.waitForSelector('.dm-q');
+  await expect.poll(() => said(page)).toContainEqual(expect.stringContaining('Step 1 of 5'));
+  expect(await said(page)).toContain('Who is filling in this form?'); // then the question and its answers
+  await pick(page, 'self'); await next(page);
+  await expect.poll(() => said(page)).toContainEqual(expect.stringContaining('Step 2 of 5'));
+  await page.locator('[data-act=back]').click();
+  await expect.poll(async () => (await said(page)).filter(t => t.includes('Step 1 of 5')).length).toBe(2); // Back: read again
+});
+
+test('turning automatic reading off stops the sound at once; turning it on again reads the current page at once', async ({ page }) => {
+  await freshStart(page, { lang: 'en', prefs: { autoRead: 'on', easy: true } });
+  await interactedThisSession(page);
+  await page.addInitScript(() => { // a slow voice, so it is still speaking when switched off
+    window.__said = []; window.__cancels = 0;
+    Object.defineProperty(window, 'SpeechSynthesisUtterance', { configurable: true, value: function (text) { this.text = text; } });
+    Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: {
+      speaking: false, getVoices: () => [], cancel() { window.__cancels++; clearTimeout(window.__t); }, pause() {}, resume() {},
+      speak(u) { window.__said.push(u.text); window.__t = setTimeout(() => u.onend && u.onend(), 5000); }
+    } });
+  });
+  await at(page, '/jobs.html');
+  await expect.poll(() => page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('playing');
+  const panel = await accessibilityPanel(page);
+  const reading = panel.locator('.sj-tog[data-tog=reading]');
+  await reading.click(); // off
+  expect(await page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('idle');
+  expect(await page.evaluate(() => window.__cancels)).toBeGreaterThan(0);
+  await expect(playBar(page)).toBeHidden();
+  await page.evaluate(() => { window.__said = []; });
+  await reading.click(); // on again
+  await expect.poll(() => said(page)).toEqual([expect.stringContaining('Jobs. First a checkbox')]);
+  await expect(reading).toHaveAttribute('aria-pressed', 'true');
+});

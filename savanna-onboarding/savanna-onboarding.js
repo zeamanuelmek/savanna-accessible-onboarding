@@ -100,6 +100,11 @@
       speak: 'Answer by voice', stop: 'Stop listening', listening: 'Microphone on. Listening… speak now, and press Stop listening when you have finished.',
       heard: 'I heard:', yes: 'Use this answer', again: 'Say it again', type: 'Type it instead',
       recStart: 'Recording. Speak now, then press Stop when you have finished.',
+      readFail: 'Reading aloud isn\'t available right now. Everything is written on the screen.',
+      heardChoose: 'Choose {yes}, {again}, or {type}.', yourAnswer: 'Your answer:', nothingTyped: 'Nothing is typed yet.',
+      spell: 'Spell it', readBack: 'Read back my answer', readBackId: 'Read back the number', idNote: 'People near you may hear this.',
+      readItAloud: 'Read it aloud', cancel: 'Cancel', readAll: 'Read all my answers',
+      readAllIdQ: 'Your ID number is in these answers. People near you may hear it.', readAllWith: 'Read with my ID number', readAllWithout: 'Read without it',
       voiceRemoteFailed: 'The speech service did not answer. Please try again, or type your answer.', voiceNoCredit: 'The speech service is not available right now. Please type your answer.',
       remoteVoiceOff: 'The online voice is not available right now. Everything is written on the screen.', heardSay: 'I heard: {text}. Choose {yes}, {again}, or {type}.',
       micAsk: 'Your browser may ask to use the microphone. Choose Allow.', micOn: 'Microphone on',
@@ -189,6 +194,11 @@
       speak: 'በድምፅ ይመልሱ', stop: 'ማዳመጥ አቁም', listening: 'ማይክሮፎኑ በርቷል። እያዳመጥኩ ነው… አሁን ይናገሩ፤ ሲጨርሱ «ማዳመጥ አቁም»ን ይጫኑ።',
       heard: 'የሰማሁት፦', yes: 'ይህን መልስ ተጠቀም', again: 'እንደገና ይናገሩ', type: 'በመጻፍ ይመልሱ',
       recStart: 'እየተቀዳ ነው። አሁን ይናገሩ፤ ሲጨርሱ «{stop}»ን ይጫኑ።',
+      readFail: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
+      heardChoose: '«{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።', yourAnswer: 'መልስዎ፦', nothingTyped: 'እስካሁን ምንም አልተጻፈም።',
+      spell: 'ፊደል በፊደል አንብብ', readBack: 'መልሴን አንብብልኝ', readBackId: 'ቁጥሩን አንብብልኝ', idNote: 'በአጠገብዎ ያሉ ሰዎች ሊሰሙት ይችላሉ።',
+      readItAloud: 'ጮክ ብለህ አንብበው', cancel: 'ተው', readAll: 'መልሶቼን ሁሉ አንብብልኝ',
+      readAllIdQ: 'የመታወቂያ ቁጥርዎ በእነዚህ መልሶች ውስጥ አለ። በአጠገብዎ ያሉ ሰዎች ሊሰሙት ይችላሉ።', readAllWith: 'ከመታወቂያ ቁጥሬ ጋር አንብብ', readAllWithout: 'ያለ እሱ አንብብ',
       voiceRemoteFailed: 'የንግግር አገልግሎቱ አልመለሰም። እባክዎ እንደገና ይሞክሩ፣ ወይም መልስዎን ይጻፉ።', voiceNoCredit: 'የንግግር አገልግሎቱ አሁን አይገኝም። እባክዎ መልስዎን ይጻፉ።',
       remoteVoiceOff: 'የኦንላይን ድምፁ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', heardSay: 'የሰማሁት፦ {text}። «{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።',
       micAsk: 'ብራውዘርዎ ማይክሮፎኑን ለመጠቀም ፈቃድ ሊጠይቅ ይችላል። «ፍቀድ»ን ይምረጡ።', micOn: 'ማይክሮፎኑ በርቷል',
@@ -284,6 +294,20 @@
       listening: 'Maayikiraafoonni banameera. Dhaggeeffachaa jira… amma dubbadhu, yoo xumurte "Dhaggeeffachuu dhaabi" tuqi.',
       heard: 'Kan ani dhage\'e:',
       recStart: 'Waraabamaa jira. Amma dubbadhu, yoo xumurte "{stop}" tuqi.',
+      readFail: 'Sagaleen dubbisuun amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.',
+      heardChoose: '"{yes}", "{again}" ykn "{type}" filadhu.',
+      yourAnswer: 'Deebii kee:',
+      nothingTyped: 'Ammaaf wanti barreeffame hin jiru.',
+      spell: 'Qubee qubeen dubbisi',
+      readBack: 'Deebii koo naaf dubbisi',
+      readBackId: 'Lakkoofsa naaf dubbisi',
+      idNote: 'Namoonni si bira jiran dhagahuu danda\'u.',
+      readItAloud: 'Sagaleen dubbisi',
+      cancel: 'Dhiisi',
+      readAll: 'Deebii koo hunda naaf dubbisi',
+      readAllIdQ: 'Lakkoofsi eenyummaa kee deebii kana keessa jira. Namoonni si bira jiran dhagahuu danda\'u.',
+      readAllWith: 'Lakkoofsa eenyummaa koo wajjin dubbisi',
+      readAllWithout: 'Isa malee dubbisi',
       voiceRemoteFailed: 'Tajaajilli dubbii deebii hin kennine. Maaloo irra deebi\'ii yaali, ykn deebii kee barreessi.',
       voiceNoCredit: 'Tajaajilli dubbii amma hin jiru. Maaloo deebii kee barreessi.',
       remoteVoiceOff: 'Sagaleen toora interneetii amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.',
@@ -548,7 +572,7 @@
   }
   // Plays a pre-recorded clip if one exists (preferred: works offline, no API), else browser speech.
   // Returns false when no voice for the language is available.
-  function speak(text, lang, audioUrl, done) {
+  function speak(text, lang, audioUrl, done, opts) {
     stopSpeaking();
     if (audioUrl) {
       try { currentAudio = new Audio(audioUrl); if (done) currentAudio.onended = done; var pr = currentAudio.play(); if (pr && pr.catch) pr.catch(function () {}); return true; } catch (e) {} // blocked sound never throws
@@ -556,8 +580,11 @@
     if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return false;
     var code = SPEECH_CODES[lang] ? lang : 'en';
     var voices = window.speechSynthesis.getVoices() || [];
-    var voice = voices.filter(function (v) { return (v.lang || '').toLowerCase().indexOf(code) === 0; })[0];
-    if (!voice && code !== 'en') return false; // never read Amharic or Oromo text with an English voice
+    var mine = voices.filter(function (v) { return (v.lang || '').toLowerCase().indexOf(code) === 0; });
+    // local: only a voice that runs on this phone (some browser voices are online services)
+    if (opts && opts.local) mine = mine.filter(function (v) { return v.localService; });
+    var voice = mine[0];
+    if (!voice && (code !== 'en' || (opts && opts.local))) return false; // never read Amharic or Oromo text with an English voice
     var u = new SpeechSynthesisUtterance(text);
     u.lang = SPEECH_CODES[code];
     if (voice) u.voice = voice;
@@ -666,8 +693,17 @@
     for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
     return REMOTE.url + '/tts?lang=' + lang + '&n=' + s.length + '&h=' + (h >>> 0).toString(36);
   }
+  var ttsPending = {}; // the same words asked twice at once: one request, never paid twice
   function remoteTts(text, lang) {
-    var key = ttsKey(text, lang), store = window.caches && window.isSecureContext !== false ? window.caches : null;
+    var key = ttsKey(text, lang);
+    if (ttsPending[key]) return ttsPending[key].then(function (b) { return URL.createObjectURL(b); });
+    var p = remoteTtsBlob(text, lang, key);
+    ttsPending[key] = p;
+    p.then(function () { delete ttsPending[key]; }, function () { delete ttsPending[key]; });
+    return p.then(function (b) { return URL.createObjectURL(b); });
+  }
+  function remoteTtsBlob(text, lang, key) {
+    var store = window.caches && window.isSecureContext !== false ? window.caches : null;
     var cached = store ? store.open(TTS_CACHE).then(function (c) { return c.match(key); }).catch(function () { return null; }) : Promise.resolve(null);
     return cached.then(function (hit) {
       if (hit) return hit.blob();
@@ -677,7 +713,7 @@
           if (store) store.open(TTS_CACHE).then(function (c) { return c.put(key, new Response(b, { headers: { 'Content-Type': 'audio/mpeg' } })); }).catch(function () {});
           return b;
         });
-    }).then(function (b) { return URL.createObjectURL(b); });
+    });
   }
   /** Speech-to-text of one recording. */
   function remoteStt(blob, lang) {
@@ -733,7 +769,7 @@
     start: function (lang, h) { return (remoteOn(lang) && remoteInput.supported() ? remoteInput : browserInput).start(lang, h); }
   };
   var speech = { input: autoInput, output: {
-    speak: function (text, lang, audioUrl, done) { return speak(text, lang, audioUrl, done); },
+    speak: function (text, lang, audioUrl, done, opts) { return speak(text, lang, audioUrl, done, opts); },
     stop: function () { stopSpeaking(); },
     pause: function () { try { window.speechSynthesis.pause(); } catch (e) {} },
     resume: function () { try { window.speechSynthesis.resume(); } catch (e) {} }
@@ -902,7 +938,7 @@
       this.stop(true);
       var self = this;
       this.items = items; this.i = 0; this.lang = lang; this.owner = owner || null; this.state = 'playing';
-      this._pending = false; this._remoteReported = false;
+      this._pending = false; this._failReported = false;
       this.last = { items: items, lang: lang, owner: owner || null };
       this.emit();
       loadAudioManifest().then(function () { if (self.items === items && self.state === 'playing') self.next(); });
@@ -912,7 +948,8 @@
       if (this.state !== 'playing') return;
       this.audio = null;
       if (this.i >= items.length) { this.state = 'idle'; this.emit(); return; }
-      var it = items[this.i++], url = it.url || (it.key ? clipUrl(it.key, this.lang) : null);
+      // each piece in its own language (mixed content: Amharic labels with English job text)
+      var it = items[this.i++], url = it.url || (it.key ? clipUrl(it.key, it.lang || this.lang) : null);
       var done = function () { if (self.items === items) self.next(); };
       if (!url) return this.voice(it, done);
       // a downloaded copy (Settings) plays even where no service worker is installed
@@ -939,24 +976,28 @@
         if (pr && pr.catch) pr.catch(function (e) { if (e && e.name === 'NotAllowedError') { if (self.audio === a) audioBlocked(); } else fail(); });
       } catch (e) { fail(); }
     },
+    /* No recorded clip: Addis AI for Amharic and Afaan Oromo (through the host's proxy), then the phone's own voice.
+       Only when every source fails is a plain message shown (once), and reading goes on with the next piece.
+       local pieces (an ID number) never leave the phone: no online voice, only a voice that runs on the phone. */
     voice: function (it, done) {
       if (this.state !== 'playing') return;
-      var self = this, items = this.items;
-      // no recorded clip: the online voice for Amharic and Afaan Oromo (through the host's proxy), once per piece
-      if (!it._remote && it.text && remoteOn(this.lang)) {
+      var self = this, items = this.items, lang = it.lang || this.lang;
+      if (!it._remote && !it.local && it.text && remoteOn(lang)) {
         it._remote = true;
-        remoteTts(it.text, this.lang).then(function (url) {
+        remoteTts(it.text, lang).then(function (url) {
           if (self.items !== items || self.state === 'idle') { URL.revokeObjectURL(url); return; }
           it.url = url; it._checked = true; self.i--; // play it like a recording (Pause, Stop, Escape all work)
           if (self.state === 'playing') self.next(); else self._pending = true;
-        }, function (code) {
+        }, function () {
           if (self.items !== items || self.state === 'idle') return;
-          if (!self._remoteReported) { self._remoteReported = true; self.report('remoteVoiceOff'); }
-          self.voice(it, done); // the phone's voice, or the "everything is on the screen" message
+          self.voice(it, done); // the phone's own voice next
         });
         return;
       }
-      if (!speech.output.speak(it.text, this.lang, null, done)) { this.report('noAudio'); this.state = 'idle'; this.items = []; this.emit(); }
+      if (!it.text || !speech.output.speak(it.text, lang, null, done, it.local ? { local: true } : null)) {
+        if (!this._failReported) { this._failReported = true; this.report('readFail'); }
+        setTimeout(done, 0); // the other pieces may still be readable (another language, a recording)
+      }
     },
     report: function (code) { if (this.owner && this.owner.audioIssue) this.owner.audioIssue(code); },
     pause: function () {
@@ -982,6 +1023,46 @@
     },
     replay: function () { if (this.last) this.play(this.last.items, this.last.lang, this.last.owner); }
   };
+  /* ---------- reading back what the learner gave, so it can be checked by ear ----------
+     Phone numbers digit by digit in groups ("zero nine one one, two three four, five six seven"); names as they are,
+     and spelled letter by letter (Ethiopic: syllable by syllable) on request; each part in its own script's
+     language. ID numbers only on request, digit by digit, never through an online voice. */
+  var DIGIT_WORDS = {
+    en: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
+    am: ['ዜሮ', 'አንድ', 'ሁለት', 'ሶስት', 'አራት', 'አምስት', 'ስድስት', 'ሰባት', 'ስምንት', 'ዘጠኝ'],
+    om: ['zeeroo', 'tokko', 'lama', 'sadii', 'afur', 'shan', 'jaha', 'torba', 'saddeet', 'sagal']
+  };
+  function phoneGroups(v) {
+    var d = String(v || '').replace(/\D/g, '');
+    if (d.length === 10) return [d.slice(0, 4), d.slice(4, 7), d.slice(7)];
+    if (d.length === 12 && d.indexOf('251') === 0) return ['251', d.slice(3, 6), d.slice(6, 9), d.slice(9)];
+    return d.match(/.{1,3}/g) || [];
+  }
+  function spokenPhone(v, lang) {
+    var W = DIGIT_WORDS[lang] || DIGIT_WORDS.en;
+    return phoneGroups(v).map(function (g) { return g.split('').map(function (c) { return W[+c]; }).join(' '); }).join(', ');
+  }
+  /** The language to read a piece of text in: Ethiopic letters are read as Amharic, other letters in the page's
+   *  language when it is Afaan Oromo (Latin script), otherwise English. */
+  function scriptLang(text, lang) { return /[\u1200-\u137F]/.test(text) ? 'am' : (lang === 'om' ? 'om' : 'en'); }
+  function spelled(text) {
+    return Array.from(String(text || '')).filter(function (c) { return /\S/.test(c); }).map(function (c) { return /[a-z]/i.test(c) ? c.toUpperCase() : c; }).join(', ');
+  }
+  function isNameField(f) { return !!f.voiceWarning || (f.type === 'text' && /name/.test(f.id)); }
+  /** Pieces to read back an answer. prefix: 'heard' or 'yourAnswer'. */
+  function readBackItems(f, value, lang, prefix) {
+    var items = [{ key: null, text: t(prefix, lang), lang: lang }];
+    if (f.type === 'tel') items.push({ key: null, text: spokenPhone(value, lang), lang: lang });
+    else items.push({ key: null, text: String(value), lang: scriptLang(String(value), lang) });
+    return items;
+  }
+  /** An ID number, digit by digit, on this phone only (recorded Amharic digits, or the phone's own voice). */
+  function localDigitItems(value, lang) {
+    var W = DIGIT_WORDS[lang] || DIGIT_WORDS.en;
+    return Array.from(String(value || '')).filter(function (c) { return /[0-9a-z]/i.test(c); }).map(function (c) {
+      return /\d/.test(c) ? { key: 'digit-' + c, text: W[+c], lang: lang, local: true } : { key: null, text: c.toUpperCase(), lang: 'en', local: true };
+    });
+  }
   var AM_DIGITS = { 'ዜሮ': '0', 'አንድ': '1', 'ሁለት': '2', 'ሶስት': '3', 'ሦስት': '3', 'አራት': '4', 'አምስት': '5', 'ስድስት': '6', 'ሰባት': '7', 'ስምንት': '8', 'ዘጠኝ': '9' };
   var EN_DIGITS = { zero: '0', oh: '0', one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9' };
   function spokenDigits(s) {
@@ -1517,7 +1598,10 @@
       h += View.input(vm, f, v, group ? '' : describedBy);
       if (group) h += '</fieldset>';
       h += '<div class="dm-tools">' + View.listenTools(vm);
-      var canSpeak = voiceAllowed(f, vm) && speech.input.supported();
+      // read back what was typed (names and phone numbers); the ID number only on request, after a short note
+      if (isNameField(f) || f.type === 'tel') h += '<button type="button" class="dm-btn" data-act="readback">' + pic(vm.pictures, '🔁') + t('readBack', lang) + '</button>';
+      if (f.sensitive && f.type === 'text') h += '<button type="button" class="dm-btn" data-act="readback-id" aria-expanded="false" aria-controls="' + View.id(vm, 'idnote') + '">' + t('readBackId', lang) + '</button>';
+      var canSpeak = voiceAllowed(f, vm) && speech.input.supported(lang);
       if (canSpeak) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">' + pic(vm.pictures, '🎤') + t('speak', lang) + '</button>';
       h += '</div>';
       // A learner who chose "speak my answers" is told plainly when this browser (e.g. an app's WebView) cannot listen.
@@ -1529,6 +1613,8 @@
           '<div id="' + pid + '" class="dm-note" data-ref="askhelp"' + (vm.askHelperOpen ? '' : ' hidden') + '><p>' + esc(L(f.askHelper.text, lang)) + '</p>' +
           '<button type="button" class="dm-btn dm-small" data-act="helper-done">' + t('askHelperDone', lang) + '</button></div>';
       }
+      if (f.sensitive && f.type === 'text') h += '<div id="' + View.id(vm, 'idnote') + '" class="dm-note" data-ref="idnote" hidden><p>' + t('idNote', lang) + '</p>' +
+        '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="readback-id-go">' + t('readItAloud', lang) + '</button><button type="button" class="dm-btn" data-act="readback-id-cancel">' + t('cancel', lang) + '</button></div></div>';
       h += '<div id="' + View.id(vm, 'heard') + '" data-ref="heard"></div>';
       h += View.status();
       h += '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button>';
@@ -1608,7 +1694,9 @@
       });
       h += '</dl>';
       if (cfg.reviewNote) h += '<div class="dm-note">' + esc(L(cfg.reviewNote, lang)) + '</div>';
-      if (vm.easy) h += '<div class="dm-tools">' + View.listenTools(vm) + '</div>';
+      h += '<div class="dm-tools">' + (vm.easy ? View.listenTools(vm) : '') + '<button type="button" class="dm-btn" data-act="readall" aria-expanded="false" aria-controls="' + View.id(vm, 'readallq') + '">' + pic(vm.pictures, '🔁') + t('readAll', lang) + '</button></div>' +
+        '<div id="' + View.id(vm, 'readallq') + '" class="dm-note" data-ref="readallq" hidden><p>' + t('readAllIdQ', lang) + '</p><div class="dm-actions">' +
+        '<button type="button" class="dm-btn" data-act="readall-with">' + t('readAllWith', lang) + '</button><button type="button" class="dm-btn dm-primary" data-act="readall-without">' + t('readAllWithout', lang) + '</button></div></div>';
       return h + View.status() + '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + esc(L(cfg.submitLabel, lang) || t('submit', lang)) + '</button></div></form>';
     },
 
@@ -1637,6 +1725,7 @@
         h += '<p>' + t('heardMatch', lang) + ' <strong>' + esc(v.shown) + '</strong></p>';
       } else {
         if (f.voiceWarning) h += '<p class="dm-heard-warn"><strong>' + esc(L(f.voiceWarning, lang)) + '</strong></p>';
+        if (isNameField(f)) h += '<p><button type="button" class="dm-btn dm-small" data-act="spell">' + t('spell', lang) + '</button></p>';
         h += '<p class="dm-hint">' + t('heardCheck', lang) + '</p><label for="' + eid + '" class="dm-heard-label">' + t('heardEdit', lang) + '</label>' +
           (f.type === 'textarea' ? '<textarea id="' + eid + '" data-ref="heard-edit" class="dm-input">' + esc(v.value) + '</textarea>'
             : '<input id="' + eid + '" data-ref="heard-edit" class="dm-input" type="' + (f.type === 'tel' ? 'tel' : 'text') + '"' + (f.type === 'tel' ? ' inputmode="tel"' : '') + ' value="' + esc(v.value) + '">');
@@ -1780,7 +1869,8 @@
     this._played = false;
     this.updatePlayer();
     // Read aloud reads each new question once; Pause and Stop appear at once, and Escape stops it (WCAG 1.4.2).
-    if ((m === 'question' || m === 'welcome') && this.easy && this._interacted) this.readQuestion();
+    // (a host page that reads each step itself, like the Savanna pages, sets SavannaOnboarding.hostReads = true)
+    if ((m === 'question' || m === 'welcome') && this.easy && this._interacted && !API.hostReads) this.readQuestion();
     // A new screen: tell the host, with its summary, so it can put it first in the page and read it (see summary())
     var key = m + ':' + this.state.step + ':' + this.lang;
     if (key !== this._stepKey) { this._stepKey = key; emit(this, 'step', { form: this.getAttribute('form'), mode: m, step: this.state.step, summary: this.summary() }, true); }
@@ -1933,6 +2023,25 @@
       return;
     }
     if (act === 'listen') { this.readQuestion(); return; }
+    if (act === 'readback') { this.readBack(); return; }
+    if (act === 'spell') { var hv = this.voice, he = this.ref('heard-edit'); var sv = he ? he.value : (hv && hv.value) || ''; Player.play([{ key: null, text: spelled(sv), lang: scriptLang(sv, this.lang) }], this.lang, this); return; }
+    if (act === 'readback-id' || act === 'readback-id-cancel') {
+      var nt = this.ref('idnote'), ib = this.querySelector('[data-act=readback-id]'), show = act === 'readback-id' && nt.hidden;
+      nt.hidden = !show; ib.setAttribute('aria-expanded', String(show));
+      if (show) { var go = nt.querySelector('[data-act=readback-id-go]'); if (go) go.focus(); } else ib.focus();
+      return;
+    }
+    if (act === 'readback-id-go') {
+      var iv = this.ref('input') ? this.ref('input').value.trim() : '';
+      Player.play(iv ? [{ key: null, text: t('yourAnswer', this.lang), lang: this.lang, local: true }].concat(localDigitItems(iv, this.lang)) : [{ key: null, text: t('nothingTyped', this.lang), lang: this.lang }], this.lang, this);
+      return;
+    }
+    if (act === 'readall') {
+      var hasId = this.state.visible().some(function (x) { return x.sensitive && x.type === 'text' && !isEmpty(s.answers[x.id]); });
+      if (hasId) { var q = this.ref('readallq'); q.hidden = !q.hidden; b.setAttribute('aria-expanded', String(!q.hidden)); if (!q.hidden) q.querySelector('[data-act=readall-without]').focus(); return; }
+      this.readAll(false); return;
+    }
+    if (act === 'readall-with' || act === 'readall-without') { this.readAll(act === 'readall-with'); return; }
     if (act === 'play-opt') { this.readOption(parseInt(b.getAttribute('data-i'), 10)); return; }
     if (act === 'pause') { if (Player.state === 'paused') Player.resume(); else Player.pause(); return; }
     if (act === 'stop-audio') { Player.stop(); var lb = this.querySelector('[data-act=listen]'); if (lb) lb.focus(); return; }
@@ -1985,6 +2094,32 @@
       items.push({ key: 'saved-for-later', text: t('savedTitle', lang) + '. ' + t('savedText', lang) });
     }
     return items;
+  };
+  /** "Read back my answer" (names and phone numbers): what is typed now, with the same rules as voice answers. */
+  SavannaOnboardingForm.prototype.readBack = function () {
+    var f = this.state.field(), inp = this.ref('input'), v = inp ? inp.value.trim() : '';
+    Player.play(v ? readBackItems(f, v, this.lang, 'yourAnswer') : [{ key: null, text: t('nothingTyped', this.lang), lang: this.lang }], this.lang, this);
+  };
+  /** "Read all my answers" on Check your answers: each question and answer; the ID number only if confirmed. */
+  SavannaOnboardingForm.prototype.readAll = function (withId) {
+    var lang = this.lang, s = this.state, vm = this.vm(), items = [];
+    s.visible().forEach(function (f) {
+      if (f.reviewHide) return;
+      var v = s.answers[f.id], label = L(f.reviewLabel || f.label, lang);
+      if (f.sensitive && f.type === 'text') {
+        if (!withId || isEmpty(v)) return;
+        items.push({ key: null, text: label, lang: lang, local: true });
+        items = items.concat(localDigitItems(v, lang));
+        return;
+      }
+      items.push({ key: null, text: label, lang: lang });
+      if (isEmpty(v)) items.push({ key: null, text: t('notGiven', lang), lang: lang });
+      else if (f.type === 'tel') items.push({ key: null, text: spokenPhone(v, lang), lang: lang });
+      else if (f.type === 'text' || f.type === 'textarea') items.push({ key: null, text: String(v), lang: scriptLang(String(v), lang) });
+      else items.push({ key: null, text: View.display(vm, f, v), lang: lang });
+    });
+    var q = this.ref('readallq'); if (q) { q.hidden = true; var rb = this.querySelector('[data-act=readall]'); if (rb) rb.setAttribute('aria-expanded', 'false'); }
+    Player.play(items, lang, this);
   };
   SavannaOnboardingForm.prototype.readQuestion = function () { this._played = true; Player.play(this.readItems(), this.lang, this); };
   SavannaOnboardingForm.prototype.readOption = function (i) {
@@ -2080,7 +2215,10 @@
     var choice = f.type === 'choice' || f.type === 'consent' || f.type === 'multi';
     this.status(t('heardSay', lang, { text: v.shown, yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }));
     var ed = this.ref('heard-edit') || this.ref('heard-h'); if (ed) ed.focus();
-    if (this.easy) Player.play([{ key: null, text: t('heard', lang) + ' ' + v.shown }], lang, this);
+    // read back what was heard, so it can be checked by ear, then the three choices
+    var back = v.hits || v.date ? [{ key: null, text: t('heard', lang) + ' ' + v.shown, lang: lang }] : readBackItems(f, v.value, lang, 'heard');
+    back.push({ key: null, text: t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }), lang: lang });
+    Player.play(back, lang, this);
   };
 
   /* The learner checked the transcript: only now does it become the answer (still saved only on Continue). */

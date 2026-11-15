@@ -36,7 +36,7 @@
       filterNote: 'This uses your Support Passport on this phone only. Employers see it only if you choose to share it when you apply.',
       noPassport: 'Create your Support Passport to see which jobs offer the support you need.',
       makePassport: 'Create my Support Passport', offers: 'Support this job offers', match: 'Offers {k} of the {n} kinds of support you chose',
-      listen: 'Listen to this job', apply: 'Apply', sample: 'Sample job (demo data)', none: 'No jobs match all of your support needs yet. Turn the filter off to see all jobs.',
+      listen: 'Listen to this job', stopListening: 'Stop listening', apply: 'Apply', sample: 'Sample job (demo data)', none: 'No jobs match all of your support needs yet. Turn the filter off to see all jobs.',
       myPassport: 'My Support Passport', edit: 'Change my Support Passport', del: 'Delete my Support Passport', deleted: 'Your Support Passport was deleted.',
       onlyYou: 'Only you can see this. It is stored on this phone.', nothing: 'You chose not to share anything for now.',
       nextPassport: 'Next: tell us what helps you (optional)', nextJobs: 'Find jobs', level: 'Your ID status:',
@@ -86,6 +86,7 @@
       filterNote: 'ይህ በዚህ ስልክ ላይ ብቻ ያለውን የድጋፍ ፓስፖርትዎን ይጠቀማል። ቀጣሪዎች የሚያዩት ሲያመለክቱ ለማጋራት ከመረጡ ብቻ ነው።',
       noPassport: 'የትኞቹ ሥራዎች የሚፈልጉትን ድጋፍ እንደሚሰጡ ለማየት የድጋፍ ፓስፖርትዎን ይፍጠሩ።',
       makePassport: 'የድጋፍ ፓስፖርቴን ፍጠር', offers: 'ይህ ሥራ የሚሰጣቸው ድጋፎች', match: 'ከመረጧቸው {n} ድጋፎች {k}ቱን ይሰጣል',
+      stopListening: 'ማዳመጥ አቁም',
       listen: 'ይህን ሥራ አዳምጥ', apply: 'አመልክት', sample: 'የናሙና ሥራ (የሙከራ መረጃ)', none: 'እስካሁን ሁሉንም የድጋፍ ፍላጎቶችዎን የሚያሟላ ሥራ የለም። ሁሉንም ለማየት ማጣሪያውን ያጥፉ።',
       myPassport: 'የድጋፍ ፓስፖርቴ', edit: 'የድጋፍ ፓስፖርቴን ቀይር', del: 'የድጋፍ ፓስፖርቴን ሰርዝ', deleted: 'የድጋፍ ፓስፖርትዎ ተሰርዟል።',
       onlyYou: 'ይህን ማየት የሚችሉት እርስዎ ብቻ ነዎት። በዚህ ስልክ ላይ ተቀምጧል።', nothing: 'ለአሁን ምንም ላለማጋራት መርጠዋል።',
@@ -155,6 +156,7 @@
       makePassport: 'Paaspoortii Deeggarsaa koo uumi',
       offers: 'Deeggarsa hojiin kun kennu',
       match: 'Gosa deeggarsaa ati filatte {n} keessaa {k} kenna',
+      stopListening: 'Dhaggeeffachuu dhaabi',
       listen: 'Hojii kana dhaggeeffadhu',
       apply: 'Iyyadhu',
       sample: 'Hojii fakkeenyaa (odeeffannoo agarsiisaa)',
@@ -458,7 +460,7 @@
         '<p' + en + '>' + esc(j.description) + '</p>' +
         (needs.length ? '<p class="match">' + T('match', { k: x.k, n: needs.length }) + '</p>' : '') +
         '<h3>' + T('offers') + '</h3><ul class="needs small">' + j.offers.map(function (o) { return '<li' + (needs.indexOf(o) !== -1 ? ' class="hit"' : '') + '><span aria-hidden="true">' + needIcon(o) + '</span> ' + esc(needLabel(o)) + '</li>'; }).join('') + '</ul>' +
-        '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '">' + pic('🔊') + T('listen') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></button> <a class="btn primary" href="' + R('#/apply/' + j.id) + '">' + T('apply') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></a></p></article></li>';
+        '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '" aria-pressed="false">' + pic('🔊') + '<span data-listen-label>' + T('listen') + '</span><span class="vh"' + en + '> ' + esc(j.title) + '</span></button> <a class="btn primary" href="' + R('#/apply/' + j.id) + '">' + T('apply') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></a></p></article></li>';
     }).join('') + '</ul>';
     h += '<script type="application/ld+json">' + JSON.stringify(jobs().map(jobPostingLd)) /* every job, whatever the private filter shows */.replace(/</g, '\\u003c') + '</' + 'script>';
     view.innerHTML = h;
@@ -470,20 +472,44 @@
       store.set('jobFilter', flt.checked); jobsView();
       var f = document.getElementById('flt'); if (f) f.focus();
     });
+    /* "Listen to this job": the same player as automatic reading (bottom bar "Now reading… Pause · Stop", Escape stops),
+       and the same order of sources (recording, Addis AI, the phone's voice). Each part is read in its own language:
+       sample jobs are written in English, the labels follow the page. Another job, or leaving the page, stops it. */
     view.querySelectorAll('[data-listen]').forEach(function (b) {
       b.addEventListener('click', function () {
-        var j = jobs().filter(function (x) { return x.id === b.getAttribute('data-listen'); })[0];
-        var text = j.title + '. ' + j.org + '. ' + j.location + '. ' + j.description + '. ' + T('offers') + ': ' + j.offers.map(needLabel).join(', ');
-        if (!D.speak(text, lang())) { var s = document.getElementById('jobs-status'); if (s) s.textContent = { am: 'የአማርኛ ድምፅ በዚህ ስልክ ላይ ገና አልተጫነም።', om: 'Sagaleen Afaan Oromoo bilbila kana irratti ammaaf hin jiru.' }[lang()] || 'Audio is not available on this device.'; }
+        var id = b.getAttribute('data-listen'), pl = D.player;
+        if (pl.state !== 'idle' && pl.owner && pl.owner.job === id) { D.stopSpeaking(); return; } // "Stop listening"
+        var j = jobs().filter(function (x) { return x.id === id; })[0];
+        var jl = j.lang || (j.sample ? 'en' : lang()), ul = lang();
+        var items = [{ key: null, text: j.title, lang: jl }, { key: null, text: j.org + '. ' + j.location, lang: jl },
+          { key: null, text: L(MODE[j.mode], ul), lang: ul }, { key: null, text: j.description, lang: jl },
+          { key: null, text: T('offers') + ': ' + j.offers.map(needLabel).join(', '), lang: ul }];
+        pl.play(items, ul, { job: id, audioIssue: function (code) {
+          var st = document.getElementById('jobs-status');
+          if (st && code === 'readFail') { st.textContent = ''; setTimeout(function () { st.textContent = D.label({ en: 'Reading aloud isn\'t available right now. Everything is written on the screen.', am: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', om: 'Sagaleen dubbisuun amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.' }, lang()); }, 50); }
+        } });
       });
     });
+    syncJobButtons();
     if (!flt) focusH1(); else if (document.activeElement === document.body) focusH1();
   }
+
+  // the job being read shows "Stop listening" (pressed); the others "Listen to this job"
+  function syncJobButtons() {
+    var pl = D.player, playing = pl.state !== 'idle' && pl.owner && pl.owner.job;
+    document.querySelectorAll('[data-listen]').forEach(function (b) {
+      var on = playing === b.getAttribute('data-listen');
+      b.setAttribute('aria-pressed', String(!!on));
+      var lb = b.querySelector('[data-listen-label]'); if (lb) lb.textContent = T(on ? 'stopListening' : 'listen');
+    });
+  }
+  D.player.on(syncJobButtons);
+  window.addEventListener('pagehide', function () { try { D.stopSpeaking(); } catch (e) {} });
 
   function employer() {
     mountForm('employer', null, function (d, slot) {
       var a = d.answers;
-      var job = { id: 'j' + Date.now().toString(36), title: a.title, org: a.org, location: a.location, mode: a.mode, offers: a.offers || [], description: a.description, contact: a.contact, datePosted: new Date().toISOString().slice(0, 10) };
+      var job = { id: 'j' + Date.now().toString(36), lang: d.lang, title: a.title, org: a.org, location: a.location, mode: a.mode, offers: a.offers || [], description: a.description, contact: a.contact, datePosted: new Date().toISOString().slice(0, 10) };
       store.set('jobs', [job].concat(store.get('jobs', [])));
       if (!slot) return;
       if (SHOWROOM) slot.innerHTML = '<p class="actions"><a class="btn primary" href="' + R('#/jobs') + '">' + T('seeJobs') + '</a></p>' +

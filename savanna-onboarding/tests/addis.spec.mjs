@@ -99,14 +99,14 @@ test.describe('in the browser (proxy mocked)', () => {
     expect(calls.tts).toEqual([]);
   });
 
-  test('no credit (402): a plain message, then the phone\'s voice; the demo never breaks', async ({ page }) => {
+  test('no credit (402): the phone\'s voice reads instead, with no message (not a failure); the demo never breaks', async ({ page }) => {
     await freshStart(page, { lang: 'am', remote: true });
     await mockProxy(page, { tts: 402 }); await listenLog(page);
     await signupTo(page, 'filler');
     await fakeVoice(page);
     await page.locator('[data-act=listen]').click();
-    await expect(page.locator('.dm-status')).toContainText('የኦንላይን ድምፁ አሁን አይገኝም');
     await expect.poll(() => page.evaluate(() => window.__said)).toContain('ይህን ቅጽ የሚሞላው ማን ነው?');
+    await expect(page.locator('.dm-status')).not.toContainText('አይገኝም'); // no "not available" message as the normal case
   });
 
   test('no proxy or no key: asked once, then not again in this tab', async ({ page }) => {

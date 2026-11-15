@@ -160,7 +160,7 @@ test('no recording and no phone voice: a clear message, and everything stays on 
   await signupTo(page, 'filler');
   await fakeVoice(page, { voice: false });
   await page.locator('[data-act=listen]').click();
-  await expect(page.locator('.dm-status')).toContainText('There is no recording for this yet');
+  await expect(page.locator('.dm-status')).toHaveText("Reading aloud isn't available right now. Everything is written on the screen.");
   await expect(playBar(page)).toBeHidden();
   await pick(page, 'self'); await next(page); // the form carries on as normal
   expect(await heading(page)).toContain('What should we call you');
