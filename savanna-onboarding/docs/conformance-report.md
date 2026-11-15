@@ -12,10 +12,26 @@
 | Product | Savanna Accessible Onboarding Module (web component, mount API) and its demo hosts |
 | Version / commit | Module 0.12.0; automated results from the 15 Nov team-fixes commit (see `DEVELOPMENT_PROGRESS.md`) |
 | Standard | WCAG 2.2, Levels A and AA (55 success criteria; 4.1.1 Parsing is obsolete in WCAG 2.2) |
-| Report date | 14 Nov 2026 (automated part). Manual part: _to fill in_ |
+| Report date | 15 Nov 2026 (automated part: final pass for the submission). Manual part: _to fill in by the team_ |
 | Evaluated by | Automated: Playwright + axe-core 4.14, Chromium. Manual: _names / roles, including co-designers_ |
-| Scope | The module (six journeys and the settings panel) as used in: the Savanna learner journey pages (site root: home, sign-up, simulated log-in, dashboard, profile, Support Passport, takeover, jobs, apply, employer, settings), the test host page (`/test-host/`) and the developer page (`/showroom.html`). Our accessibility fixes to the Savanna page frame are in scope; Savanna's own unchanged stylesheets are not evaluated on their own |
+| Scope | The module (seven journeys and the settings panel) as used in: the Savanna learner journey pages (site root: home, sign-up, simulated log-in, dashboard, profile, Support Passport, takeover, jobs, apply, employer, settings), the test host page (`/test-host/`) and the developer page (`/showroom.html`). Our accessibility fixes to the Savanna page frame are in scope; Savanna's own unchanged stylesheets are not evaluated on their own |
 | Out of scope | The Savanna platform itself; the browser's speech services; screen-reader voices |
+
+### What changed on 15 Nov (all covered by the automated evidence below)
+
+- **Header:** one bar on every Savanna page (Home; Language ▾, Accessibility ▾, Log in or account; on phones Home,
+  Accessibility ▾ and Menu). The Accessibility panel ("Accessibility options") holds Larger text, High contrast, Stop
+  motion and Automatic reading.
+- **Reading layer:** hand-written summaries for every page and form step (English, with Amharic and Afaan Oromo
+  drafts), read when a page or step opens if automatic reading is on; Listen on every question, answer and in Help;
+  "Read all my answers"; reading back voice and typed answers; a playback bar ("Now reading… Pause · Stop") only while
+  audio plays. Order of sources: recorded clip, Addis AI (optional proxy), the phone's voice.
+- **ID after sign-up:** sign-up asks no ID; "Add your ID (optional)" from My profile and the dashboard.
+- **Phone numbers** shown 0911 23 45 67 and read in natural numbers, on the phone only; ID numbers digit by digit,
+  on request, on the phone only.
+- **Addis AI** speech for Amharic and Afaan Oromo through the demo host's optional proxy; consent names Addis AI and
+  Google; never on ID or support-needs questions.
+- **Content:** reassuring claims removed ("show trust, do not claim it"); consent facts kept.
 
 ### Result values used here
 
@@ -58,7 +74,7 @@ Main task (confirmed): **sign up for Savanna and save a Support Passport.**
 |---|---|---|---|
 | Forms timed out | No time limits; answers saved on the device after every question; "Finish later" | 2.2.1 | A5 (no time-out after 3 hours), A6 (autosave, resume); co-designers to confirm |
 | Refugees were asked for ID they don't have | **Sign-up asks no ID** (since 15 Nov). "Add your ID (optional)" is on My profile and the dashboard, whenever the learner wants: six ID routes incl. refugee ID / proof of registration and "refer me through a partner"; ID number optional and typed, never spoken; no ID photo; honest badges, never "verified" | 3.3.2 | A8, journey tests |
-| Help was English only | All text in Amharic and English; language switch and help in the same place on every screen; screen-reader tip in both languages | 3.1.1, 3.1.2, 3.2.6 | A1 (language of parts), A5 (help position); Amharic review pending; see NVDA limitation |
+| Help was English only | All text in Amharic, English and Afaan Oromo (drafts for review); Language in the header of every page; help in the same place on every question, with its own Listen button; page summaries in all three languages; screen-reader tip in all three | 3.1.1, 3.1.2, 3.2.6 | A1 (language of parts), A5 (help position); Amharic review pending; see NVDA limitation |
 | Job boards broke under screen readers | Job titles as headings, named "Apply" links, count announced, native checkbox filter | 1.3.1, 2.4.4, 2.4.6, 4.1.3 | A1, A8; NVDA and TalkBack to do |
 
 ## 3. Test environments
@@ -86,7 +102,7 @@ support, with who and when) · **Notes / limitations**.
 
 | SC | Name | Level | Automated evidence | Automated result | Manual check needed | Manual result | Notes / limitations |
 |---|---|---|---|---|---|---|---|
-| 1.1.1 | Non-text Content | A | A1: axe image-alt, button-name, link-name; icons `aria-hidden` beside text; logo has alt text "Savanna home" | Automated: no failures | Screen reader: no unlabelled images or icons | _to fill in_ | |
+| 1.1.1 | Non-text Content | A | A1: axe image-alt, button-name, link-name; icons `aria-hidden` beside text; no logo (the module is for any organisation) | Automated: no failures | Screen reader: no unlabelled images or icons | _to fill in_ | |
 | 1.2.1 | Audio-only and Video-only (Prerecorded) | A | Every recording has the same words on screen (the script is generated from the screen text, `docs/audio-script.md`) | Automated: no failures | Listen to recordings, compare with the screen | _to fill in_ | Recordings are being made on 14 Nov |
 | 1.2.2 | Captions (Prerecorded) | A | No video in scope | Not applicable | — | — | |
 | 1.2.3 | Audio Description or Media Alternative (Prerecorded) | A | No video in scope | Not applicable | — | — | |
@@ -101,7 +117,7 @@ support, with who and when) · **Notes / limitations**.
 | 1.4.2 | Audio Control | A | A7. Nothing plays by itself on a first visit: the first control after the skip link is "Tap anywhere or press any key to hear this page", and browsers' autoplay rules are respected: on a new page the summary is tried at once only when automatic reading is on and the learner has already interacted with the site in this session, and if the browser blocks it (play promise rejected, or speech "not allowed") the prompt is shown instead, with no error. A summary can last longer than 3 seconds, so 1.4.2 is met by these controls: **while any audio plays, "Now reading… Pause · Stop" is pinned to the bottom of the page** (announced politely; the same bar for page summaries and questions); **Escape stops the sound at once**; **"Automatic reading" is one on/off switch** in the header's Accessibility panel (and in Settings) and is remembered. Tab never starts the audio. The bar never covers the focused control: the page gets bottom padding while it shows (2.4.11) | Automated: no failures | With NVDA and TalkBack running: our audio does not cover the screen reader, and the off switch is easy to find | _to fill in_ | |
 | 1.4.3 | Contrast (Minimum) | AA | A4: all text pairs ≥ 4.5:1 in normal and high contrast; A1 axe color-contrast | Automated: no failures | — | _to fill in_ | |
 | 1.4.4 | Resize Text | AA | A2: 200% zoom and 200% text; A1: extra-large text setting | Automated: no failures | Browser zoom and phone font size by a person | _to fill in_ | |
-| 1.4.5 | Images of Text | AA | No images of text (the ALX logo is a logo) | Automated: no failures (review) | — | _to fill in_ | |
+| 1.4.5 | Images of Text | AA | No images of text | Automated: no failures (review) | — | _to fill in_ | |
 | 1.4.10 | Reflow | AA | A1: no sideways scrolling at 320 CSS px on every screen; A2 at 640 px | Automated: no failures | 400% zoom on a desktop browser | _to fill in_ | |
 | 1.4.11 | Non-text Contrast | AA | A4: control borders 4.10:1, focus outline ≥ 3:1, selected border | Automated: no failures | — | _to fill in_ | |
 | 1.4.12 | Text Spacing | AA | A5: WCAG spacing applied; no sideways scrolling, no clipped text | Automated: no failures | — | _to fill in_ | |
@@ -113,7 +129,7 @@ support, with who and when) · **Notes / limitations**.
 |---|---|---|---|---|---|---|---|
 | 2.1.1 | Keyboard | A | A2, A3: the whole gate task and sign-up by keyboard; arrow keys in choice groups | Automated: no failures | Keyboard-only person; NVDA keys | _to fill in_ | |
 | 2.1.2 | No Keyboard Trap | A | A2: Tab moves through every page and back to the start | Automated: no failures | — | _to fill in_ | |
-| 2.1.4 | Character Key Shortcuts | A | No single-key shortcuts (only Escape to stop audio / close the menu) | Automated: no failures (review) | — | _to fill in_ | |
+| 2.1.4 | Character Key Shortcuts | A | No single-key shortcuts. Escape stops audio and closes panels. On a page showing "Tap anywhere or press any key to hear this page", the first key press (not Tab) starts reading; this can be turned off ("Automatic reading" off in the Accessibility panel or Settings) | Automated: no failures (review) | — | _to fill in_ | |
 | 2.2.1 | Timing Adjustable | A | A5: an answer after 3 hours is accepted; no time limits anywhere | Automated: no failures | — | _to fill in_ | Simulated log-in code has no expiry |
 | 2.2.2 | Pause, Stop, Hide | A | A7: audio can be paused and stopped from the bottom playback bar or with Escape; nothing moves or updates on its own | Automated: no failures | — | _to fill in_ | |
 | 2.3.1 | Three Flashes or Below Threshold | A | No flashing or animation; reduced motion respected | Automated: no failures (review) | — | _to fill in_ | |
@@ -121,7 +137,7 @@ support, with who and when) · **Notes / limitations**.
 | 2.4.2 | Page Titled | A | A5: every Savanna page has its own title "… \| Savanna" | Automated: no failures | — | _to fill in_ | |
 | 2.4.3 | Focus Order | A | A2: logical order; focus moves to the question or the error summary on each screen | Automated: no failures | Screen reader | _to fill in_ | |
 | 2.4.4 | Link Purpose (In Context) | A | A1 axe; "Apply" and "Listen" include the job title in their names (A8) | Automated: no failures | NVDA links list | _to fill in_ | |
-| 2.4.5 | Multiple Ways | AA | Sidebar menu, dashboard cards and links between steps | Automated: no failures (review) | — | _to fill in_ | |
+| 2.4.5 | Multiple Ways | AA | Header (Home, account menu), sidebar menu (Menu on phones), dashboard cards and links between steps | Automated: no failures (review) | — | _to fill in_ | |
 | 2.4.6 | Headings and Labels | AA | A1: one h1 per screen (the question); labels on every field | Automated: no failures | NVDA H list | _to fill in_ | |
 | 2.4.7 | Focus Visible | AA | A2: visible outline at all 61 Tab stops (phone and desktop, 200% zoom); A3 | Automated: no failures | — | _to fill in_ | Found and fixed in Phase 9: Savanna's Bootstrap hid our outline on buttons and sidebar links |
 | 2.4.11 | Focus Not Obscured (Minimum) | AA | A2: every focused item fully on screen and not hidden under the sticky header; A7: the bottom playback bar never covers the focused control (bottom padding and scroll padding while it shows) | Automated: no failures | — | _to fill in_ | |
@@ -140,14 +156,14 @@ support, with who and when) · **Notes / limitations**.
 | 3.1.2 | Language of Parts | AA | A1: every Amharic or English part marked with `lang` | Automated: no failures | NVDA / TalkBack switch voice | _to fill in_ | **Known limitation:** NVDA's default Windows voice spells Amharic letter by letter even though `lang="am"` is correct (§5). Amharic is an AI draft pending native review |
 | 3.2.1 | On Focus | A | Focus never changes the page or submits | Automated: no failures (review) | — | _to fill in_ | |
 | 3.2.2 | On Input | A | Choosing an option never moves on by itself; Continue is always a separate step. In Settings, choosing a language or text size applies at once (announced as "Saved"), which is expected for settings | Automated: no failures | Confirm the Settings behaviour is not surprising | _to fill in_ | |
-| 3.2.3 | Consistent Navigation | AA | A5: same menu, same order, on every page | Automated: no failures | — | _to fill in_ | |
-| 3.2.4 | Consistent Identification | AA | Same names for the same functions everywhere (Continue, Change, Get help, Listen) | Automated: no failures (review) | — | _to fill in_ | |
-| 3.2.6 | Consistent Help | A | A5: "Get help" in the same place on every question | Automated: no failures | — | _to fill in_ | |
+| 3.2.3 | Consistent Navigation | AA | A5: same menu, same order, on every page; one header bar in the same order on every page (journey tests) | Automated: no failures | — | _to fill in_ | |
+| 3.2.4 | Consistent Identification | AA | Same names for the same functions everywhere (Continue, Change, Get help, Listen to the question, Read all my answers, Pause, Stop) | Automated: no failures (review) | — | _to fill in_ | |
+| 3.2.6 | Consistent Help | A | A5: "Get help" in the same place on every question; Accessibility and Language in the same place in the header on every page | Automated: no failures | — | _to fill in_ | |
 | 3.3.1 | Error Identification | A | A6: error summary with link, field error text, `aria-invalid`, `aria-describedby` | Automated: no failures | Screen reader hears the error | _to fill in_ | |
 | 3.3.2 | Labels or Instructions | A | Every field has a visible label and hint where needed (A1 axe label) | Automated: no failures | — | _to fill in_ | |
 | 3.3.3 | Error Suggestion | AA | A6: errors say how to fix (phone format, letters only, date range) | Automated: no failures | — | _to fill in_ | |
 | 3.3.4 | Error Prevention (Legal, Financial, Data) | AA | A6: "Check your answers" with Change before every submit; consent required | Automated: no failures | — | _to fill in_ | |
-| 3.3.7 | Redundant Entry | A | A8, journey tests: application and profile prefilled from earlier answers | Automated: no failures | — | _to fill in_ | |
+| 3.3.7 | Redundant Entry | A | A8, journey tests: application, profile and "Add your ID" prefilled from earlier answers | Automated: no failures | — | _to fill in_ | |
 | 3.3.8 | Accessible Authentication (Minimum) | AA | Journey test: simulated log-in has no password to remember and no puzzle; the code can be pasted or filled in by the phone; no time limit | Automated: no failures | — | _to fill in_ | The log-in is simulated; Savanna's real sign-in must meet this too |
 
 ### Principle 4 — Robust
@@ -155,7 +171,7 @@ support, with who and when) · **Notes / limitations**.
 | SC | Name | Level | Automated evidence | Automated result | Manual check needed | Manual result | Notes / limitations |
 |---|---|---|---|---|---|---|---|
 | 4.1.2 | Name, Role, Value | A | A1 axe (aria, button-name, label); toggles expose `aria-pressed` / `aria-expanded` (A7, A8, journey) | Automated: no failures | NVDA / TalkBack announce states | _to fill in_ | |
-| 4.1.3 | Status Messages | AA | Saved, welcome back, job count, offline, voice and download messages in `role="status"` (A6–A9) | Automated: no failures | Screen reader hears them | _to fill in_ | |
+| 4.1.3 | Status Messages | AA | Saved, welcome back, job count, offline, voice ("Recording…", "I heard…"), sharing and download messages in `role="status"`; "Now reading…" announced politely (A6–A9) | Automated: no failures | Screen reader hears them | _to fill in_ | |
 
 ## 5. Known limitations
 
@@ -169,7 +185,7 @@ support, with who and when) · **Notes / limitations**.
   Still to check: TalkBack on Android (Google's speech service has Amharic on some phones).
 - **Amharic text is an AI draft** until a native speaker reviews it.
 - **Addis AI speech** (voice answers and reading aloud in Amharic and Afaan Oromo, through the demo's optional proxy)
-  is tested with mocked endpoints only; real recognition quality for Ethiopian names and accents is not yet tested
+  is checked on the live site (16 Nov) and in mocked tests; real recognition quality for Ethiopian names and accents is not yet tested
   with learners. Without a key, credit or connection it falls back to the browser's speech with a plain message.
 - **Amharic audio is synthetic.** Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint. Afaan Oromo has no Microsoft voice: it is text only, plus the phone's
   voice if it has one.
@@ -178,7 +194,7 @@ support, with who and when) · **Notes / limitations**.
   (the page summary is read). Browsers allow sound only after an interaction with each new page; then the
   prompt "Tap anywhere or press any key to hear this page" is shown.
 - **Phone and ID numbers are read on the phone only** (recorded Amharic numbers, otherwise a voice on the phone);
-  Oromo number clips are not generated yet.
+  every fixed text is pre-recorded in Amharic and Afaan Oromo (754 clips), so reading never depends on a live service.
 - **Voice input** depends on the browser's speech service (cloud, with consent); it is optional and never required.
 - **Simulated parts** (log-in, SMS, trainer and employer systems) are out of scope for conformance but are built to
   the same standard.

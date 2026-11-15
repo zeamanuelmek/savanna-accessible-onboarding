@@ -13,8 +13,9 @@ or any other site adds with **two script tags**. No framework, no build step, no
 | [`/showroom.html`](https://savanna-accessible-onboarding.vercel.app/showroom.html) | Developer and test page (all journeys behind one menu) |
 
 **Access without disclosure:** learners choose how they want to interact (read-aloud, voice, larger text, simple
-mode) without ever stating or proving a disability. **Nothing leaves the host without consent:** the module itself
-sends nothing over the network.
+mode) without ever stating or proving a disability. **Nothing leaves the host without consent:** the module sends no
+answers over the network; the only optional exception is speech for Amharic and Afaan Oromo, sent to the host's own
+proxy after consent (see "Amharic and Afaan Oromo speech with Addis AI" below).
 
 ---
 
@@ -33,6 +34,11 @@ docker compose up
 Open http://localhost:8080 (the Savanna journey), http://localhost:8080/test-host/ and
 http://localhost:8080/showroom.html. Stop with `Ctrl+C`. Another port: `PORT=9000 docker compose up`.
 
+**Optional, paid: Addis AI speech for Amharic and Afaan Oromo.** Copy `.env.example` to `.env`, set
+`ADDIS_API_KEY=…` in it (the file is git-ignored), then run `docker compose --profile addis up`. This adds a small
+Node service (`proxy/server.cjs`) that nginx reaches at `/api/`. Without it, everything works the same with the
+browser's own speech.
+
 **Without Docker:** any static file server works, because these are plain files.
 
 ```bash
@@ -44,6 +50,8 @@ npx --yes serve -l 8080 .          # or: python -m http.server 8080
 
 1. Copy these from `savanna-onboarding/` to your site, **keeping them side by side**:
    `savanna-onboarding.js`, `forms.js`, and the folder `assets/fonts/`. (The script finds the fonts next to itself.)
+   For recorded Amharic audio, also copy `assets/audio/` (the clips and `manifest.json`); without it, reading aloud
+   uses the phone's voice.
 2. Add two script tags and an empty element where the form should appear:
 
 ```html
@@ -55,7 +63,7 @@ npx --yes serve -l 8080 .          # or: python -m http.server 8080
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var handle = SavannaOnboarding.mount('#onboarding', {
-      form: 'signup',          // signup | passport | profile | takeover | apply | employer
+      form: 'signup',          // signup | identity | passport | profile | takeover | apply | employer
       welcome: true,           // start with "how would you like to answer?"
       headingLevel: 2,         // your page already has an <h1>: the question becomes an <h2>
       onComplete: function (detail, doneSlot) {
@@ -84,7 +92,9 @@ same data arrives in the `savanna-onboarding:complete` event (it bubbles to `doc
   them elsewhere, plug in your own storage:
   `SavannaOnboarding.setStorage({ getItem, setItem, removeItem, keys })`.
 - **Speech engine:** voice input and read-aloud go through one adapter, `SavannaOnboarding.setSpeech({ input, output })`
-  (see [`docs/for-developers.md`](docs/for-developers.md)). The default is the browser's own (free) engine.
+  (see [`docs/for-developers.md`](docs/for-developers.md)). The default is the browser's own (free) engine. For
+  Amharic and Afaan Oromo through your own proxy (for example Addis AI): `mount(…, { speechProxy: '/api' })`; the
+  contract and our reference proxy are in `for-developers.md` section 3b-2. The module never holds a key.
 
 ### Step 4 — Make it look like your site (10 minutes)
 
@@ -205,6 +215,18 @@ English. Voice is never offered on ID or support-needs questions. Limits that pr
 recordings, 600 characters of text, a per-IP rate limit, our own site only, a cache so the same words are never paid
 twice) are in [`docs/privacy-security.md`](docs/privacy-security.md).
 
+## Audio tools (recorded Amharic, regenerated after wording changes)
+
+All run from `savanna-onboarding/` and are not deployed:
+
+| Tool | What it does |
+|---|---|
+| `node tools/audio-script.cjs` | Rebuilds `docs/audio-script.md` (the list of clips, word for word from the screen text). Run it after any wording change |
+| `python tools/generate-audio.py` | Generates the Amharic clips with Microsoft's Amharic neural voice (edge-tts, `am-ET-MekdesNeural`), converts them and runs the check. Needs `pip install edge-tts` and ffmpeg (`winget install Gyan.FFmpeg`). `--only name1,name2` for a few clips |
+| `node tools/convert-audio.cjs <folder>` | Converts human recordings (WAV, M4A, MP3…) to mono MP3 with even loudness, named as in the script |
+| `node tools/check-audio.cjs` | Lists found, missing and broken clips and writes `assets/audio/manifest.json` (commit the clips and the manifest together) |
+| `node tools/generate-audio-addis.cjs` | The Afaan Oromo clips with Addis AI (voice om-bikila), generated once: only clips that are missing or whose words changed (key from `../.env` or `ADDIS_API_KEY`; `--dry` shows what it would make and an estimate) |
+
 ## Future: local speech (not built)
 
 The speech adapter (`SavannaOnboarding.setSpeech({ input, output })`, see `for-developers.md`) can connect to a
@@ -245,9 +267,11 @@ work; nothing of it is built.
 | Savanna look: Poppins, navy text, Savanna red actions, Noto Sans Ethiopic for Amharic | implemented |
 | The module inside Savanna's own pages (starter kit) | implemented as a demo: Savanna's CSS unchanged, our pages around it |
 | Log-in | **simulated**: a labelled demo. No server, no SMS; the code is shown on screen. Meets WCAG 3.3.8: nothing to remember, no puzzle, the code can be pasted or filled in by the phone, no time limit |
-| Text size, high contrast, language settings | implemented |
-| Read-aloud | implemented: "Listen" on every question and a Listen button on every answer, with Pause/Resume, Stop and Play again; Escape stops it. Plays the Amharic clips named in [`docs/audio-script.md`](docs/audio-script.md) (79 clips, 3.8 MB), otherwise the phone's voice, otherwise a short message that everything is on screen. **Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint.** To regenerate after a wording change: `node tools/audio-script.cjs`, then `python tools/generate-audio.py` (needs `pip install edge-tts` and ffmpeg). **Afaan Oromo has no Microsoft voice:** it is text only, plus the phone's voice if it has one. Audio is never required |
-| Page summaries and automatic reading | implemented, **English only for now**: every page and form step has a short hand-written summary (for example "Step 3 of 5: your phone number. You can type it or say it. Below are Continue and Back.") as the first text inside `<main>`, visually hidden, so screen readers reach it first. On a first visit the first control after the skip link is "Tap anywhere or press any key to hear this page"; after that, each page and step reads its summary when it opens (remembered across pages and visits). On a new page the summary is tried at once when automatic reading is on and the learner has already interacted with the site in this session; only if the browser blocks it (the play promise is rejected, or speech is "not allowed") does the prompt appear, and the next tap or key press reads it. Tab never starts it. "Automatic reading" is one switch, in the Accessibility panel and in Settings; while audio plays, "Now reading… Pause · Stop" is pinned to the bottom, and Escape stops at once (WCAG 1.4.2). Hosts get the summary in the `savanna-onboarding:step` event |
+| Text size, high contrast, language settings | implemented: one header bar on every page (Home; Language ▾, Accessibility ▾ and Log in; on phones Home, Accessibility ▾ and Menu). The Accessibility panel has Larger text, High contrast, Stop motion and Automatic reading |
+| Phone numbers | implemented the Ethiopian way: shown 0911 23 45 67, read in natural numbers ("zero nine eleven, twenty-three…") in three languages, **on the phone only**: recorded numbers 0-99 in Amharic and Afaan Oromo, otherwise a voice on the phone. Never sent to an online voice |
+| Reading back answers | implemented: after a voice answer "I heard: …" then the three choices; "Spell it"; "Read back my answer" on names and phone numbers; the ID number only on request, after "People near you may hear this", on the phone only |
+| Read-aloud | implemented on every page and form: "Listen to the question" and a Listen button on every answer; Pause and Stop in the playback bar at the bottom while audio plays; Escape stops it; with reading on, choices are spoken ("Selected: …") and the Accessibility toggles are confirmed. **Every fixed text is recorded** ([`docs/audio-script.md`](docs/audio-script.md): 754 clips, 377 Amharic and 377 Afaan Oromo, 28.8 MB): page and step summaries, questions, answers, hints, prompts, messages and numbers. Order of sources: recorded clip, then Addis AI through the host's proxy (only for dynamic text: names, typed answers, employer-written job text), then the phone's voice; only when all fail: "Reading aloud isn't available right now. Everything is written on the screen." **Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint.** Afaan Oromo clips were generated once with Addis AI (draft text for review). Audio is never required |
+| Page summaries and automatic reading | implemented on every page and form step, in English with Amharic and Afaan Oromo drafts (inventory in `DEVELOPMENT_PROGRESS.md`): a hand-written summary is the first text inside `<main>`; with automatic reading on, each page and step reads its summary and content when it opens, also on revisits and Back. A first visit shows "Tap anywhere or press any key to hear this page"; later pages try to read at once and show that prompt only if the browser blocks sound. Tab never starts it. "Automatic reading" is one switch (Accessibility panel and Settings). "Read all my answers" on Check your answers, the confirmations and the Support Passport card; Listen in Help. Gap: Settings has no per-setting Listen |
 | Pictures and bigger buttons | implemented: a separate setting from automatic reading |
 | Amharic audio for offline use | implemented: Settings offers "Download Amharic audio for offline use (about X MB)" with progress, and "Remove downloaded audio". Otherwise each recording is kept the first time it plays |
 | Screen readers and Amharic | **known limitation:** NVDA with its default Windows voice spells Amharic letter by letter. Mitigations: recorded Amharic (read aloud), one-tap English, correct `lang` tags, and a tip on the welcome screen and in Help |
@@ -257,10 +281,10 @@ work; nothing of it is built.
 | Private Support Passport | implemented on the device: private by default, "who can see this" on the card, trainer sharing can be turned on and off, sharing with an employer only per application (the learner sees exactly what would be shared) and can be withdrawn. **Simulated:** there is no trainer or employer system, so nothing is actually sent; withdrawing changes only the copy on the phone |
 | Partner-assisted sign-up | implemented: learner consent, then a handover and learner takeover step |
 | Amharic text | AI draft: needs native-speaker review |
-| Addis AI speech (Amharic and Afaan Oromo) | implemented behind the host's proxy, **tested with mocked endpoints only; not yet tried with the real service or a real key**. Voice answers (recorded in the page, at most 30 seconds) and reading aloud when no recording exists. Falls back to the browser's speech with a plain message when the proxy, the key or the credit is missing |
+| Addis AI speech (Amharic and Afaan Oromo) | implemented behind the demo host's optional proxy (Vercel functions `api/stt.js`, `api/tts.js`; Docker `--profile addis`). **Checked on the live site (16 Nov):** `/api/tts` returns audio/mpeg for Amharic and Oromo, `/api/stt` transcribes a real Amharic clip. (Addis AI requires `client_request_id` for paid generation, although its documentation lists it as optional; fixed 15 Nov.) Automated tests use mocked endpoints. Falls back to the browser's speech, without breaking, when the proxy, the key or the credit is missing |
 | Backend / API | unavailable by design: the module sends no answers anywhere; the host page decides where data goes (speech for Amharic and Afaan Oromo goes only to the host's own proxy, when the host sets one). Data and events: [`docs/api-schema.md`](docs/api-schema.md) |
 | Offline (minimum) | implemented and tested in the browser's offline mode: after one visit, the pages, module, fonts and styles open with no connection (`sw.js`); answers are saved on the phone; a clear offline message; recordings are kept once played. **Voice input never works offline.** Not yet tested on a real phone in flight mode. See [`docs/offline-plan.md`](docs/offline-plan.md) |
-| Docker Compose | written (`docker compose up`); **not yet run on a machine with Docker** (planned clean-machine check in Phase 10) |
+| Docker Compose | written (`docker compose up`; optional `--profile addis`). The file's paths are checked; **not yet run on a machine with Docker** (open item: clean-machine check) |
 
 ## Keyboard and screen-reader (ARIA) support
 
@@ -330,7 +354,9 @@ audit test is skipped if they are not there.
 ## Files
 
 - `savanna-onboarding.js`: the module (web component, mount API, design tokens, no dependencies)
-- `forms.js`: the six form recipes (plain data)
+- `forms.js`: the seven form recipes (plain data): signup, identity (Add your ID), passport, profile, takeover, apply,
+  employer
+- `assets/audio/`: recorded (generated) Amharic clips and `manifest.json`
 - `assets/fonts/`: Poppins and Noto Sans Ethiopic (SIL Open Font Licence, licence files included)
 - `index.html`, `signup.html`, `dashboard.html`, … and `journey/`: the learner journey inside Savanna's pages
   (pages generated by `tools/journey-pages.cjs`)
@@ -339,6 +365,8 @@ audit test is skipped if they are not there.
 - `test-host/`: the test host page
 - `showroom.html`, `app.js`, `app.css`: developer and test page; `app.js` also holds the demo views both hosts share
 - `docs/`: developer guide, data and events (`api-schema.md`), offline plan, audio script, conformance report
-- `tests/`: Playwright + axe-core tests. `tools/`: small generators (not deployed)
+- `api/`: the demo host's optional Addis AI reference proxy (Vercel functions; `_addis.js` is shared with
+  `../proxy/server.cjs` for Docker). Key only from `ADDIS_API_KEY`; see `../.env.example`
+- `tests/`: Playwright + axe-core tests. `tools/`: small generators and the audio tools (not deployed)
 - `../docker-compose.yml`, `../docker/nginx.conf`: run everything with `docker compose up`
 - Design tokens and their sources: [`../DESIGN_TOKENS.md`](../DESIGN_TOKENS.md). Progress: [`../DEVELOPMENT_PROGRESS.md`](../DEVELOPMENT_PROGRESS.md)

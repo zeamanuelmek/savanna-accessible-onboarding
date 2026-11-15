@@ -1723,3 +1723,22 @@ use the module's own reading (Listen, option Listen, Read all, read back), not t
   recordings now play where the phone's voice or Addis AI did, "Automatic reading off" is spoken); readaloud/voice/
   journey/career/identity/date-language/offline/security 184 passed (one timing fix); **a11y 192 scans, 0 serious or
   critical.**
+
+---
+
+## Phase 10 — Submission pack (documents, 16 Nov)
+
+- `SUBMISSION.md` (new, one page): live link, the simulated log-in, how to run it (Docker, optional
+  `--profile addis`, without Docker), where each deliverable is, test summary, known limitations, open items.
+- Root `README.md`: live demo link and the submission summary first.
+- `savanna-onboarding/README.md`: install steps checked against the files (Docker and the optional Addis profile,
+  `ADDIS_API_KEY` in `.env`, recorded audio files, the `identity` form, `speechProxy`); new "Audio tools" section;
+  "real vs simulated" brought up to date (header, reading everywhere, ID after sign-up, Ethiopian phone numbers,
+  read back, Addis AI checked live, every fixed text recorded); files list.
+- `docs/conformance-report.md`: final pass ("what changed on 15 Nov", seven journeys, three languages, no logo, 2.1.4,
+  2.4.5, 3.2.3, 3.2.4, 3.2.6, 3.3.7, 4.1.3, limitations); every "Manual result" cell left for the team (56).
+- `docs/architecture.md` and `docs/demo-script.md` rewritten for today's product.
+- `LICENSE`: still a placeholder; listed as the first open item.
+- Docker: not available on this machine; the compose file's paths were checked, a clean-machine run stays open.
+- **Open items:** the licence text; the team's manual results; a clean-machine `docker compose up`; one full-suite
+  run on the final commit.
