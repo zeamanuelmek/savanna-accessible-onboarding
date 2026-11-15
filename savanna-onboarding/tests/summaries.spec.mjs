@@ -153,7 +153,7 @@ test('"Automatic reading" is one switch, in the Accessibility panel and in Setti
   await expect(page.locator('#sj-hear')).toHaveCount(0);
   await page.keyboard.press('Escape');
   await pick(page, 'read_type'); await page.locator('#sj-mode button[type=submit]').click();
-  expect(await said(page)).toEqual([]); // nothing read
+  expect(await said(page)).toEqual(['Automatic reading off']); // only the short confirmation; then nothing is read
   await at(page, '/settings.html');
   await expect(page.locator('#sj-hear')).toHaveCount(0);
   const group = page.getByRole('group', { name: 'Automatic reading' });
@@ -233,13 +233,16 @@ test('turning automatic reading off stops the sound at once; turning it on again
   await expect.poll(() => page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('playing');
   const panel = await accessibilityPanel(page);
   const reading = panel.locator('.sj-tog[data-tog=reading]');
-  await reading.click(); // off
-  expect(await page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('idle');
+  await reading.click(); // off: the page summary stops at once; only "Automatic reading off" is said
   expect(await page.evaluate(() => window.__cancels)).toBeGreaterThan(0);
+  expect(await said(page)).toEqual([expect.stringContaining('Jobs. First a checkbox'), 'Automatic reading off']);
+  await page.keyboard.press('Escape'); await page.keyboard.press('Escape'); // stop the confirmation; close the panel
+  await expect.poll(() => page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('idle');
   await expect(playBar(page)).toBeHidden();
+  await accessibilityPanel(page);
   await page.evaluate(() => { window.__said = []; });
-  await reading.click(); // on again
-  await expect.poll(() => said(page)).toEqual([expect.stringContaining('Jobs. First a checkbox')]);
+  await reading.click(); // on again: confirmed, then the page at once
+  await expect.poll(() => said(page), { timeout: 15000 }).toEqual(['Automatic reading on', expect.stringContaining('Jobs. First a checkbox')]); // (this test's voice takes 5 s a piece)
   await expect(reading).toHaveAttribute('aria-pressed', 'true');
 });
 
@@ -262,7 +265,7 @@ test('Check your answers reads its summary when it opens, and offers "Read all m
   await page.fill('[data-ref=input]', 'Abebe'); await next(page);
   await page.fill('[data-ref=input]', '0911234567'); await next(page);
   await next(page); await pick(page, 'yes'); await next(page);
-  await expect.poll(() => said(page)).toContainEqual('Sign up for Savanna. Check your answers: 5 answers, each with a Change button. At the bottom is Create my account.');
+  await expect.poll(() => said(page)).toContainEqual('Check your answers: 5 answers, each with a Change button. At the bottom is Create my account.'); // a piece with its own clip
   await expect(page.getByRole('button', { name: 'Read all my answers' })).toBeVisible();
 });
 
@@ -282,7 +285,7 @@ test('the jobs page reads its summary when it opens', async ({ page }) => {
 test('a job application step reads its summary, then the question', async ({ page }) => {
   await readingOn(page); await signedInLearner(page);
   await at(page, '/apply.html?job=s1'); await page.waitForSelector('.dm-q');
-  await expect.poll(() => said(page)).toEqual(expect.arrayContaining([expect.stringMatching(/^Job application\. Step 1 of \d: your name for this application\./), 'Your name for this application']));
+  await expect.poll(() => said(page)).toEqual(expect.arrayContaining(['Job application.', expect.stringMatching(/^Step 1 of \d: your name for this application\.$/), 'Your name for this application']));
   await next(page); // the phone number (prefilled)
   await expect.poll(() => said(page)).toContainEqual(expect.stringMatching(/Step 2 of \d: your phone number\./));
 });
@@ -310,4 +313,30 @@ test('the Help panel has its own Listen button (same player)', async ({ page }) 
   await page.evaluate(() => { window.__said = []; });
   await page.locator('[data-act=listen-help]').click();
   await expect.poll(() => said(page)).toEqual([expect.stringContaining('There is no time limit.')]);
+});
+
+// ---- the voice fix (16 Nov): clips first, spoken choices, confirmed toggles, no tab-wide switch-off
+test('choosing an answer says "Selected: …" when reading is on (and nothing when it is off)', async ({ page }) => {
+  await readingOn(page);
+  await at(page, '/signup.html'); await page.waitForSelector('.dm-q');
+  await expect.poll(() => page.evaluate(() => window.SavannaOnboarding.player.state), { timeout: 15000 }).toBe('idle'); // the page has been read
+  await page.evaluate(() => { window.__said = []; });
+  await pick(page, 'self');
+  await expect.poll(() => said(page)).toEqual(['Selected:', 'Me, for myself']);
+  await page.evaluate(() => window.SavannaOnboarding.setPrefs({ autoRead: 'off', easy: false }));
+  await page.evaluate(() => { window.__said = []; });
+  await pick(page, 'partner');
+  await page.waitForTimeout(300);
+  expect(await said(page)).toEqual([]);
+});
+
+test('the Accessibility toggles are confirmed aloud when reading is on ("Larger text on")', async ({ page }) => {
+  await readingOn(page);
+  await at(page, '/jobs.html');
+  const panel = await accessibilityPanel(page);
+  await page.evaluate(() => { window.__said = []; });
+  await panel.locator('.sj-tog[data-tog=size]').click();
+  await expect.poll(() => said(page)).toEqual(['Larger text on']);
+  await panel.locator('.sj-tog[data-tog=reading]').click(); // off
+  await expect.poll(() => said(page)).toContain('Automatic reading off');
 });

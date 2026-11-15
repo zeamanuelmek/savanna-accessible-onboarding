@@ -124,6 +124,33 @@ test.describe('in the browser (proxy mocked)', () => {
     expect(await page.evaluate(() => window.SavannaOnboarding.speechProxy().down)).toBe(true);
   });
 
+  test('a passing failure (502) never switches the online voice off: the next piece tries again', async ({ page }) => {
+    await freshStart(page, { lang: 'om', remote: true });
+    const calls = await mockProxy(page, { tts: 502 });
+    await signupTo(page, 'filler');
+    await fakeVoice(page);
+    await page.locator('[data-act=listen]').click();
+    await expect.poll(() => page.evaluate(() => window.__said.length)).toBeGreaterThan(0);
+    const n = calls.tts.length;
+    await page.locator('[data-act=listen]').click();
+    await expect.poll(() => calls.tts.length).toBeGreaterThan(n); // asked again
+    expect(await page.evaluate(() => window.SavannaOnboarding.speechProxy().down)).toBe(false);
+  });
+
+  test('not set up: paused, and tried again after 60 seconds', async ({ page }) => {
+    await page.clock.install();
+    await freshStart(page, { lang: 'om', remote: true });
+    const calls = await mockProxy(page, { tts: 503 });
+    await signupTo(page, 'filler');
+    await fakeVoice(page);
+    await page.locator('[data-act=listen]').click();
+    await expect.poll(() => calls.tts.length).toBe(1);
+    await page.clock.runFor(2000);
+    expect(await page.evaluate(() => window.SavannaOnboarding.speechProxy().down)).toBe(true);
+    await page.clock.fastForward(61000);
+    expect(await page.evaluate(() => window.SavannaOnboarding.speechProxy().down)).toBe(false);
+  });
+
   test('voice answer in Amharic: recorded, sent to the proxy (lang=am, WebM), and shown for checking first', async ({ page }) => {
     await freshStart(page, { lang: 'am', remote: true });
     await fakeRecorder(page);

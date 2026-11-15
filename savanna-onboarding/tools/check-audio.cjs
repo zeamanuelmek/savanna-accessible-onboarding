@@ -17,7 +17,7 @@ const FORMATS = ['.mp3', '.m4a'];
 // expected clips: rows like  | 12 | `am/signup-name-question.mp3` | <span lang="am">…</span> | 6 s | |
 const expected = [];
 for (const line of script.split(/\r?\n/)) {
-  const m = line.match(/^\|\s*(\d+)\s*\|\s*`(am|en)\/([a-z0-9-]+)\.mp3`\s*\|\s*(?:<span[^>]*>)?(.*?)(?:<\/span>)?\s*\|/);
+  const m = line.match(/^\|\s*(\d+)\s*\|\s*`(am|en|om)\/([a-z0-9-]+)\.mp3`\s*\|\s*(?:<span[^>]*>)?(.*?)(?:<\/span>)?\s*\|/);
   if (m) expected.push({ n: +m[1], lang: m[2], key: m[3], text: m[4] });
 }
 if (!expected.length) { console.error('No clips found in docs/audio-script.md.'); process.exit(1); }

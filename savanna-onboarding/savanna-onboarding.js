@@ -101,6 +101,7 @@
       heard: 'I heard:', yes: 'Use this answer', again: 'Say it again', type: 'Type it instead',
       recStart: 'Recording. Speak now, then press Stop when you have finished.',
       readFail: 'Reading aloud isn\'t available right now. Everything is written on the screen.',
+      selected: 'Selected:', notSelected: 'Not selected:',
       heardChoose: 'Choose {yes}, {again}, or {type}.', yourAnswer: 'Your answer:', nothingTyped: 'Nothing is typed yet.',
       spell: 'Spell it', readBack: 'Read back my answer', readBackId: 'Read back the number', idNote: 'People near you may hear this.',
       readItAloud: 'Read it aloud', cancel: 'Cancel', readAll: 'Read all my answers',
@@ -195,6 +196,7 @@
       heard: 'የሰማሁት፦', yes: 'ይህን መልስ ተጠቀም', again: 'እንደገና ይናገሩ', type: 'በመጻፍ ይመልሱ',
       recStart: 'እየተቀዳ ነው። አሁን ይናገሩ፤ ሲጨርሱ «{stop}»ን ይጫኑ።',
       readFail: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
+      selected: 'ተመርጧል፦', notSelected: 'አልተመረጠም፦',
       heardChoose: '«{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።', yourAnswer: 'መልስዎ፦', nothingTyped: 'እስካሁን ምንም አልተጻፈም።',
       spell: 'ፊደል በፊደል አንብብ', readBack: 'መልሴን አንብብልኝ', readBackId: 'ቁጥሩን አንብብልኝ', idNote: 'በአጠገብዎ ያሉ ሰዎች ሊሰሙት ይችላሉ።',
       readItAloud: 'ጮክ ብለህ አንብበው', cancel: 'ተው', readAll: 'መልሶቼን ሁሉ አንብብልኝ',
@@ -295,6 +297,8 @@
       heard: 'Kan ani dhage\'e:',
       recStart: 'Waraabamaa jira. Amma dubbadhu, yoo xumurte "{stop}" tuqi.',
       readFail: 'Sagaleen dubbisuun amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.',
+      selected: 'Filatame:',
+      notSelected: 'Hin filatamne:',
       heardChoose: '"{yes}", "{again}" ykn "{type}" filadhu.',
       yourAnswer: 'Deebii kee:',
       nothingTyped: 'Ammaaf wanti barreeffame hin jiru.',
@@ -1108,7 +1112,7 @@
   function isNameField(f) { return !!f.voiceWarning || (f.type === 'text' && /name/.test(f.id)); }
   /** Pieces to read back an answer. prefix: 'heard' or 'yourAnswer'. */
   function readBackItems(f, value, lang, prefix) {
-    var items = [{ key: null, text: t(prefix, lang), lang: lang }];
+    var items = [{ key: prefix === 'heard' ? 'msg-heard' : 'msg-your-answer', text: t(prefix, lang), lang: lang }];
     if (f.type === 'tel') items = items.concat(phoneItems(value, lang)); // on the phone only
     else items.push({ key: null, text: String(value), lang: scriptLang(String(value), lang) });
     return items;
@@ -1879,7 +1883,7 @@
       if (navigator.onLine === false) { b.hidden = false; b.textContent = msg; }
       else { b.textContent = msg; setTimeout(function () { if (navigator.onLine !== false && b.textContent === t('online', self.lang)) b.hidden = true; }, 6000); }
       // read aloud too when automatic reading is on (offline: a recording or the phone's voice; the online voice is skipped)
-      if (readingOn()) Player.play([{ key: null, text: msg, lang: self.lang }], self.lang, { audioIssue: function () {} });
+      if (readingOn()) Player.play([{ key: navigator.onLine === false ? 'msg-offline' : 'msg-online', text: msg, lang: self.lang }], self.lang, { audioIssue: function () {} });
     };
     window.addEventListener('online', this._onNet);
     window.addEventListener('offline', this._onNet);
@@ -1963,6 +1967,29 @@
   function fill(str, vars) { Object.keys(vars).forEach(function (k) { str = str.split('{' + k + '}').join(vars[k]); }); return str; }
   /* --- page summaries (hand-written, never generated): what this screen asks, how to answer, and what is below it.
      English, with Amharic and Afaan Oromo drafts. --- */
+  /** The summary as pieces to read, each with its recorded clip (sum-…): in Amharic and Afaan Oromo the question
+   *  itself follows, so the step piece is "Step 3 of 5" without the topic; in English it includes the topic. */
+  SavannaOnboardingForm.prototype.summaryItems = function () {
+    var lang = SUMMARY_T[this.lang] ? this.lang : 'en', T = SUMMARY_T[lang], s = this.state, vm = this.vm(), cfg = this.cfg, m = s.mode, form = this.getAttribute('form');
+    var names = { next: t('next', lang), back: t('back', lang), change: t('change', lang) }, it = function (key, text) { return { key: key, text: text, lang: lang }; };
+    if (m === 'welcome') return [it('sum-welcome-' + form, fill(T.welcome, { title: L(cfg.title, lang), next: names.next }))];
+    if (m === 'question') {
+      var f = s.field(), p = s.progress(), back = s.step > 0 || !!vm.backUrl || this.welcomeOn;
+      var how = f.type === 'choice' || f.type === 'consent' ? 'one' : f.type === 'multi' ? 'many' : f.type === 'ethdate' ? 'date' : voiceAllowed(f, vm) && speech.input.supported(lang) ? 'say' : 'type';
+      var step = lang === 'en' ? fill(T.step, { n: p.n, m: p.total, topic: L(f.summary, 'en') || L(f.label, 'en') }) : fill(T.step, { n: p.n, m: p.total, topic: '' }).trim();
+      var items = [it('sum-step-' + p.n + '-' + p.total, step), it('sum-' + how, T[how])];
+      if (f.optional) items.push(it('sum-skip', T.skip));
+      items.push(it(back ? 'sum-both' : 'sum-only', fill(back ? T.both : T.only, names)));
+      return items;
+    }
+    if (m === 'review') {
+      var n = s.visible().filter(function (x) { return !x.reviewHide; }).length;
+      return [it('sum-review-' + form + '-' + n, fill(T.review, { title: L(cfg.reviewTitle, lang) || t('review', lang), n: n, change: names.change, submit: L(cfg.submitLabel, lang) || t('submit', lang) }))];
+    }
+    if (m === 'done') return [it('sum-done-' + form, fill(T.done, { title: L(cfg.doneTitle, lang), text: L(cfg.doneText, lang) }))];
+    if (m === 'saved') return [it('sum-saved', T.saved)];
+    return [];
+  };
   SavannaOnboardingForm.prototype.summary = function () {
     var lang = SUMMARY_T[this.lang] ? this.lang : 'en', T = SUMMARY_T[lang], s = this.state, vm = this.vm(), cfg = this.cfg, m = s.mode;
     var names = { next: t('next', lang), back: t('back', lang), change: t('change', lang) };
@@ -2037,6 +2064,7 @@
   };
 
   SavannaOnboardingForm.prototype.onChange = function (e) {
+    if (this.state.mode === 'welcome' && e.target.name === 'mode') { this.sayChoice(null, e.target); return; }
     var f = this.state.mode === 'question' && this.state.field();
     if (!f) return;
     if (f.type === 'ethdate') {
@@ -2057,13 +2085,17 @@
       var conv = this.ref('date-conv'); if (conv) conv.textContent = msg;
       if (msg && e.target.name !== 'cal') this.status(msg);
     }
-    if (this.easy && (f.type === 'choice' || f.type === 'multi' || f.type === 'consent') && e.target.closest) {
-      var lab = e.target.closest('.dm-opt');
-      if (lab && e.target.checked) {
-        var all = Array.prototype.slice.call(this.querySelectorAll('.dm-form .dm-opt'));
-        this.readOption(all.indexOf(lab));
-      }
-    }
+    if ((f.type === 'choice' || f.type === 'multi' || f.type === 'consent') && e.target.name === 'v') this.sayChoice(f, e.target);
+  };
+  /* Speak what the learner chooses, when reading is on: "Selected: …" (or "Not selected: …" for a box unticked),
+     with the option's own clip. */
+  SavannaOnboardingForm.prototype.sayChoice = function (f, input) {
+    if (!readingOn()) return;
+    var lang = this.lang, form = this.getAttribute('form'), o = f ? optionsOf(f).filter(function (x) { return String(x.value) === input.value; })[0] : null;
+    var label = o ? L(o.label, lang) : (input.closest('label') ? input.closest('label').textContent.trim() : input.value);
+    var key = f && o ? clipKey(form, f.id, 'option', o.value) : clipKey('welcome', 'option', input.value);
+    if (input.type === 'radio' && !input.checked) return;
+    Player.play([{ key: input.checked ? 'msg-selected' : 'msg-not-selected', text: t(input.checked ? 'selected' : 'notSelected', lang), lang: lang }, { key: key, text: label, lang: lang }], lang, { audioIssue: function () {} });
   };
 
   SavannaOnboardingForm.prototype.onClick = function (e) {
@@ -2117,7 +2149,7 @@
     }
     if (act === 'readback-id-go') {
       var iv = this.ref('input') ? this.ref('input').value.trim() : '';
-      Player.play(iv ? [{ key: null, text: t('yourAnswer', this.lang), lang: this.lang, local: true }].concat(localDigitItems(iv, this.lang)) : [{ key: null, text: t('nothingTyped', this.lang), lang: this.lang }], this.lang, this);
+      Player.play(iv ? [{ key: 'msg-your-answer', text: t('yourAnswer', this.lang), lang: this.lang, local: true }].concat(localDigitItems(iv, this.lang)) : [{ key: 'msg-nothing-typed', text: t('nothingTyped', this.lang), lang: this.lang }], this.lang, this);
       return;
     }
     if (act === 'readall') {
@@ -2183,7 +2215,7 @@
   /** "Read back my answer" (names and phone numbers): what is typed now, with the same rules as voice answers. */
   SavannaOnboardingForm.prototype.readBack = function () {
     var f = this.state.field(), inp = this.ref('input'), v = inp ? inp.value.trim() : '';
-    Player.play(v ? readBackItems(f, v, this.lang, 'yourAnswer') : [{ key: null, text: t('nothingTyped', this.lang), lang: this.lang }], this.lang, this);
+    Player.play(v ? readBackItems(f, v, this.lang, 'yourAnswer') : [{ key: 'msg-nothing-typed', text: t('nothingTyped', this.lang), lang: this.lang }], this.lang, this);
   };
   /** "Read all my answers" on Check your answers: each question and answer; the ID number only if confirmed. */
   SavannaOnboardingForm.prototype.readAll = function (withId) {
@@ -2302,7 +2334,7 @@
     var ed = this.ref('heard-edit') || this.ref('heard-h'); if (ed) ed.focus();
     // read back what was heard, so it can be checked by ear, then the three choices
     var back = v.hits || v.date ? [{ key: null, text: t('heard', lang) + ' ' + v.shown, lang: lang }] : readBackItems(f, v.value, lang, 'heard');
-    back.push({ key: null, text: t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }), lang: lang });
+    back.push({ key: 'msg-heard-choose-' + (choice ? 'tap' : 'type'), text: t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }), lang: lang });
     // if nothing can read it, stay quiet: "I heard: … Choose …" is already announced and on the screen
     Player.play(back, lang, { audioIssue: function () {} });
   };
@@ -2509,6 +2541,52 @@
       .map(function (f) { return { id: f.id, label: L(f.reviewLabel || f.label, vm.lang), value: View.display(vm, f, answers[f.id]) }; });
   }
 
+  /** Every fixed text the module reads aloud, in one language, with the name of its recorded clip. The clip
+   *  generator (tools/audio-script.cjs) writes these exact words, so a clip always matches the screen. Dynamic text
+   *  (names, typed answers, a list built from the learner's own Support Passport) is not in it. */
+  function speechCatalog(lang) {
+    var out = [], seen = {}, T = SUMMARY_T[lang] || SUMMARY_T.en, names = { next: t('next', lang), back: t('back', lang), change: t('change', lang) };
+    function add(section, key, text) { if (!text || seen[key] || typeof text !== 'string') return; seen[key] = 1; out.push({ section: section, key: key, text: text }); }
+    var fixed = function (v) { return typeof v === 'function' ? null : L(v, lang); };
+    add('Start', 'welcome-question', t('welcomeTitle', lang) + ' ' + t('welcomeHint', lang));
+    MODES.forEach(function (m) { add('Start', clipKey('welcome', 'option', m), t('m_' + m, lang)); });
+    Object.keys(FORMS).forEach(function (id) {
+      var cfg = FORMS[id], sec = 'Form: ' + id;
+      cfg.fields.forEach(function (f) {
+        if (typeof f.label !== 'function' && typeof f.body !== 'function' && typeof f.hint !== 'function')
+          add(sec, clipKey(id, f.id, 'question'), [fixed(f.label), fixed(f.body), fixed(f.hint)].filter(Boolean).join(' '));
+        optionsOf(f).forEach(function (o) { add(sec, clipKey(id, f.id, 'option', o.value), L(o.label, lang)); });
+        if (f.type === 'ethdate') { add(sec, clipKey(id, f.id, 'calendar'), t('calendar', lang)); add(sec, clipKey(id, f.id, 'option', 'eth'), t('calEth', lang)); add(sec, clipKey(id, f.id, 'option', 'greg'), t('calGreg', lang)); }
+      });
+      add(sec, clipKey(id, 'check-answers'), (L(cfg.reviewTitle, lang) || t('review', lang)) + '. ' + (L(cfg.reviewHint, lang) || t('reviewHint', lang)));
+      if (cfg.reviewNote) add(sec, clipKey(id, 'check-answers-note'), L(cfg.reviewNote, lang));
+      add(sec, clipKey(id, 'done'), L(cfg.doneTitle, lang) + ' ' + L(cfg.doneText, lang));
+      // summaries
+      add('Summaries', 'sum-welcome-' + id, fill(T.welcome, { title: L(cfg.title, lang), next: names.next }));
+      var most = cfg.fields.filter(function (f) { return !f.reviewHide; }).length; // never more answers than questions
+      for (var n = 1; n <= most; n++) add('Summaries', 'sum-review-' + id + '-' + n, fill(T.review, { title: L(cfg.reviewTitle, lang) || t('review', lang), n: n, change: names.change, submit: L(cfg.submitLabel, lang) || t('submit', lang) }));
+      add('Summaries', 'sum-done-' + id, fill(T.done, { title: L(cfg.doneTitle, lang), text: L(cfg.doneText, lang) }));
+    });
+    var longest = Math.max.apply(null, Object.keys(FORMS).map(function (id) { return FORMS[id].fields.length; }));
+    if (lang !== 'en') for (var mm = 1; mm <= longest; mm++) for (var nn = 1; nn <= mm; nn++) add('Summaries', 'sum-step-' + nn + '-' + mm, fill(T.step, { n: nn, m: mm, topic: '' }).trim());
+    ['one', 'many', 'date', 'say', 'type', 'skip', 'saved'].forEach(function (k) { add('Summaries', 'sum-' + k, T[k]); });
+    add('Summaries', 'sum-both', fill(T.both, names)); add('Summaries', 'sum-only', fill(T.only, names));
+    // messages read aloud
+    add('Messages', 'help', t('helpTitle', lang) + ' ' + t('helpText', lang));
+    add('Messages', 'msg-heard', t('heard', lang)); add('Messages', 'msg-your-answer', t('yourAnswer', lang)); add('Messages', 'msg-nothing-typed', t('nothingTyped', lang));
+    add('Messages', 'msg-heard-choose-type', t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t('type', lang) }));
+    add('Messages', 'msg-heard-choose-tap', t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t('tapInstead', lang) }));
+    add('Messages', 'msg-selected', t('selected', lang)); add('Messages', 'msg-not-selected', t('notSelected', lang));
+    add('Messages', 'msg-offline', t('offline', lang)); add('Messages', 'msg-online', t('online', lang));
+    Object.keys(ERROR_CLIPS).forEach(function (k) { add('Messages', ERROR_CLIPS[k], t(k, lang)); });
+    add('Messages', 'saved-for-later', t('savedTitle', lang) + '. ' + t('savedText', lang));
+    add('Messages', 'resumed', t('resumed', lang)); add('Messages', 'prefilled', t('prefilled', lang));
+    add('Messages', 'voice-consent', t('voiceConsentTitle', lang) + '. ' + t('voiceConsent', lang));
+    add('Messages', 'voice-check', t('heardCheck', lang)); add('Messages', 'voice-used', t('voiceUsed', lang));
+    for (var x = 0; x < 100; x++) add('Numbers 0-99 (read on the phone only)', 'num-' + x, numberWords(x, lang));
+    return out;
+  }
+
   var API = window.SavannaOnboarding = {
     mount: mount, unmount: unmount,
     version: '0.12.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
@@ -2516,7 +2594,7 @@
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth, fromGregorian: gregToEth, gregorianMonths: GREG_MONTHS, parseSpoken: parseSpokenDate },
     describe: describe, speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
     player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
-    prefs: getPrefs, setPrefs: setPrefs, readingOn: readingOn,
+    prefs: getPrefs, setPrefs: setPrefs, readingOn: readingOn, speechCatalog: speechCatalog,
     /** Pieces to read an element's content (headings, paragraphs, lists), each in its own language: for Player.play. */
     itemsFromElement: itemsFromElement,
     /** The host's speech proxy (for example '/api'): Amharic and Afaan Oromo speech through it; null turns it off. */

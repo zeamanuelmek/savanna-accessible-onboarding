@@ -58,6 +58,7 @@
       modeTitle: 'How do you like to register?',
       modeHint: 'This is only about how you like to fill in the form. You can change it at any time in Settings.',
       m_read_type: 'Read and type', m_listen: 'Listen and respond', m_speak: 'Speak my answers', m_simple: 'Simple steps with pictures and big text',
+      stateOn: 'on', stateOff: 'off', selected: 'Selected:',
       a11y: 'Accessibility', autoRead: 'Automatic reading', allSettings: 'All accessibility settings', menuLabel: 'Menu',
       hearPage: 'Tap anywhere or press any key to hear this page',
       listenQ: 'Listen to the question', stopAudio: 'Stop', cont: 'Continue', errMode: 'Choose one way to continue.',
@@ -113,6 +114,7 @@
       modeHint: 'ይህ ቅጹን መሙላት የሚመርጡበትን መንገድ ብቻ ነው። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።',
       m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
       hearPage: 'ይህን ገጽ ለመስማት የትም ቦታ ይንኩ ወይም ማንኛውንም ቁልፍ ይጫኑ',
+      stateOn: 'በርቷል', stateOff: 'ጠፍቷል', selected: 'ተመርጧል፦',
       a11y: 'ተደራሽነት', autoRead: 'በራስ-ሰር ማንበብ', allSettings: 'ሁሉም የተደራሽነት ቅንብሮች', menuLabel: 'ምናሌ',
       listenQ: 'ጥያቄውን አዳምጥ', stopAudio: 'አቁም', cont: 'ቀጥል', errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
       acctTitle: 'ይመዝገቡ ወይም ይግቡ', acctChosen: 'የመረጡት፦ {mode}።', acctChange: 'የምመዘገብበትን መንገድ ቀይር',
@@ -214,6 +216,7 @@
       listenQ: 'Gaaffii dhaggeeffadhu',
       stopAudio: 'Dhaabi',
       hearPage: 'Fuula kana dhaggeeffachuuf bakka kamiyyuu tuqi ykn furtuu kamiyyuu cuqaasi',
+      stateOn: 'banameera', stateOff: 'cufameera', selected: 'Filatame:',
       a11y: 'Dhaqqabummaa', autoRead: 'Ofumaan dubbisuu', allSettings: 'Qindaa\'ina dhaqqabummaa hunda', menuLabel: 'Baafata',
       cont: 'Itti fufi',
       errMode: 'Itti fufuuf karaa tokko filadhu.',
@@ -366,18 +369,25 @@
       '<a href="showroom.html">' + T('showroom') + '</a> · <a href="test-host/">' + T('testHost') + '</a>';
     wireFrame();
   }
+  // "Larger text on", "Automatic reading off"… (recorded clips a11y-…), when reading is on or was just switched
+  function toggleSay(key, on) {
+    var label = { size: 'larger', contrast: 'contrast', motion: 'motion', reading: 'autoRead' }[key];
+    return [{ key: 'a11y-' + key + '-' + (on ? 'on' : 'off'), text: T(label) + ' ' + T(on ? 'stateOn' : 'stateOff'), lang: lang() }];
+  }
   function toggle(key) {
     var p = D.prefs();
-    if (key === 'size') D.setPrefs({ size: p.size === 'normal' ? 'large' : 'normal' });
-    else if (key === 'contrast') D.setPrefs({ contrast: p.contrast === 'high' ? 'normal' : 'high' });
-    else if (key === 'motion') D.setPrefs({ motion: p.motion === 'reduce' ? 'normal' : 'reduce' });
+    var said = function (k, on) { if (D.readingOn()) D.player.play(toggleSay(k, on), lang(), summaryOwner); };
+    if (key === 'size') { D.setPrefs({ size: p.size === 'normal' ? 'large' : 'normal' }); said('size', p.size === 'normal'); }
+    else if (key === 'contrast') { D.setPrefs({ contrast: p.contrast === 'high' ? 'normal' : 'high' }); said('contrast', p.contrast !== 'high'); }
+    else if (key === 'motion') { D.setPrefs({ motion: p.motion === 'reduce' ? 'normal' : 'reduce' }); said('motion', p.motion !== 'reduce'); }
     // one switch for all reading: page summaries and questions
     else if (key === 'reading') {
       var on = !D.readingOn(p);
-      if (!on) D.stopSpeaking(); // off: silence at once
+      if (!on) D.stopSpeaking(); // off: silence at once, then a short "Automatic reading off"
       needPrompt = false; interacted = true; lastRead = '';
       D.setPrefs({ autoRead: on ? 'on' : 'off', easy: on });
-      if (on) readCurrent(); // on: read this page now
+      if (on) readCurrent(toggleSay('reading', true)); // on: "Automatic reading on", then this page at once
+      else D.player.play(toggleSay('reading', false), lang(), summaryOwner);
     }
     else if (D.languages.indexOf(key) !== -1 && key !== lang()) D.setPrefs({ lang: key });
   }
@@ -544,10 +554,16 @@
       om: 'Baga gara Savanna dhufte. Tarkaanfii 1 keessaa 2: akkaataa galmaa\'uu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu fi deebisuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii fi barreeffama gurguddaa wajjin. Sana booda "Itti fufi" filadhu. Afaan fi Dhaqqabummaan fuula gubbaa jiru.' }
   };
   function inLang(o) { return o ? (o[lang()] || o.en) : ''; }
-  function homeSummary() { return inLang(HOME_SUMMARY[signedIn() ? 'back' : home.step === 'account' ? 'account' : 'mode']); }
+  function homeWhich() { return signedIn() ? 'back' : home.step === 'account' ? 'account' : 'mode'; }
+  function homeSummary() { return inLang(HOME_SUMMARY[homeWhich()]); }
   function pageSummary() {
     if (PROTECTED.indexOf(page) !== -1 && !signedIn()) return inLang(PAGE_SUMMARY.needLogin);
     return page === 'home' ? homeSummary() : inLang(PAGE_SUMMARY[page]);
+  }
+  // the recorded clip of the page summary (page-…), so it never depends on a live voice
+  function pageSummaryKey() {
+    if (PROTECTED.indexOf(page) !== -1 && !signedIn()) return 'page-needlogin';
+    return page === 'home' ? 'page-home-' + homeWhich() : 'page-' + page;
   }
   // force: a new page or step (read even if the words are the same); otherwise only read when the words changed
   function setSummary(text, force) {
@@ -566,15 +582,22 @@
   /* What a page or step says when it opens: its summary (English for now), then a form's question and answers (any
      language: recorded clips first, then Addis AI, then the phone's voice). The page decides this, every time a page
      or step opens (also on revisits and Back), so it is never read twice or only once. */
-  function readCurrent() {
-    var items = [], form = currentForm();
-    if (summaryText) items.push({ key: null, text: summaryText, lang: lang() });
-    if (form && form.readItems && form.state && (form.state.mode === 'question' || form.state.mode === 'welcome' || form.state.mode === 'done')) {
-      try { items = items.concat(form.state.mode === 'done' ? form.readItems().slice(0) : form.readItems()); } catch (e) {}
-    } else if (!form) items = items.concat(pageContent()); // notices and cards on pages without a form
+  function readCurrent(before) {
+    var items = (before || []).slice(), form = currentForm(), L2 = lang();
+    if (form && form.summaryItems && form.state) {
+      // a form: "Sign up for Savanna." + the step summary + (Check your answers: what is below) — each a recorded clip
+      var f = form.getAttribute('form'), mode = form.state.mode;
+      if (FORM_PRE[f]) items.push({ key: 'pre-' + f, text: inLang(FORM_PRE[f]), lang: L2 });
+      try { items = items.concat(form.summaryItems()); } catch (e) {}
+      if (mode === 'review' && FORM_POST[f]) items.push({ key: 'post-' + f, text: inLang(FORM_POST[f]), lang: L2 });
+      if (mode === 'question' || mode === 'welcome' || mode === 'done') { try { items = items.concat(form.readItems()); } catch (e) {} }
+    } else {
+      if (summaryText) items.push({ key: pageSummaryKey(), text: summaryText, lang: L2 });
+      items = items.concat(pageContent()); // notices and cards on pages without a form
+    }
     lastRead = summaryText;
     if (!items.length) return;
-    try { D.player.play(items, lang(), form || summaryOwner); } catch (e) {}
+    try { D.player.play(items, L2, form || summaryOwner); } catch (e) {}
   }
   function readSummary() { readCurrent(); }
   /* The content read after the summary on pages without a form: the notices waiting for the learner (dashboard), the
@@ -633,6 +656,24 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && D.player.state !== 'idle') D.stopSpeaking(); }); // Escape stops at once
   // each new form step brings its own summary (and is read when reading is on)
   D.hostReads = true; // these pages decide what is read when a step opens; the forms do not read on their own
+  /** Every fixed text these pages read aloud, in one language, with its clip name (for tools/audio-script.cjs). */
+  window.SavannaJourney = { speechCatalog: function (l) {
+    var out = [], tl = function (k) { return (TX[l] && TX[l][k]) || TX.en[k]; }, inL = function (o) { return o[l] || o.en; };
+    out.push({ section: 'Savanna pages', key: 'home-question', text: tl('modeTitle') + ' ' + tl('modeHint') });
+    Object.keys(PAGE_SUMMARY).forEach(function (k) { out.push({ section: 'Page summaries', key: 'page-' + k.toLowerCase(), text: inL(PAGE_SUMMARY[k]) }); });
+    Object.keys(HOME_SUMMARY).forEach(function (k) { out.push({ section: 'Page summaries', key: 'page-home-' + k, text: inL(HOME_SUMMARY[k]) }); });
+    Object.keys(FORM_PRE).forEach(function (k) { out.push({ section: 'Page summaries', key: 'pre-' + k, text: inL(FORM_PRE[k]) }); });
+    Object.keys(FORM_POST).forEach(function (k) { out.push({ section: 'Page summaries', key: 'post-' + k, text: inL(FORM_POST[k]) }); });
+    [['size', 'larger'], ['contrast', 'contrast'], ['motion', 'motion'], ['reading', 'autoRead']].forEach(function (x) {
+      out.push({ section: 'Accessibility panel', key: 'a11y-' + x[0] + '-on', text: tl(x[1]) + ' ' + tl('stateOn') });
+      out.push({ section: 'Accessibility panel', key: 'a11y-' + x[0] + '-off', text: tl(x[1]) + ' ' + tl('stateOff') });
+    });
+    out.push({ section: 'Savanna pages', key: 'page-offline', text: tl('offline') });
+    var sms = tl('smsText').split('{code}');
+    [['login-phone', tl('phone')], ['login-phone-hint', tl('phoneHint')], ['login-sms-title', tl('smsTitle')], ['login-sms-before', sms[0]], ['login-sms-after', sms[1]], ['login-code', tl('code')], ['login-code-hint', tl('codeHint')]]
+      .forEach(function (x) { if (x[1] && x[1].trim()) out.push({ section: 'Log in', key: x[0], text: x[1] }); });
+    return out;
+  } };
   document.addEventListener('savanna-onboarding:step', function (e) {
     var d = e.detail || {}, text = d.summary ? [inLang(FORM_PRE[d.form]), d.summary, d.mode === 'review' ? inLang(FORM_POST[d.form]) : ''].join(' ').trim() : '';
     // a done screen is read once the host has filled in its confirmation (just after this event)
@@ -762,7 +803,11 @@
     if (signedIn()) view.querySelector('.sj-split-form').removeAttribute('aria-labelledby');
     var form = document.getElementById('sj-mode');
     if (form) {
-      form.onchange = function (e) { if (e.target.name === 'mode') home.mode = e.target.value; };
+      form.onchange = function (e) {
+        if (e.target.name !== 'mode') return;
+        home.mode = e.target.value;
+        if (D.readingOn()) D.player.play([{ key: 'msg-selected', text: T('selected'), lang: lang() }, { key: 'welcome-option-' + e.target.value.replace('_', '-'), text: T('m_' + e.target.value), lang: lang() }], lang(), summaryOwner);
+      };
       form.onsubmit = function (e) {
         e.preventDefault();
         var c = form.querySelector('input[name=mode]:checked');
@@ -828,13 +873,13 @@
        simulated SMS, with the code digit by digit and on the phone only (it is never sent to an online voice). */
     document.getElementById('sj-login-listen').onclick = function () {
       var L2 = lang(), items;
-      if (login.step === 'phone') items = [{ key: null, text: T('phone'), lang: L2 }, { key: null, text: T('phoneHint'), lang: L2 }];
+      if (login.step === 'phone') items = [{ key: 'login-phone', text: T('phone'), lang: L2 }, { key: 'login-phone-hint', text: T('phoneHint'), lang: L2 }];
       else {
         var sms = T('smsText', { code: '{CODE}' }).split('{CODE}'); // the words before and after the code
-        items = [{ key: null, text: T('smsTitle'), lang: L2 }, { key: null, text: sms[0], lang: L2 }]
+        items = [{ key: 'login-sms-title', text: T('smsTitle'), lang: L2 }, { key: 'login-sms-before', text: sms[0], lang: L2 }]
           .concat(String(login.code).split('').map(function (c) { return { key: 'num-' + c, text: c, lang: L2, local: true }; }))
-          .concat(sms[1] && sms[1].trim() ? [{ key: null, text: sms[1], lang: L2 }] : [])
-          .concat([{ key: null, text: T('code'), lang: L2 }, { key: null, text: T('codeHint'), lang: L2 }]);
+          .concat(sms[1] && sms[1].trim() ? [{ key: 'login-sms-after', text: sms[1], lang: L2 }] : [])
+          .concat([{ key: 'login-code', text: T('code'), lang: L2 }, { key: 'login-code-hint', text: T('codeHint'), lang: L2 }]);
       }
       D.player.play(items, L2, { audioIssue: function (code) { var st = document.getElementById('sj-status'); if (st && code === 'readFail') st.textContent = D.label({ en: "Reading aloud isn't available right now. Everything is written on the screen.", am: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', om: 'Sagaleen dubbisuun amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.' }, L2); } });
     };
@@ -940,7 +985,7 @@
     var n = document.getElementById('sj-offline');
     if (!n) return;
     var hasForm = !!view.querySelector('savanna-onboarding-form');
-    if (navigator.onLine === false && !hasForm) { n.hidden = false; n.textContent = T('offline'); if (D.readingOn() && interacted) D.player.play([{ key: null, text: T('offline'), lang: lang() }], lang(), summaryOwner); }
+    if (navigator.onLine === false && !hasForm) { n.hidden = false; n.textContent = T('offline'); if (D.readingOn() && interacted) D.player.play([{ key: 'page-offline', text: T('offline'), lang: lang() }], lang(), summaryOwner); }
     else if (!n.hidden) { n.textContent = T('online'); setTimeout(function () { if (navigator.onLine !== false) n.hidden = true; }, 6000); }
   }
   window.addEventListener('online', netNotice);

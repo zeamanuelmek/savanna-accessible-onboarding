@@ -52,7 +52,7 @@ test('sign-up asks no ID; "Add your ID (optional)" then gives "Number recorded â
   await expect(page.locator('.badge')).toHaveText('No ID added yet');
   await expect(page.locator('.dm-done-slot a[href="#/identity"]')).toHaveText('Add your ID (optional)');
   await page.locator('.dm-done-slot a[href="#/identity"]').click();
-  expect(await heading(page)).toBe('Which ID do you have?');
+  await expect.poll(() => heading(page)).toBe('Which ID do you have?'); // the page changes on hashchange: wait for it
   await pick(page, 'fayda'); await next(page);
   await fill(page, 'FAYDA-1234');
   await next(page);

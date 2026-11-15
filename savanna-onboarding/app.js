@@ -388,9 +388,9 @@
 
   function fmtDate(iso) { try { return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return iso.slice(0, 10); } }
   // a status message for screen readers; read aloud too when automatic reading is on (the shared player)
-  function sayStatus(id, msg) {
+  function sayStatus(id, msg, key) {
     setTimeout(function () { var s = document.getElementById(id); if (s) { s.textContent = ''; s.textContent = msg; } }, 80);
-    if (D.readingOn()) D.player.play([{ key: null, text: msg, lang: lang() }], lang(), { audioIssue: function () {} });
+    if (D.readingOn()) D.player.play([{ key: key || null, text: msg, lang: lang() }], lang(), { audioIssue: function () {} });
   }
 
   function passportView() {
@@ -419,13 +419,13 @@
         }).join('') + '</ul>' : '<p>' + T('sharedNone') + '</p>') + '</section>' +
         '<p class="actions"><button type="button" class="btn primary" id="edit">' + T('edit') + '</button> <a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a> <button type="button" class="btn danger" id="del">' + T('del') + '</button></p><p role="status" id="pp-status"></p>';
       document.getElementById('edit').onclick = function () { window.__editPassport = true; hideHostLang(); passportView(); };
-      document.getElementById('del').onclick = function () { store.del('passport'); window.__editPassport = false; passportView(); sayStatus('pp-status', T('deleted')); };
+      document.getElementById('del').onclick = function () { store.del('passport'); window.__editPassport = false; passportView(); sayStatus('pp-status', T('deleted'), 'card-deleted'); };
       document.getElementById('sharing').onclick = function () {
         var next = sharing === 'trainers' ? 'ask' : 'trainers';
         p.sharing = next; p.updated = new Date().toISOString(); store.set('passport', p);
         passportView();
         var b = document.getElementById('sharing'); if (b) b.focus();
-        sayStatus('pp-status', T('sharingSaved', { who: T('who_' + next) }));
+        sayStatus('pp-status', T('sharingSaved', { who: T('who_' + next) }), 'card-shared-' + next);
       };
       view.querySelectorAll('[data-withdraw]').forEach(function (b) {
         b.onclick = function () {
@@ -434,7 +434,7 @@
           store.set('applications', apps);
           passportView();
           var h = document.getElementById('shared-h'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
-          sayStatus('pp-status', T('withdrawDone'));
+          sayStatus('pp-status', T('withdrawDone'), 'card-withdrawn');
         };
       });
       focusH1();
@@ -476,7 +476,10 @@
     setTimeout(function () { var s = document.getElementById('jobs-status'); if (s) s.textContent = count === 1 ? T('jobShown') : T('jobsShown', { n: count }); }, 60);
     var flt = document.getElementById('flt');
     if (flt) flt.addEventListener('change', function () {
-      store.set('jobFilter', flt.checked); jobsView();
+      var on = flt.checked;
+      store.set('jobFilter', on); jobsView();
+      // "Selected: Only show jobs…" / "Not selected: …" when reading is on (recorded clips)
+      if (D.readingOn()) D.player.play([{ key: on ? 'msg-selected' : 'msg-not-selected', text: D.label(on ? { en: 'Selected:', am: 'ተመርጧል፦', om: 'Filatame:' } : { en: 'Not selected:', am: 'አልተመረጠም፦', om: 'Hin filatamne:' }, lang()), lang: lang() }, { key: 'jobs-filter', text: T('filterAll'), lang: lang() }], lang(), { audioIssue: function () {} });
       var f = document.getElementById('flt'); if (f) f.focus();
     });
     /* "Listen to this job": the same player as automatic reading (bottom bar "Now reading… Pause · Stop", Escape stops),
@@ -490,7 +493,7 @@
         var jl = j.lang || (j.sample ? 'en' : lang()), ul = lang();
         var items = [{ key: null, text: j.title, lang: jl }, { key: null, text: j.org + '. ' + j.location, lang: jl },
           { key: null, text: L(MODE[j.mode], ul), lang: ul }, { key: null, text: j.description, lang: jl },
-          { key: null, text: T('offers') + ': ' + j.offers.map(needLabel).join(', '), lang: ul }];
+          { key: 'jobs-offers', text: T('offers'), lang: ul }].concat(j.offers.map(function (o) { return { key: 'passport-needs-option-' + o.replace(/_/g, '-'), text: needLabel(o), lang: ul }; }));
         pl.play(items, ul, { job: id, audioIssue: function (code) {
           var st = document.getElementById('jobs-status');
           if (st && code === 'readFail') { st.textContent = ''; setTimeout(function () { st.textContent = D.label({ en: 'Reading aloud isn\'t available right now. Everything is written on the screen.', am: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', om: 'Sagaleen dubbisuun amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.' }, lang()); }, 50); }
@@ -614,6 +617,13 @@
     // Where "Back" on a form's first screen goes (the Savanna journey sets it; the showroom has none).
     backUrl: null,
     T: T, lang: lang, esc: esc, jobs: jobs, statusPanel: statusPanel,
+    /** Fixed texts this host reads aloud, in one language, with their clip names (tools/audio-script.cjs). */
+    speechCatalog: function (l) {
+      var tl = function (k, vars) { var s = (TX[l] && TX[l][k]) || TX.en[k]; Object.keys(vars || {}).forEach(function (v) { s = s.split('{' + v + '}').join(vars[v]); }); return s; };
+      return [['card-shared-ask', tl('sharingSaved', { who: tl('who_ask') })], ['card-shared-trainers', tl('sharingSaved', { who: tl('who_trainers') })],
+        ['card-withdrawn', tl('withdrawDone')], ['card-deleted', tl('deleted')], ['jobs-offers', tl('offers')], ['jobs-filter', tl('filterAll')]]
+        .map(function (x) { return { section: 'Support Passport card and jobs', key: x[0], text: x[1] }; });
+    },
     setLinks: function (fn) { linkFor = fn; },
     render: function (name, container, arg) { view = container; window.__editPassport = false; VIEWS[name](arg); }
   };

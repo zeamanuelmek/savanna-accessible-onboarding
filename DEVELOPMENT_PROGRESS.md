@@ -1693,3 +1693,33 @@ use the module's own reading (Listen, option Listen, Read all, read back), not t
   button text and decorative icons. Settings: skipped (agreed).
 - Tests (one worker, both sizes): readback/summaries/journey/identity/career/offline 172 passed; a11y for log-in and
   Support Passport screens 20 passed, 0 serious or critical. The full suite runs overnight.
+
+---
+
+## Urgent voice fix (15-16 Nov night)
+
+- **Cause of the silence:** Addis AI answered `422 CLIENT_REQUEST_ID_REQUIRED` ("client_request_id is required for paid
+  generation") to every TTS request; the docs list the field as optional. Found by calling Addis AI directly with
+  the key from the local `.env` (git-ignored; never printed). The proxy now sends `client_request_id` (a hash of the
+  words, language and voice, so a repeat is an idempotent replay), uses the MP3 inline in `data.audio`, and logs
+  Addis AI's error message (300 characters, never the key or the learner's text). STT needed no change.
+  Pushed first, on its own (`d2c98f0`).
+- **No silent dead ends:** the online voice is paused only when the proxy is not set up (`not_configured`,
+  `origin`, no proxy) and tried again after 60 s; passing failures never switch it off. A piece that cannot be read
+  is skipped with one message.
+- **Fixed text never depends on a live service:** every fixed text that is read has a recorded clip: page and step
+  summaries, every form question, answer and hint (all seven forms), check-your-answers and done texts, the "I
+  heard / Choose…" prompts, "Selected:", status and offline messages, the Accessibility toggles, log-in, the
+  Support Passport card messages, the jobs labels, numbers 0-99. **754 clips: 377 Amharic (edge-tts, Mekdes) and 377
+  Afaan Oromo (Addis AI, om-bikila, generated once), 28.8 MB.** The clip list comes from catalogs in the code
+  (`SavannaOnboarding.speechCatalog`, `SavannaJourney.speechCatalog`, `SavannaDemoHost.speechCatalog`) so a clip
+  always matches the screen. Generators kept: `tools/audio-script.cjs`, `tools/generate-audio.py`,
+  `tools/generate-audio-addis.cjs` (replaces `generate-oromo-numbers.cjs`); both make only missing or changed clips.
+  Addis AI live is used only for dynamic text (names, typed answers, employer-written job text).
+- **Speak what the learner chooses:** with reading on, "Selected: …" / "Not selected: …" (the option's clip) for
+  answers, the four ways on the home page and the jobs filter; the Accessibility toggles are confirmed ("Larger text
+  on", "Automatic reading on/off"); turning reading on says so and reads the page at once.
+- Tests (one worker, both sizes): readback/summaries/addis 118 passed (after updating tests to the new behaviour:
+  recordings now play where the phone's voice or Addis AI did, "Automatic reading off" is spoken); readaloud/voice/
+  journey/career/identity/date-language/offline/security 184 passed (one timing fix); **a11y 192 scans, 0 serious or
+  critical.**
