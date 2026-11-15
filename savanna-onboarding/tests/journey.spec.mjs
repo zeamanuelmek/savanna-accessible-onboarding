@@ -106,7 +106,7 @@ test('Savanna frame: menu button, labelled navigation, logo with a name, languag
   await expect(page.getByRole('link', { name: 'Savanna home' })).toHaveCount(1);
   await page.locator('.sj-tog[data-tog=am]').click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'am');
-  await expect(page.locator('.sj h1')).toHaveText('ከALX ጋር ወደ ጉዞዎ እንኳን ደህና መጡ');
+  await expect(page.locator('.sj h1')).toHaveText('ወደ ምዝገባ ገጽዎ እንኳን ደህና መጡ');
   await expect(page.locator('.sj-tog[data-tog=am]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('.sj-tog[data-tog=am]')).toBeFocused();
   await page.locator('.sj-tog[data-tog=en]').click();
@@ -240,10 +240,13 @@ test('the showroom stays reachable as the developer and test page', async ({ pag
   await expect(page).toHaveTitle(/Savanna Accessible Onboarding Module/);
 });
 
-test('home: first "How would you like to use Savanna?", then "Sign up or log in"; Back returns to the first step', async ({ page }) => {
+test('home: first "How do you like to register?", then "Sign up or log in"; Back returns to the first step', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/index.html');
-  await expect(page.locator('.sj-split h1')).toHaveText('Welcome to your journey with ALX');
+  await expect(page.locator('.sj-split h1')).toHaveText('Welcome to your onboarding page');
+  await expect(page.locator('.sj-split img')).toHaveCount(0); // generic: no ALX logo in the welcome panel
+  await expect(page.locator('.sj-a11y-t')).toHaveCount(0); // no "Make this page work for you." sentence on the home page
+  await expect(page.getByRole('region', { name: 'Make this page work for you.' })).toHaveCount(1);
   await expect(page.locator('.sj-split a[href="signup.html"]')).toHaveCount(0); // sign up comes after the choice
   await page.locator('#sj-mode button[type=submit]').click(); // nothing chosen
   await expect(page.locator('#sj-mode-errors')).toBeFocused();
@@ -256,7 +259,7 @@ test('home: first "How would you like to use Savanna?", then "Sign up or log in"
   const prefs = await page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.prefs')));
   expect(prefs).toMatchObject({ mode: 'simple', pictures: true, size: 'large' });
   await page.goBack();
-  await expect(page.locator('#sj-step-h')).toHaveText('How would you like to use Savanna?');
+  await expect(page.locator('#sj-step-h')).toHaveText('How do you like to register?');
   await expect(page.locator('input[value=simple]')).toBeChecked();
   await page.goForward();
   await page.locator('.sj-split a[href="signup.html"]').click();

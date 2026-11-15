@@ -1372,3 +1372,25 @@ Asked by the team outside the phase plan, before Phase 10.
   Its links (Start Learning, events, My courses…) go nowhere, as in the starter.
 - Tests: updated for the new layout; new tests for the dashboard content, sidebar order, activities, dialog,
   account menu, and the logged-out dashboard.
+
+---
+
+## Team requests (15 Nov): date of birth, home wording, Afaan Oromo
+
+- **Date of birth (sign-up question 6):** first "Which calendar do you use?" (Ethiopian / Gregorian). "Read and type"
+  and "simple steps": day, month and year are lists, no microphone. "Listen" and "speak": day and year are typed,
+  with "Answer by voice" (spoken dates such as "12 Meskerem 1995" or "March 5 1990" are shown for checking first;
+  a month name chooses the calendar). Switching calendar keeps the same day (converted). The other calendar's date
+  is shown under the fields. Answer format adds `cal` (`docs/api-schema.md`). Decision 18 updated in CLAUDE.md.
+  Fixed on the way: choosing a month or year used to redraw the question and move focus to the heading.
+- **Home page:** no "Make this page work for you." sentence (the buttons stay, so language and contrast can still be
+  changed on the first page; the bar keeps the sentence as its name for screen readers). "How do you like to
+  register?". The welcome panel is generic ("Welcome to your onboarding page"), with no ALX logo, so any
+  organisation can use it.
+- **Afaan Oromo (`om`)** on every page: module interface, the four forms and the profile/takeover forms, support
+  needs, trust badges, demo views, Savanna pages and sidebar, "Make this page work for you." bar, Settings, month
+  names (Ethiopian and Gregorian), the in-form language switch (now one button per other language). About 460 texts.
+  **DRAFT: the team's native speaker must proofread it.** Browsers rarely have Oromo speech: read-aloud and voice
+  answers say so, and everything stays written on screen. Recorded audio exists for Amharic only.
+- Tests: `tests/date-language.spec.mjs` (new, 9 tests), accessibility screens for the typed date and an Oromo
+  question; older tests updated.

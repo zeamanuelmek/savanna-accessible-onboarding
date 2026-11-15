@@ -53,7 +53,8 @@ Decisions from the Phase 2 review (14 Nov):
 15. **Gate main task (confirmed): "sign up for Savanna and save a Support Passport".** That path must be perfect first.
 16. **Phase 8 shows a realistic learner journey inside the Savanna starter pages**, not our showroom menu (details in Phase 8 below). The current demo site stays as the **developer and test page**.
 17. **Amharic:** the co-designer or an interpreter reviews the Amharic text on 14 Nov afternoon; Zeamanuel records the audio clips that night from `savanna-onboarding/docs/audio-script.md` into `savanna-onboarding/assets/audio/am/` (MP3, or M4A), then runs `node tools/check-audio.cjs` and commits the clips with `assets/audio/manifest.json`. Text changes go into the code first, then the script is regenerated (`node tools/audio-script.cjs`).
-18. **No microphone on the date question** (approved cut, Phase 3): the Ethiopian date is typed or chosen. Documented in `docs/for-developers.md`.
+18. ~~No microphone on the date question~~ **Replaced on 15 Nov (owner request):** the date of birth starts with a choice of calendar (Ethiopian or Gregorian). Learners who chose "read and type" or "simple steps" pick day, month and year from lists, with no microphone; learners who chose "listen" or "speak" type day and year and can answer by voice (checked before use, like every voice answer). Documented in `docs/for-developers.md`.
+19. **Afaan Oromo (`om`) is a third language on every page** (15 Nov, owner request). The Oromo text is a DRAFT until the team's native speaker proofreads it; texts without an Oromo version fall back to English.
 
 ## 3. Starting point (what already exists)
 
@@ -64,12 +65,12 @@ The prototype (files `dimts.js`, `forms.js`, `app.js`, `app.css`, `index.html`, 
 - Read-aloud via SpeechSynthesis (with optional pre-recorded `audio` per question); voice input via Web Speech API (am-ET / en-US) with a consent screen and "I heard… / Yes / Say it again / Type it instead".
 - Welcome screen (choose: read and type / listen / speak / simple), `<dimts-settings>` (language, text size, contrast, answer mode, read-aloud), preferences applied globally via `data-dm-size` / `data-dm-contrast` on `<html>`.
 - Demo host (`app.js`): mobile menu, home, jobs list with on-device support filter, schema.org JobPosting output, "For developers" page.
-- Amharic + English strings (Amharic is a DRAFT needing native-speaker review).
+- Amharic + English strings (Amharic is a DRAFT needing native-speaker review). Afaan Oromo added 15 Nov (draft, decision 19).
 - Live demo (then): https://dimts-track1.vercel.app (Vercel project `dimts-track1`). Now: https://savanna-accessible-onboarding.vercel.app (section 10).
 
 **Known problems to fix (found in review):**
 - ~~**Privacy bug:** unreviewed speech was saved before the learner confirmed.~~ Fixed in Phase 3.
-- No trust badge beside each ID choice; no per-option play button; no microphone on the date field (decision 18: stays that way); ~~no profile page~~ (Phase 2); no "learner takes over" step after partner sign-up; ~~voice consent is not revocable in the UI~~ (Phase 3; support-sharing consent is Phase 5).
+- No trust badge beside each ID choice; no per-option play button; ~~no microphone on the date field~~ (decision 18, changed 15 Nov); ~~no profile page~~ (Phase 2); no "learner takes over" step after partner sign-up; ~~voice consent is not revocable in the UI~~ (Phase 3; support-sharing consent is Phase 5).
 - "For developers" page is inside the learner site — must move to docs and a separate test host page.
 - Green theme is not Savanna branding.
 - Sensitive data (profile, support needs) stored in plain localStorage.

@@ -68,7 +68,7 @@
 | 29 | `am/signup-referral-partner-option-tib.mp3` | <span lang="am">Tomorrow is Better</span> | 3 s |  |
 | 30 | `am/signup-referral-partner-option-unhcr-partner.mp3` | <span lang="am">የስደተኞች ድጋፍ ድርጅት</span> | 4 s |  |
 | 31 | `am/signup-referral-partner-option-unsure.mp3` | <span lang="am">እርግጠኛ አይደለሁም። እንድመርጥ እርዱኝ።</span> | 7 s |  |
-| 32 | `am/signup-dob-question.mp3` | <span lang="am">መቼ ተወለዱ? የኢትዮጵያ አቆጣጠር ይጠቀሙ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።</span> | 11 s |  |
+| 32 | `am/signup-dob-question.mp3` | <span lang="am">መቼ ተወለዱ? መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።</span> | 15 s |  |
 | 33 | `am/signup-consent-question.mp3` | <span lang="am">መልሶችዎን በምንይዝበት መንገድ ይስማማሉ? እዚህ የሚነግሩንን ብቻ እንይዛለን። የሕክምና ወረቀት በፍጹም አንጠይቅም። መጀመሪያ እርስዎን ሳንጠይቅ ለማንም አናጋራም። መልሶችዎን በማንኛውም ጊዜ መቀየር ወይም መሰረዝ ይችላሉ።</span> | 30 s |  |
 | 34 | `am/signup-consent-option-yes.mp3` | <span lang="am">አዎ፣ እስማማለሁ</span> | 3 s |  |
 | 35 | `am/signup-consent-option-no.mp3` | <span lang="am">አይ፣ አልስማማም</span> | 3 s |  |

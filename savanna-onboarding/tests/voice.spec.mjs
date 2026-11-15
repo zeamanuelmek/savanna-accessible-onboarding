@@ -87,7 +87,7 @@ test('"Type it instead" throws the transcript away; changing language does too',
   await say(page, { alts: ['Spoken Name'] });
   await speakAnswer(page);
   await expect(page.locator('.dm-heard')).toHaveCount(1);
-  await page.locator('[data-act=lang]').click();
+  await page.locator('[data-act=lang][data-lang=am]').click();
   await expect(page.locator('.dm-heard')).toHaveCount(0);
   expect(await draftText(page)).not.toContain('Spoken Name');
 });

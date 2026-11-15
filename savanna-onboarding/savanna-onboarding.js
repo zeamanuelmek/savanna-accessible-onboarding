@@ -45,10 +45,17 @@
 
   /* ---------- learner preferences: saved once, applied everywhere the component is embedded ---------- */
   var MODES = ['read_type', 'listen', 'speak', 'simple'];
+  /* Languages: Amharic (default), English and Afaan Oromo. Each name is written in its own language.
+     Afaan Oromo is a DRAFT for native-speaker review; where a text has no Oromo version yet, English is shown. */
+  var LANGS = ['am', 'en', 'om'];
+  var LANG_NAMES = { am: 'አማርኛ', en: 'English', om: 'Afaan Oromoo' };
+  // Speech codes for the browser engines. Few browsers have Oromo voices or recognition: they then say so, and
+  // everything stays written on the screen.
+  var SPEECH_CODES = { am: 'am-ET', en: 'en-US', om: 'om-ET' };
   // easy = read aloud. pictures = pictures and bigger buttons (separate since Phase 4; older saves follow "simple" mode).
   function getPrefs() {
     var p = store.get('prefs', {});
-    return { lang: p.lang || 'am', easy: !!p.easy, pictures: p.pictures != null ? !!p.pictures : p.mode === 'simple',
+    return { lang: LANGS.indexOf(p.lang) !== -1 ? p.lang : 'am', easy: !!p.easy, pictures: p.pictures != null ? !!p.pictures : p.mode === 'simple',
       mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal', motion: p.motion === 'reduce' ? 'reduce' : 'normal' };
   }
   function applyPrefs() {
@@ -122,8 +129,11 @@
       errPhone: 'Enter a phone number with 10 digits, like 0911 234 567.',
       errDate: 'Enter a real date in the Ethiopian calendar. Day 1 to 30, Pagume 1 to 5 or 6.',
       errConsent: 'You need to agree to continue. If you are not sure, choose "Get help".',
-      day: 'Day', month: 'Month', year: 'Year (Ethiopian calendar)', chooseMonth: 'Choose a month',
-      gregorian: 'In the Gregorian calendar this is {date}.',
+      day: 'Day', month: 'Month', year: 'Year', chooseMonth: 'Choose a month', chooseDay: 'Choose a day', chooseYear: 'Choose a year',
+      gregorian: 'In the Gregorian calendar this is {date}.', ethiopian: 'In the Ethiopian calendar this is {date}.',
+      calendar: 'Which calendar do you use?', calEth: 'Ethiopian calendar', calGreg: 'Gregorian (European) calendar',
+      errDateGreg: 'Enter a real date in the Gregorian calendar, for example 5 March 1995.',
+      voiceNoDate: 'I did not catch a date. Say the day, the month and the year, for example "12 Meskerem 1995", or type it below.',
       prefilled: 'We filled this in from your profile. You can change it.',
       welcomeTitle: 'How would you like to complete registration?',
       welcomeHint: 'This is only about how you like to use the form. We never ask why. You can change it at any time in Settings.',
@@ -199,8 +209,11 @@
       errPhone: 'ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 234 567።',
       errDate: 'በኢትዮጵያ አቆጣጠር ትክክለኛ ቀን ያስገቡ። ቀን ከ1 እስከ 30፣ ጳጉሜን ከ1 እስከ 5 ወይም 6።',
       errConsent: 'ለመቀጠል መስማማት ያስፈልጋል። እርግጠኛ ካልሆኑ "እርዳታ"ን ይምረጡ።',
-      day: 'ቀን', month: 'ወር', year: 'ዓመት (በኢትዮጵያ አቆጣጠር)', chooseMonth: 'ወር ይምረጡ',
-      gregorian: 'በፈረንጆች አቆጣጠር {date} ነው።',
+      day: 'ቀን', month: 'ወር', year: 'ዓመት', chooseMonth: 'ወር ይምረጡ', chooseDay: 'ቀን ይምረጡ', chooseYear: 'ዓመት ይምረጡ',
+      gregorian: 'በፈረንጆች አቆጣጠር {date} ነው።', ethiopian: 'በኢትዮጵያ አቆጣጠር {date} ነው።',
+      calendar: 'የትኛውን አቆጣጠር ይጠቀማሉ?', calEth: 'የኢትዮጵያ አቆጣጠር', calGreg: 'የፈረንጆች (የአውሮፓ) አቆጣጠር',
+      errDateGreg: 'በፈረንጆች አቆጣጠር ትክክለኛ ቀን ያስገቡ፤ ለምሳሌ 5 March 1995።',
+      voiceNoDate: 'ቀን አልሰማሁም። ቀኑን፣ ወሩንና ዓመቱን ይናገሩ፤ ለምሳሌ «12 መስከረም 1995»፤ ወይም ከታች ይጻፉት።',
       prefilled: 'ይህን ከመገለጫዎ ሞልተነዋል። መቀየር ይችላሉ።',
       welcomeTitle: 'ምዝገባውን እንዴት መሙላት ይፈልጋሉ?',
       welcomeHint: 'ይህ ቅጹን መጠቀም የሚመርጡበትን መንገድ ብቻ ነው። ምክንያቱን በፍጹም አንጠይቅም። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።',
@@ -232,6 +245,143 @@
       settingsSaved: 'ተቀምጧል። ይህ ቅንብር ይህ መሣሪያ በዚህ ስልክ በሚሠራበት ቦታ ሁሉ ይተገበራል።',
       countChanged: 'መልስዎ የጥያቄዎቹን ብዛት ቀይሯል። አሁን {total} ጥያቄዎች አሉ።',
       resumeMissing: 'ለዚህ ሊንክ የተቀመጡ መልሶችን በዚህ ስልክ ላይ ማግኘት አልቻልንም። መልሶች የሚቀመጡት በጀመሩበት ስልክ ላይ ብቻ ነው። እዚህ እንደገና መጀመር ይችላሉ።'
+    },
+    // Afaan Oromo: DRAFT for review by a native speaker (team review planned)
+    om: {
+      back: 'Duubatti',
+      next: 'Itti fufi',
+      submit: 'Ergi',
+      listen: 'Gaaffii dhaggeeffadhu',
+      speak: 'Sagaleen deebisi',
+      stop: 'Dhaggeeffachuu dhaabi',
+      listening: 'Maayikiraafoonni banameera. Dhaggeeffachaa jira… amma dubbadhu, yoo xumurte "Dhaggeeffachuu dhaabi" tuqi.',
+      heard: 'Kan ani dhage\'e:',
+      yes: 'Deebii kana fayyadami',
+      again: 'Irra deebi\'ii jedhi',
+      type: 'Kanaa mannaa barreessi',
+      micAsk: 'Biraawuzarri kee maayikiraafoonii fayyadamuuf hayyama si gaafachuu danda\'a. "Hayyami" filadhu.',
+      micOn: 'Maayikiraafoonni banameera',
+      processing: 'Waan jette hubachaa jira…',
+      heardCheck: 'Ilaali, yoo barbaachise sirreessi. Hanga "Deebii kana fayyadami" filattutti homtuu hin kuufamu.',
+      tapInstead: 'Kanaa mannaa tuqi',
+      heardEdit: 'Deebii kee, sagalee kee irraa',
+      heardMatch: 'Kun wal sima:',
+      orDid: 'Moo kana jettee:',
+      voiceUsed: 'Deebiin sagalee kee irraa itti dabalameera. Ilaali, achiis "Itti fufi" filadhu.',
+      voiceDiscarded: 'Deebiin sagalee kuffifameera. Deebii kee barreessi ykn tuqi.',
+      voiceCheckFirst: 'Dura deebii sagalee kee ilaali: "Deebii kana fayyadami" ykn "Kanaa mannaa barreessi" filadhu.',
+      voiceDenied: 'Maayikiraafoonni cufameera. Kanaa mannaa barreessuu ykn tuquu dandeessa, ykn qindaa\'ina biraawuzaraa keessatti maayikiraafoonii hayyami.',
+      voiceNetwork: 'Deebiin sagaleen walqunnamtii interneetii barbaada. Maaloo deebii kee barreessi ykn tuqi.',
+      voiceNoSpeech: 'Homaa hin dhageenye. Irra deebi\'ii yaali, ykn deebii kee barreessi ykn tuqi.',
+      voiceNoMic: 'Maayikiraafoonni hin argamne. Maaloo deebii kee barreessi ykn tuqi.',
+      voiceLangUnsupported: 'Deebiin sagaleen afaan kanaan biraawuzara kana irratti hin jiru. Maaloo deebii kee barreessi ykn tuqi.',
+      s_voice: 'Deebii sagaleen',
+      voice_on: 'Hayyamameera',
+      voice_off: 'Hin hayyamamne',
+      s_voiceHint: 'Sagalee kee gara barreeffamaatti jijjiiruuf, biraawuzarri kun waraabbii kee Google\'tti erga. Gaaffii eenyummaa ykn deeggarsaa irratti sagaleen gonkumaa hin dhiyaatu.',
+      progress: 'Gaaffii {n} kan {total} keessaa',
+      optional: '(dirqama miti)',
+      problem: 'Rakkoon jira',
+      review: 'Deebii kee mirkaneessi',
+      reviewHint: 'Osoo hin ergin dura wanti hundi sirrii ta\'uu isaa mirkaneeffadhu.',
+      change: 'Jijjiiri',
+      notGiven: 'Hin kennamne',
+      later: 'Booda xumuri',
+      help: 'Gargaarsa argadhu',
+      helpTitle: 'Gargaarsa barbaaddaa?',
+      helpClose: 'Gargaarsa cufi',
+      helpText: 'Daangaan yeroo hin jiru. Deebiin kee gaaffii hunda booda bilbila kana irratti kuufama. Dhaabbata michuu kan akka AAAPD akka siif guutu gaafachuu ykn booda deebi\'uu dandeessa.',
+      easyOn: 'Sagaleen dubbisi: banaa',
+      easyOff: 'Sagaleen dubbisi: cufaa',
+      langSwitch: 'Afaan Oromoo',
+      langSwitchLabel: 'Afaan gara Afaan Oromootti jijjiiri',
+      resumed: 'Baga nagaan deebite. Deebii kee kuufneerra.',
+      savedTitle: 'Deebiin kee kuufameera',
+      savedText: 'Homtuu hin badne. Itti fufuuf geessituu kana bilbila kana irratti bani:',
+      smsPreview: 'Gosa dhugaa keessatti ergaa gabaabaa (SMS) kana siif ergina turre:',
+      voiceConsentTitle: 'Osoo sagalee kee hin fayyadamin dura',
+      voiceConsent: 'Sagalee kee gara barreeffamaatti jijjiiruuf, biraawuzarri kun waraabbii kee Google\'tti erga. Kanaa mannaa barreessuu ykn tuquu dandeessa. Yeroo kamiyyuu Qindaa\'ina keessatti cufuu dandeessa. Sagalee kee fayyadamuu barbaaddaa?',
+      voiceAllow: 'Eeyyee, sagalee koo fayyadami',
+      voiceDeny: 'Lakki, nan barreessa ykn nan tuqa',
+      voiceUnsupported: 'Deebiin sagaleen biraawuzara kana irratti hin jiru. Chrome Android irratti yaali, ykn deebii kee barreessi ykn tuqi.',
+      voiceNoMatch: 'Filannoo keessaa tokkollee hin qabanne. Maaloo irra deebi\'ii jedhi ykn deebii kee tuqi.',
+      voiceError: 'Maayikiraafoonni hin hojjenne. Maaloo deebii kee barreessi ykn tuqi.',
+      noAmVoice: 'Sagaleen Afaan Amaaraa ammaaf meeshaa kana irratti hin jiru. Sagaleen waraabame ni dabalama.',
+      saved: 'Kuufameera.',
+      selected: 'Filatameera:',
+      errRequired: 'Itti fufuuf maaloo gaaffii kana deebisi.',
+      errChoice: 'Itti fufuuf deebii tokko filadhu.',
+      errMulti: 'Yoo xiqqaate deebii tokko filadhu.',
+      errPhone: 'Lakkoofsa bilbilaa dijiitii 10 qabu galchi, fakkeenyaaf 0911 234 567.',
+      errDate: 'Guyyaa dhugaa dhaha Itoophiyaatiin galchi. Guyyaan 1 hanga 30, Qaammee 1 hanga 5 ykn 6.',
+      errConsent: 'Itti fufuuf walii galuu qabda. Yoo hin mirkaneeffatin, "Gargaarsa argadhu" filadhu.',
+      day: 'Guyyaa',
+      month: 'Ji\'a',
+      year: 'Waggaa',
+      chooseMonth: 'Ji\'a filadhu',
+      chooseDay: 'Guyyaa filadhu',
+      chooseYear: 'Waggaa filadhu',
+      gregorian: 'Dhaha Gorgooriyaanitti kun {date} dha.',
+      ethiopian: 'Dhaha Itoophiyaatiin kun {date} dha.',
+      calendar: 'Dhaha kam fayyadamta?',
+      calEth: 'Dhaha Itoophiyaa',
+      calGreg: 'Dhaha Gorgooriyaan (Awurooppaa)',
+      errDateGreg: 'Guyyaa dhugaa dhaha Gorgooriyaaniitiin galchi, fakkeenyaaf 5 Bitootessa 1995.',
+      voiceNoDate: 'Guyyaa hin qabanne. Guyyaa, ji\'aa fi waggaa jedhi, fakkeenyaaf "12 Fulbaana 1995", ykn armaan gaditti barreessi.',
+      prefilled: 'Kana piroofaayilii kee irraa guutneerra. Jijjiiruu dandeessa.',
+      welcomeTitle: 'Galmee akkamitti xumuruu barbaadda?',
+      welcomeHint: 'Kun akkaataa unka kana itti fayyadamuu barbaaddu qofa ilaala. Sababa gonkumaa hin gaafannu. Yeroo kamiyyuu Qindaa\'ina keessatti jijjiiruu dandeessa.',
+      m_read_type: 'Dubbisuu fi barreessuu',
+      m_listen: 'Dhaggeeffachuu fi deebisuu',
+      m_speak: 'Deebii koo sagaleen kennuu',
+      m_simple: 'Tarkaanfii salphaa fakkii fi barreeffama gurguddaa wajjin',
+      errMode: 'Itti fufuuf karaa tokko filadhu.',
+      settings: 'Qindaa\'ina',
+      settingsHint: 'Qindaa\'inni kee bilbila kana irratti kuufamee bakka meeshaan kun mul\'atu hundatti hojjeta.',
+      s_lang: 'Afaan',
+      s_size: 'Hamma barreeffamaa',
+      s_contrast: 'Garaagarummaa halluu',
+      s_mode: 'Akkaataa deebisuu barbaadu',
+      s_read: 'Sagaleen dubbisi',
+      s_readHint: 'Gaaffiiwwan sagaleen dubbifamu, deebii hundi immoo qabduu "Dhaggeeffadhu" mataa isaa qaba. Wanti hundi iskiriinii irrattis ni barreeffama.',
+      s_pictures: 'Fakkiiwwan fi qabduuwwan gurguddaa',
+      askHelperDone: 'Bilbilli natti deebi\'eera',
+      voiceAmbiguous: 'Deebii tokkoo ol dhaga\'e. Maaloo tokko qofa jedhi, ykn deebii kee tuqi.',
+      srTip: 'Yoo dubbisaan iskiriinii kee qubee Afaan Amaaraa tokko tokkoon dubbise, sagalee Afaan Amaaraa waraabame dhaggeeffachuuf «Sagaleen dubbisi» bani, ykn gara Ingiliffaatti jijjiiri.',
+      s_offlineAudio: 'Sagalee Afaan Amaaraa interneetii malee',
+      oa_intro: 'Waraabbiiwwan yeroo jalqabaaf yommuu taphataman bilbila kana irratti kuufamu. Akka walqunnamtii malee hojjetaniif, amma hunda buufachuus dandeessa.',
+      oa_download: 'Sagalee Afaan Amaaraa interneetii malee fayyadamuuf buufadhu (gara {mb} MB)',
+      oa_remove: 'Sagalee buufame haqi',
+      oa_progressLabel: 'Adeemsa buufachuu',
+      oa_progress: 'Buufachaa jira: waraabbii {total} keessaa {done} ({mb} MB keessaa {mbDone}).',
+      oa_started: 'Sagalee Afaan Amaaraa buufachaa jira.',
+      oa_done: 'Xumurameera. Waraabbiin {n} bilbila kana irra jiru, interneetii malees ni hojjetu.',
+      oa_partial: '{total} keessaa {done} buufameera. {failed} buufamuu hin dandeenye. Walqunnamtii ilaaliitii irra deebi\'ii yaali.',
+      oa_stored: 'Waraabbii {total} keessaa {n} bilbila kana irra jiru.',
+      oa_notStored: 'Ammaaf waraabbiin buufame hin jiru.',
+      oa_removed: 'Sagaleen buufame bilbila kana irraa haqameera.',
+      oa_offline: 'Buufachuuf walqunnamtii barbaadda.',
+      oa_none: 'Waraabbiin Afaan Amaaraa ammaaf hin jiru.',
+      oa_unsupported: 'Biraawuzarri kun sagalee interneetii malee fayyadamuuf kuusuu hin danda\'u.',
+      offline: 'Interneetii irraa ala jirta. Deebiin kee bilbila kana irratti kuufameera, itti fufuu dandeessa. Deebiin sagaleen walqunnamtii barbaada.',
+      online: 'Interneetiitti deebi\'teetta.',
+      play: 'Dhaggeeffadhu',
+      pause: 'Yeroof dhaabi',
+      resume: 'Itti fufi',
+      stopAudio: 'Dhaabi',
+      replay: 'Irra deebi\'ii taphachiisi',
+      noAudio: 'Kanaaf ammaaf waraabbiin hin jiru, bilbilli kun immoo afaan kanaaf sagalee hin qabu. Wanti hundi iskiriinii irratti barreeffameera.',
+      clipFailed: 'Waraabbiin tokko taphachuu hin dandeenye, kanaaf sagaleen bilbilaa dubbisaa jira.',
+      size_normal: 'Idilee',
+      size_large: 'Guddaa',
+      size_xlarge: 'Baay\'ee guddaa',
+      contrast_normal: 'Idilee',
+      contrast_high: 'Garaagarummaa halluu ol\'aanaa',
+      on: 'Banaa',
+      off: 'Cufaa',
+      settingsSaved: 'Kuufameera. Qindaa\'inni kun amma bakka meeshaan kun bilbila kana irratti itti fayyadamu hundatti hojjeta.',
+      countChanged: 'Deebiin kee baay\'ina gaaffiiwwanii jijjiireera. Amma gaaffiiwwan {total} jiru.',
+      resumeMissing: 'Geessituu kanaaf deebii kuufame bilbila kana irratti argachuu hin dandeenye. Deebiin kan kuufamu bilbila itti jalqabde qofa irratti. Asitti irra deebi\'ee jalqabuu dandeessa.'
     }
   };
   function t(key, lang, vars) {
@@ -249,24 +399,24 @@
 
   /* ---------- shared support vocabulary (used by learners AND employers) ---------- */
   var NEEDS = [
-    { value: 'screen_reader', icon: '📱', label: { en: 'Works with a screen reader', am: 'ከስክሪን አንባቢ ጋር የሚሰራ' } },
-    { value: 'audio', icon: '🔊', label: { en: 'Audio for everything', am: 'ሁሉም ነገር በድምፅ' } },
-    { value: 'sign_language', icon: '🤟', label: { en: 'Sign language interpreter', am: 'የምልክት ቋንቋ አስተርጓሚ' } },
-    { value: 'captions', icon: '💬', label: { en: 'Captions on videos and calls', am: 'በቪዲዮና በጥሪ ላይ የጽሑፍ ትርጉም' } },
-    { value: 'simple_words', icon: '🔤', label: { en: 'Simple words', am: 'ቀላል ቃላት' } },
-    { value: 'written', icon: '📝', label: { en: 'Instructions in writing', am: 'በጽሑፍ የተሰጠ መመሪያ' } },
-    { value: 'step_free', icon: '♿', label: { en: 'Step-free building access', am: 'ደረጃ የሌለው መግቢያ' } },
-    { value: 'extra_time', icon: '⏳', label: { en: 'Extra time for tasks and tests', am: 'ለሥራና ለፈተና ተጨማሪ ጊዜ' } },
-    { value: 'flexible_hours', icon: '🕒', label: { en: 'Flexible working hours', am: 'ተለዋዋጭ የሥራ ሰዓት' } },
-    { value: 'remote', icon: '🏠', label: { en: 'Work from home', am: 'ከቤት መሥራት' } },
-    { value: 'helper', icon: '🤝', label: { en: 'Someone to help with forms', am: 'ቅጽ ለመሙላት የሚረዳ ሰው' } }
+    { value: 'screen_reader', icon: '📱', label: { en: 'Works with a screen reader', am: 'ከስክሪን አንባቢ ጋር የሚሰራ', om: 'Dubbisaa iskiriinii wajjin kan hojjetu' } },
+    { value: 'audio', icon: '🔊', label: { en: 'Audio for everything', am: 'ሁሉም ነገር በድምፅ', om: 'Wanti hundi sagaleen' } },
+    { value: 'sign_language', icon: '🤟', label: { en: 'Sign language interpreter', am: 'የምልክት ቋንቋ አስተርጓሚ', om: 'Hiikaa afaan mallattoo' } },
+    { value: 'captions', icon: '💬', label: { en: 'Captions on videos and calls', am: 'በቪዲዮና በጥሪ ላይ የጽሑፍ ትርጉም', om: 'Barreeffama viidiyoo fi waamicha irratti' } },
+    { value: 'simple_words', icon: '🔤', label: { en: 'Simple words', am: 'ቀላል ቃላት', om: 'Jechoota salphaa' } },
+    { value: 'written', icon: '📝', label: { en: 'Instructions in writing', am: 'በጽሑፍ የተሰጠ መመሪያ', om: 'Qajeelfama barreeffamaan' } },
+    { value: 'step_free', icon: '♿', label: { en: 'Step-free building access', am: 'ደረጃ የሌለው መግቢያ', om: 'Seensa gamoo sadarkaa malee' } },
+    { value: 'extra_time', icon: '⏳', label: { en: 'Extra time for tasks and tests', am: 'ለሥራና ለፈተና ተጨማሪ ጊዜ', om: 'Yeroo dabalataa hojii fi qormaataaf' } },
+    { value: 'flexible_hours', icon: '🕒', label: { en: 'Flexible working hours', am: 'ተለዋዋጭ የሥራ ሰዓት', om: 'Sa\'aatii hojii jijjiiramaa' } },
+    { value: 'remote', icon: '🏠', label: { en: 'Work from home', am: 'ከቤት መሥራት', om: 'Mana irraa hojjechuu' } },
+    { value: 'helper', icon: '🤝', label: { en: 'Someone to help with forms', am: 'ቅጽ ለመሙላት የሚረዳ ሰው', om: 'Nama unka guutuuf gargaaru' } }
   ];
 
   /* ---------- honest ID trust status. Nothing is ever "verified": there is no verification service. ---------- */
   var TRUST = {
-    self_declared: { en: 'Self-declared', am: 'በራስ የተገለጸ' },
-    document_number_recorded: { en: 'Number recorded — not verified', am: 'ቁጥር ተመዝግቧል — አልተረጋገጠም' },
-    partner_referral_pending: { en: 'Partner referral pending', am: 'የአጋር ድርጅት ማረጋገጫ በመጠበቅ ላይ' }
+    self_declared: { en: 'Self-declared', am: 'በራስ የተገለጸ', om: 'Ofiin kan himame' },
+    document_number_recorded: { en: 'Number recorded — not verified', am: 'ቁጥር ተመዝግቧል — አልተረጋገጠም', om: 'Lakkoofsi galmeeffameera — hin mirkanoofne' },
+    partner_referral_pending: { en: 'Partner referral pending', am: 'የአጋር ድርጅት ማረጋገጫ በመጠበቅ ላይ', om: 'Ergaan michuu eegaa jira' }
   };
   /** Trust status from sign-up or profile answers: the ID route and whether a number was given. */
   function trustLevel(a) {
@@ -287,7 +437,8 @@
   /* ---------- Ethiopian calendar ---------- */
   var ETH_MONTHS = {
     en: ['Meskerem', 'Tikimt', 'Hidar', 'Tahsas', 'Tir', 'Yekatit', 'Megabit', 'Miyazia', 'Ginbot', 'Sene', 'Hamle', 'Nehase', 'Pagume'],
-    am: ['መስከረም', 'ጥቅምት', 'ኅዳር', 'ታኅሣሥ', 'ጥር', 'የካቲት', 'መጋቢት', 'ሚያዝያ', 'ግንቦት', 'ሰኔ', 'ሐምሌ', 'ነሐሴ', 'ጳጉሜን']
+    am: ['መስከረም', 'ጥቅምት', 'ኅዳር', 'ታኅሣሥ', 'ጥር', 'የካቲት', 'መጋቢት', 'ሚያዝያ', 'ግንቦት', 'ሰኔ', 'ሐምሌ', 'ነሐሴ', 'ጳጉሜን'],
+    om: ['Fulbaana', 'Onkololeessa', 'Sadaasa', 'Muddee', 'Amajjii', 'Guraandhala', 'Bitootessa', 'Eebila', 'Caamsaa', 'Waxabajjii', 'Adoolessa', 'Hagayya', 'Qaammee']
   };
   function ethToJdn(y, m, d) { return 1724221 + 365 * (y - 1) + Math.floor(y / 4) + 30 * m + d - 31; }
   function ethToGregorian(y, m, d) { return new Date((ethToJdn(y, m, d) - 2440588) * 86400000); }
@@ -296,8 +447,55 @@
     return Number.isInteger(y) && Number.isInteger(m) && Number.isInteger(d) &&
       y >= 1900 && y <= 2030 && m >= 1 && m <= 13 && d >= 1 && d <= ethDaysInMonth(y, m);
   }
+  var GREG_MONTHS = {
+    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+    am: ['ጃንዩወሪ', 'ፌብሩወሪ', 'ማርች', 'ኤፕሪል', 'ሜይ', 'ጁን', 'ጁላይ', 'ኦገስት', 'ሴፕቴምበር', 'ኦክቶበር', 'ኖቬምበር', 'ዲሴምበር'],
+    om: ['Amajjii', 'Guraandhala', 'Bitootessa', 'Eebila', 'Caamsaa', 'Waxabajjii', 'Adoolessa', 'Hagayya', 'Fulbaana', 'Onkololeessa', 'Sadaasa', 'Muddee']
+  };
+  function gregValid(y, m, d) {
+    if (!Number.isInteger(y) || !Number.isInteger(m) || !Number.isInteger(d) || y < 1900 || y > new Date().getFullYear() || m < 1 || m > 12 || d < 1) return false;
+    var dt = new Date(Date.UTC(y, m - 1, d));
+    return dt.getUTCMonth() === m - 1 && dt.getUTCDate() === d;
+  }
+  // Gregorian -> Ethiopian (inverse of ethToJdn), for showing a Gregorian date in the Ethiopian calendar
+  function gregToEth(date) {
+    var jdn = Math.floor(date.getTime() / 86400000) + 2440588, r = (jdn - 1723856) % 1461, n = r % 365 + 365 * Math.floor(r / 1460);
+    return { y: 4 * Math.floor((jdn - 1723856) / 1461) + Math.floor(r / 365) - Math.floor(r / 1460), m: Math.floor(n / 30) + 1, d: n % 30 + 1 };
+  }
+  function monthsFor(cal, lang) { var set = cal === 'greg' ? GREG_MONTHS : ETH_MONTHS; return set[lang] || set.en; }
+  /** A date answer: { cal: 'eth' | 'greg', d, m, y, gregorian: 'YYYY-MM-DD' } (older answers without cal are Ethiopian). */
+  function dateValue(cal, d, m, y) {
+    if (cal === 'greg') return gregValid(y, m, d) ? { cal: 'greg', d: d, m: m, y: y, gregorian: new Date(Date.UTC(y, m - 1, d)).toISOString().slice(0, 10) } : null;
+    return ethValid(y, m, d) ? { cal: 'eth', d: d, m: m, y: y, gregorian: ethToGregorian(y, m, d).toISOString().slice(0, 10) } : null;
+  }
+  function fmtEthiopian(iso, lang) { var e = gregToEth(new Date(iso)); return e.d + ' ' + monthsFor('eth', lang)[e.m - 1] + ' ' + e.y; }
+  /* A spoken date: "12 Meskerem 1995", "March 5 1990", "5 3 1990". A month name also tells which calendar is meant. */
+  function parseSpokenDate(said, cal) {
+    var words = norm(said).split(' ').filter(Boolean), nums = [], month = 0, mcal = '';
+    words.forEach(function (w) {
+      var digit = AM_DIGITS[w] || EN_DIGITS[w];
+      if (/^\d+$/.test(w) || digit) { nums.push(parseInt(digit || w, 10)); return; }
+      if (month) return;
+      // the chosen calendar first: in Afaan Oromo both calendars use the same month names
+      (cal === 'greg' ? [['greg', GREG_MONTHS], ['eth', ETH_MONTHS]] : [['eth', ETH_MONTHS], ['greg', GREG_MONTHS]]).forEach(function (pair) {
+        Object.keys(pair[1]).forEach(function (lg) {
+          pair[1][lg].forEach(function (name, i) {
+            var n = norm(name);
+            if (!month && n && (w === n || (n.length > 3 && w.length > 3 && (w.indexOf(n.slice(0, 4)) === 0)))) { month = i + 1; mcal = pair[0]; }
+          });
+        });
+      });
+    });
+    if (mcal) cal = mcal;
+    var y = 0, rest = [];
+    nums.forEach(function (n) { if (!y && n >= 1000) y = n; else rest.push(n); });
+    var d = rest[0];
+    if (!month && rest.length >= 2) month = rest[1];
+    return dateValue(cal, d, month, y);
+  }
   function fmtGregorian(date, lang) {
-    try { return date.toLocaleDateString(lang === 'am' ? 'en-GB' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }); }
+    if (lang === 'om') return date.getUTCDate() + ' ' + GREG_MONTHS.om[date.getUTCMonth()] + ' ' + date.getUTCFullYear();
+    try { return date.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }); }
     catch (e) { return date.toISOString().slice(0, 10); }
   }
 
@@ -315,12 +513,12 @@
       try { currentAudio = new Audio(audioUrl); if (done) currentAudio.onended = done; currentAudio.play(); return true; } catch (e) {}
     }
     if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return false;
-    var code = lang === 'am' ? 'am' : 'en';
+    var code = SPEECH_CODES[lang] ? lang : 'en';
     var voices = window.speechSynthesis.getVoices() || [];
     var voice = voices.filter(function (v) { return (v.lang || '').toLowerCase().indexOf(code) === 0; })[0];
-    if (!voice && code === 'am') return false;
+    if (!voice && code !== 'en') return false; // never read Amharic or Oromo text with an English voice
     var u = new SpeechSynthesisUtterance(text);
-    u.lang = code === 'am' ? 'am-ET' : 'en-US';
+    u.lang = SPEECH_CODES[code];
     if (voice) u.voice = voice;
     u.rate = 0.95;
     if (done) { u.onend = done; u.onerror = function (e) { if (!e || e.error !== 'interrupted' && e.error !== 'canceled') done(); }; }
@@ -358,7 +556,7 @@
       }
       function open() {
         rec = new SR();
-        rec.lang = lang === 'am' ? 'am-ET' : 'en-US';
+        rec.lang = SPEECH_CODES[lang] || 'en-US';
         rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = true;
         rec.onresult = function (ev) {
           for (var i = ev.resultIndex; i < ev.results.length; i++) if (ev.results[i].isFinal) heard.push(segment(ev.results[i]));
@@ -578,11 +776,11 @@
     var words = norm(transcript).split(' ').filter(Boolean);
     // 1. the option's own "say" words, or its whole label
     var hits = options.filter(function (o) {
-      return (o.say || []).concat([L(o.label, 'en'), L(o.label, 'am')]).some(function (term) { return hasTerm(words, term); });
+      return (o.say || []).concat([L(o.label, 'en'), L(o.label, 'am'), L(o.label, 'om')]).some(function (term) { return hasTerm(words, term); });
     });
     // 2. only if nothing matched: a significant single word of a label ("I agree" must not also match "No, I do not agree")
     if (!hits.length) hits = options.filter(function (o) {
-      return [L(o.label, 'en'), L(o.label, 'am')].some(function (lbl) {
+      return [L(o.label, 'en'), L(o.label, 'am'), L(o.label, 'om')].some(function (lbl) {
         return norm(lbl).split(' ').some(function (w) { return w.length > 3 && STOP.indexOf(w) === -1 && hasTerm(words, w); });
       });
     });
@@ -619,9 +817,11 @@
   }
   function optionsOf(f) { return f.options === 'NEEDS' ? NEEDS : (f.options || []); }
   function isGroupField(f) { return f.type === 'choice' || f.type === 'multi' || f.type === 'consent' || f.type === 'ethdate'; }
-  function isEmpty(v) { return v == null || v === '' || (Array.isArray(v) && !v.length); }
+  function isEmpty(v) { return v == null || v === '' || (Array.isArray(v) && !v.length) || (typeof v === 'object' && !Array.isArray(v) && 'cal' in v && !v.d && !v.m && !v.y); }
   // Voice input is never offered on sensitive questions (support needs, ID), so that data never reaches a cloud speech service.
-  function voiceAllowed(f) { return f.voice !== false && !f.sensitive && f.type !== 'ethdate'; }
+  function voiceAllowed(f, vm) { return f.voice !== false && !f.sensitive && !(f.type === 'ethdate' && vm && dateLists(vm)); }
+  /** Day and year as lists (like the month) for "read and type" and "simple steps"; typed, with voice, for "listen" and "speak". */
+  function dateLists(vm) { return vm.prefsMode !== 'listen' && vm.prefsMode !== 'speak'; }
 
   /** Checks one answer. Returns '' when it is fine, otherwise the error message in the given language. */
   function validateAnswer(f, v, answers, lang) {
@@ -630,7 +830,7 @@
       return f.type === 'choice' ? t('errChoice', lang) : f.type === 'multi' ? t('errMulti', lang) : f.type === 'consent' ? t('errConsent', lang) : t('errRequired', lang);
     }
     if (f.type === 'tel') { var digits = String(v).replace(/\D/g, ''); if (digits.indexOf('251') === 0) digits = '0' + digits.slice(3); if (digits.length !== 10) return t('errPhone', lang); }
-    if (f.type === 'ethdate' && !v.gregorian) return t('errDate', lang);
+    if (f.type === 'ethdate' && !v.gregorian) return t(v.cal === 'greg' ? 'errDateGreg' : 'errDate', lang);
     if (f.type === 'consent' && f.requiredValue && v !== f.requiredValue) return t('errConsent', lang);
     if (f.validate) { var msg = f.validate(v, answers); if (msg) return L(msg, lang); }
     return '';
@@ -767,6 +967,7 @@
   FormState.prototype.finish = function () {
     this.prune();
     var out = JSON.parse(JSON.stringify(this.answers));
+    Object.keys(out).forEach(function (k) { if (isEmpty(out[k])) delete out[k]; }); // e.g. a calendar chosen but no date given
     if (this.resumeCode) store.del('resume.' + this.resumeCode);
     store.del(this.key);
     this.mode = 'done';
@@ -879,6 +1080,7 @@
     '.dm textarea.dm-input{min-height:8em}',
     '.dm-input[aria-invalid=true]{border-color:var(--so-error);border-width:3px}',
     '.dm-date{display:flex;flex-wrap:wrap;gap:.75em}',
+    '.dm-cal{border:0;margin:0 0 1em;padding:0;min-width:0}.dm-cal legend{font-weight:600;margin-bottom:.5em;padding:0}.dm-cal-opts{margin:0}',
     '.dm-date div{display:flex;flex-direction:column;gap:.25em;max-width:100%}',
     '.dm-date label{font-weight:500}',
     '.dm-date .dm-input{width:auto;max-width:100%}',
@@ -971,7 +1173,7 @@
     },
     status: function () { return '<p class="dm-status" role="status" aria-live="polite"></p>'; },
     srTip: function () {
-      return '<div class="dm-note dm-sr-tip"><p lang="en">' + UI.en.srTip + '</p><p lang="am">' + UI.am.srTip + '</p></div>';
+      return '<div class="dm-note dm-sr-tip"><p lang="en">' + UI.en.srTip + '</p><p lang="am">' + UI.am.srTip + '</p><p lang="om">' + UI.om.srTip + '</p></div>';
     },
 
     /* "Listen" and the player controls (Pause/Resume, Stop, Play again). Shown and labelled by the controller. */
@@ -996,7 +1198,9 @@
       return '<div class="dm-bar">' +
         '<div>' + (showBack ? '<button type="button" class="dm-link" data-act="back">← ' + t('back', lang) + '</button>' : '') + '</div>' +
         '<div class="dm-bar-r">' +
-        '<button type="button" class="dm-btn dm-small" data-act="lang" lang="' + (lang === 'am' ? 'en' : 'am') + '">' + t('langSwitch', lang) + '</button>' +
+        LANGS.filter(function (l) { return l !== lang; }).map(function (l) {
+          return '<button type="button" class="dm-btn dm-small" data-act="lang" data-lang="' + l + '" lang="' + l + '">' + LANG_NAMES[l] + '</button>';
+        }).join('') +
         '<button type="button" class="dm-btn dm-small" data-act="easy" aria-pressed="' + vm.easy + '">🔊 ' + t(vm.easy ? 'easyOn' : 'easyOff', lang) + '</button>' +
         '<button type="button" class="dm-btn dm-small" data-act="help" aria-expanded="' + !!vm.helpOpen + '" aria-controls="' + helpId + '">' + t('help', lang) + '</button>' +
         '</div></div>' +
@@ -1049,11 +1253,11 @@
       h += View.input(vm, f, v, group ? '' : describedBy);
       if (group) h += '</fieldset>';
       h += '<div class="dm-tools">' + View.listenTools(vm);
-      var canSpeak = voiceAllowed(f) && speech.input.supported();
+      var canSpeak = voiceAllowed(f, vm) && speech.input.supported();
       if (canSpeak) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">🎤 ' + t('speak', lang) + '</button>';
       h += '</div>';
       // A learner who chose "speak my answers" is told plainly when this browser (e.g. an app's WebView) cannot listen.
-      if (voiceAllowed(f) && !canSpeak && vm.prefsMode === 'speak') h += '<p class="dm-note">' + t('voiceUnsupported', lang) + '</p>';
+      if (voiceAllowed(f, vm) && !canSpeak && vm.prefsMode === 'speak') h += '<p class="dm-note">' + t('voiceUnsupported', lang) + '</p>';
       if (f.askHelper) {
         // A learner who cannot type (or whose name voice gets wrong) can hand the phone to someone, then check the name.
         var pid = View.id(vm, 'askhelp');
@@ -1088,13 +1292,33 @@
         }).join('') + '</div>';
       }
       if (f.type === 'ethdate') {
-        var d = v || {}, months = ETH_MONTHS[lang] || ETH_MONTHS.en, mId = View.id(vm, 'm'), yId = View.id(vm, 'y');
-        return '<div class="dm-date">' +
-          '<div><label for="' + inputId + '">' + t('day', lang) + '</label><input id="' + inputId + '" data-ref="input" class="dm-input" name="d" inputmode="numeric" size="3" value="' + esc(d.d || '') + '"' + inv + '></div>' +
-          '<div><label for="' + mId + '">' + t('month', lang) + '</label><select id="' + mId + '" data-ref="m" class="dm-input" name="m"' + inv + '><option value="">' + t('chooseMonth', lang) + '</option>' +
-          months.map(function (m, i) { return '<option value="' + (i + 1) + '"' + (Number(d.m) === i + 1 ? ' selected' : '') + '>' + m + '</option>'; }).join('') + '</select></div>' +
-          '<div><label for="' + yId + '">' + t('year', lang) + '</label><input id="' + yId + '" data-ref="y" class="dm-input" name="y" inputmode="numeric" size="5" value="' + esc(d.y || '') + '"' + inv + '></div>' +
-          '</div>' + (d.gregorian ? '<p class="dm-hint">' + t('gregorian', lang, { date: fmtGregorian(new Date(d.gregorian), lang) }) + '</p>' : '');
+        /* First the calendar (Ethiopian or Gregorian), then day, month and year. Learners who read and type, or chose
+           simple steps, pick the day and year from lists like the month; learners who listen or speak type them, and
+           can answer by voice. */
+        var d = v || {}, cal = d.cal === 'greg' ? 'greg' : 'eth', months = monthsFor(cal, lang), mId = View.id(vm, 'm'), yId = View.id(vm, 'y');
+        var lists = dateLists(vm), now = new Date(), topYear = cal === 'greg' ? now.getFullYear() : gregToEth(now).y;
+        var calName = View.id(vm, 'cal');
+        function opt(val, text, on) { return '<option value="' + val + '"' + (on ? ' selected' : '') + '>' + text + '</option>'; }
+        var days = [], years = [];
+        for (var k = 1; k <= (cal === 'greg' ? 31 : 30); k++) days.push(opt(k, k, Number(d.d) === k));
+        for (var yr = topYear; yr >= topYear - 100; yr--) years.push(opt(yr, yr, Number(d.y) === yr));
+        var dayCtl = lists
+          ? '<select id="' + inputId + '" data-ref="input" class="dm-input" name="d"' + inv + '>' + opt('', t('chooseDay', lang), false) + days.join('') + '</select>'
+          : '<input id="' + inputId + '" data-ref="input" class="dm-input" name="d" inputmode="numeric" autocomplete="bday-day" size="3" value="' + esc(d.d || '') + '"' + inv + '>';
+        var yearCtl = lists
+          ? '<select id="' + yId + '" data-ref="y" class="dm-input" name="y"' + inv + '>' + opt('', t('chooseYear', lang), false) + years.join('') + '</select>'
+          : '<input id="' + yId + '" data-ref="y" class="dm-input" name="y" inputmode="numeric" autocomplete="bday-year" size="5" value="' + esc(d.y || '') + '"' + inv + '>';
+        var conv = d.gregorian ? (cal === 'greg' ? t('ethiopian', lang, { date: fmtEthiopian(d.gregorian, lang) }) : t('gregorian', lang, { date: fmtGregorian(new Date(d.gregorian), lang) })) : '';
+        return '<fieldset class="dm-cal"><legend>' + t('calendar', lang) + '</legend><div class="dm-opts dm-cal-opts">' +
+          [['eth', 'calEth'], ['greg', 'calGreg']].map(function (c) {
+            return '<label class="dm-opt"><input type="radio" name="cal" id="' + calName + '-' + c[0] + '" value="' + c[0] + '"' + (cal === c[0] ? ' checked' : '') + '><span>' + t(c[1], lang) + '</span></label>';
+          }).join('') + '</div></fieldset>' +
+          '<div class="dm-date">' +
+          '<div><label for="' + inputId + '">' + t('day', lang) + '</label>' + dayCtl + '</div>' +
+          '<div><label for="' + mId + '">' + t('month', lang) + '</label><select id="' + mId + '" data-ref="m" class="dm-input" name="m"' + inv + '>' + opt('', t('chooseMonth', lang), false) +
+          months.map(function (m, i) { return opt(i + 1, m, Number(d.m) === i + 1); }).join('') + '</select></div>' +
+          '<div><label for="' + yId + '">' + t('year', lang) + '</label>' + yearCtl + '</div>' +
+          '</div><p class="dm-hint" data-ref="date-conv">' + conv + '</p>';
       }
       return '';
     },
@@ -1104,7 +1328,7 @@
       if (isEmpty(v)) return t('notGiven', lang);
       if (f.type === 'choice' || f.type === 'consent') { var o = opts.filter(function (x) { return x.value === v; })[0]; return o ? L(o.label, lang) + (o.badge ? ' (' + L(o.badge, lang) + ')' : '') : v; }
       if (f.type === 'multi') return v.map(function (x) { var o = opts.filter(function (y) { return y.value === x; })[0]; return o ? L(o.label, lang) : x; }).join(', ');
-      if (f.type === 'ethdate') return v.d + ' ' + (ETH_MONTHS[lang] || ETH_MONTHS.en)[v.m - 1] + ' ' + v.y + ' (' + fmtGregorian(new Date(v.gregorian), lang) + ')';
+      if (f.type === 'ethdate') return v.d + ' ' + monthsFor(v.cal, lang)[v.m - 1] + ' ' + v.y + ' (' + (v.cal === 'greg' ? fmtEthiopian(v.gregorian, lang) : fmtGregorian(new Date(v.gregorian), lang)) + ')';
       return String(v);
     },
 
@@ -1126,7 +1350,7 @@
 
     saved: function (vm) {
       var lang = vm.lang, link = vm.resumeLink;
-      var sms = lang === 'am' ? 'ምዝገባዎን ለመቀጠል፦ ' + link : 'Continue your form: ' + link;
+      var sms = ({ am: 'ምዝገባዎን ለመቀጠል፦ ', om: 'Unka kee itti fufuuf: ' }[lang] || 'Continue your form: ') + link;
       return View.bar(vm, false) + '<h1 class="dm-q" tabindex="-1">' + t('savedTitle', lang) + '</h1><p>' + t('savedText', lang) + '</p>' +
         '<p><a href="' + esc(link) + '">' + esc(link) + '</a></p>' +
         '<div class="dm-panel"><h2>' + t('smsPreview', lang) + '</h2><p lang="' + lang + '"><samp>' + esc(sms) + '</samp></p></div>' +
@@ -1143,7 +1367,7 @@
     /* Review panel. Nothing from speech reaches the answer until "Use this answer" is chosen. */
     heard: function (vm, v) {
       var lang = vm.lang, f = v.field, hid = View.id(vm, 'heard-h'), eid = View.id(vm, 'heard-edit');
-      var choice = f.type === 'choice' || f.type === 'consent' || f.type === 'multi';
+      var choice = f.type === 'choice' || f.type === 'consent' || f.type === 'multi' || f.type === 'ethdate';
       var h = '<div class="dm-heard" role="group" aria-labelledby="' + hid + '"><p id="' + hid + '" data-ref="heard-h" tabindex="-1">' + t('heard', lang) + ' <q>' + esc(v.transcript) + '</q></p>';
       if (choice) {
         h += '<p>' + t('heardMatch', lang) + ' <strong>' + esc(v.shown) + '</strong></p>';
@@ -1158,7 +1382,7 @@
       }
       return h + '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="heard-yes">' + t('yes', lang) + '</button>' +
         '<button type="button" class="dm-btn" data-act="heard-again">' + t('again', lang) + '</button>' +
-        '<button type="button" class="dm-btn" data-act="heard-type">' + t(choice ? 'tapInstead' : 'type', lang) + '</button></div></div>';
+        '<button type="button" class="dm-btn" data-act="heard-type">' + t(choice && f.type !== 'ethdate' ? 'tapInstead' : 'type', lang) + '</button></div></div>';
     },
 
     voiceConsent: function (vm) {
@@ -1299,10 +1523,10 @@
     if (f.type === 'multi') return Array.prototype.map.call(form.querySelectorAll('input[name=v]:checked'), function (i) { return i.value; });
     if (f.type === 'choice' || f.type === 'consent') { var c = form.querySelector('input[name=v]:checked'); return c ? c.value : ''; }
     if (f.type === 'ethdate') {
+      var c = form.querySelector('input[name=cal]:checked'), cal = c && c.value === 'greg' ? 'greg' : 'eth';
       var d = parseInt(form.d.value, 10), m = parseInt(form.m.value, 10), y = parseInt(form.y.value, 10);
-      var val = { d: form.d.value.trim(), m: form.m.value, y: form.y.value.trim() };
-      if (ethValid(y, m, d)) val = { d: d, m: m, y: y, gregorian: ethToGregorian(y, m, d).toISOString().slice(0, 10) };
-      return (val.d || val.m || val.y) ? val : '';
+      var raw = { cal: cal, d: String(form.d.value).trim(), m: form.m.value, y: String(form.y.value).trim() };
+      return dateValue(cal, d, m, y) || ((raw.d || raw.m || raw.y) ? raw : (cal === 'greg' ? { cal: 'greg', d: '', m: '', y: '' } : ''));
     }
     var inp = this.ref('input'); return inp ? inp.value.trim() : '';
   };
@@ -1349,9 +1573,22 @@
     var f = this.state.mode === 'question' && this.state.field();
     if (!f) return;
     if (f.type === 'ethdate') {
-      this.collect();
-      var v = this.state.answers[f.id], st = this.querySelector('.dm-status');
-      if (st) st.textContent = v && v.gregorian ? t('gregorian', this.lang, { date: fmtGregorian(new Date(v.gregorian), this.lang) }) : '';
+      var before = this.state.answers[f.id], nv = this.readField(f);
+      if (e.target.name === 'cal' && nv && nv.cal) { // the same day in the other calendar, or start the month and year again
+        if (before && before.gregorian) {
+          var g = new Date(before.gregorian), e2 = gregToEth(g);
+          nv = nv.cal === 'greg' ? dateValue('greg', g.getUTCDate(), g.getUTCMonth() + 1, g.getUTCFullYear()) : dateValue('eth', e2.d, e2.m, e2.y);
+        } else nv = { cal: nv.cal, d: nv.d, m: '', y: '' };
+      }
+      if (nv !== undefined) this.state.setAnswer(f.id, nv);
+      if (e.target.name === 'cal') { // month names change: redraw, and keep focus on the calendar choice
+        this.render(false);
+        var r = this.querySelector('input[name=cal]:checked'); if (r) r.focus();
+      }
+      var v = this.state.answers[f.id], lang = this.lang, msg = !v || !v.gregorian ? '' : v.cal === 'greg'
+        ? t('ethiopian', lang, { date: fmtEthiopian(v.gregorian, lang) }) : t('gregorian', lang, { date: fmtGregorian(new Date(v.gregorian), lang) });
+      var conv = this.ref('date-conv'); if (conv) conv.textContent = msg;
+      if (msg && e.target.name !== 'cal') this.status(msg);
     }
     if (this.easy && (f.type === 'choice' || f.type === 'multi' || f.type === 'consent') && e.target.closest) {
       var lab = e.target.closest('.dm-opt');
@@ -1376,7 +1613,8 @@
     }
     if (act === 'lang') {
       this.collect();
-      this.lang = this.lang === 'am' ? 'en' : 'am'; this.error = ''; this.savePrefs(); this.render(true); return;
+      var to = b.getAttribute('data-lang');
+      this.lang = LANGS.indexOf(to) !== -1 ? to : (this.lang === 'am' ? 'en' : 'am'); this.error = ''; this.savePrefs(); this.render(true); return;
     }
     if (act === 'easy') {
       this.collect();
@@ -1530,7 +1768,12 @@
   SavannaOnboardingForm.prototype.handleTranscript = function (f, alts) {
     var lang = this.lang, said = (alts[0] || '').trim(), v = this.voice;
     v.transcript = said; v.others = [];
-    if (f.type === 'choice' || f.type === 'consent' || f.type === 'multi') {
+    if (f.type === 'ethdate') {
+      var cur = this.readField(f), dv = null;
+      for (var j = 0; j < alts.length && !dv; j++) dv = parseSpokenDate(alts[j], cur && cur.cal === 'greg' ? 'greg' : 'eth');
+      if (!dv) { v.state = 'error'; this.setVoiceButton(false); this.status(t('voiceNoDate', lang)); return; }
+      v.date = dv; v.shown = View.display(this.vm(), f, dv);
+    } else if (f.type === 'choice' || f.type === 'consent' || f.type === 'multi') {
       var opts = optionsOf(f), hits = [];
       for (var i = 0; i < alts.length && !hits.length; i++) hits = matchOptions(alts[i], opts);
       if (!hits.length) { v.state = 'error'; this.status(t('voiceNoMatch', lang)); return; }
@@ -1554,6 +1797,12 @@
   SavannaOnboardingForm.prototype.confirmVoice = function () {
     var v = this.voice, form = this.querySelector('.dm-form');
     if (!v || v.state !== 'review' || !form) return;
+    if (v.date) { // a checked spoken date: shown in the fields (calendar, day, month, year); saved on Continue
+      this.voice = null; this.state.setAnswer(v.field.id, v.date); this.render(false);
+      this.status(t('voiceUsed', this.lang));
+      var sb = this.querySelector('.dm-form button[type=submit]'); if (sb) sb.focus();
+      return;
+    }
     if (v.hits) {
       if (v.field.type !== 'multi') Array.prototype.forEach.call(form.querySelectorAll('input[name=v]'), function (i) { i.checked = false; });
       v.hits.forEach(function (val) { var inp = form.querySelector('input[name=v][value="' + val + '"]'); if (inp) inp.checked = true; });
@@ -1660,7 +1909,7 @@
         }).join('') + '</div></fieldset>';
       }
       this.innerHTML = '<div class="dm dm-settings" lang="' + lang + '"><h1 class="dm-q" tabindex="-1">' + t('settings', lang) + '</h1><p class="dm-hint">' + t('settingsHint', lang) + '</p><form class="dm-form" novalidate>' +
-        group('lang', t('s_lang', lang), [['am', 'አማርኛ', 'am'], ['en', 'English', 'en']], p.lang) +
+        group('lang', t('s_lang', lang), LANGS.map(function (l) { return [l, LANG_NAMES[l], l]; }), p.lang) +
         group('size', t('s_size', lang), [['normal', t('size_normal', lang)], ['large', t('size_large', lang)], ['xlarge', t('size_xlarge', lang)]], p.size) +
         group('contrast', t('s_contrast', lang), [['normal', t('contrast_normal', lang)], ['high', t('contrast_high', lang)]], p.contrast) +
         group('mode', t('s_mode', lang), MODES.map(function (m) { return [m, t('m_' + m, lang), null, MODE_ICONS[m]]; }), p.mode) +
@@ -1734,10 +1983,10 @@
     mount: mount, unmount: unmount,
     version: '0.11.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
-    eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
+    eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth, fromGregorian: gregToEth, gregorianMonths: GREG_MONTHS, parseSpoken: parseSpokenDate },
     speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
     player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
-    prefs: getPrefs, setPrefs: setPrefs, prefsForMode: prefsForMode,
+    prefs: getPrefs, setPrefs: setPrefs, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
     /** Adds the module's styles and fonts to the page (done automatically when a form or settings element appears). */
     styles: function () { injectCss(); applyPrefs(); }
   };

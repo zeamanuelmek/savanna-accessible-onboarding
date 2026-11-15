@@ -24,7 +24,7 @@
       home: 'Home', dashboard: 'My dashboard', profile: 'My profile', passport: 'Support Passport', jobs: 'Jobs',
       employer: 'For employers: post a job', settings: 'Accessibility settings', signup: 'Sign up', login: 'Log in', logout: 'Log out',
       takeover: 'Take over your account', apply: 'Apply',
-      foot: 'Demo of the Savanna Accessible Onboarding Module inside Savanna\'s own page design (ALX starter kit). The log-in is simulated, all data stays in this browser, sample jobs are fictional, and the Amharic is a draft for native-speaker review.',
+      foot: 'Demo of the Savanna Accessible Onboarding Module inside Savanna\'s own page design (ALX starter kit). The log-in is simulated, all data stays in this browser, sample jobs are fictional, and the Amharic and Afaan Oromo are drafts for native-speaker review.',
       showroom: 'Developer and test page', testHost: 'Test host page',
       heroNoId: 'No ID? You can still start learning: a partner organisation can confirm who you are.',
       backIn: 'Welcome back, {name}.', toDashboard: 'Go to my dashboard',
@@ -53,12 +53,12 @@
       deleted: 'Your data was deleted from this phone.',
       offline: 'You are offline. Pages you have opened before still work, and your answers stay on this phone.', online: 'You are back online.',
       barText: 'Make this page work for you.', larger: 'Larger text', contrast: 'High contrast', motion: 'Stop motion',
-      artTitle: 'Welcome to your journey with ALX', artText: 'Your gateway to gaining in-demand skills and joining our talent community!',
-      modeTitle: 'How would you like to use Savanna?',
-      modeHint: 'This is only about how you like to use Savanna. We never ask why. You can change it at any time in Settings.',
+      artTitle: 'Welcome to your onboarding page', artText: 'Register in a few minutes, at your own pace, in the way that works best for you.',
+      modeTitle: 'How do you like to register?',
+      modeHint: 'This is only about how you like to fill in the form. We never ask why. You can change it at any time in Settings.',
       m_read_type: 'Read and type', m_listen: 'Listen and respond', m_speak: 'Speak my answers', m_simple: 'Simple steps with pictures and big text',
       listenQ: 'Listen to the question', stopAudio: 'Stop', cont: 'Continue', errMode: 'Choose one way to continue.',
-      acctTitle: 'Sign up or log in', acctChosen: 'You chose: {mode}.', acctChange: 'Change how I use Savanna',
+      acctTitle: 'Sign up or log in', acctChosen: 'You chose: {mode}.', acctChange: 'Change how I register',
       acctNew: 'New to Savanna? Sign up one question at a time. There is no time limit.', acctHave: 'Already have an account? Log in with your phone number.',
       account: 'your account', learning: 'Access my learning', resources: 'My resources', courses: 'My courses', rooms: 'Conference rooms',
       servers: 'Servers', sandboxes: 'Sandboxes', video: 'Video on demand', campus: 'My Campus', peers: 'Peers', myProfile: 'My Profile',
@@ -69,7 +69,7 @@
       home: 'መነሻ', dashboard: 'ዳሽቦርዴ', profile: 'የእኔ መገለጫ', passport: 'የድጋፍ ፓስፖርት', jobs: 'ሥራዎች',
       employer: 'ለቀጣሪዎች፦ ሥራ ያስተዋውቁ', settings: 'የተደራሽነት ቅንብሮች', signup: 'ይመዝገቡ', login: 'ግባ', logout: 'ውጣ',
       takeover: 'መለያዎን ይረከቡ', apply: 'አመልክት',
-      foot: 'የ<span lang="en">Savanna Accessible Onboarding Module</span> ማሳያ፣ በሳቫና የራሱ የገጽ ንድፍ ውስጥ (የALX ማስጀመሪያ ኪት)። መግባቱ የተመሰለ ነው፤ ሁሉም መረጃ በዚህ ብራውዘር ውስጥ ይቆያል፤ የናሙና ሥራዎቹ ልብ ወለድ ናቸው፤ አማርኛው በአፍ መፍቻ ተናጋሪ የሚገመገም ረቂቅ ነው።',
+      foot: 'የ<span lang="en">Savanna Accessible Onboarding Module</span> ማሳያ፣ በሳቫና የራሱ የገጽ ንድፍ ውስጥ (የALX ማስጀመሪያ ኪት)። መግባቱ የተመሰለ ነው፤ ሁሉም መረጃ በዚህ ብራውዘር ውስጥ ይቆያል፤ የናሙና ሥራዎቹ ልብ ወለድ ናቸው፤ አማርኛውና አፋን ኦሮሞው በአፍ መፍቻ ተናጋሪዎች የሚገመገሙ ረቂቆች ናቸው።',
       showroom: 'የገንቢዎችና የሙከራ ገጽ', testHost: 'የሙከራ አስተናጋጅ ገጽ',
       heroNoId: 'መታወቂያ የለዎትም? አሁንም መማር መጀመር ይችላሉ፤ አጋር ድርጅት ማንነትዎን ሊያረጋግጥ ይችላል።',
       backIn: 'እንኳን ደህና መጡ፣ {name}።', toDashboard: 'ወደ ዳሽቦርዴ ሂድ',
@@ -98,16 +98,121 @@
       deleted: 'መረጃዎ ከዚህ ስልክ ተሰርዟል።',
       offline: 'ከኢንተርኔት ውጪ ነዎት። ከዚህ በፊት የከፈቷቸው ገጾች አሁንም ይሠራሉ፤ መልሶችዎም በዚህ ስልክ ላይ ይቆያሉ።', online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።',
       barText: 'ይህን ገጽ ለእርስዎ እንዲመች ያድርጉት።', larger: 'ትልቅ ጽሑፍ', contrast: 'ከፍተኛ ንፅፅር', motion: 'እንቅስቃሴ አቁም',
-      artTitle: 'ከALX ጋር ወደ ጉዞዎ እንኳን ደህና መጡ', artText: 'ተፈላጊ ክህሎቶችን ለማግኘትና የተሰጥኦ ማኅበረሰባችንን ለመቀላቀል መግቢያዎ!',
-      modeTitle: 'ሳቫናን እንዴት መጠቀም ይፈልጋሉ?',
-      modeHint: 'ይህ ሳቫናን መጠቀም የሚመርጡበትን መንገድ ብቻ ነው። ምክንያቱን በፍጹም አንጠይቅም። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።',
+      artTitle: 'ወደ ምዝገባ ገጽዎ እንኳን ደህና መጡ', artText: 'በጥቂት ደቂቃዎች፣ በራስዎ ፍጥነት፣ ለእርስዎ በሚመች መንገድ ይመዝገቡ።',
+      modeTitle: 'እንዴት መመዝገብ ይፈልጋሉ?',
+      modeHint: 'ይህ ቅጹን መሙላት የሚመርጡበትን መንገድ ብቻ ነው። ምክንያቱን በፍጹም አንጠይቅም። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።',
       m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
       listenQ: 'ጥያቄውን አዳምጥ', stopAudio: 'አቁም', cont: 'ቀጥል', errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
-      acctTitle: 'ይመዝገቡ ወይም ይግቡ', acctChosen: 'የመረጡት፦ {mode}።', acctChange: 'ሳቫናን የምጠቀምበትን መንገድ ቀይር',
+      acctTitle: 'ይመዝገቡ ወይም ይግቡ', acctChosen: 'የመረጡት፦ {mode}።', acctChange: 'የምመዘገብበትን መንገድ ቀይር',
       acctNew: 'ለሳቫና አዲስ ነዎት? በአንድ ጊዜ አንድ ጥያቄ እየመለሱ ይመዝገቡ። የጊዜ ገደብ የለም።', acctHave: 'መለያ አለዎት? በስልክ ቁጥርዎ ይግቡ።',
       account: 'የእርስዎ መለያ', learning: 'ትምህርቴን ክፈት', resources: 'የእኔ ግብዓቶች', courses: 'ኮርሶቼ', rooms: 'የስብሰባ ክፍሎች',
       servers: 'ሰርቨሮች', sandboxes: 'የሙከራ ቦታዎች', video: 'በፍላጎት የሚታዩ ቪዲዮዎች', campus: 'የእኔ ካምፓስ', peers: 'አብረውኝ የሚማሩ', myProfile: 'የእኔ መገለጫ',
       inert: '«{name}» የሳቫና አካል ነው፤ በዚህ ማሳያ ውስጥ ግን የለም።'
+    },
+    // Afaan Oromo: DRAFT for review by a native speaker (team review planned)
+    om: {
+      skip: 'Gara qabiyyee ijootti darbi',
+      menu: 'Baafata',
+      logoAlt: 'Fuula jalqabaa Savanna',
+      navLabel: 'Savanna',
+      home: 'Fuula jalqabaa',
+      dashboard: 'Daashboordii koo',
+      profile: 'Piroofaayilii koo',
+      passport: 'Paaspoortii Deeggarsaa',
+      jobs: 'Hojiiwwan',
+      employer: 'Qacartootaaf: hojii beeksisi',
+      settings: 'Qindaa\'ina dhaqqabummaa',
+      signup: 'Galmaa\'i',
+      login: 'Seeni',
+      logout: 'Ba\'i',
+      takeover: 'Herrega kee fudhadhu',
+      apply: 'Iyyadhu',
+      foot: 'Agarsiisa <span lang="en">Savanna Accessible Onboarding Module</span>, dizaayinii fuula Savanna mataa isaa keessatti (meeshaa jalqabaa ALX). Seensi fakkeessa dha, odeeffannoon hundi biraawuzara kana keessa hafa, hojiiwwan fakkeenyaa dhugaa miti, Afaan Amaaraa fi Afaan Oromoon immoo dubbattoota afaanichaatiin kan ilaalamu dha.',
+      showroom: 'Fuula misoomsitootaa fi qorannoo',
+      testHost: 'Fuula keessummeessaa qorannoo',
+      heroNoId: 'Eenyummaa hin qabduu? Ammas barachuu jalqabuu dandeessa: dhaabbanni michuu eenyummaa kee mirkaneessuu danda\'a.',
+      backIn: 'Baga nagaan deebite, {name}.',
+      toDashboard: 'Gara daashboordii kootti deemi',
+      needLogin: 'Maaloo seeni',
+      needLoginText: 'Fuula kana ilaaluuf seenuu qabda.',
+      noAccount: 'Ammaaf herrega hin qabduu?',
+      welcome: 'Baga nagaan dhufte, {name}',
+      idCard: 'Haala eenyummaa keetii',
+      ppNone: 'Ammaaf hin uumamne. Waan barachuu fi hojjechuuf si gargaaru nutti himi. Dhuunfaan tura.',
+      ppCreate: 'Paaspoortii Deeggarsaa koo uumi',
+      ppSaved: 'Kuufameera. Eenyutu arga: {who}.',
+      ppOnlyMe: 'ati qofa',
+      ppTrainers: 'atii fi leenjistoota kee ALX',
+      ppEmpty: 'Ammaaf homaa qooduu dhiisuu filatteetta.',
+      ppOpen: 'Paaspoortii Deeggarsaa koo bani',
+      profText: 'Maqaa, lakkoofsa bilbilaa fi eenyummaa kee ilaali ykn jijjiiri.',
+      profOpen: 'Piroofaayilii koo bani',
+      jobsText: 'Hojiiwwan deeggarsa barbaaddu kennan argadhu. Calaltichi bilbila kee irratti hojjeta.',
+      jobsOpen: 'Hojii barbaadi',
+      setText: 'Hamma barreeffamaa, garaagarummaa halluu, afaan, sagaleen dubbisuu fi deebii sagaleen.',
+      setOpen: 'Qindaa\'ina bani',
+      takeText: 'Dhaabbanni michuu si galmeesseera. Bal\'ina isaa ilaaliitii herrega kee fudhadhu.',
+      loginTitle: 'Seeni',
+      simLabel: 'Seensa fakkeessaa',
+      simText: 'Agarsiisni kun sarvarii hin qabu. Ergaan gabaabaan (SMS) hin ergamu. Kan mirkanaa\'u lakkoofsi bilbilaa herrega bilbila kana irratti kuufame wajjin wal simuu isaa qofa.',
+      phone: 'Lakkoofsa bilbilaa',
+      phoneHint: 'Lakkoofsa ittiin galmoofte, fakkeenyaaf 0911 234 567.',
+      sendCode: 'Koodii naaf ergi',
+      smsTitle: 'Ergaa gabaabaa fakkeessaa',
+      smsText: 'Koodiin seensa Savanna kee {code} dha',
+      code: 'Koodii ergaa gabaabaa irraa',
+      codeHint: 'Garagalchitee maxxansuu, ykn bilbilli kee akka guutu hayyamuu dandeessa. Daangaan yeroo hin jiru.',
+      doLogin: 'Seeni',
+      problem: 'Rakkoon jira',
+      errPhone: 'Lakkoofsa bilbilaa dijiitii 10 qabu galchi, fakkeenyaaf 0911 234 567.',
+      errNoAccount: 'Bilbila kana irratti herregni Savanna lakkoofsa bilbilaa kanaan hin jiru. Lakkoofsa ilaali, ykn galmaa\'i.',
+      errCode: 'Koodiin sun ergaa gabaabaa wajjin wal hin simu. Ilaaliitii irra deebi\'ii yaali. Maxxansuu dandeessa.',
+      codeSent: 'Koodiin ergameera (fakkeessa). Armaan gaditti mul\'ata.',
+      loggedOut: 'Baateetta. Deebiin kee bilbila kana irra tura.',
+      employerIntro: 'Qacartootaaf',
+      settingsIntro: '',
+      delTitle: 'Odeeffannoo koo bilbila kana irraa haqi',
+      delText: 'Kun piroofaayilii, Paaspoortii Deeggarsaa, iyyannoowwan fi deebii kuufame kee bilbila kana irraa haqa. Qindaa\'inni kee ni hafa. Kun deebi\'uu hin danda\'u.',
+      delBtn: 'Odeeffannoo koo haqi',
+      delYes: 'Eeyyee, hunda haqi',
+      delNo: 'Lakki, odeeffannoon koo haa hafu',
+      delSure: 'Mirkaneeffattaa?',
+      deleted: 'Odeeffannoon kee bilbila kana irraa haqameera.',
+      offline: 'Interneetii irraa ala jirta. Fuulli kanaan dura banatte amma iyyuu ni hojjeta, deebiin kee immoo bilbila kana irra tura.',
+      online: 'Interneetiitti deebi\'teetta.',
+      barText: 'Fuula kana akka siif mijatu godhi.',
+      larger: 'Barreeffama guddaa',
+      contrast: 'Garaagarummaa halluu ol\'aanaa',
+      motion: 'Sochii dhaabi',
+      artTitle: 'Gara fuula galmee keetiitti baga nagaan dhufte',
+      artText: 'Daqiiqaa muraasa keessatti, saffisa keetiin, karaa siif mijatuun galmaa\'i.',
+      modeTitle: 'Akkamitti galmaa\'uu barbaadda?',
+      modeHint: 'Kun akkaataa unka kana guutuu barbaaddu qofa ilaala. Sababa gonkumaa hin gaafannu. Yeroo kamiyyuu Qindaa\'ina keessatti jijjiiruu dandeessa.',
+      m_read_type: 'Dubbisuu fi barreessuu',
+      m_listen: 'Dhaggeeffachuu fi deebisuu',
+      m_speak: 'Deebii koo sagaleen kennuu',
+      m_simple: 'Tarkaanfii salphaa fakkii fi barreeffama gurguddaa wajjin',
+      listenQ: 'Gaaffii dhaggeeffadhu',
+      stopAudio: 'Dhaabi',
+      cont: 'Itti fufi',
+      errMode: 'Itti fufuuf karaa tokko filadhu.',
+      acctTitle: 'Galmaa\'i ykn seeni',
+      acctChosen: 'Kan filatte: {mode}.',
+      acctChange: 'Akkaataa itti galmaa\'u jijjiiri',
+      acctNew: 'Savanna\'tti haaraa dhaa? Gaaffii tokko tokkoon galmaa\'i. Daangaan yeroo hin jiru.',
+      acctHave: 'Duraanuu herrega qabdaa? Lakkoofsa bilbila keetiin seeni.',
+      account: 'herrega kee',
+      learning: 'Barnoota koo seeni',
+      resources: 'Qabeenya koo',
+      courses: 'Koorsiiwwan koo',
+      rooms: 'Kutaalee walgahii',
+      servers: 'Sarvariiwwan',
+      sandboxes: 'Bakka shaakalaa',
+      video: 'Viidiyoo yeroo barbaadanitti',
+      campus: 'Kaampasii koo',
+      peers: 'Hiriyoota barumsaa',
+      myProfile: 'Piroofaayilii koo',
+      inert: '"{name}" kutaa Savanna ti, garuu agarsiisa kana keessa hin jiru.'
     }
   };
   function lang() { return H.lang(); }
@@ -198,13 +303,15 @@
       return '<li><button type="button" class="sj-tog" data-tog="' + key + '" aria-pressed="' + on + '"' + (extra || '') + '>' +
         '<span class="sj-tick" aria-hidden="true">✓ </span>' + label + '</button></li>';
     }
-    return '<section class="sj-a11y" aria-labelledby="sj-a11y-t"><div class="sj-a11y-in">' +
-      '<p id="sj-a11y-t" class="sj-a11y-t">' + T('barText') + '</p><ul class="sj-a11y-list">' +
+    // On the home page the sentence is not shown; the bar keeps it as its name for screen readers
+    return '<section class="sj-a11y' + (page === 'home' ? ' sj-a11y-bare' : '') + '" ' + (page === 'home' ? 'aria-label="' + esc(T('barText')) + '"' : 'aria-labelledby="sj-a11y-t"') + '><div class="sj-a11y-in">' +
+      (page === 'home' ? '' : '<p id="sj-a11y-t" class="sj-a11y-t">' + T('barText') + '</p>') + '<ul class="sj-a11y-list">' +
       tog('size', p.size !== 'normal', T('larger')) +
       tog('contrast', p.contrast === 'high', T('contrast')) +
       tog('motion', p.motion === 'reduce', T('motion')) +
       tog('en', lang() === 'en', 'English', ' lang="en"') +
       tog('am', lang() === 'am', 'አማርኛ', ' lang="am"') +
+      tog('om', lang() === 'om', 'Afaan Oromoo', ' lang="om"') +
       '<li><a class="sj-tog sj-tog-link" href="settings.html"' + (page === 'settings' ? ' aria-current="page"' : '') + '><i class="fa-solid fa-universal-access" aria-hidden="true"></i> ' + T('settings') + '</a></li>' +
       '</ul></div></section>';
   }
@@ -342,7 +449,7 @@
      The choice is saved as the learner's preference, so the sign-up form starts straight at its first question. */
   var MODES = ['read_type', 'listen', 'speak', 'simple'], MODE_ICONS = { read_type: '⌨️', listen: '🎧', speak: '🎤', simple: '🖼️' };
   var home = { step: new URLSearchParams(location.search).get('step') === 'account' ? 'account' : 'mode', mode: D.prefs().mode || '', error: '' };
-  var homeAudio = { audioIssue: function (code) { var st = document.getElementById('sj-mode-status'); if (st && code === 'noAudio') st.textContent = D.label({ en: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.', am: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።' }, lang()); } };
+  var homeAudio = { audioIssue: function (code) { var st = document.getElementById('sj-mode-status'); if (st && code === 'noAudio') st.textContent = D.label({ en: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.', am: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', om: 'Kanaaf ammaaf waraabbiin hin jiru, bilbilli kun immoo afaan kanaaf sagalee hin qabu. Wanti hundi iskiriinii irratti barreeffameera.' }, lang()); } };
   function homePage() {
     D.styles(); // the module's option, button and error styles
     var right;
@@ -362,7 +469,8 @@
         '<form class="dm-form" id="sj-mode" novalidate><fieldset aria-describedby="sj-mode-hint' + (err ? ' sj-mode-err' : '') + '"><legend><h2 class="dm-q" id="sj-step-h">' + T('modeTitle') + '</h2></legend>' +
         '<p id="sj-mode-hint" class="dm-hint">' + T('modeHint') + '</p>' +
         '<div class="dm-note dm-sr-tip"><p lang="en">If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.</p>' +
-        '<p lang="am">የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «ጮክ ብሎ ማንበብ»ን ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።</p></div>' +
+        '<p lang="am">የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «ጮክ ብሎ ማንበብ»ን ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።</p>' +
+        '<p lang="om">Yoo dubbisaan iskiriinii kee qubee Afaan Amaaraa tokko tokkoon dubbise, sagalee Afaan Amaaraa waraabame dhaggeeffachuuf «Sagaleen dubbisi» bani, ykn gara Ingiliffaatti jijjiiri.</p></div>' +
         (err ? '<span id="sj-mode-err" class="dm-err"><span class="dm-vh">Error: </span>' + esc(err) + '</span>' : '') +
         '<div class="dm-opts">' + MODES.map(function (m, i) {
           return '<label class="dm-opt"><input type="radio" name="mode" value="' + m + '"' + (i === 0 ? ' id="sj-mode-0"' : '') + (home.mode === m ? ' checked' : '') + '>' +
@@ -373,7 +481,8 @@
         '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + T('cont') + '</button></div></form>';
     }
     view.innerHTML = '<div class="sj-split">' +
-      '<section class="sj-split-art" aria-labelledby="sj-art-h"><img class="sj-split-logo" src="vendor/savanna-static-pages/assets/img/holberton-logo-full-alx.png" alt="ALX">' +
+      // Generic on purpose: the module can be installed by any organisation, not only ALX
+      '<section class="sj-split-art" aria-labelledby="sj-art-h">' +
         '<h1 id="sj-art-h">' + T('artTitle') + '</h1><p>' + T('artText') + '</p></section>' +
       '<section class="sj-split-form dm" aria-labelledby="sj-step-h">' + right + '</section></div>';
     if (signedIn()) view.querySelector('.sj-split-form').removeAttribute('aria-labelledby');

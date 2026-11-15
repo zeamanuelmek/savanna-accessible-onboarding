@@ -36,7 +36,9 @@ const screens = {
   'signup: text question with error': async p => { await signupTo(p, 'name'); await next(p); },
   'signup: ID choice': async p => signupTo(p, 'id_route'),
   'signup: Ethiopian date': async p => signupTo(p, 'dob'),
-  'signup: date error': async p => { await signupTo(p, 'dob'); await p.fill('[data-ref=input]', '40'); await next(p); },
+  'signup: date error': async p => { await signupTo(p, 'dob'); await p.selectOption('[data-ref=input]', '30'); await p.selectOption('[data-ref=m]', '13'); await p.selectOption('[data-ref=y]', '2017'); await next(p); }, // 30 Pagume does not exist
+  'signup: date typed, with voice (speak)': async p => { await signupTo(p, 'dob', 'speak'); },
+  'signup: question in Afaan Oromo': async p => { await go(p, '#/'); await p.evaluate(() => window.SavannaOnboarding.setPrefs({ lang: 'om' })); await signupTo(p, 'name'); },
   'signup: consent': async p => signupTo(p, 'consent'),
   'signup: check answers': async p => signupTo(p, 'END'),
   'signup: done': async p => { await signupTo(p, 'END'); await next(p); },

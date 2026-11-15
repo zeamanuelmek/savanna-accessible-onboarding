@@ -41,9 +41,9 @@ test('LEARNER VIEW: no developer page in the learner navigation (fixed in Phase 
   await expect(page.locator('#nav a[href="#/developers"]')).toHaveCount(0);
 });
 
-// Decision (Phase 3, approved cut order): the date is typed or chosen, not spoken. Three separate parts in the
-// Ethiopian calendar are hard to recognise reliably, and voice is cut first. Documented in docs/for-developers.md.
-test('VOICE: the date question has no microphone (decision, Phase 3)', async ({ page }) => {
+// Decision 18, changed on 15 Nov: with "read and type" (lists for day, month and year) there is no microphone on the
+// date; "listen" and "speak" type the date and may answer by voice (tests/date-language.spec.mjs).
+test('VOICE: the date question has no microphone when the date is chosen from lists (decision 18)', async ({ page }) => {
   await page.addInitScript(() => { window.SpeechRecognition = class { start() {} stop() {} abort() {} }; });
   await signupTo(page, 'dob');
   await expect(page.locator('[data-act=speak]')).toHaveCount(0);

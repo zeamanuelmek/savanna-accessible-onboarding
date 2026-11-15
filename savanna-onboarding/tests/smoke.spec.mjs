@@ -51,10 +51,10 @@ test('phone validation rejects a short number', async ({ page }) => {
 });
 
 test('Ethiopian date converts to Gregorian', async ({ page }) => {
-  await signupTo(page, 'dob');
-  await page.fill('[data-ref=input]', '1');
+  await signupTo(page, 'dob'); // "read and type": day, month and year are lists
+  await page.selectOption('[data-ref=input]', '1');
   await page.selectOption('[data-ref=m]', '1');
-  await page.fill('[data-ref=y]', '2017');
+  await page.selectOption('[data-ref=y]', '2017');
   await next(page);
   // 1 Meskerem 2017 E.C. = 11 September 2024
   const draft = await page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.draft.signup')));
@@ -112,7 +112,7 @@ test('settings apply text size and contrast to the page', async ({ page }) => {
 
 test('language switch changes the question to Amharic', async ({ page }) => {
   await signupTo(page, 'name');
-  await page.locator('[data-act=lang]').click();
+  await page.locator('[data-act=lang][data-lang=am]').click();
   expect(await heading(page)).toBe('ምን ብለን እንጥራዎ?');
   await expect(page.locator('.dm')).toHaveAttribute('lang', 'am');
 });

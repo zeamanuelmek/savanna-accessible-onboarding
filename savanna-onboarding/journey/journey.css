@@ -238,3 +238,4 @@ html[data-dm-contrast=high] .sj-alx .sj-greeting a { color: #000; }
 @media (max-width: 400px) { .sj-alx .curriculum-score-card .card-body { padding: 1rem !important; } .sj-alx .curriculum-score-card p { margin-left: 0 !important; margin-right: 0 !important; } }
 /* ALX shortens long titles with "…" (events, courses); in our copy they wrap, so nothing is hidden at large text sizes */
 .sj-alx .text-truncate, .sj-alx-dialogs .text-truncate { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; overflow-wrap: anywhere; }
+.sj-a11y-bare .sj-a11y-in { justify-content: flex-end; }

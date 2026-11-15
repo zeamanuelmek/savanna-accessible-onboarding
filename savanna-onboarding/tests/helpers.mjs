@@ -42,9 +42,9 @@ export function summarise(violations) {
 }
 
 /** Walk the sign-up journey up to (and including) the given field id. */
-export async function signupTo(page, stopAt) {
+export async function signupTo(page, stopAt, mode = 'read_type') {
   await go(page, '#/signup');
-  await pick(page, 'read_type'); await next(page);
+  await pick(page, mode); await next(page);
   const steps = [
     ['filler', async () => pick(page, 'self')],
     ['name', async () => page.fill('[data-ref=input]', 'Abebe Kebede')],

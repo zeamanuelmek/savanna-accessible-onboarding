@@ -17,7 +17,7 @@
     en: {
       home: 'Home', join: 'Join', profile: 'My profile', passport: 'Support Passport', jobs: 'Jobs', post: 'Post a job', settings: 'Settings', menu: 'Menu',
       product: 'Savanna Accessible Onboarding Module', brandSub: 'Accessible onboarding',
-      foot: 'Demo for the Accessibility Hackathon 2026 (Track 1: accessible onboarding). All data stays in this browser. Sample jobs are fictional. Amharic wording is a draft for native-speaker review.',
+      foot: 'Demo for the Accessibility Hackathon 2026 (Track 1: accessible onboarding). All data stays in this browser. Sample jobs are fictional. Amharic and Afaan Oromo wording is a draft for native-speaker review.',
       jobsShown: '{n} jobs shown', jobShown: '1 job shown',
       heroTitle: 'Sign up, say what helps you, find work that fits',
       heroText: 'The Savanna Accessible Onboarding Module is one accessible form engine. It asks one question per screen, can read every question aloud, accepts voice answers you can check and fix, and never times out. The same engine runs sign-up, the Support Passport, job applications and the employer form.',
@@ -105,6 +105,91 @@
       notShared: 'የድጋፍ ፓስፖርት፦ አልተጋራም', seeJobs: 'በሥራ ገጹ ላይ ይመልከቱት', applyFor: 'የሚያመለክቱበት፦',
       notFound: 'ይህ ሥራ አልተገኘም።', back: 'ወደ ሥራዎች ተመለስ',
       noProfile: 'እስካሁን አልተመዘገቡም፤ ስለዚህ በዚህ ስልክ ላይ መገለጫ የለም።', joinFirst: 'ሳቫናን ይቀላቀሉ', backProfile: 'ወደ መገለጫዬ ተመለስ'
+    },
+    // Afaan Oromo: DRAFT for review by a native speaker (team review planned)
+    om: {
+      home: 'Fuula jalqabaa',
+      join: 'Galmaa\'i',
+      profile: 'Piroofaayilii koo',
+      passport: 'Paaspoortii Deeggarsaa',
+      jobs: 'Hojiiwwan',
+      post: 'Hojii beeksisi',
+      settings: 'Qindaa\'ina',
+      menu: 'Baafata',
+      product: 'Savanna Accessible Onboarding Module',
+      brandSub: 'Galmee hunda dandeessisu',
+      foot: 'Agarsiisa Hakaatoonii Dhaqqabummaa 2026 (Kutaa 1: galmee hunda dandeessisu). Odeeffannoon hundi biraawuzara kana keessa hafa. Hojiiwwan fakkeenyaa dhugaa miti. Barreeffamni Afaan Amaaraa fi Afaan Oromoo dubbattoota afaanichaatiin kan ilaalamu dha.',
+      jobsShown: 'Hojiiwwan {n} agarsiifamaniiru',
+      jobShown: 'Hojiin 1 agarsiifameera',
+      heroTitle: 'Galmaa\'i, waan si gargaaru himi, hojii siif ta\'u argadhu',
+      heroText: 'Savanna Accessible Onboarding Module maashina unka tokko kan hunda dandeessisu dha. Iskiriinii tokko irratti gaaffii tokko gaafata, gaaffii hunda sagaleen dubbisuu danda\'a, deebii sagalee kan ilaaltee sirreessitu ni fudhata, yeroon isaa gonkumaa hin darbu. Maashinni kun galmee, Paaspoortii Deeggarsaa, iyyannoo hojii fi unka qacaraa hojjechiisa.',
+      start: 'Jalqabi: Savanna\'tti galmaa\'i',
+      cards: 'Wantoota yaaluu dandeessu',
+      c1: 'Eenyummaa kamiin ykn malee galmaa\'i',
+      c1t: 'Faayda, waraqaa eenyummaa ganda, paaspoortii, eenyummaa baqataa, sanada biraa, ykn michuu karaa "na ergi". Hojjettoonni michuu hayyama barataatiin barataa galmeessuus ni danda\'u.',
+      c2: 'Paaspoortii Deeggarsaa',
+      c2t: '"Maaltu si gargaara?", gonkumaa "Qaamni miidhamuun kee maali?" miti. Bilbila kee irra tura, eenyu akka argu ati filatta.',
+      c3: 'Dhuunfaan hojii barbaadi',
+      c3t: 'Hojiiwwan deeggarsa barbaadduun calali. Calaltichi bilbila kee irratti hojjeta, kanaaf boordiin hojii fedhii kee gonkumaa hin beeku.',
+      c4: 'Hojii beeksisi',
+      c4t: 'Qacartoonni deeggarsa hojiin tokko kennu tarree walfakkaataa sanaan mallattoo godhu. Hojichi akkaataa schema.org JobPosting tiin maxxanfama.',
+      reset: 'Odeeffannoo agarsiisaa bilbila kana irra jiru hunda haqi',
+      resetDone: 'Odeeffannoon agarsiisaa bilbila kana irra ture hundi haqameera.',
+      jobsTitle: 'Hojiiwwan',
+      filterAll: 'Hojiiwwan deeggarsa ani barbaadu hunda kennan qofa agarsiisi',
+      filterNote: 'Dhuunfaa: kun Paaspoortii Deeggarsaa kee bilbila kana irra jiru fayyadama. Boordiin hojii gonkumaa hin argu, qacartoonni immoo yoo yeroo iyyattu qooduu filatte qofa argu.',
+      noPassport: 'Hojiiwwan deeggarsa barbaaddu kennan ilaaluuf Paaspoortii Deeggarsaa kee uumi.',
+      makePassport: 'Paaspoortii Deeggarsaa koo uumi',
+      offers: 'Deeggarsa hojiin kun kennu',
+      match: 'Gosa deeggarsaa ati filatte {n} keessaa {k} kenna',
+      listen: 'Hojii kana dhaggeeffadhu',
+      apply: 'Iyyadhu',
+      sample: 'Hojii fakkeenyaa (odeeffannoo agarsiisaa)',
+      none: 'Ammaaf hojiin fedhii deeggarsaa kee hunda guutu hin jiru. Hojiiwwan hunda ilaaluuf calaltii cufi.',
+      myPassport: 'Paaspoortii Deeggarsaa koo',
+      edit: 'Paaspoortii Deeggarsaa koo jijjiiri',
+      del: 'Paaspoortii Deeggarsaa koo haqi',
+      deleted: 'Paaspoortiin Deeggarsaa kee haqameera.',
+      onlyYou: 'Kana kan argu ati qofa. Bilbila kana irratti kuufameera.',
+      nothing: 'Ammaaf homaa qooduu dhiisuu filatteetta.',
+      nextPassport: 'Itti aanee: waan si gargaaru nutti himi (dirqama miti)',
+      nextJobs: 'Hojii barbaadi',
+      level: 'Haala eenyummaa keetii:',
+      lv_partner_referral_pending: 'Dhaabbanni michuu eenyummaa kee mirkaneessuuf si quunnama. Amma barachuu jalqabuu dandeessa.',
+      lv_document_number_recorded: 'Lakkoofsa ati kennite ni qabanna. Namni ofumaan isa mirkaneessu hin jiru. Amma barachuu jalqabuu dandeessa.',
+      lv_self_declared: 'Namni eenyummaa kee mirkaneesse hin jiru. Yeroo kamiyyuu lakkoofsa dabaluu dandeessa. Amma barachuu jalqabuu dandeessa.',
+      assisted: 'Gargaarsa {org} tiin galmaa\'e.',
+      handTitle: 'Maaloo amma bilbila barataatti kenni',
+      handText: 'Barataan waan galfame ilaalee herrega fudhata. Paaspoortiin Deeggarsaa dhuunfaa dha: barataan booda kophaa isaa guuta.',
+      handBtn: 'Ani barataa dha: herrega koo fudhadhu',
+      takeTitle: 'Herrega kee fudhadhu',
+      nothingToTake: 'Wanti fudhatamu hin jiru. Herregni kun duraanuu kan kee dha.',
+      takeFirst: 'Dura herrega kee nama si gargaare irraa fudhadhu. Paaspoortiin Deeggarsaa kee dhuunfaa dha, kanaaf kan guutu ati qofa.',
+      whoSees: 'Eenyutu kana arga',
+      who_ask: 'Ati qofa. Yeroo hojii iyyattu, yeroo hunda si gaafanna. Qacaraan tarree deeggarsaa kee kan argu yoo hojii sanaaf eeyyee jette qofa.',
+      who_trainers: 'Atii fi leenjistoota kee ALX. Qacartoonni amma iyyuu kan argan yoo hojii tokkoof eeyyee jette qofa.',
+      allowTrainers: 'Leenjistoonni koo ALX akka argan hayyami',
+      stopTrainers: 'Leenjistoota kootiif qooduu dhaabi',
+      sharingSaved: 'Kuufameera. Eenyutu arga: {who}',
+      trainersDemo: 'Agarsiisa: ammaaf sirni leenjistootaa hin jiru, kanaaf namatti homtuu hin ergamu.',
+      sharedWith: 'Qacartootaaf qoodame',
+      sharedNone: 'Qacaraa kamiifuu hin qoodne.',
+      sharedOn: 'guyyaa {date} qoodame',
+      withdraw: 'Deebisi',
+      withdrawnOn: 'guyyaa {date} deebi\'e',
+      withdrawDone: 'Deebi\'eera. Agarsiisni kun sirna qacaraa hin qabu, kanaaf kan jijjiirame garagalcha bilbila kana irra jiru qofa. Sirni dhugaa qacaraan akka haqu itti himuu qaba.',
+      neverShared: 'Namaaf gonkumaa hin qoodamu: sababa, haala fayyaa, ykn waan jechoota keetiin barreessite.',
+      ownWords: 'Jechoota keetiin (kan argu ati qofa):',
+      jsonTitle: 'Waan waltajjiiwwan hojii biroo argatan (schema.org JobPosting)',
+      receives: 'Waan qacaraan argatu',
+      notShared: 'Paaspoortii Deeggarsaa: hin qoodamne',
+      seeJobs: 'Boordii hojii irratti ilaali',
+      applyFor: 'Kan iyyattu:',
+      notFound: 'Hojiin kun hin argamne.',
+      back: 'Gara hojiiwwaniitti deebi\'i',
+      noProfile: 'Ammaaf hin galmoofne, kanaaf bilbila kana irratti piroofaayiliin hin jiru.',
+      joinFirst: 'Savanna\'tti galmaa\'i',
+      backProfile: 'Gara piroofaayilii kootti deebi\'i'
     }
   };
   function T(k, vars) { var s = (TX[lang()] || TX.en)[k] || TX.en[k] || k; if (vars) Object.keys(vars).forEach(function (v) { s = s.split('{' + v + '}').join(vars[v]); }); return s; }
@@ -123,7 +208,7 @@
       offers: ['sign_language', 'captions', 'written', 'remote', 'extra_time', 'step_free'], description: 'Build and fix web pages with a senior mentor.' }
   ];
   function jobs() { return store.get('jobs', []).concat(SAMPLE); }
-  var MODE = { onsite: { en: 'At the office', am: 'በቢሮ' }, remote: { en: 'From home', am: 'ከቤት' }, hybrid: { en: 'Office and home', am: 'በቢሮና በቤት' } };
+  var MODE = { onsite: { en: 'At the office', am: 'በቢሮ', om: 'Waajjira keessatti' }, remote: { en: 'From home', am: 'ከቤት', om: 'Mana irraa' }, hybrid: { en: 'Office and home', am: 'በቢሮና በቤት', om: 'Waajjiraa fi mana' } };
 
   function jobPostingLd(j) {
     return {
@@ -221,7 +306,7 @@
   function statusPanel(p) {
     return '<div class="notice"><p><strong>' + T('level') + '</strong> <span class="badge">' + esc(L(D.TRUST[p.assurance_level], lang())) + '</span></p>' +
       '<p>' + T('lv_' + p.assurance_level) + '</p>' +
-      (p.registered_by ? '<p>' + T('assisted', { org: esc(ORG[p.registered_by.org] || (lang() === 'am' ? 'አጋር ድርጅት' : 'a partner organisation')) }) + '</p>' : '') + '</div>';
+      (p.registered_by ? '<p>' + T('assisted', { org: esc(ORG[p.registered_by.org] || ({ am: 'አጋር ድርጅት', om: 'dhaabbata michuu' }[lang()] || 'a partner organisation')) }) + '</p>' : '') + '</div>';
   }
 
   function profileView() {
@@ -353,7 +438,7 @@
       b.addEventListener('click', function () {
         var j = jobs().filter(function (x) { return x.id === b.getAttribute('data-listen'); })[0];
         var text = j.title + '. ' + j.org + '. ' + j.location + '. ' + j.description + '. ' + T('offers') + ': ' + j.offers.map(needLabel).join(', ');
-        if (!D.speak(text, lang())) { var s = document.getElementById('jobs-status'); if (s) s.textContent = lang() === 'am' ? 'የአማርኛ ድምፅ በዚህ ስልክ ላይ ገና አልተጫነም።' : 'Audio is not available on this device.'; }
+        if (!D.speak(text, lang())) { var s = document.getElementById('jobs-status'); if (s) s.textContent = { am: 'የአማርኛ ድምፅ በዚህ ስልክ ላይ ገና አልተጫነም።', om: 'Sagaleen Afaan Oromoo bilbila kana irratti ammaaf hin jiru.' }[lang()] || 'Audio is not available on this device.'; }
       });
     });
     if (!flt) focusH1(); else if (document.activeElement === document.body) focusH1();
@@ -432,7 +517,9 @@
   };
   if (!SHOWROOM) return;
 
-  function syncHostLang() { var b = document.getElementById('host-lang'); b.textContent = lang() === 'am' ? 'English' : 'አማርኛ'; b.setAttribute('lang', lang() === 'am' ? 'en' : 'am'); }
+  // The showroom's one language button goes round the three languages: Amharic, English, Afaan Oromo
+  function nextLang() { var L = D.languages, i = L.indexOf(lang()); return L[(i + 1) % L.length]; }
+  function syncHostLang() { var b = document.getElementById('host-lang'), n = nextLang(); b.textContent = D.languageNames[n]; b.setAttribute('lang', n); }
   // Preferences can change from any component (language switch, Settings): keep the host page in step.
   document.addEventListener('savanna-onboarding:prefs', function () {
     var r = location.hash || '#/';
@@ -441,7 +528,7 @@
     if (!formPage) { var active = document.activeElement && document.activeElement.id; route(); if (active) { var el = document.getElementById(active); if (el) el.focus(); } }
   });
   document.getElementById('skip').addEventListener('click', function (e) { e.preventDefault(); var m = document.getElementById('main'); m.focus(); });
-  document.getElementById('host-lang').addEventListener('click', function () { D.setPrefs({ lang: lang() === 'am' ? 'en' : 'am' }); });
+  document.getElementById('host-lang').addEventListener('click', function () { D.setPrefs({ lang: nextLang() }); });
   syncHostLang();
   // Minimum offline mode (see sw.js): the showroom works without a connection after one visit.
   if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js').catch(function () {}); } catch (e) {} }

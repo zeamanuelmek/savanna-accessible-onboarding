@@ -39,7 +39,7 @@ They are never sent to employers.
   "$id": "savanna-onboarding/prefs",
   "type": "object",
   "properties": {
-    "lang":     { "enum": ["am", "en"] },
+    "lang":     { "enum": ["am", "en", "om"] },
     "easy":     { "type": "boolean", "description": "Read questions aloud" },
     "mode":     { "enum": ["", "read_type", "listen", "speak", "simple"] },
     "size":     { "enum": ["normal", "large", "xlarge"] },
@@ -64,7 +64,7 @@ checks it and chooses "Use this answer".
   "properties": {
     "form":     { "enum": ["signup", "profile", "takeover", "passport", "employer", "apply"], "description": "Or the id of a form the host registered itself" },
     "instance": { "type": ["string", "null"], "description": "The element's instance attribute (for example the job id on apply)" },
-    "lang":     { "enum": ["am", "en"], "description": "Language the learner used" },
+    "lang":     { "enum": ["am", "en", "om"], "description": "Language the learner used (om = Afaan Oromo)" },
     "answers":  { "type": "object", "description": "One of the answer schemas below, chosen by `form`" }
   },
   "required": ["form", "instance", "lang", "answers"]
@@ -77,11 +77,12 @@ checks it and chooses "Use this answer".
 {
   "$defs": {
     "ethDate": {
-      "description": "Ethiopian-calendar date, with the Gregorian date worked out on the device",
+      "description": "A date in the calendar the learner chose (Ethiopian or Gregorian). `gregorian` is always the same day in the Gregorian calendar, worked out on the device: use it for storage and comparison. Answers saved before 15 Nov have no `cal` and are Ethiopian.",
       "type": "object",
       "properties": {
-        "d": { "type": "integer", "minimum": 1, "maximum": 30 },
-        "m": { "type": "integer", "minimum": 1, "maximum": 13, "description": "1 = Meskerem ... 13 = Pagume" },
+        "cal": { "enum": ["eth", "greg"], "default": "eth", "description": "eth = Ethiopian calendar, greg = Gregorian" },
+        "d": { "type": "integer", "minimum": 1, "maximum": 31 },
+        "m": { "type": "integer", "minimum": 1, "maximum": 13, "description": "Ethiopian: 1 = Meskerem ... 13 = Pagume. Gregorian: 1 = January ... 12 = December" },
         "y": { "type": "integer", "minimum": 1900, "maximum": 2030 },
         "gregorian": { "type": "string", "format": "date" }
       },

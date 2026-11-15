@@ -183,7 +183,7 @@ work; nothing of it is built.
 |---|---|
 | **Forms timed out** | There are no time limits anywhere. Answers are saved on the phone after every question, and "Finish later" gives a link to continue on the same phone. |
 | **Refugees were asked for ID they don't have** | Six ID routes: Fayda, kebele ID, passport, refugee ID or proof of registration (RRS / UNHCR), another document, or "I have none of these, refer me through a partner". The ID number is optional, nobody is asked for a photo of their ID, and learning can start without any ID. IDs are never claimed to be verified. |
-| **Help was English only** | Every question, hint, error and help panel is in Amharic and English (the Amharic is a draft for native-speaker review). A language switch and "Get help" are in the same place on every screen. |
+| **Help was English only** | Every question, hint, error and help panel is in Amharic, English and Afaan Oromo (the Amharic and Oromo are drafts for native-speaker review). A language switch and "Get help" are in the same place on every screen. |
 | **Job boards broke under screen readers** | Job titles are headings, every "Apply" link names its job, the number of jobs is announced on load and after filtering, and the filter is a normal checkbox. Tested automatically; NVDA and TalkBack checks by a person are still to do. |
 
 ## What is real and what is not

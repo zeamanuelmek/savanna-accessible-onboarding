@@ -6,7 +6,7 @@
 (function () {
   var p = {};
   try { p = JSON.parse(localStorage.getItem('savanna-onboarding.prefs') || '{}') || {}; } catch (e) {}
-  var root = document.documentElement, lang = p.lang === 'en' ? 'en' : 'am';
+  var root = document.documentElement, lang = p.lang === 'en' || p.lang === 'om' ? p.lang : 'am';
   root.lang = lang;
   root.setAttribute('data-dm-size', p.size || 'normal');
   root.setAttribute('data-dm-contrast', p.contrast || 'normal');

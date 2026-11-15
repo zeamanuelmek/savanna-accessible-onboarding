@@ -118,8 +118,14 @@ One file, `savanna-onboarding.js`, in clear layers:
   away. Changing language or leaving the question also throws them away.
 - **Consent first.** The first time, the module explains that the browser sends the recording to Google. The learner
   can turn voice answers off (or on) at any time in Settings.
-- **Never on sensitive questions** (`sensitive: true`: ID and support needs), and **not on the date question**: the
-  Ethiopian date has three parts that browsers recognise badly, so it is typed or chosen (a team decision).
+- **Never on sensitive questions** (`sensitive: true`: ID and support needs).
+- **The date question** starts with a choice of calendar (Ethiopian or Gregorian). For learners who chose "read and
+  type" or "simple steps", day, month and year are lists and there is no microphone. For "listen" and "speak", day and
+  year are typed and the microphone is offered: "12 Meskerem 1995" or "March 5 1990" is shown for checking first; a
+  month name also tells which calendar is meant. Answers are `{ cal, d, m, y, gregorian }` (see `api-schema.md`).
+- **Languages:** Amharic (`am`, default), English (`en`) and Afaan Oromo (`om`, a draft for native-speaker review).
+  Each text in a form config can carry `om`; a missing one falls back to English. Few browsers have Oromo speech:
+  read-aloud and voice answers then say so, and everything stays on the screen.
 - **Fallbacks:** when the browser has no speech engine (for example inside some apps' WebView), there is no microphone
   button; a learner who chose "Speak my answers" sees a plain note. Blocked microphone, no network, nothing heard, no
   microphone and unsupported language each give a clear message, and typing or tapping always works.
