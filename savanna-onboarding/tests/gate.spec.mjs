@@ -70,10 +70,6 @@ test('GATE dry run: keyboard only, 200% zoom, sound off', async ({ page }, info)
   await checkScreen('name');
   await tabTo('[data-ref=input]'); await page.keyboard.type('Abebe'); await enter();
   await tabTo('[data-ref=input]'); await page.keyboard.type('0911234567'); await enter();
-  await checkScreen('ID type');
-  await tabTo('input[name=v]'); await page.keyboard.press('ArrowDown'); // Kebele ID (arrow keys inside the group)
-  await tabTo('button[type=submit]'); await enter();
-  await tabTo('[data-ref=input]'); await enter(); // ID number: skip
   await checkScreen('date of birth');
   await tabTo('button[type=submit]'); await enter(); // date: skip
   await tabTo('input[name=v]'); await space(); // consent: yes

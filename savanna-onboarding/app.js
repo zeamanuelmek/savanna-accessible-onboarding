@@ -37,6 +37,7 @@
       myPassport: 'My Support Passport', edit: 'Change my Support Passport', del: 'Delete my Support Passport', deleted: 'Your Support Passport was deleted.',
       onlyYou: 'Only you can see this. It is stored on this phone.', nothing: 'You chose not to share anything for now.',
       nextPassport: 'Next: tell us what helps you (optional)', nextJobs: 'Find jobs', level: 'Your ID status:',
+      lv_no_id_yet: 'You do not need an ID to start learning. You can add one later in My profile, if you want to.', addId: 'Add your ID (optional)', changeId: 'Change my ID details',
       lv_partner_referral_pending: 'A partner organisation will contact you to confirm who you are. You can start learning now.',
       lv_document_number_recorded: 'We keep the number you gave. Nobody checks it automatically. You can start learning now.',
       lv_self_declared: 'Nobody has checked your ID. You can add the number at any time. You can start learning now.',
@@ -59,6 +60,9 @@
       ownWords: 'In your own words (only you see this):',
       jsonTitle: 'What other job platforms receive (schema.org JobPosting)', receives: 'What the employer receives',
       notShared: 'Support Passport: not shared', seeJobs: 'See it on the job board', applyFor: 'Applying for:',
+      sentTo: 'Your application was sent to {org}', sentJob: 'Job', sharedYes: 'Support Passport: shared', sharedList: 'The employer sees only this list: {list}.',
+      sentDemo: 'This is a demo: nothing was actually sent. Your application is kept only on this phone.',
+      postedTitle: 'Your job "{title}" is on the job board', postedDemo: 'This is a demo: the job is kept only on this phone. Nothing was sent or published anywhere else.',
       notFound: 'This job was not found.', back: 'Back to jobs',
       noProfile: 'You have not joined yet, so there is no profile on this phone.', joinFirst: 'Join Savanna', backProfile: 'Back to my profile'
     },
@@ -83,6 +87,7 @@
       myPassport: 'የድጋፍ ፓስፖርቴ', edit: 'የድጋፍ ፓስፖርቴን ቀይር', del: 'የድጋፍ ፓስፖርቴን ሰርዝ', deleted: 'የድጋፍ ፓስፖርትዎ ተሰርዟል።',
       onlyYou: 'ይህን ማየት የሚችሉት እርስዎ ብቻ ነዎት። በዚህ ስልክ ላይ ተቀምጧል።', nothing: 'ለአሁን ምንም ላለማጋራት መርጠዋል።',
       nextPassport: 'ቀጣይ፦ የሚረዳዎትን ይንገሩን (አማራጭ)', nextJobs: 'ሥራ ፈልግ', level: 'የመታወቂያዎ ሁኔታ፦',
+      lv_no_id_yet: 'መማር ለመጀመር መታወቂያ አያስፈልግዎትም። ከፈለጉ በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።', addId: 'መታወቂያዎን ይጨምሩ (አማራጭ)', changeId: 'የመታወቂያ ዝርዝሬን ቀይር',
       lv_partner_referral_pending: 'ማንነትዎን ለማረጋገጥ አጋር ድርጅት ያገኝዎታል። አሁን መማር መጀመር ይችላሉ።',
       lv_document_number_recorded: 'የሰጡትን ቁጥር እንይዛለን። ማንም በራስ-ሰር አያረጋግጠውም። አሁን መማር መጀመር ይችላሉ።',
       lv_self_declared: 'መታወቂያዎን ማንም አላረጋገጠም። ቁጥሩን በማንኛውም ጊዜ መጨመር ይችላሉ። አሁን መማር መጀመር ይችላሉ።',
@@ -105,6 +110,9 @@
       ownWords: 'በራስዎ ቃላት (እርስዎ ብቻ ያዩታል)፦',
       jsonTitle: 'ሌሎች የሥራ ጣቢያዎች የሚቀበሉት (schema.org JobPosting)', receives: 'ቀጣሪው የሚቀበለው',
       notShared: 'የድጋፍ ፓስፖርት፦ አልተጋራም', seeJobs: 'በሥራ ገጹ ላይ ይመልከቱት', applyFor: 'የሚያመለክቱበት፦',
+      sentTo: 'ማመልከቻዎ ለ{org} ተልኳል', sentJob: 'ሥራ', sharedYes: 'የድጋፍ ፓስፖርት፦ ተጋርቷል', sharedList: 'ቀጣሪው የሚያየው ይህን ዝርዝር ብቻ ነው፦ {list}።',
+      sentDemo: 'ይህ ማሳያ ነው፤ በእውነት ምንም አልተላከም። ማመልከቻዎ በዚህ ስልክ ላይ ብቻ ይቀመጣል።',
+      postedTitle: '«{title}» የተባለው ሥራዎ በሥራ ገጹ ላይ ነው', postedDemo: 'ይህ ማሳያ ነው፤ ሥራው በዚህ ስልክ ላይ ብቻ ይቀመጣል። ወደ ሌላ ቦታ ምንም አልተላከም፣ አልታተመም።',
       notFound: 'ይህ ሥራ አልተገኘም።', back: 'ወደ ሥራዎች ተመለስ',
       noProfile: 'እስካሁን አልተመዘገቡም፤ ስለዚህ በዚህ ስልክ ላይ መገለጫ የለም።', joinFirst: 'ሳቫናን ይቀላቀሉ', backProfile: 'ወደ መገለጫዬ ተመለስ'
     },
@@ -157,6 +165,7 @@
       nextPassport: 'Itti aanee: waan si gargaaru nutti himi (dirqama miti)',
       nextJobs: 'Hojii barbaadi',
       level: 'Haala eenyummaa keetii:',
+      lv_no_id_yet: 'Barachuu jalqabuuf eenyummaan si hin barbaachisu. Yoo barbaadde booda «Piroofaayilii koo» keessatti dabaluu dandeessa.', addId: 'Eenyummaa kee dabali (dirqama miti)', changeId: 'Odeeffannoo eenyummaa koo jijjiiri',
       lv_partner_referral_pending: 'Dhaabbanni michuu eenyummaa kee mirkaneessuuf si quunnama. Amma barachuu jalqabuu dandeessa.',
       lv_document_number_recorded: 'Lakkoofsa ati kennite ni qabanna. Namni ofumaan isa mirkaneessu hin jiru. Amma barachuu jalqabuu dandeessa.',
       lv_self_declared: 'Namni eenyummaa kee mirkaneesse hin jiru. Yeroo kamiyyuu lakkoofsa dabaluu dandeessa. Amma barachuu jalqabuu dandeessa.',
@@ -185,6 +194,9 @@
       jsonTitle: 'Waan waltajjiiwwan hojii biroo argatan (schema.org JobPosting)',
       receives: 'Waan qacaraan argatu',
       notShared: 'Paaspoortii Deeggarsaa: hin qoodamne',
+      sentTo: 'Iyyannoon kee {org} tiif ergameera', sentJob: 'Hojii', sharedYes: 'Paaspoortii Deeggarsaa: qoodameera', sharedList: 'Qacaraan tarree kana qofa arga: {list}.',
+      sentDemo: 'Kun agarsiisa qofa: dhugumaan wanti tokkollee hin ergamne. Iyyannoon kee bilbila kana irra qofa kuufama.',
+      postedTitle: 'Hojiin kee "{title}" boordii hojii irra jira', postedDemo: 'Kun agarsiisa qofa: hojichi bilbila kana irra qofa kuufama. Bakka biraatti wanti tokkollee hin ergamne, hin maxxanfamne.',
       seeJobs: 'Boordii hojii irratti ilaali',
       applyFor: 'Kan iyyattu:',
       notFound: 'Hojiin kun hin argamne.',
@@ -283,16 +295,16 @@
     mountForm('signup', null, function (d, slot) {
       var a = d.answers;
       var partner = a.filler === 'partner';
-      // The ID number itself is not kept by this demo host (data minimisation); only the status it gives.
+      // No ID at sign-up: the learner may add one later ("Add your ID (optional)").
       // The staff member's name is kept only until the learner takes over the account.
-      var p = { name: a.name, phone: a.phone, lang: d.lang, id_route: a.id_route, assurance_level: assurance(a, null),
-        referral_partner: a.referral_partner || null, registered_by: partner ? { org: a.partner_org, staff: a.staff_name } : null,
+      var p = { name: a.name, phone: a.phone, lang: d.lang, id_route: null, assurance_level: 'no_id_yet',
+        referral_partner: null, registered_by: partner ? { org: a.partner_org, staff: a.staff_name } : null,
         takeover_pending: partner, dob: a.dob || null };
       store.set('profile', p);
       if (!slot) return;
       if (partner) slot.innerHTML = statusPanel(p) + '<div class="notice handover"><h2>' + T('handTitle') + '</h2><p>' + T('handText') + '</p>' +
         '<p class="actions"><a class="btn primary" href="' + R('#/takeover') + '">' + T('handBtn') + '</a></p></div>';
-      else slot.innerHTML = statusPanel(p) +
+      else slot.innerHTML = statusPanel(p, true) +
         '<p class="actions"><a class="btn primary" href="' + R('#/passport') + '">' + T('nextPassport') + '</a> <a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
     });
   }
@@ -305,9 +317,11 @@
     return lv;
   }
   var ORG = { aaapd: 'AAAPD', tib: 'Tomorrow is Better' };
-  function statusPanel(p) {
-    return '<div class="notice"><p><strong>' + T('level') + '</strong> <span class="badge">' + esc(L(D.TRUST[p.assurance_level], lang())) + '</span></p>' +
-      '<p>' + T('lv_' + p.assurance_level) + '</p>' +
+  function statusPanel(p, idLink) {
+    var lv = D.TRUST[p.assurance_level] ? p.assurance_level : 'no_id_yet';
+    return '<div class="notice"><p><strong>' + T('level') + '</strong> <span class="badge">' + esc(L(D.TRUST[lv], lang())) + '</span></p>' +
+      '<p>' + T('lv_' + lv) + '</p>' +
+      (idLink ? '<p class="mb-0"><a class="btn" href="' + R('#/identity') + '">' + T(p.id_route ? 'changeId' : 'addId') + '</a></p>' : '') +
       (p.registered_by ? '<p>' + T('assisted', { org: esc(ORG[p.registered_by.org] || ({ am: 'አጋር ድርጅት', om: 'dhaabbata michuu' }[lang()] || 'a partner organisation')) }) + '</p>' : '') + '</div>';
   }
 
@@ -320,11 +334,29 @@
     mountForm('profile', null, function (d, slot) {
       var a = d.answers, p = {};
       Object.keys(old).forEach(function (k) { p[k] = old[k]; });
-      p.name = a.name; p.full_name = a.full_name || null; p.phone = a.phone; p.id_route = a.id_route; p.referral_partner = a.referral_partner || null; p.dob = a.dob || null;
+      p.name = a.name; p.full_name = a.full_name || null; p.phone = a.phone; p.dob = a.dob || null;
+      p.updated = new Date().toISOString();
+      store.set('profile', p);
+      if (slot) slot.innerHTML = statusPanel(p, true) + '<p class="actions"><a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
+    });
+  }
+
+  /* "Add your ID (optional)": the six ID routes, honest badges and the partner-referral path. Not part of sign-up. */
+  function identityView() {
+    var old = store.get('profile', null);
+    if (!old) {
+      view.innerHTML = '<h1 tabindex="-1">' + T('addId') + '</h1><p>' + T('noProfile') + '</p><p><a class="btn primary" href="' + R('#/signup') + '">' + T('joinFirst') + '</a></p>';
+      focusH1(); return;
+    }
+    mountForm('identity', null, function (d, slot) {
+      var a = d.answers, p = {};
+      Object.keys(old).forEach(function (k) { p[k] = old[k]; });
+      // The ID number itself is not kept by this demo host (data minimisation); only the status it gives.
+      p.id_route = a.id_route; p.referral_partner = a.referral_partner || null;
       p.assurance_level = assurance(a, old);
       p.updated = new Date().toISOString();
       store.set('profile', p);
-      if (slot) slot.innerHTML = statusPanel(p) + '<p class="actions"><a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
+      if (slot) slot.innerHTML = statusPanel(p) + '<p class="actions"><a class="btn primary" href="' + R('#/profile') + '">' + T('backProfile') + '</a> <a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
     });
   }
 
@@ -338,12 +370,11 @@
     mountForm('takeover', null, function (d, slot) {
       var a = d.answers, p = {};
       Object.keys(old).forEach(function (k) { p[k] = old[k]; });
-      p.name = a.name; p.phone = a.phone; p.id_route = a.id_route; p.referral_partner = a.referral_partner || null; p.dob = a.dob || null;
-      p.assurance_level = assurance(a, old);
+      p.name = a.name; p.phone = a.phone; p.dob = a.dob || null;
       p.registered_by = old.registered_by ? { org: old.registered_by.org } : null; // staff name removed
       p.takeover_pending = false; p.taken_over = new Date().toISOString();
       store.set('profile', p);
-      if (slot) slot.innerHTML = statusPanel(p) +
+      if (slot) slot.innerHTML = statusPanel(p, true) +
         '<p class="actions"><a class="btn primary" href="' + R('#/passport') + '">' + T('nextPassport') + '</a> <a class="btn" href="' + R('#/jobs') + '">' + T('nextJobs') + '</a></p>';
     });
   }
@@ -451,9 +482,20 @@
       var a = d.answers;
       var job = { id: 'j' + Date.now().toString(36), title: a.title, org: a.org, location: a.location, mode: a.mode, offers: a.offers || [], description: a.description, contact: a.contact, datePosted: new Date().toISOString().slice(0, 10) };
       store.set('jobs', [job].concat(store.get('jobs', [])));
-      if (slot) slot.innerHTML = '<p class="actions"><a class="btn primary" href="' + R('#/jobs') + '">' + T('seeJobs') + '</a></p>' +
+      if (!slot) return;
+      if (SHOWROOM) slot.innerHTML = '<p class="actions"><a class="btn primary" href="' + R('#/jobs') + '">' + T('seeJobs') + '</a></p>' +
         '<details><summary>' + T('jsonTitle') + '</summary><pre tabindex="0"><code>' + esc(JSON.stringify(jobPostingLd(job), null, 2)) + '</code></pre></details>';
+      // Learner and employer pages: a plain confirmation, never raw data (the JSON stays on the developer pages)
+      else slot.innerHTML = '<h2>' + T('postedTitle', { title: esc(job.title) }) + '</h2>' + sentList(D.describe('employer', a, lang())) +
+        '<p class="dm-note">' + T('postedDemo') + '</p><p class="actions"><a class="btn primary" href="' + R('#/jobs') + '">' + T('seeJobs') + '</a></p>';
     });
+  }
+
+  /** A readable list of answers (label: value), for the plain confirmations on learner and employer pages. */
+  function sentList(rows) {
+    return '<dl class="dm-review sj-sent">' + rows.map(function (r) {
+      return '<div><dt>' + esc(r.label) + '</dt><dd' + (r.lang || '') + '>' + esc(r.value) + '</dd></div>';
+    }).join('') + '</dl>';
   }
 
   function apply(id) {
@@ -465,9 +507,17 @@
       var support = D.supportForEmployer(a); // empty unless the learner said "share" for this job
       if (support.length) packet.supportThatHelps = support.map(function (n) { return n.label.en; });
       var apps = store.get('applications', []); apps.unshift({ at: new Date().toISOString(), packet: packet }); store.set('applications', apps);
-      if (slot) slot.innerHTML = '<h2>' + T('receives') + '</h2><pre tabindex="0"><code>' + esc(JSON.stringify(packet, null, 2)) + '</code></pre>' +
+      if (!slot) return;
+      var en = j.sample && lang() !== 'en' ? ' lang="en"' : ''; // sample jobs are written in English
+      if (SHOWROOM) slot.innerHTML = '<h2>' + T('receives') + '</h2><pre tabindex="0"><code>' + esc(JSON.stringify(packet, null, 2)) + '</code></pre>' +
         (packet.supportThatHelps ? '' : '<p class="muted">' + T('notShared') + '</p>') +
         '<p><a class="btn" href="' + R('#/jobs') + '">' + T('back') + '</a></p>';
+      // Learner pages: a plain confirmation of what was sent, never raw data
+      else slot.innerHTML = '<h2>' + T('sentTo', { org: '<span' + en + '>' + esc(j.org) + '</span>' }) + '</h2>' +
+        sentList([{ label: T('sentJob'), value: j.title, lang: en }].concat(D.describe('apply', a, lang()).filter(function (r) { return r.id !== 'share_passport'; }))) +
+        '<p class="sj-shared"><strong>' + T(support.length ? 'sharedYes' : 'notShared') + '</strong>' +
+        (support.length ? ' ' + T('sharedList', { list: esc(support.map(function (n) { return D.label(n.label, lang()); }).join('; ')) }) : '') + '</p>' +
+        '<p class="dm-note">' + T('sentDemo') + '</p><p class="actions"><a class="btn" href="' + R('#/jobs') + '">' + T('back') + '</a></p>';
     });
     var banner = document.createElement('p'); banner.className = 'muted';
     var en = j.sample && lang() !== 'en' ? ' lang="en"' : ''; // sample jobs are written in English
@@ -483,20 +533,20 @@
 
   function focusH1() { var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); } }
 
-  var TITLES = { '#/': 'home', '#/signup': 'join', '#/profile': 'profile', '#/takeover': 'takeTitle', '#/passport': 'passport', '#/jobs': 'jobs', '#/employer': 'post', '#/settings': 'settings' };
+  var TITLES = { '#/': 'home', '#/signup': 'join', '#/profile': 'profile', '#/identity': 'addId', '#/takeover': 'takeTitle', '#/passport': 'passport', '#/jobs': 'jobs', '#/employer': 'post', '#/settings': 'settings' };
   function route() {
     var r = location.hash || '#/';
     if (r.indexOf('#/') !== 0) return; // in-page anchors such as the skip link
     D.stopSpeaking();
     nav(r);
-    var isForm = r === '#/signup' || r === '#/employer' || r === '#/settings' || (r === '#/profile' && !!store.get('profile', null)) || (r === '#/takeover' && !!(store.get('profile', {}) || {}).takeover_pending) || r.indexOf('#/apply/') === 0 || (r === '#/passport' && (!store.get('passport', null) || window.__editPassport));
-    document.getElementById('host-lang').hidden = isForm;
+    // the language button stays visible on every screen: forms have no language choice of their own
     var base = r.indexOf('#/apply/') === 0 ? '#/apply' : r;
     document.title = (base === '#/apply' ? T('apply') : T(TITLES[base] || 'home')) + ' · ' + T('product');
     if (base !== '#/passport') window.__editPassport = false;
     if (r === '#/' || r === '#') home();
     else if (r === '#/signup') signup();
     else if (r === '#/profile') profileView();
+    else if (r === '#/identity') identityView();
     else if (r === '#/takeover') takeoverView();
     else if (r === '#/passport') passportView();
     else if (r === '#/jobs') jobsView();
@@ -508,7 +558,7 @@
   }
 
   /* ---- shared views for other hosts (the Savanna journey pages) ---- */
-  var VIEWS = { signup: signup, profile: profileView, takeover: takeoverView, passport: passportView, jobs: jobsView,
+  var VIEWS = { signup: signup, profile: profileView, identity: identityView, takeover: takeoverView, passport: passportView, jobs: jobsView,
     employer: employer, apply: apply, settings: settingsView };
   var API_HOST = window.SavannaDemoHost = {
     // The Savanna journey asks "how would you like to answer?" on its home page, so its sign-up starts at the first question.

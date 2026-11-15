@@ -1419,3 +1419,85 @@ Asked by the team outside the phase plan, before Phase 10.
      (the page the learner came from, kept for this tab; Settings never sends the learner back to Log in).
   Checked and fine: axe 0 issues (normal, high contrast, extra-large, Oromo, 320px), focus stays on the changed
   setting, bar and Settings stay in step, page title follows the language.
+
+---
+
+## Demo Amharic audio (15 Nov)
+
+The planned human recordings were not made. **Demo Amharic audio was generated with Microsoft's Amharic neural voice
+(edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's
+official Azure service, in the hardening sprint.**
+
+- `tools/generate-audio.py` (new): reads every clip from `docs/audio-script.md`, generates it with
+  `am-ET-MekdesNeural` (female; `am-ET-AmehaNeural` only if Mekdes keeps failing), 10% slower, into a temporary
+  folder, then runs `tools/convert-audio.cjs` (ffmpeg: mono MP3, 44.1 kHz, 80 kbps, even loudness) and
+  `tools/check-audio.cjs`. The free service often returns no audio at random, so each clip is retried with a growing
+  wait; finished clips are kept, so a stopped run can be restarted. **All 79 clips are in Mekdes's voice** (one that
+  first came back in Ameha was made again). Kept in the repo so ALX can regenerate the clips after wording changes:
+  `node tools/audio-script.cjs`, then `python tools/generate-audio.py` (needs `pip install edge-tts` and ffmpeg:
+  `winget install Gyan.FFmpeg`).
+- `docs/audio-script.md` regenerated from today's text: the new home page question (`home-question`), the calendar
+  choice in the date question (`signup-dob-calendar`, `-option-eth`, `-option-greg`), the "What should we call you?"
+  wording, and the ID questions under "Add your ID" (`identity-…`). 79 clips, 3.8 MB.
+- Wired in: the home page "Listen" button now plays the recorded home question and the four ways; the date question
+  reads the calendar choice with its clips. Service worker cache v5.
+- **Afaan Oromo has no Microsoft voice:** text only, plus the phone's voice if it has one.
+- Tests: the manifest lists a clip for every line of the script and every file exists; home and calendar clips play.
+
+## Team fixes before Phase 10 (15 Nov)
+
+1. **Plain confirmations** (`app.js`): on the Savanna pages the job application ends with "Your application was sent
+   to [employer]", a readable summary of what was sent (new `SavannaOnboarding.describe(form, answers, lang)`, the same
+   labels as "Check your answers"), "Support Passport: shared / not shared", and "This is a demo: nothing was actually
+   sent." The job post ends with 'Your job "…" is on the job board' and a summary. The JSON views stay only on
+   `showroom.html` and `test-host/`.
+2. **No language choice inside the forms** (`savanna-onboarding.js`): the language is set only from the bar (and
+   Settings). The showroom's language button now stays visible on form screens.
+3. **The bar has no visible "Make this page work for you" text.** It is a landmark named "Accessibility options"
+   (Amharic and Oromo names too).
+4. **ID moved out of sign-up** into a new form, `identity` ("Add your ID (optional)", `forms.js`), with the six routes,
+   badges and the partner-referral path unchanged, prefilled from the profile. Sign-up: 5 questions (8 with a
+   partner). New trust status `no_id_yet` ("No ID added yet"). It opens on My profile (`profile.html?add=id`); the
+   dashboard shows "Add your ID (optional)" right after sign-up (until an ID is added); the sign-up, takeover and
+   profile "done" screens and the ID card on My profile link to it. Takeover now checks name, phone and date of
+   birth. `docs/api-schema.md`, the audio script and the tests are updated (13 ID clips renamed, 2 regenerated).
+5. **ID number note:** "For your privacy, ID numbers are typed, not spoken. You can ask someone you trust to type it."
+   (three languages; still no microphone on that question).
+6. **Voice recording feedback** (three languages): on start, "Recording. Speak now, then press Stop when you have
+   finished" in the live region, a short beep (Web Audio; silently skipped if sound is blocked) and focus on Stop; on
+   stop, "I heard: … Choose Use this answer, Say it again, or Type it instead" and focus on the editable words.
+7. **Page summaries and automatic reading** (English only for now; `journey/journey.js`, module `summary()`):
+   - Every page and every form step has a short hand-written summary (topics per question in `forms.js`, sentences
+     in the module and in `journey.js`; nothing generated). It is the first text inside `<main>` (visually hidden).
+     Hosts get it in the new `savanna-onboarding:step` event.
+   - First visit: the first control after the skip link is "Tap anywhere or press any key to hear this page". The
+     first tap or key press (not Tab, Shift, Escape…) turns automatic reading on (preference `autoRead`, remembered).
+   - **Refined (15 Nov, team request):** on each new page the summary is tried at once when automatic reading is on
+     and the learner has already interacted with the site in this session (remembered in `sessionStorage`). Only if
+     the browser blocks it (the play promise is rejected with `NotAllowedError`, or speech fails with
+     `not-allowed`) is the prompt shown; the module then sends `savanna-onboarding:audioblocked` and stops quietly.
+     Steps inside a page are read as they open. Nothing throws when sound is blocked or missing (tested). In "read
+     aloud" mode the form reads each question itself instead.
+   - Pause/Resume and Stop are always in the bar; Escape stops at once; "Turn off automatic reading" is the first
+     control in the bar and is in Settings. Conformance report: WCAG 1.4.2 updated.
+   - Module 0.12.0.
+
+### Tests (one worker, phone and desktop sizes)
+
+- Full suite: **498 passed, 5 failed, 7 skipped** (19 min). The 5 failures were 2 tests still expecting the old
+  wording (question count "6 of 7", the old "Microphone on" message), run at both sizes, and a timing race in the
+  takeover test (it had also failed once earlier the same day, before these changes). Fixed; the 3 tests then
+  passed at both sizes (6 passed).
+- New: `tests/summaries.spec.mjs` (8 tests × 2 sizes), journey tests for the dashboard "Add your ID" link and the
+  plain confirmations, a voice test in Amharic, audio manifest tests.
+- axe-core: 0 serious or critical on every scanned screen (the "Add your ID" screens added to the scan list).
+
+### Real vs simulated / to check
+
+- The Amharic audio is synthetic (see above). Listen to a few clips before the demo.
+- Automatic reading: tested with a fake voice only. Try it with NVDA (it should not talk over NVDA once "Turn off
+  automatic reading" is pressed) and on a phone.
+- The beep at recording start: not heard in automated tests (no sound there). Check on a phone.
+- After the automatic-reading refinement (try at once, prompt only when blocked): `tests/summaries.spec.mjs`
+  **20 passed**; the affected files (a11y, career, gate, journey, keyboard, readaloud, voice; phone and desktop)
+  **287 passed, 1 skipped** (run in batches, one worker, because the computer ran low on memory).

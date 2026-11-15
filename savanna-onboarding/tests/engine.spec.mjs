@@ -2,7 +2,7 @@
 // the fixes (stale ID number, changing question count, resume screen, two forms on one page, storage keys)
 // and the new profile-update journey.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, identityTo } from './helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
@@ -20,34 +20,38 @@ test('state works on its own, without the page (FormState)', async ({ page }) =>
     s.setAnswer('filler', 'self');
     s.prune();
     out.selfTotal = s.progress().total;
-    s.setAnswer('id_route', 'fayda'); s.setAnswer('id_number', 'A1');
-    s.setAnswer('id_route', 'kebele');
-    out.numberAfterRouteChange = s.answers.id_number === undefined;
+    const id = new D.FormState(D.forms.identity, 'draft.unit-test-id');
+    id.setAnswer('id_route', 'fayda'); id.setAnswer('id_number', 'A1');
+    id.setAnswer('id_route', 'kebele');
+    out.numberAfterRouteChange = id.answers.id_number === undefined;
+    out.signupAsksId = D.forms.signup.fields.some(f => /^id_|referral/.test(f.id));
+    localStorage.removeItem('savanna-onboarding.draft.unit-test-id');
     out.error = D.validate(D.forms.signup.fields.find(f => f.id === 'phone'), '0911', {}, 'en');
     localStorage.removeItem('savanna-onboarding.draft.unit-test');
     return out;
   });
   expect(r.first).toBe('filler');
-  expect(r.partnerTotal).toBe(10);
-  expect(r.selfTotal).toBe(7);
+  expect(r.partnerTotal).toBe(8);
+  expect(r.selfTotal).toBe(5);
+  expect(r.signupAsksId).toBe(false); // the ID is in "Add your ID (optional)", not in sign-up
   expect(r.numberAfterRouteChange).toBe(true);
   expect(r.error).toContain('10 digits');
 });
 
 test('ID number is cleared when the ID type changes (Fayda -> kebele), and asked again', async ({ page }) => {
-  await signupTo(page, 'id_number');
+  await identityTo(page, 'id_number');
   await page.fill('[data-ref=input]', 'FAYDA-123456');
   await next(page);
-  await page.locator('[data-act=back]').click();
-  await page.locator('[data-act=back]').click();
+  await page.locator('[data-act=back]').click(); // from "Check your answers" to the ID number
+  await page.locator('[data-act=back]').click(); // to the ID type
   await pick(page, 'kebele'); await next(page);
   expect(await heading(page)).toContain('number on your ID');
   await expect(page.locator('[data-ref=input]')).toHaveValue('');
-  expect(JSON.stringify(await draft(page))).not.toContain('FAYDA-123456');
+  expect(await page.evaluate(() => localStorage.getItem('savanna-onboarding.draft.identity') || '')).not.toContain('FAYDA-123456');
 });
 
 test('after "Change" of the ID type on the summary, the new follow-up question is asked before returning', async ({ page }) => {
-  await signupTo(page, 'END');
+  await identityTo(page, 'END');
   const idRow = page.locator('.dm-review > div', { hasText: 'ID' }).first();
   await idRow.locator('[data-act=change]').click();
   await pick(page, 'none'); await next(page);
@@ -60,10 +64,10 @@ test('after "Change" of the ID type on the summary, the new follow-up question i
 test('when an answer changes the number of questions, the learner is told', async ({ page }) => {
   await go(page, '#/signup');
   await pick(page, 'read_type'); await next(page);
-  await expect(page.locator('.dm-progress')).toHaveText('Question 1 of 7');
+  await expect(page.locator('.dm-progress')).toHaveText('Question 1 of 5');
   await pick(page, 'partner'); await next(page);
-  await expect(page.locator('.dm-progress')).toHaveText('Question 2 of 10');
-  await expect(page.locator('.dm-status')).toHaveText('Your answer changed the number of questions. There are now 10 questions.');
+  await expect(page.locator('.dm-progress')).toHaveText('Question 2 of 8');
+  await expect(page.locator('.dm-status')).toHaveText('Your answer changed the number of questions. There are now 8 questions.');
 });
 
 test('the question count stays the same along the whole "for myself" route', async ({ page }) => {
@@ -71,12 +75,12 @@ test('the question count stays the same along the whole "for myself" route', asy
   await go(page, '#/signup');
   await pick(page, 'read_type'); await next(page);
   const steps = [() => pick(page, 'self'), () => page.fill('[data-ref=input]', 'Abebe Kebede'), () => page.fill('[data-ref=input]', '0911234567'),
-    () => pick(page, 'kebele'), async () => {}, async () => {}, () => pick(page, 'yes')];
+    async () => {}, () => pick(page, 'yes')];
   for (const act of steps) {
     totals.push((await page.locator('.dm-progress').innerText()).replace(/.* of /, ''));
     await act(); await next(page);
   }
-  expect(totals).toEqual(['7', '7', '7', '7', '7', '7', '7']);
+  expect(totals).toEqual(['5', '5', '5', '5', '5']);
   expect(await heading(page)).toBe('Check your answers');
 });
 
@@ -84,11 +88,11 @@ test('no microphone on sensitive questions (ID and support needs)', async ({ pag
   await page.addInitScript(() => { window.SpeechRecognition = class { start() {} stop() {} abort() {} }; });
   await signupTo(page, 'name');
   await expect(page.locator('[data-act=speak]')).toHaveCount(1); // name: voice is fine
-  await page.fill('[data-ref=input]', 'Abebe Kebede'); await next(page);
-  await page.fill('[data-ref=input]', '0911234567'); await next(page);
+  await identityTo(page, 'id_route');
   await expect(page.locator('[data-act=speak]')).toHaveCount(0); // ID type
   await pick(page, 'fayda'); await next(page);
   await expect(page.locator('[data-act=speak]')).toHaveCount(0); // ID number
+  await expect(page.locator('.dm-hint').first()).toContainText('For your privacy, ID numbers are typed, not spoken. You can ask someone you trust to type it.');
   await go(page, '#/passport');
   await expect(page.locator('[data-act=speak]')).toHaveCount(0); // "would you like to tell us what helps you"
   await pick(page, 'yes'); await next(page);
@@ -173,7 +177,7 @@ test('profile update: starts on the summary, changes one detail, and later forms
   expect(await heading(page)).toContain('Your profile is updated');
   const profile = await page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.profile')));
   expect(profile.name).toBe('Abebe K. Tesfaye');
-  expect(profile.assurance_level).toBe('self_declared');
+  expect(profile.assurance_level).toBe('no_id_yet'); // no ID asked at sign-up; the profile update keeps the status
   await go(page, '#/apply/s1');
   await expect(page.locator('[data-ref=input]')).toHaveValue('Abebe K. Tesfaye'); // never asked twice
 });

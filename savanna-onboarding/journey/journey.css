@@ -29,7 +29,7 @@ main.content:focus, .sj h1:focus { outline: none; }
 .sj-skip { position: absolute; left: -9999px; top: 0; z-index: 2000; background: var(--so-heading); color: #fff; padding: .75rem 1rem; font-weight: 600; border-radius: var(--so-radius-sm); }
 .sj-skip:focus { left: 1rem; top: .75rem; color: #fff; }
 
-/* "Make this page work for you." bar (from ALX's accessible hackathon site). It scrolls away with the page. */
+/* "Accessibility options" bar (from ALX's accessible hackathon site). It scrolls away with the page. */
 #sj-frame { display: contents; } /* so the header can stick to the top of the whole page */
 .sj-a11y { background: #fff; border-bottom: 1px solid var(--so-navy); font-family: var(--so-font); color: var(--so-navy); font-size: calc(var(--so-base-size) * var(--so-scale) * .95); }
 .sj-a11y-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; max-width: 72rem; margin: 0 auto; padding: .5rem 1rem; }
@@ -257,7 +257,7 @@ html[data-dm-contrast=high] .sj-alx .sj-greeting a { color: #000; }
 .sj-tip summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; color: var(--so-heading); }
 .sj-tip[open] summary { margin-bottom: .25rem; }
 .sj-tip p { margin: .4rem 0 0; }
-/* Language dropdown in the "Make this page work for you" bar */
+/* Language dropdown in the "Accessibility options" bar */
 .sj-lang-wrap { position: relative; }
 .sj-lang-btn { display: inline-flex; align-items: center; gap: .45rem; }
 .sj-lang-menu { position: absolute; right: 0; top: calc(100% + .35rem); z-index: 1200; min-width: 12rem; list-style: none; margin: 0; padding: .35rem; background: #fff; border: 2px solid var(--so-navy); border-radius: var(--so-radius); box-shadow: 0 6px 18px rgba(0, 43, 86, .15); }
@@ -269,3 +269,11 @@ html[data-dm-contrast=high] .sj-alx .sj-greeting a { color: #000; }
 @media (max-width: 30em) { .sj-lang-menu { left: 0; right: auto; } }
 html[data-dm-contrast=high] .sj-lang-menu { border-color: #000; }
 html[data-dm-contrast=high] .sj-lang-menu button { color: #000; }
+
+/* "Tap anywhere or press any key to hear this page": first after the skip link, on a first visit (English only) */
+.sj-hear { display: block; width: 100%; min-height: 48px; padding: .6rem 1rem; border: 0; border-bottom: 2px solid var(--so-navy);
+  background: #fff4d6; color: var(--so-navy); font: inherit; font-weight: 600; text-align: center; cursor: pointer; }
+.sj-hear:focus-visible { outline: 3px solid var(--so-navy); outline-offset: -5px; }
+/* Sound controls in the bar (automatic reading, Pause, Stop): always visible */
+.sj-snd { white-space: normal; }
+html[data-dm-contrast=high] .sj-hear { background: #fff; color: #000; border-bottom-color: #000; }

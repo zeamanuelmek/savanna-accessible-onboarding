@@ -59,7 +59,7 @@ test('the full name is optional, in My profile, and job applications use it', as
 test('voice matching for choices: whole words, Amharic endings, and never a guess between two answers', async ({ page }) => {
   await go(page, '#/');
   const r = await page.evaluate(() => {
-    const D = window.SavannaOnboarding, f = id => D.forms.signup.fields.find(x => x.id === id).options;
+    const D = window.SavannaOnboarding, f = id => (D.forms.signup.fields.find(x => x.id === id) || D.forms.identity.fields.find(x => x.id === id)).options;
     const want = D.forms.passport.fields.find(x => x.id === 'want').options;
     const m = (s, o) => D._matchOptions(s, o);
     return {

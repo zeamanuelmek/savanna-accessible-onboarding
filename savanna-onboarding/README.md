@@ -137,17 +137,21 @@ the page flow. `journey/dashboard.js` replaces ALX's `static-page.js` (module ta
 My Profile at the bottom. Our links are in standard places: **Jobs** in "My Campus" (a campus resource for
 learners); **My profile** is ALX's "My Profile"; **Support Passport, My profile, Accessibility settings, Log out** in
 the account menu at the top right (a disclosure button with plain links); **Accessibility settings** also at the end
-of the "Make this page work for you" bar on every page; **For employers: post a job** in the footer (employers are
+of the "Accessibility options" bar on every page; **For employers: post a job** in the footer (employers are
 not learners). "My dashboard" became ALX's "Home". Savanna sections that are not in the demo (My courses, Servers…)
 say so when chosen. The ID status, Support Passport status and "Delete my data from this phone" cards moved from the
 old dashboard to **My profile**. Pages for visitors who are not logged in (home, sign-up, log-in) have no sidebar,
 as on ALX's own sign-up page; "Log in" or "Sign up" is at the top right.
 
-**"Make this page work for you." bar** (from ALX's accessible hackathon site) at the top of every page (on the home
-page without the sentence): Larger text, High contrast, Stop motion (toggle buttons with `aria-pressed`; the pressed
-state also shows a tick and a dark fill, not colour alone), a **Language** dropdown (a disclosure button showing the
-current language; the list names each language in its own language; Escape closes it and returns focus), and
-**Accessibility settings**. The choices are the module's own saved preferences, so they follow the
+**"Accessibility options" bar** (from ALX's accessible hackathon site) at the top of every page, with no visible
+sentence: it is a landmark (`<section aria-label="Accessibility options">`) that screen readers list with their
+landmark or region keys. In order: **Turn off automatic reading** (the one-key switch for screen reader users),
+**Pause / Resume** and **Stop** (always visible), Larger text, High contrast, Stop motion (toggle buttons with
+`aria-pressed`; the pressed state also shows a tick and a dark fill, not colour alone), a **Language** dropdown (a
+disclosure button showing the current language; the list names each language in its own language; Escape closes
+it and returns focus), and **Accessibility settings**. **The language is set only here** (and in Settings): the
+forms have no language choice of their own, so there is one place to look. On the developer page the language
+button is in the page header. The choices are the module's own saved preferences, so they follow the
 learner to every page and form. The bar scrolls away; the 72px header below it stays at the top (sticky), so on a
 small screen or at 400% zoom the part that stays on screen is never taller than the header.
 
@@ -182,7 +186,8 @@ work; nothing of it is built.
 
 | Form | What it does |
 | --- | --- |
-| `signup` | Sign-up with any ID or none (Fayda, kebele ID, passport, refugee ID, another document, or "refer me" through a partner). Includes a partner-assisted route with learner consent, and an Ethiopian-calendar date of birth |
+| `signup` | Sign-up with no ID question (5 questions; 8 with a partner). Includes a partner-assisted route with learner consent, and an Ethiopian-calendar date of birth |
+| `identity` | "Add your ID (optional)", from My profile or the dashboard: Fayda, kebele ID, passport, refugee ID, another document, or "refer me" through a partner, with honest badges. The ID number is typed, never spoken |
 | `passport` | Support Passport: "What would help you?", never a diagnosis. Private by default. Stays on the device |
 | `profile` | Profile update: opens on a summary of the learner's details, prefilled; "Change" only what needs updating |
 | `takeover` | After a partner signs a learner up, the learner checks the details alone and takes over the account; the staff name is then removed |
@@ -194,7 +199,7 @@ work; nothing of it is built.
 | What co-designers found | What this module does |
 |---|---|
 | **Forms timed out** | There are no time limits anywhere. Answers are saved on the phone after every question, and "Finish later" gives a link to continue on the same phone. |
-| **Refugees were asked for ID they don't have** | Six ID routes: Fayda, kebele ID, passport, refugee ID or proof of registration (RRS / UNHCR), another document, or "I have none of these, refer me through a partner". The ID number is optional, nobody is asked for a photo of their ID, and learning can start without any ID. IDs are never claimed to be verified. |
+| **Refugees were asked for ID they don't have** | **Sign-up asks no ID.** "Add your ID (optional)" is on My profile, and the dashboard offers it right after sign-up. Six ID routes: Fayda, kebele ID, passport, refugee ID or proof of registration (RRS / UNHCR), another document, or "I have none of these, refer me through a partner". The ID number is optional and typed, never spoken ("For your privacy, ID numbers are typed, not spoken. You can ask someone you trust to type it."), nobody is asked for a photo of their ID, and learning can start without any ID. IDs are never claimed to be verified. |
 | **Help was English only** | Every question, hint, error and help panel is in Amharic, English and Afaan Oromo (the Amharic and Oromo are drafts for native-speaker review). A language switch and "Get help" are in the same place on every screen. |
 | **Job boards broke under screen readers** | Job titles are headings, every "Apply" link names its job, the number of jobs is announced on load and after filtering, and the filter is a normal checkbox. Tested automatically; NVDA and TalkBack checks by a person are still to do. |
 
@@ -207,13 +212,14 @@ work; nothing of it is built.
 | The module inside Savanna's own pages (starter kit) | implemented as a demo: Savanna's CSS unchanged, our pages around it |
 | Log-in | **simulated**: a labelled demo. No server, no SMS; the code is shown on screen. Meets WCAG 3.3.8: nothing to remember, no puzzle, the code can be pasted or filled in by the phone, no time limit |
 | Text size, high contrast, language settings | implemented |
-| Read-aloud | implemented: "Listen" on every question and a Listen button on every answer, with Pause/Resume, Stop and Play again; Escape stops it. Plays the recorded Amharic clips named in [`docs/audio-script.md`](docs/audio-script.md) when they exist, otherwise the phone's voice, otherwise a short message that everything is on screen. **The recordings are being made by the team; until they are added, Amharic relies on the phone's voice, which most phones do not have.** Audio is never required |
+| Read-aloud | implemented: "Listen" on every question and a Listen button on every answer, with Pause/Resume, Stop and Play again; Escape stops it. Plays the Amharic clips named in [`docs/audio-script.md`](docs/audio-script.md) (79 clips, 3.8 MB), otherwise the phone's voice, otherwise a short message that everything is on screen. **Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint.** To regenerate after a wording change: `node tools/audio-script.cjs`, then `python tools/generate-audio.py` (needs `pip install edge-tts` and ffmpeg). **Afaan Oromo has no Microsoft voice:** it is text only, plus the phone's voice if it has one. Audio is never required |
+| Page summaries and automatic reading | implemented, **English only for now**: every page and form step has a short hand-written summary (for example "Step 3 of 5: your phone number. You can type it or say it. Below are Continue and Back.") as the first text inside `<main>`, visually hidden, so screen readers reach it first. On a first visit the first control after the skip link is "Tap anywhere or press any key to hear this page"; after that, each page and step reads its summary when it opens (remembered across pages and visits). On a new page the summary is tried at once when automatic reading is on and the learner has already interacted with the site in this session; only if the browser blocks it (the play promise is rejected, or speech is "not allowed") does the prompt appear, and the next tap or key press reads it. Tab never starts it. Pause and Stop are always in the bar, Escape stops at once, and "Turn off automatic reading" is the first control in the bar and in Settings (WCAG 1.4.2). Hosts get the summary in the `savanna-onboarding:step` event |
 | Pictures and bigger buttons | implemented: a separate setting from read aloud |
 | Amharic audio for offline use | implemented: Settings offers "Download Amharic audio for offline use (about X MB)" with progress, and "Remove downloaded audio". Otherwise each recording is kept the first time it plays |
 | Screen readers and Amharic | **known limitation:** NVDA with its default Windows voice spells Amharic letter by letter. Mitigations: recorded Amharic (read aloud), one-tap English, correct `lang` tags, and a tip on the welcome screen and in Help |
-| Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Google, so consent is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions, or on the date. Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
+| Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Google, so consent is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions. When recording starts, "Recording. Speak now, then press Stop when you have finished" is announced, a short beep plays and focus moves to Stop; afterwards "I heard: … Choose Use this answer, Say it again, or Type it instead" is announced and focus moves to the editable words (in Amharic, English and Afaan Oromo). Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
 | "Finish later" SMS | **simulated**: a labelled preview, no SMS is sent |
-| ID verification | unavailable: IDs are never verified. Each ID choice shows an honest badge ("Self-declared · not verified", "Partner referral pending"); after sign-up the status is "Self-declared", "Number recorded — not verified" or "Partner referral pending" |
+| ID verification | unavailable: IDs are never verified. Each ID choice shows an honest badge ("Self-declared · not verified", "Partner referral pending"); after sign-up the status is "No ID added yet"; after "Add your ID (optional)" it is "Self-declared", "Number recorded — not verified" or "Partner referral pending" |
 | Private Support Passport | implemented on the device: private by default, "who can see this" on the card, trainer sharing can be turned on and off, sharing with an employer only per application (the learner sees exactly what would be shared) and can be withdrawn. **Simulated:** there is no trainer or employer system, so nothing is actually sent; withdrawing changes only the copy on the phone |
 | Partner-assisted sign-up | implemented: learner consent, then a handover and learner takeover step |
 | Amharic text | AI draft: needs native-speaker review |
@@ -228,7 +234,7 @@ work; nothing of it is built.
 - Everything works with the keyboard alone: `Tab` / `Shift+Tab` to move, `Space` to choose an option, arrow keys
   inside a group of single choices, `Enter` to continue.
 - Every control shows a 3px navy focus outline (at least 3:1 contrast), and focus is never hidden behind other content.
-- Every page starts with a "Skip to main content" link. On phones the menu button opens with `Enter` or `Space`, and
+- Every page starts with a "Skip to main content" link (on a first visit in English, followed by "Tap anywhere or press any key to hear this page"). On phones the menu button opens with `Enter` or `Space`, and
   `Escape` closes it and returns focus to the button.
 - There are no keyboard traps and no time limits.
 
@@ -248,7 +254,7 @@ work; nothing of it is built.
 - Each answer's Listen button is a separate button beside the answer (never inside it), named "Listen: <the answer>".
   While audio plays, Pause and Stop appear next to "Listen to the question"; `Escape` also stops it (WCAG 1.4.2).
 - Errors: the field gets `aria-invalid="true"` and is linked to its error message and hint with `aria-describedby`.
-- Progress ("Question 2 of 7") is plain text. The visual bar is hidden from screen readers.
+- Progress ("Question 2 of 5") is plain text. The visual bar is hidden from screen readers.
 - Status messages ("Saved", "Welcome back", the number of jobs shown) are announced through a polite `role="status"` live region.
 - Pop-ups are inline panels (help, voice consent, "I heard…"), so there is nothing to trap focus in.
 

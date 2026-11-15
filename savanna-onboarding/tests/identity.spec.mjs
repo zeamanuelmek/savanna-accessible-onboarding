@@ -1,15 +1,15 @@
 // Phase 5: identity and private support. Honest trust badges (never "verified"), the private Support Passport card
 // with revocable sharing, sharing with employers only per application, and the learner takeover after partner sign-up.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, identityTo } from './helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
 const profile = page => page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.profile') || 'null'));
 const fill = (page, v) => page.fill('[data-ref=input]', v);
 
-/** Partner-assisted sign-up, up to and including "Create my account". */
-async function partnerSignup(page, { idRoute = 'refugee', number = '' } = {}) {
+/** Partner-assisted sign-up, up to and including "Create my account". There is no ID question in sign-up. */
+async function partnerSignup(page) {
   await go(page, '#/'); // a different page first, so the sign-up form is drawn afresh
   await go(page, '#/signup');
   await pick(page, 'read_type'); await next(page);
@@ -19,9 +19,6 @@ async function partnerSignup(page, { idRoute = 'refugee', number = '' } = {}) {
   await pick(page, 'yes'); await next(page);
   await fill(page, 'Selam Bekele'); await next(page);
   await fill(page, '0922334455'); await next(page);
-  await pick(page, idRoute); await next(page);
-  if (idRoute === 'none') { await pick(page, 'aaapd'); await next(page); }
-  else { if (number) await fill(page, number); await next(page); }
   await next(page); // date of birth: optional
   await pick(page, 'yes'); await next(page);
   expect(await heading(page)).toBe('Check your answers');
@@ -36,7 +33,7 @@ async function noVerifiedClaim(page) {
 }
 
 test('every ID choice shows an honest trust badge, and nothing claims "verified"', async ({ page }) => {
-  await signupTo(page, 'id_route');
+  await identityTo(page, 'id_route');
   for (const v of ['fayda', 'kebele', 'passport', 'refugee', 'other']) {
     await expect(page.locator(`.dm-opt:has(input[value=${v}]) .dm-badge`)).toHaveText('Self-declared · not verified');
   }
@@ -46,14 +43,19 @@ test('every ID choice shows an honest trust badge, and nothing claims "verified"
 });
 
 test('the badge is part of the option name for screen readers', async ({ page }) => {
-  await signupTo(page, 'id_route');
+  await identityTo(page, 'id_route');
   await expect(page.getByRole('radio', { name: /Fayda national ID Self-declared · not verified/ })).toHaveCount(1);
 });
 
-test('ID status after sign-up: "Number recorded — not verified" when a number is given', async ({ page }) => {
-  await signupTo(page, 'id_number');
+test('sign-up asks no ID; "Add your ID (optional)" then gives "Number recorded — not verified" when a number is given', async ({ page }) => {
+  await signupTo(page, 'END'); await next(page);
+  await expect(page.locator('.badge')).toHaveText('No ID added yet');
+  await expect(page.locator('.dm-done-slot a[href="#/identity"]')).toHaveText('Add your ID (optional)');
+  await page.locator('.dm-done-slot a[href="#/identity"]').click();
+  expect(await heading(page)).toBe('Which ID do you have?');
+  await pick(page, 'fayda'); await next(page);
   await fill(page, 'FAYDA-1234');
-  await next(page); await next(page); await pick(page, 'yes'); await next(page);
+  await next(page);
   await expect(page.locator('.dm-review')).toContainText('Fayda national ID (Self-declared · not verified)');
   await next(page);
   await expect(page.locator('.badge')).toHaveText('Number recorded — not verified');
@@ -62,11 +64,15 @@ test('ID status after sign-up: "Number recorded — not verified" when a number 
   await noVerifiedClaim(page);
 });
 
-test('ID status: "Self-declared" without a number, "Partner referral pending" without an ID', async ({ page }) => {
-  await signupTo(page, 'END'); await next(page);
+test('ID status: "Self-declared" without a number, "Partner referral pending" through a partner', async ({ page }) => {
+  await identityTo(page, 'END');
+  await next(page);
   await expect(page.locator('.badge')).toHaveText('Self-declared');
-  await page.evaluate(() => Object.keys(localStorage).filter(k => !k.endsWith('.prefs') && k !== '__seeded').forEach(k => localStorage.removeItem(k)));
-  await partnerSignup(page, { idRoute: 'none' });
+  await go(page, '#/profile'); await go(page, '#/identity');
+  await expect(page.locator('input[value=fayda]')).toBeChecked(); // prefilled from the profile: never asked twice
+  await pick(page, 'none'); await next(page);
+  expect(await heading(page)).toContain('Which organisation can confirm');
+  await pick(page, 'aaapd'); await next(page); await next(page);
   await expect(page.locator('.badge')).toHaveText('Partner referral pending');
 });
 
@@ -86,7 +92,7 @@ test('partner sign-up ends with a handover to the learner, not the Support Passp
 test('learner takeover: the learner checks the details, then the staff name is removed', async ({ page }) => {
   await partnerSignup(page);
   await page.locator('a[href="#/takeover"]').click();
-  expect(await heading(page)).toBe('Take over your account');
+  await expect.poll(() => heading(page)).toBe('Take over your account'); // the page changes on hashchange: wait for it
   await expect(page.locator('.dm-hint').first()).toContainText('Hana Staff from AAAPD helped you sign up');
   await expect(page.locator('.dm-review')).toContainText('Selam Bekele');
   await page.locator('.dm-review > div', { hasText: 'Name' }).first().locator('[data-act=change]').click();

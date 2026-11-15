@@ -27,7 +27,7 @@ test('1.4.12 Text Spacing: no content is cut off or scrolls sideways with WCAG t
       document.head.appendChild(s);
     });
   });
-  for (const step of ['filler', 'id_route', 'dob', 'END']) {
+  for (const step of ['filler', 'phone', 'dob', 'END']) {
     await fromStart(page, step);
     expect(await overflow(page), `sideways scrolling at ${step}`).toBeLessThanOrEqual(0);
     // nothing clipped: no element hides its own text overflow
@@ -90,7 +90,7 @@ test('3.2.3 Consistent Navigation: the same menu, in the same order, on every pa
 
 test('3.2.6 Consistent Help: "Get help" is in the same place on every question', async ({ page }) => {
   const spots = new Set();
-  for (const step of ['filler', 'name', 'phone', 'id_route', 'dob', 'consent']) {
+  for (const step of ['filler', 'name', 'phone', 'dob', 'consent']) {
     await fromStart(page, step);
     const b = await page.locator('.dm-bar [data-act=help]').boundingBox();
     const bar = await page.locator('.dm-bar').boundingBox();

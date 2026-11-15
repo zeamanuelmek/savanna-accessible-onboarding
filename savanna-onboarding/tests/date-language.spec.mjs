@@ -2,14 +2,14 @@
 // lists for "read and type" and "simple steps", typed (with voice) for "listen" and "speak". And Afaan Oromo as a
 // third language on every page (a draft for native-speaker review).
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, say, speakAnswer, barLanguage, formLanguage } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, say, speakAnswer, barLanguage, hostLanguage } from './helpers.mjs';
 
 const draft = page => page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.draft.signup')));
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
 test('date: the calendar is chosen first; "read and type" picks day, month and year from lists; no microphone', async ({ page }) => {
   await signupTo(page, 'dob');
-  await expect(page.locator('.dm-progress, [data-ref=progress]').first()).toContainText('Question 6 of 7');
+  await expect(page.locator('.dm-progress, [data-ref=progress]').first()).toContainText('Question 4 of 5');
   const cal = page.getByRole('group', { name: 'Which calendar do you use?' });
   await expect(cal.getByRole('radio', { name: 'Ethiopian calendar' })).toBeChecked();
   await expect(cal.getByRole('radio', { name: 'Gregorian (European) calendar' })).not.toBeChecked();
@@ -92,11 +92,11 @@ test('Afaan Oromo: from the bar on every Savanna page, in the forms and in Setti
   await page.locator('.sj-split a[href="signup.html"]').click();
   await page.waitForSelector('.dm-q');
   expect(await heading(page)).toBe('Eenyutu unka kana guutaa jira?');
-  // inside the form: a Language dropdown, each language named in its own language
-  await expect(page.locator('.dm-bar [data-act=lang]')).toHaveText([/አማርኛ/, /English/, /Afaan Oromoo/]);
-  await formLanguage(page, 'en');
+  // the form has no language choice of its own: the bar at the top is the one place to change it
+  await expect(page.locator('.dm-bar [data-act=lang], .dm-bar [data-act=lang-menu]')).toHaveCount(0);
+  await hostLanguage(page, 'en');
   expect(await heading(page)).toBe('Who is filling in this form?');
-  await formLanguage(page, 'om');
+  await hostLanguage(page, 'om');
   expect(await heading(page)).toBe('Eenyutu unka kana guutaa jira?');
   await page.goto('/settings.html'); await page.waitForFunction(() => !!window.SavannaOnboarding);
   await expect(page.locator('input[name=lang][value=om]')).toBeChecked();

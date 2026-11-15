@@ -1,4 +1,4 @@
-/* Savanna Accessible Onboarding Module: form "recipes". Each form is plain data: the same engine renders all six.
+/* Savanna Accessible Onboarding Module: form "recipes". Each form is plain data: the same engine renders all seven.
    Amharic wording is a first draft: a native speaker must review it before testing with learners.
    Field flags used here (full list in docs/for-developers.md):
    - sensitive: true      support needs and ID questions. The engine never offers voice input on them, so that data is
@@ -28,6 +28,35 @@
     }
   };
   function withName(f) { f.voiceWarning = NAME.voiceWarning; f.askHelper = NAME.askHelper; f.validate = NAME.validate; return f; }
+
+  /* ID questions: not part of sign-up (nobody needs an ID to start learning; 21 Oct co-design finding: refugees were
+     asked for ID they do not have). They are the "Add your ID (optional)" form, opened from My profile and the
+     dashboard. Same routes, honest badges and "refer me through a partner" path as before. */
+  var ID_FIELDS = [
+      { id: 'id_route', picture: '🪪', type: 'choice', sensitive: true, prefill: { from: 'profile', key: 'id_route' }, reviewLabel: { en: 'ID', am: 'መታወቂያ', om: 'Eenyummaa' },
+        label: { en: 'Which ID do you have?', am: 'የትኛው መታወቂያ አለዎት?', om: 'Waraqaa eenyummaa kam qabda?' },
+        hint: { en: 'Any of these is fine. You can start learning even without an ID. Nobody checks IDs automatically: we record what you tell us.', am: 'ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ። መታወቂያዎች በራስ-ሰር አይረጋገጡም፤ የሚነግሩንን እንመዘግባለን።', om: 'Kamiyyuu ni ta\'a. Waraqaa eenyummaa malees barachuu jalqabuu dandeessa. Namni eenyummaa ofumaan mirkaneessu hin jiru: waan ati nutti himtu galmeessina.' },
+        options: [
+          { value: 'fayda', icon: '🪪', label: { en: 'Fayda national ID', am: 'ፋይዳ ብሔራዊ መታወቂያ', om: 'Eenyummaa biyyaalessaa Faayda' }, say: ['fayda', 'ፋይዳ'], badge: NOT_CHECKED },
+          { value: 'kebele', icon: '🏘️', label: { en: 'Kebele ID', am: 'የቀበሌ መታወቂያ', om: 'Waraqaa eenyummaa ganda' }, say: ['kebele', 'ቀበሌ'], badge: NOT_CHECKED },
+          { value: 'passport', icon: '📘', label: { en: 'Passport', am: 'ፓስፖርት', om: 'Paaspoortii' }, say: ['passport', 'ፓስፖርት'], badge: NOT_CHECKED },
+          { value: 'refugee', icon: '📄', label: { en: 'Refugee ID or proof of registration (RRS / UNHCR)', am: 'የስደተኛ መታወቂያ ወይም የምዝገባ ማረጋገጫ', om: 'Eenyummaa baqataa ykn ragaa galmee (RRS / UNHCR)' }, say: ['refugee', 'ስደተኛ'], badge: NOT_CHECKED },
+          { value: 'other', icon: '🗂️', label: { en: 'Another document', am: 'ሌላ ሰነድ', om: 'Sanada biraa' }, say: ['another', 'document', 'ሰነድ'], badge: NOT_CHECKED },
+          { value: 'none', icon: '🤝', label: { en: 'I have none of these. Refer me through a partner.', am: 'ምንም የለኝም። በአጋር ድርጅት በኩል ይመዝግቡኝ።', om: 'Kana keessaa tokkollee hin qabu. Karaa michuu na ergi.' }, say: ['none', 'refer', 'ምንም', 'የለኝም'], badge: D.TRUST.partner_referral_pending }
+        ] },
+      { id: 'id_number', picture: '🔢', type: 'text', optional: true, sensitive: true, clearIfChanged: 'id_route', showIf: { field: 'id_route', in: ['fayda', 'kebele', 'passport', 'refugee', 'other'] },
+        label: { en: 'What is the number on your ID?', am: 'በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው?', om: 'Lakkoofsi waraqaa eenyummaa kee irra jiru meeqa?' },
+        hint: { en: 'You can skip this and add it later. We never ask for a photo of your ID. If you add the number, your status becomes "Number recorded — not verified". For your privacy, ID numbers are typed, not spoken. You can ask someone you trust to type it.', am: 'ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል። ለግላዊነትዎ የመታወቂያ ቁጥሮች በድምፅ ሳይሆን በመጻፍ ይገባሉ። የሚያምኑትን ሰው እንዲጽፍልዎ መጠየቅ ይችላሉ።', om: 'Kana dabarsitee booda dabaluu dandeessa. Suuraa eenyummaa kee gonkumaa hin gaafannu. Yoo lakkoofsa dabalte, haalli kee "Lakkoofsi galmeeffameera — hin mirkanoofne" ta\'a. Dhuunfaa keetiif, lakkoofsi eenyummaa barreeffamee galfama malee hin dubbatamu. Nama amantu akka siif barreessu gaafachuu dandeessa.' } },
+      { id: 'referral_partner', picture: '🤝', type: 'choice', sensitive: true, prefill: { from: 'profile', key: 'referral_partner' }, showIf: { field: 'id_route', equals: 'none' },
+        label: { en: 'Which organisation can confirm who you are?', am: 'ማንነትዎን የትኛው ድርጅት ሊያረጋግጥ ይችላል?', om: 'Dhaabbanni kam eenyummaa kee mirkaneessuu danda\'a?' },
+        hint: { en: 'They will contact you. You can start learning while you wait.', am: 'እነሱ ያገኙዎታል። እየጠበቁ መማር መጀመር ይችላሉ።', om: 'Isaan si quunnamu. Osoo eegduu barachuu jalqabuu dandeessa.' },
+        options: [
+          { value: 'aaapd', label: { en: 'AAAPD', am: 'AAAPD', om: 'AAAPD' }, say: ['aaapd'] },
+          { value: 'tib', label: { en: 'Tomorrow is Better', am: 'Tomorrow is Better', om: 'Tomorrow is Better' }, say: ['tomorrow'] },
+          { value: 'unhcr_partner', label: { en: 'A refugee support organisation', am: 'የስደተኞች ድጋፍ ድርጅት', om: 'Dhaabbata deeggarsa baqattootaa' }, say: ['refugee', 'ስደተኞች'] },
+          { value: 'unsure', label: { en: "I'm not sure. Please help me choose.", am: 'እርግጠኛ አይደለሁም። እንድመርጥ እርዱኝ።', om: 'Hin mirkaneeffadhu. Maaloo akkan filadhu na gargaari.' }, say: ['not sure', 'help', 'እርግጠኛ', 'እርዱኝ'] }
+        ] }
+  ];
 
   /* 1. SIGN-UP (with ID ladder and partner-assisted mode) */
   D.register('signup', {
@@ -63,29 +92,6 @@
       { id: 'phone', picture: '📱', type: 'tel', autocomplete: 'tel',
         label: { en: 'What is your phone number?', am: 'ስልክ ቁጥርዎ ስንት ነው?', om: 'Lakkoofsi bilbila keetii meeqa?' },
         hint: { en: 'We use it only to send you a link to continue. For example 0911 234 567.', am: 'ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።', om: 'Kan itti fayyadamnu geessituu itti fufuu siif erguuf qofa. Fakkeenyaaf 0911 234 567.' } },
-      { id: 'id_route', picture: '🪪', type: 'choice', sensitive: true, reviewLabel: { en: 'ID', am: 'መታወቂያ', om: 'Eenyummaa' },
-        label: { en: 'Which ID do you have?', am: 'የትኛው መታወቂያ አለዎት?', om: 'Waraqaa eenyummaa kam qabda?' },
-        hint: { en: 'Any of these is fine. You can start learning even without an ID. Nobody checks IDs automatically: we record what you tell us.', am: 'ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ። መታወቂያዎች በራስ-ሰር አይረጋገጡም፤ የሚነግሩንን እንመዘግባለን።', om: 'Kamiyyuu ni ta\'a. Waraqaa eenyummaa malees barachuu jalqabuu dandeessa. Namni eenyummaa ofumaan mirkaneessu hin jiru: waan ati nutti himtu galmeessina.' },
-        options: [
-          { value: 'fayda', icon: '🪪', label: { en: 'Fayda national ID', am: 'ፋይዳ ብሔራዊ መታወቂያ', om: 'Eenyummaa biyyaalessaa Faayda' }, say: ['fayda', 'ፋይዳ'], badge: NOT_CHECKED },
-          { value: 'kebele', icon: '🏘️', label: { en: 'Kebele ID', am: 'የቀበሌ መታወቂያ', om: 'Waraqaa eenyummaa ganda' }, say: ['kebele', 'ቀበሌ'], badge: NOT_CHECKED },
-          { value: 'passport', icon: '📘', label: { en: 'Passport', am: 'ፓስፖርት', om: 'Paaspoortii' }, say: ['passport', 'ፓስፖርት'], badge: NOT_CHECKED },
-          { value: 'refugee', icon: '📄', label: { en: 'Refugee ID or proof of registration (RRS / UNHCR)', am: 'የስደተኛ መታወቂያ ወይም የምዝገባ ማረጋገጫ', om: 'Eenyummaa baqataa ykn ragaa galmee (RRS / UNHCR)' }, say: ['refugee', 'ስደተኛ'], badge: NOT_CHECKED },
-          { value: 'other', icon: '🗂️', label: { en: 'Another document', am: 'ሌላ ሰነድ', om: 'Sanada biraa' }, say: ['another', 'document', 'ሰነድ'], badge: NOT_CHECKED },
-          { value: 'none', icon: '🤝', label: { en: 'I have none of these. Refer me through a partner.', am: 'ምንም የለኝም። በአጋር ድርጅት በኩል ይመዝግቡኝ።', om: 'Kana keessaa tokkollee hin qabu. Karaa michuu na ergi.' }, say: ['none', 'refer', 'ምንም', 'የለኝም'], badge: D.TRUST.partner_referral_pending }
-        ] },
-      { id: 'id_number', picture: '🔢', type: 'text', optional: true, sensitive: true, clearIfChanged: 'id_route', showIf: { field: 'id_route', in: ['fayda', 'kebele', 'passport', 'refugee', 'other'] },
-        label: { en: 'What is the number on your ID?', am: 'በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው?', om: 'Lakkoofsi waraqaa eenyummaa kee irra jiru meeqa?' },
-        hint: { en: 'You can skip this and add it later. We never ask for a photo of your ID. If you add the number, your status becomes "Number recorded — not verified".', am: 'ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል።', om: 'Kana dabarsitee booda dabaluu dandeessa. Suuraa eenyummaa kee gonkumaa hin gaafannu. Yoo lakkoofsa dabalte, haalli kee "Lakkoofsi galmeeffameera — hin mirkanoofne" ta\'a.' } },
-      { id: 'referral_partner', picture: '🤝', type: 'choice', sensitive: true, showIf: { field: 'id_route', equals: 'none' },
-        label: { en: 'Which organisation can confirm who you are?', am: 'ማንነትዎን የትኛው ድርጅት ሊያረጋግጥ ይችላል?', om: 'Dhaabbanni kam eenyummaa kee mirkaneessuu danda\'a?' },
-        hint: { en: 'They will contact you. You can start learning while you wait.', am: 'እነሱ ያገኙዎታል። እየጠበቁ መማር መጀመር ይችላሉ።', om: 'Isaan si quunnamu. Osoo eegduu barachuu jalqabuu dandeessa.' },
-        options: [
-          { value: 'aaapd', label: { en: 'AAAPD', am: 'AAAPD', om: 'AAAPD' }, say: ['aaapd'] },
-          { value: 'tib', label: { en: 'Tomorrow is Better', am: 'Tomorrow is Better', om: 'Tomorrow is Better' }, say: ['tomorrow'] },
-          { value: 'unhcr_partner', label: { en: 'A refugee support organisation', am: 'የስደተኞች ድጋፍ ድርጅት', om: 'Dhaabbata deeggarsa baqattootaa' }, say: ['refugee', 'ስደተኞች'] },
-          { value: 'unsure', label: { en: "I'm not sure. Please help me choose.", am: 'እርግጠኛ አይደለሁም። እንድመርጥ እርዱኝ።', om: 'Hin mirkaneeffadhu. Maaloo akkan filadhu na gargaari.' }, say: ['not sure', 'help', 'እርግጠኛ', 'እርዱኝ'] }
-        ] },
       { id: 'dob', picture: '🎂', type: 'ethdate', optional: true,
         label: { en: 'When were you born?', am: 'መቼ ተወለዱ?', om: 'Yoom dhalatte?' },
         hint: { en: 'First choose the Ethiopian or the Gregorian calendar. You can skip this if you are not sure.', am: 'መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።', om: 'Dura dhaha Itoophiyaa ykn dhaha Gorgooriyaan filadhu. Yoo hin mirkaneeffatin kana dabarsuu dandeessa.' } },
@@ -100,6 +106,15 @@
     submitLabel: { en: 'Create my account', am: 'መለያዬን ፍጠር', om: 'Herrega koo uumi' },
     doneTitle: { en: 'Welcome! Your account is ready.', am: 'እንኳን ደህና መጡ! መለያዎ ዝግጁ ነው።', om: 'Baga nagaan dhufte! Herregni kee qophaa\'eera.' },
     doneText: { en: 'You can start learning now.', am: 'አሁን መማር መጀመር ይችላሉ።', om: 'Amma barachuu jalqabuu dandeessa.' }
+  });
+
+  /* 1b. ADD YOUR ID (optional) */
+  D.register('identity', {
+    title: { en: 'Add your ID (optional)', am: 'መታወቂያዎን ይጨምሩ (አማራጭ)', om: 'Eenyummaa kee dabali (dirqama miti)' },
+    fields: ID_FIELDS,
+    submitLabel: { en: 'Save my ID details', am: 'የመታወቂያ ዝርዝሬን አስቀምጥ', om: 'Odeeffannoo eenyummaa koo kuusi' },
+    doneTitle: { en: 'Your ID details are saved', am: 'የመታወቂያ ዝርዝርዎ ተቀምጧል', om: 'Odeeffannoon eenyummaa kee kuufameera' },
+    doneText: { en: 'Nobody checks IDs automatically. You can change this at any time in My profile.', am: 'መታወቂያዎች በራስ-ሰር አይረጋገጡም። ይህን በማንኛውም ጊዜ በ«የእኔ መገለጫ» ውስጥ መቀየር ይችላሉ።', om: 'Namni eenyummaa ofumaan mirkaneessu hin jiru. Kana yeroo kamiyyuu «Piroofaayilii koo» keessatti jijjiiruu dandeessa.' }
   });
 
   /* 2. SUPPORT PASSPORT (needs, not diagnosis; learner-owned) */
@@ -193,7 +208,7 @@
     ],
     submitLabel: { en: 'Send my application', am: 'ማመልከቻዬን ላክ', om: 'Iyyannoo koo ergi' },
     doneTitle: { en: 'Your application is sent', am: 'ማመልከቻዎ ተልኳል', om: 'Iyyannoon kee ergameera' },
-    doneText: { en: 'Below is exactly what the employer receives.', am: 'ከዚህ በታች ቀጣሪው በትክክል የሚቀበለው ይታያል።', om: 'Armaan gaditti waan qacaraan argatu sirriitti jira.' }
+    doneText: { en: 'Below is a summary of what you sent.', am: 'ከዚህ በታች የላኩት ማጠቃለያ አለ።', om: 'Armaan gaditti cuunfaa waan ergite jira.' }
   });
 
   /* 5. PROFILE UPDATE: the sign-up questions again, prefilled from the profile. Starts on the summary; the learner
@@ -213,7 +228,7 @@
     if (lang === 'om') return (r.staff ? r.staff + ' ' + org + ' irraa' : org) + ' akka galmooftu si gargaare.';
     return (r.staff ? r.staff + ' from ' + org : org) + ' helped you sign up.';
   }
-  var takeoverFields = ['name', 'phone', 'id_route', 'id_number', 'referral_partner', 'dob'];
+  var takeoverFields = ['name', 'phone', 'dob']; // the ID is added later by the learner, in "Add your ID (optional)"
   D.register('takeover', {
     title: { en: 'Take over your account', am: 'መለያዎን ይረከቡ', om: 'Herrega kee fudhadhu' },
     startAt: 'review',
@@ -241,9 +256,6 @@
         label: { en: 'What is your full name?', am: 'ሙሉ ስምዎ ማን ነው?', om: 'Maqaan kee guutuun eenyu?' },
         hint: { en: 'Optional. Add it only if you want it on job applications. Amharic or English letters are both fine.', am: 'አማራጭ። በሥራ ማመልከቻዎች ላይ እንዲታይ ከፈለጉ ብቻ ይጨምሩት። የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ።', om: 'Dirqama miti. Yoo iyyannoo hojii irratti akka mul\'atu barbaadde qofa dabali. Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta\'u.' } }),
       fromSignup('phone', { prefill: { from: 'profile', key: 'phone' }, reviewLabel: { en: 'Phone number', am: 'ስልክ ቁጥር', om: 'Lakkoofsa bilbilaa' } }),
-      fromSignup('id_route', { prefill: { from: 'profile', key: 'id_route' } }),
-      fromSignup('id_number', { reviewLabel: { en: 'ID number (only if you want to add or change it)', am: 'የመታወቂያ ቁጥር (መጨመር ወይም መቀየር ከፈለጉ ብቻ)', om: 'Lakkoofsa eenyummaa (yoo dabaluu ykn jijjiiruu barbaadde qofa)' } }),
-      fromSignup('referral_partner', { prefill: { from: 'profile', key: 'referral_partner' }, reviewLabel: { en: 'Organisation that can confirm who you are', am: 'ማንነትዎን የሚያረጋግጥ ድርጅት', om: 'Dhaabbata eenyummaa kee mirkaneessuu danda\'u' } }),
       fromSignup('dob', { prefill: { from: 'profile', key: 'dob' }, reviewLabel: { en: 'Date of birth', am: 'የትውልድ ቀን', om: 'Guyyaa dhalootaa' } })
     ],
     reviewTitle: { en: 'My profile', am: 'የእኔ መገለጫ', om: 'Piroofaayilii koo' },
@@ -254,4 +266,24 @@
     doneText: { en: 'Forms will now be filled in with your new details.', am: 'ቅጾች ከአሁን ጀምሮ በአዲሱ ዝርዝርዎ ይሞላሉ።', om: 'Amma unkaaleen odeeffannoo kee haaraan guutamu.' }
   });
   D.forms.takeover.fields = D.forms.profile.fields.filter(function (f) { return takeoverFields.indexOf(f.id) !== -1; });
+
+  /* Page summaries (English only for now, written by hand): the topic of each question. The engine puts it in a short
+     sentence, for example "Step 3 of 5: your phone number. You can type it or say it. Below are Continue and Back." */
+  var SUMMARIES = {
+    signup: { filler: 'who is filling in this form: you, or a partner organisation with you', partner_org: 'which partner organisation you work for',
+      staff_name: 'your own name, as the staff member helping', learner_consent: 'the learner agrees that you help them fill in this form',
+      name: 'the name we should call you', phone: 'your phone number', dob: 'your date of birth', consent: 'whether you agree to how we keep your answers' },
+    identity: { id_route: 'which ID you have. Each choice shows an honest status, and having no ID is fine', id_number: 'the number on your ID. For your privacy, it is typed, not spoken',
+      referral_partner: 'which organisation can confirm who you are' },
+    passport: { want: 'whether you want to tell us what helps you learn and work', needs: 'what helps you, from a list. Nothing about health or conditions',
+      other_need: 'anything else that helps you, in your own words', sharing: 'who can see your Support Passport. Only you is chosen for you' },
+    employer: { title: 'the job title', org: 'the name of your organisation', location: 'where the job is', mode: 'where the work is done: office, home or both',
+      offers: 'the support this job offers, from the same list learners use', description: 'a short description of the job', contact: 'how applicants can contact you' },
+    apply: { name: 'your name for this application', phone: 'your phone number', why: 'why you want this job', experience: 'work or learning you have done before',
+      interview: 'how you would like to be interviewed', share_passport: 'whether to share your Support Passport list with this employer. Saying no never affects your application' },
+    profile: { name: 'the name we call you', full_name: 'your full name', phone: 'your phone number', dob: 'your date of birth' }
+  };
+  Object.keys(SUMMARIES).forEach(function (form) {
+    D.forms[form].fields.forEach(function (f) { if (SUMMARIES[form][f.id]) f.summary = { en: SUMMARIES[form][f.id] }; });
+  });
 })();

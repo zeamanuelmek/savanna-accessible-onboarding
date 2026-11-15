@@ -159,14 +159,14 @@ test('audio is never required: with no speech and no audio at all, sign-up still
   await pick(page, 'self'); await next(page);
   await page.fill('[data-ref=input]', 'Abebe Kebede'); await next(page);
   await page.fill('[data-ref=input]', '0911234567'); await next(page);
-  await pick(page, 'kebele'); await next(page); await next(page); await next(page);
+  await next(page); // date of birth: optional
   await pick(page, 'yes'); await next(page);
   expect(await heading(page)).toBe('Check your answers');
   await next(page);
   expect(await heading(page)).toContain('Your account is ready');
 });
 
-test('the audio manifest is empty until clips are added, so nothing is downloaded that does not exist', async ({ page }) => {
+test('an English learner never downloads the Amharic clips', async ({ page }) => {
   const asked = [];
   page.on('request', r => { if (r.url().includes('/assets/audio/am/')) asked.push(r.url()); });
   await signupTo(page, 'filler');
@@ -174,4 +174,35 @@ test('the audio manifest is empty until clips are added, so nothing is downloade
   await page.locator('[data-act=listen]').click();
   await expect.poll(() => said(page)).toHaveLength(3);
   expect(asked).toEqual([]);
+});
+
+test('the manifest lists a clip for every line of docs/audio-script.md, and every clip file exists', async () => {
+  const fs = await import('fs');
+  const script = fs.readFileSync('docs/audio-script.md', 'utf8');
+  const keys = [...script.matchAll(/^\|\s*\d+\s*\|\s*`am\/([a-z0-9-]+)\.mp3`/gm)].map(m => m[1]);
+  const manifest = JSON.parse(fs.readFileSync('assets/audio/manifest.json', 'utf8'));
+  expect(keys.length).toBeGreaterThan(70);
+  expect(keys.filter(k => !(manifest.am || {})[k])).toEqual([]);
+  for (const k of keys) expect(fs.statSync('assets/audio/am/' + manifest.am[k]).size).toBeGreaterThan(1000);
+});
+
+test('the home page Listen button plays the recorded home question and the four ways', async ({ page }) => {
+  await clips(page, { am: { 'home-question': 'home-question.mp3', 'welcome-option-read-type': 'welcome-option-read-type.mp3',
+    'welcome-option-listen': 'welcome-option-listen.mp3', 'welcome-option-speak': 'welcome-option-speak.mp3', 'welcome-option-simple': 'welcome-option-simple.mp3' } });
+  await page.goto('/index.html?lang=am');
+  await page.waitForFunction(() => !!window.SavannaOnboarding);
+  await page.evaluate(() => window.SavannaOnboarding.setPrefs({ lang: 'am' }));
+  await page.locator('#sj-listen').click();
+  await expect.poll(() => page.evaluate(() => window.__clips), { timeout: 10000 }).toEqual(['home-question.mp3',
+    'welcome-option-read-type.mp3', 'welcome-option-listen.mp3', 'welcome-option-speak.mp3', 'welcome-option-simple.mp3']);
+});
+
+test('the date question reads the calendar choice too, with its own clips', async ({ page }) => {
+  await clips(page, { en: { 'signup-dob-question': 'signup-dob-question.mp3', 'signup-dob-calendar': 'signup-dob-calendar.mp3',
+    'signup-dob-option-eth': 'signup-dob-option-eth.mp3', 'signup-dob-option-greg': 'signup-dob-option-greg.mp3' } });
+  await signupTo(page, 'dob');
+  await fakeVoice(page, { ms: 50 });
+  await page.locator('[data-act=listen]').click();
+  await expect.poll(() => page.evaluate(() => window.__clips), { timeout: 10000 }).toEqual(['signup-dob-question.mp3',
+    'signup-dob-calendar.mp3', 'signup-dob-option-eth.mp3', 'signup-dob-option-greg.mp3']);
 });

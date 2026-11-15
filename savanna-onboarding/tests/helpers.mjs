@@ -1,9 +1,12 @@
 // Shared helpers for the onboarding module tests.
 import AxeBuilder from '@axe-core/playwright';
+import { expect } from '@playwright/test';
 
 export const APP = '/showroom.html';
 
 /** Open the demo with a clean device: no drafts, no profile, chosen language. */
+// Automatic reading of page summaries is off by default here, so other tests are not talked over; the summary tests
+// (tests/summaries.spec.mjs) turn it on or leave it to be asked ('ask').
 export async function freshStart(page, { lang = 'en', prefs = {}, extra = {} } = {}) {
   await page.addInitScript(([p, x]) => {
     if (sessionStorage.getItem('__seeded')) return; // seed once per test, keep data across reloads
@@ -11,7 +14,7 @@ export async function freshStart(page, { lang = 'en', prefs = {}, extra = {} } =
     localStorage.setItem('savanna-onboarding.prefs', JSON.stringify(p));
     for (const [k, v] of Object.entries(x)) localStorage.setItem(k, JSON.stringify(v));
     sessionStorage.setItem('__seeded', '1');
-  }, [{ lang, ...prefs }, extra]);
+  }, [{ lang, autoRead: 'off', ...prefs }, extra]);
 }
 
 export async function go(page, hash = '#/') {
@@ -41,6 +44,22 @@ export function summarise(violations) {
   return violations.map(v => `${v.impact}: ${v.id} (${v.nodes.length}) ${v.help} -> ${v.nodes.slice(0, 3).map(n => n.target.join(' ')).join(' | ')}`);
 }
 
+/** "Add your ID (optional)" (no longer part of sign-up): open it on the showroom, with a signed-up learner on this
+ *  device, and walk up to the given field id ('END' = "Check your answers"). */
+export async function identityTo(page, stopAt, { route = 'fayda' } = {}) {
+  await go(page, '#/');
+  await page.evaluate(() => {
+    if (!localStorage.getItem('savanna-onboarding.profile')) localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: null, assurance_level: 'no_id_yet' }));
+  });
+  await go(page, '#/identity');
+  await page.waitForSelector('.dm-q');
+  const steps = [['id_route', () => pick(page, route)], ...(route === 'none' ? [['referral_partner', () => pick(page, 'aaapd')]] : [['id_number', async () => {}]])];
+  for (const [id, act] of steps) {
+    if (id === stopAt) return;
+    await act(); await next(page);
+  }
+}
+
 /** Walk the sign-up journey up to (and including) the given field id. */
 export async function signupTo(page, stopAt, mode = 'read_type') {
   await go(page, '#/signup');
@@ -49,8 +68,6 @@ export async function signupTo(page, stopAt, mode = 'read_type') {
     ['filler', async () => pick(page, 'self')],
     ['name', async () => page.fill('[data-ref=input]', 'Abebe Kebede')],
     ['phone', async () => page.fill('[data-ref=input]', '0911234567')],
-    ['id_route', async () => pick(page, 'fayda')],
-    ['id_number', async () => {}],
     ['dob', async () => {}],
     ['consent', async () => pick(page, 'yes')]
   ];
@@ -94,13 +111,15 @@ export async function speakAnswer(page) {
   await mic.click();
 }
 
-/** Choose a language from the "Make this page work for you" bar's Language dropdown. */
+/** Choose a language from the accessibility bar's Language dropdown. */
 export async function barLanguage(page, l) {
   await page.locator('.sj-lang-btn').click();
   await page.locator('#sj-lang-menu button[data-lang="' + l + '"]').click();
 }
-/** Choose a language from a form's own Language dropdown. */
-export async function formLanguage(page, l) {
-  await page.locator('.dm-bar [data-act=lang-menu]').click();
-  await page.locator('.dm-bar [data-act=lang][data-lang="' + l + '"]').click();
+/** Change the language from the host page (forms have no language choice of their own): the bar on Savanna's pages,
+ *  or the showroom's language button, which goes round the three languages. */
+export async function hostLanguage(page, l) {
+  if (await page.locator('.sj-lang-btn').count()) return barLanguage(page, l);
+  for (let i = 0; i < 3 && (await page.locator('.dm').first().getAttribute('lang')) !== l; i++) await page.locator('#host-lang').click();
+  await expect(page.locator('.dm').first()).toHaveAttribute('lang', l);
 }

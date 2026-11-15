@@ -1,6 +1,6 @@
 // Functional baseline: features the prototype claims to have, checked end to end.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo, formLanguage } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, hostLanguage } from './helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
@@ -16,7 +16,7 @@ test('sign-up journey completes and creates a profile', async ({ page }) => {
   expect(await heading(page)).toContain('Welcome');
   const profile = await page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.profile')));
   expect(profile.name).toBe('Abebe Kebede');
-  expect(profile.assurance_level).toBe('self_declared');
+  expect(profile.assurance_level).toBe('no_id_yet'); // the ID is optional, added later from My profile
   const events = await page.evaluate(() => window.__events);
   expect(events).toHaveLength(1);
   expect(events[0].form).toBe('signup');
@@ -112,7 +112,7 @@ test('settings apply text size and contrast to the page', async ({ page }) => {
 
 test('language switch changes the question to Amharic', async ({ page }) => {
   await signupTo(page, 'name');
-  await formLanguage(page, 'am');
+  await hostLanguage(page, 'am');
   expect(await heading(page)).toBe('ምን ብለን እንጥራዎ?');
   await expect(page.locator('.dm')).toHaveAttribute('lang', 'am');
 });

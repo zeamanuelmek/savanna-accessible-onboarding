@@ -56,7 +56,9 @@
   function getPrefs() {
     var p = store.get('prefs', {});
     return { lang: LANGS.indexOf(p.lang) !== -1 ? p.lang : 'am', easy: !!p.easy, pictures: p.pictures != null ? !!p.pictures : p.mode === 'simple',
-      mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal', motion: p.motion === 'reduce' ? 'reduce' : 'normal' };
+      mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal', motion: p.motion === 'reduce' ? 'reduce' : 'normal',
+      // automatic reading of page summaries: 'ask' until the learner first interacts, then 'on' or 'off'
+      autoRead: p.autoRead === 'on' || p.autoRead === 'off' ? p.autoRead : 'ask' };
   }
   function applyPrefs() {
     var p = getPrefs(), root = document.documentElement;
@@ -70,7 +72,7 @@
     target.dispatchEvent(new CustomEvent('dimts:' + name, { bubbles: !!bubbles, detail: detail }));
   }
   // Values a preference may take; anything else is ignored (a host bug can never wipe the learner's choices)
-  var PREF_VALUES = { lang: LANGS, size: ['normal', 'large', 'xlarge'], contrast: ['normal', 'high'], motion: ['normal', 'reduce'], mode: [''].concat(MODES) };
+  var PREF_VALUES = { lang: LANGS, size: ['normal', 'large', 'xlarge'], contrast: ['normal', 'high'], motion: ['normal', 'reduce'], mode: [''].concat(MODES), autoRead: ['ask', 'on', 'off'] };
   function setPrefs(patch) {
     var p = getPrefs();
     Object.keys(patch || {}).forEach(function (k) {
@@ -95,6 +97,7 @@
       back: 'Back', next: 'Continue', submit: 'Submit', listen: 'Listen to the question',
       speak: 'Answer by voice', stop: 'Stop listening', listening: 'Microphone on. Listening… speak now, and press Stop listening when you have finished.',
       heard: 'I heard:', yes: 'Use this answer', again: 'Say it again', type: 'Type it instead',
+      recStart: 'Recording. Speak now, then press Stop when you have finished.', heardSay: 'I heard: {text}. Choose {yes}, {again}, or {type}.',
       micAsk: 'Your browser may ask to use the microphone. Choose Allow.', micOn: 'Microphone on',
       processing: 'Working out what you said…',
       heardCheck: 'Check it and fix it if needed. Nothing is kept until you choose "Use this answer".',
@@ -147,6 +150,8 @@
       settings: 'Settings', settingsHint: 'Your settings are saved on this phone and used everywhere this tool appears.',
       s_lang: 'Language', s_size: 'Text size', s_contrast: 'Contrast', s_mode: 'How I like to answer', s_read: 'Read aloud',
       s_readHint: 'Questions are read out, and every answer has its own Listen button. Everything is also written on the screen.',
+      s_auto: 'Automatic reading of page summaries', auto_on: 'Read a short summary of each page and step when it opens', auto_off: 'Turn off automatic reading',
+      s_autoHint: 'English only for now. Pause and Stop are always at the top of the page, and Escape stops the sound at once. Screen reader users may prefer to turn it off.',
       s_pictures: 'Pictures and bigger buttons',
       askHelperDone: 'I have the phone back', voiceAmbiguous: 'I heard more than one answer. Please say just one, or tap your answer.',
       srTip: 'If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.',
@@ -163,6 +168,7 @@
       online: 'You are back online.',
       play: 'Listen', pause: 'Pause', resume: 'Resume', stopAudio: 'Stop', replay: 'Play again',
       noAudio: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.',
+      blocked: 'The browser did not allow sound yet. Press Listen to hear it. Everything is written on the screen.',
       clipFailed: 'A recording could not be played, so the phone\'s voice is reading instead.',
       size_normal: 'Normal', size_large: 'Large', size_xlarge: 'Extra large',
       s_motion: 'Motion', motion_normal: 'Allow animations', motion_reduce: 'Stop motion',
@@ -178,6 +184,7 @@
       back: 'ተመለስ', next: 'ቀጥል', submit: 'ላክ', listen: 'ጥያቄውን አዳምጥ',
       speak: 'በድምፅ ይመልሱ', stop: 'ማዳመጥ አቁም', listening: 'ማይክሮፎኑ በርቷል። እያዳመጥኩ ነው… አሁን ይናገሩ፤ ሲጨርሱ «ማዳመጥ አቁም»ን ይጫኑ።',
       heard: 'የሰማሁት፦', yes: 'ይህን መልስ ተጠቀም', again: 'እንደገና ይናገሩ', type: 'በመጻፍ ይመልሱ',
+      recStart: 'እየተቀዳ ነው። አሁን ይናገሩ፤ ሲጨርሱ «{stop}»ን ይጫኑ።', heardSay: 'የሰማሁት፦ {text}። «{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።',
       micAsk: 'ብራውዘርዎ ማይክሮፎኑን ለመጠቀም ፈቃድ ሊጠይቅ ይችላል። «ፍቀድ»ን ይምረጡ።', micOn: 'ማይክሮፎኑ በርቷል',
       processing: 'የተናገሩትን እየለየሁ ነው…',
       heardCheck: 'ያረጋግጡት፤ ካስፈለገም ያስተካክሉት። «ይህን መልስ ተጠቀም»ን እስኪመርጡ ድረስ ምንም አይቀመጥም።',
@@ -229,6 +236,8 @@
       errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
       settings: 'ቅንብሮች', settingsHint: 'ቅንብሮችዎ በዚህ ስልክ ላይ ይቀመጣሉ፤ ይህ መሣሪያ በሚገኝበት ቦታ ሁሉ ይሠራሉ።',
       s_lang: 'ቋንቋ', s_size: 'የጽሑፍ መጠን', s_contrast: 'ንፅፅር', s_mode: 'መመለስ የምመርጥበት መንገድ', s_read: 'ጮክ ብሎ ማንበብ',
+      s_auto: 'የገጽ ማጠቃለያዎችን በራስ-ሰር ማንበብ', auto_on: 'እያንዳንዱ ገጽና ደረጃ ሲከፈት አጭር ማጠቃለያ አንብብ', auto_off: 'በራስ-ሰር ማንበብን አጥፋ',
+      s_autoHint: 'ለጊዜው በእንግሊዝኛ ብቻ። «ለአፍታ አቁም» እና «አቁም» ሁልጊዜ በገጹ አናት ላይ ናቸው፤ Escape ድምፁን ወዲያው ያቆማል። የስክሪን አንባቢ ተጠቃሚዎች ማጥፋትን ሊመርጡ ይችላሉ።',
       s_readHint: 'ጥያቄዎች ይነበባሉ፤ እያንዳንዱ መልስም የራሱ «አዳምጥ» አዝራር አለው። ሁሉም ነገር በማያ ገጹ ላይም ተጽፏል።',
       s_pictures: 'ሥዕሎችና ትልልቅ አዝራሮች',
       askHelperDone: 'ስልኩ ተመልሶልኛል', voiceAmbiguous: 'ከአንድ በላይ መልስ ሰማሁ። እባክዎ አንዱን ብቻ ይናገሩ ወይም መልስዎን ይንኩ።',
@@ -246,6 +255,7 @@
       online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።',
       play: 'አዳምጥ', pause: 'ለአፍታ አቁም', resume: 'ማጫወት ቀጥል', stopAudio: 'አቁም', replay: 'እንደገና አጫውት',
       noAudio: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
+      blocked: 'ብራውዘሩ ድምፅ ገና አልፈቀደም። ለመስማት «አዳምጥ»ን ይጫኑ። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
       clipFailed: 'ቅጂው መጫወት አልቻለም፤ ስለዚህ የስልኩ ድምፅ እያነበበ ነው።',
       s_motion: 'እንቅስቃሴ', motion_normal: 'እንቅስቃሴ ፍቀድ', motion_reduce: 'እንቅስቃሴ አቁም',
       s_motionHint: 'እንቅስቃሴዎችን፣ መንሸራተትንና ቀስ ብሎ መሸብለልን ያቆማል።',
@@ -267,6 +277,8 @@
       stop: 'Dhaggeeffachuu dhaabi',
       listening: 'Maayikiraafoonni banameera. Dhaggeeffachaa jira… amma dubbadhu, yoo xumurte "Dhaggeeffachuu dhaabi" tuqi.',
       heard: 'Kan ani dhage\'e:',
+      recStart: 'Waraabamaa jira. Amma dubbadhu, yoo xumurte "{stop}" tuqi.',
+      heardSay: 'Kan ani dhage\'e: {text}. "{yes}", "{again}" ykn "{type}" filadhu.',
       yes: 'Deebii kana fayyadami',
       again: 'Irra deebi\'ii jedhi',
       type: 'Kanaa mannaa barreessi',
@@ -354,6 +366,8 @@
       s_contrast: 'Garaagarummaa halluu',
       s_mode: 'Akkaataa deebisuu barbaadu',
       s_read: 'Sagaleen dubbisi',
+      s_auto: 'Cuunfaa fuulaa ofumaan dubbisuu', auto_on: 'Yeroo fuulli fi tarkaanfiin banamu cuunfaa gabaabaa dubbisi', auto_off: 'Dubbisa ofumaan dhaabi',
+      s_autoHint: 'Ammaaf Ingiliffaa qofa. "Dhaabi xiqqoo" fi "Dhaabi" yeroo hunda fuula gubbaa jiru, Escape immoo sagalee battaluma dhaaba. Fayyadamtoonni dubbisaa iskiriinii dhaabuu filachuu danda\'u.',
       s_readHint: 'Gaaffiiwwan sagaleen dubbifamu, deebii hundi immoo qabduu "Dhaggeeffadhu" mataa isaa qaba. Wanti hundi iskiriinii irrattis ni barreeffama.',
       s_pictures: 'Fakkiiwwan fi qabduuwwan gurguddaa',
       askHelperDone: 'Bilbilli natti deebi\'eera',
@@ -382,6 +396,7 @@
       stopAudio: 'Dhaabi',
       replay: 'Irra deebi\'ii taphachiisi',
       noAudio: 'Kanaaf ammaaf waraabbiin hin jiru, bilbilli kun immoo afaan kanaaf sagalee hin qabu. Wanti hundi iskiriinii irratti barreeffameera.',
+      blocked: 'Biraawuzarri ammaaf sagalee hin hayyamne. Dhaggeeffachuuf "Dhaggeeffadhu" tuqi. Wanti hundi iskiriinii irratti barreeffameera.',
       clipFailed: 'Waraabbiin tokko taphachuu hin dandeenye, kanaaf sagaleen bilbilaa dubbisaa jira.',
       s_motion: 'Sochii', motion_normal: 'Sochii hayyami', motion_reduce: 'Sochii dhaabi',
       s_motionHint: 'Sochii, mucucaachuu fi gadi-ol suuta socho\'uu dhaaba.',
@@ -428,13 +443,14 @@
 
   /* ---------- honest ID trust status. Nothing is ever "verified": there is no verification service. ---------- */
   var TRUST = {
+    no_id_yet: { en: 'No ID added yet', am: 'ገና መታወቂያ አልተጨመረም', om: 'Ammaaf eenyummaan hin dabalamne' },
     self_declared: { en: 'Self-declared', am: 'በራስ የተገለጸ', om: 'Ofiin kan himame' },
     document_number_recorded: { en: 'Number recorded — not verified', am: 'ቁጥር ተመዝግቧል — አልተረጋገጠም', om: 'Lakkoofsi galmeeffameera — hin mirkanoofne' },
     partner_referral_pending: { en: 'Partner referral pending', am: 'የአጋር ድርጅት ማረጋገጫ በመጠበቅ ላይ', om: 'Ergaan michuu eegaa jira' }
   };
-  /** Trust status from sign-up or profile answers: the ID route and whether a number was given. */
+  /** Trust status from the "Add your ID (optional)" answers: the ID route and whether a number was given. */
   function trustLevel(a) {
-    if (!a || !a.id_route) return 'self_declared';
+    if (!a || !a.id_route) return 'no_id_yet';
     if (a.id_route === 'none') return 'partner_referral_pending';
     return a.id_number ? 'document_number_recorded' : 'self_declared';
   }
@@ -524,7 +540,7 @@
   function speak(text, lang, audioUrl, done) {
     stopSpeaking();
     if (audioUrl) {
-      try { currentAudio = new Audio(audioUrl); if (done) currentAudio.onended = done; currentAudio.play(); return true; } catch (e) {}
+      try { currentAudio = new Audio(audioUrl); if (done) currentAudio.onended = done; var pr = currentAudio.play(); if (pr && pr.catch) pr.catch(function () {}); return true; } catch (e) {} // blocked sound never throws
     }
     if (!window.speechSynthesis || !window.SpeechSynthesisUtterance) return false;
     var code = SPEECH_CODES[lang] ? lang : 'en';
@@ -535,7 +551,11 @@
     u.lang = SPEECH_CODES[code];
     if (voice) u.voice = voice;
     u.rate = 0.95;
-    if (done) { u.onend = done; u.onerror = function (e) { if (!e || e.error !== 'interrupted' && e.error !== 'canceled') done(); }; }
+    u.onerror = function (e) {
+      if (e && e.error === 'not-allowed') { audioBlocked(); return; } // autoplay rules: wait for the learner
+      if (done && (!e || e.error !== 'interrupted' && e.error !== 'canceled')) done();
+    };
+    if (done) u.onend = done;
     window.speechSynthesis.speak(u);
     return true;
   }
@@ -603,6 +623,20 @@
     pause: function () { try { window.speechSynthesis.pause(); } catch (e) {} },
     resume: function () { try { window.speechSynthesis.resume(); } catch (e) {} }
   } };
+  /** A short, quiet beep when recording starts. Never throws: no Web Audio, or sound blocked, means no beep. */
+  var beepCtx = null;
+  function beep() {
+    try {
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return;
+      var c = beepCtx || (beepCtx = new C());
+      if (c.state === 'suspended' && c.resume) { var pr = c.resume(); if (pr && pr.catch) pr.catch(function () {}); }
+      var o = c.createOscillator(), g = c.createGain();
+      o.frequency.value = 880; g.gain.value = 0.12;
+      o.connect(g); g.connect(c.destination);
+      o.start(); o.stop(c.currentTime + 0.15);
+    } catch (e) { /* no beep */ }
+  }
   function setSpeech(o) { if (o && o.input) speech.input = o.input; if (o && o.output) speech.output = o.output; }
 
   /* ---------- recorded audio ----------
@@ -694,6 +728,15 @@
   /* ---------- the player: one at a time, for every form on the page ----------
      play([{ key, text, url? }], lang) reads a list in order: each piece uses its recording when there is one, otherwise
      the phone's voice. pause / resume / stop / replay. Audio is never required: everything is also on screen. */
+  /* The browser blocked sound (autoplay rules: no interaction with this page yet). Nothing is thrown: the player
+     stops quietly, tells its owner ('blocked') and the page (event savanna-onboarding:audioblocked), so the host can
+     ask the learner to tap or press a key. Everything stays written on the screen. */
+  function audioBlocked() {
+    var owner = Player.owner;
+    Player.stop(true);
+    if (owner && owner.audioIssue) { try { owner.audioIssue('blocked'); } catch (e) {} }
+    emit(document, 'audioblocked', null);
+  }
   var Player = {
     items: [], i: 0, state: 'idle', lang: 'en', last: null, owner: null, audio: null, subs: [],
     on: function (fn) { this.subs.push(fn); }, off: function (fn) { var k = this.subs.indexOf(fn); if (k !== -1) this.subs.splice(k, 1); },
@@ -733,7 +776,10 @@
         self.voice(it, done);
       };
       a.onended = done; a.onerror = fail;
-      try { var pr = a.play(); if (pr && pr.catch) pr.catch(fail); } catch (e) { fail(); }
+      try {
+        var pr = a.play();
+        if (pr && pr.catch) pr.catch(function (e) { if (e && e.name === 'NotAllowedError') { if (self.audio === a) audioBlocked(); } else fail(); });
+      } catch (e) { fail(); }
     },
     voice: function (it, done) {
       if (this.state !== 'playing') return;
@@ -1094,12 +1140,6 @@
     '.dm textarea.dm-input{min-height:8em}',
     '.dm-input[aria-invalid=true]{border-color:var(--so-error);border-width:3px}',
     '.dm-date{display:flex;flex-wrap:wrap;gap:.75em}',
-    '.dm-lang{position:relative;display:inline-flex}',
-    '.dm-lang-menu{position:absolute;right:0;top:calc(100% + .3em);z-index:20;display:flex;flex-direction:column;min-width:11em;padding:.3em;background:var(--so-surface);border:var(--so-border-width) solid var(--so-border-strong);border-radius:var(--so-radius);box-shadow:0 6px 18px rgba(0,43,86,.15)}',
-    '.dm-lang-menu[hidden]{display:none}',
-    '.dm-lang-menu button{display:flex;align-items:center;gap:.4em;min-height:44px;padding:.3em .7em;border:0;border-radius:var(--so-radius-sm);background:none;color:var(--so-heading);font:inherit;text-align:left;cursor:pointer}',
-    '.dm-lang-menu button:hover,.dm-lang-menu button[aria-current]{background:var(--so-surface-alt)}.dm-lang-menu button[aria-current]{font-weight:700}',
-    '.dm-lang-tick{display:inline-block;width:1em}',
     '.dm-preview{border:var(--so-border-width) dashed var(--so-border);border-radius:var(--so-radius);padding:.75em 1em;margin:0 0 1.5em;background:var(--so-surface)}',
     '.dm-preview-h{font-weight:600;margin:0 0 .25em;color:var(--so-heading)}.dm-preview-btn{pointer-events:none}',
     '.dm-cal{border:0;margin:0 0 1em;padding:0;min-width:0}.dm-cal legend{font-weight:600;margin-bottom:.5em;padding:0}.dm-cal-opts{margin:0}',
@@ -1240,12 +1280,7 @@
           // the first screen: "Back" leaves the form, to the page the host names (mount option backUrl)
           : vm.backUrl ? '<a class="dm-link" href="' + esc(vm.backUrl) + '">← ' + t('back', lang) + '</a>' : '') + '</div>' +
         '<div class="dm-bar-r">' +
-        // Language: one dropdown (a disclosure button and a short list), each language named in its own language
-        '<span class="dm-lang"><button type="button" class="dm-btn dm-small" data-act="lang-menu" aria-expanded="false" aria-controls="' + View.id(vm, 'langs') + '">' +
-          '<span class="dm-vh">' + t('s_lang', lang) + ': </span><span lang="' + lang + '">' + LANG_NAMES[lang] + '</span><span aria-hidden="true"> ▾</span></button>' +
-          '<span id="' + View.id(vm, 'langs') + '" class="dm-lang-menu" data-ref="langs" hidden>' + LANGS.map(function (l) {
-            return '<button type="button" data-act="lang" data-lang="' + l + '" lang="' + l + '"' + (l === lang ? ' aria-current="true"' : '') + '><span aria-hidden="true" class="dm-lang-tick">' + (l === lang ? '✓' : '') + '</span>' + LANG_NAMES[l] + '</button>';
-          }).join('') + '</span></span>' +
+        // No language choice here: the host page sets the language (on Savanna's pages, from the bar at the top)
         '<button type="button" class="dm-btn dm-small" data-act="easy" aria-pressed="' + vm.easy + '">' + pic(vm.pictures, '🔊') + t(vm.easy ? 'easyOn' : 'easyOff', lang) + '</button>' +
         '<button type="button" class="dm-btn dm-small" data-act="help" aria-expanded="' + !!vm.helpOpen + '" aria-controls="' + helpId + '">' + t('help', lang) + '</button>' +
         '</div></div>' +
@@ -1486,12 +1521,8 @@
       this.addEventListener('click', this.onClick.bind(this));
       this.addEventListener('keydown', function (e) {
         if (e.key !== 'Escape') return;
-        var lm = self.querySelector('[data-act=lang-menu][aria-expanded=true]');
-        if (lm) { self.langMenu(false, true); return; }
         if (Player.state !== 'idle') Player.stop();
       });
-      this._onDocClick = function (e) { if (!self.contains(e.target) || !e.target.closest('.dm-lang')) self.langMenu(false); };
-      document.addEventListener('click', this._onDocClick);
       // A multi-line answer box is shown whole when it gets focus (browsers only reveal its first line), so a learner
       // using zoom sees all of it (found by the Phase 9 gate dry run at 200% zoom).
       this.addEventListener('focusin', function (e) { if (e.target.tagName === 'TEXTAREA' && e.target.scrollIntoView) e.target.scrollIntoView({ block: 'nearest' }); });
@@ -1571,6 +1602,33 @@
     this.updatePlayer();
     // Read aloud reads each new question once; Pause and Stop appear at once, and Escape stops it (WCAG 1.4.2).
     if ((m === 'question' || m === 'welcome') && this.easy && this._interacted) this.readQuestion();
+    // A new screen: tell the host, with its summary, so it can put it first in the page and read it (see summary())
+    var key = m + ':' + this.state.step + ':' + this.lang;
+    if (key !== this._stepKey) { this._stepKey = key; emit(this, 'step', { form: this.getAttribute('form'), mode: m, step: this.state.step, summary: this.summary() }, true); }
+  };
+
+  /* --- page summaries (English only for now; hand-written, never generated): what this screen asks, how to answer,
+     and what is below it. Field topics are in forms.js (summary); the sentences around them are here. --- */
+  SavannaOnboardingForm.prototype.summary = function () {
+    if (this.lang !== 'en') return '';
+    var s = this.state, vm = this.vm(), cfg = this.cfg, m = s.mode;
+    if (m === 'welcome') return L(cfg.title, 'en') + '. First, choose how you like to fill in the form: read and type, listen, speak my answers, or simple steps with pictures. Below is Continue.';
+    if (m === 'question') {
+      var f = s.field(), p = s.progress(), back = s.step > 0 || !!vm.backUrl || this.welcomeOn;
+      var topic = L(f.summary, 'en') || L(f.label, 'en');
+      var how = f.type === 'choice' || f.type === 'consent' ? 'Choose one answer.' : f.type === 'multi' ? 'Choose all that apply.'
+        : f.type === 'ethdate' ? 'First choose your calendar, then the day, month and year.'
+        : voiceAllowed(f, vm) && speech.input.supported() ? 'You can type it or say it.' : 'Type it.';
+      if (f.optional) how += ' You can skip it.';
+      return 'Step ' + p.n + ' of ' + p.total + ': ' + topic + '. ' + how + (back ? ' Below are Continue and Back.' : ' Below is Continue.');
+    }
+    if (m === 'review') {
+      var n = s.visible().filter(function (x) { return !x.reviewHide; }).length;
+      return (L(cfg.reviewTitle, 'en') || 'Check your answers') + ': ' + n + (n === 1 ? ' answer' : ' answers') + ', each with a Change button. At the bottom is ' + (L(cfg.submitLabel, 'en') || 'Continue') + '.';
+    }
+    if (m === 'done') return L(cfg.doneTitle, 'en') + '. ' + L(cfg.doneText, 'en') + ' Below are the next steps.';
+    if (m === 'saved') return 'Your answers are saved on this phone. Below is the link to continue later.';
+    return '';
   };
 
   /* --- reading the current value out of the page into the state --- */
@@ -1668,13 +1726,6 @@
       s.back(this.welcomeOn);
       this.save(); this.render(true); return;
     }
-    if (act === 'lang-menu') { this.langMenu(b.getAttribute('aria-expanded') !== 'true'); return; }
-    if (act === 'lang') {
-      if (b.getAttribute('data-lang') === this.lang) { this.langMenu(false, true); return; }
-      this.collect();
-      var to = b.getAttribute('data-lang');
-      this.lang = LANGS.indexOf(to) !== -1 ? to : (this.lang === 'am' ? 'en' : 'am'); this.error = ''; this.savePrefs(); this.render(true); return;
-    }
     if (act === 'easy') {
       this.collect();
       this.easy = !this.easy; this.savePrefs(); Player.stop(); this.render(false);
@@ -1722,12 +1773,6 @@
     if (act === 'heard-type') { this.voiceReset(); this.status(t('voiceDiscarded', this.lang)); var ti = this.ref('input'); if (ti) ti.focus(); return; }
   };
 
-  SavannaOnboardingForm.prototype.langMenu = function (open, focusBtn) {
-    var b = this.querySelector('[data-act=lang-menu]'), m = this.ref('langs');
-    if (!b || !m) return;
-    b.setAttribute('aria-expanded', String(open)); m.hidden = !open;
-    if (open) (m.querySelector('[aria-current]') || m.querySelector('button')).focus(); else if (focusBtn) b.focus();
-  };
   SavannaOnboardingForm.prototype.status = function (msg) { var s = this.querySelector('.dm-status'); if (s) { s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); } };
   SavannaOnboardingForm.prototype.setHeard = function (html) { var h = this.ref('heard'); if (h) h.innerHTML = shiftHeadings(html, this.headingLevel()); };
 
@@ -1745,6 +1790,10 @@
       items.push({ key: clipKey(form, f.id, 'question'), url: f.audio && f.audio[lang],
         text: [L(f.label, lang), L(f.body, lang), L(f.hint, lang)].filter(Boolean).join(' ') });
       optionsOf(f).forEach(function (o) { items.push({ key: clipKey(form, f.id, 'option', o.value), text: L(o.label, lang) }); });
+      if (f.type === 'ethdate') { // the calendar choice at the top of the date question
+        items.push({ key: clipKey(form, f.id, 'calendar'), text: t('calendar', lang) });
+        items.push({ key: clipKey(form, f.id, 'option', 'eth'), text: t('calEth', lang) }, { key: clipKey(form, f.id, 'option', 'greg'), text: t('calGreg', lang) });
+      }
     } else if (s.mode === 'welcome') {
       items.push({ key: 'welcome-question', text: t('welcomeTitle', lang) + ' ' + t('welcomeHint', lang) });
       MODES.forEach(function (m) { items.push({ key: clipKey('welcome', 'option', m), text: t('m_' + m, lang) }); });
@@ -1812,7 +1861,10 @@
     Player.stop();
     var v = this.voice = { state: 'listening', field: f };
     this.setVoiceButton(true);
-    this.status(t('listening', lang) + ' ' + t('micAsk', lang));
+    // Recording feedback: announced in the live region, a short beep, and focus on the Stop button
+    this.status(t('recStart', lang, { stop: t('stop', lang) }));
+    beep();
+    var sb = this.querySelector('[data-act=speak]'); if (sb) sb.focus();
     var handlers = {
       result: function (alts) { if (self.voice === v) self.handleTranscript(f, alts); },
       error: function (code) {
@@ -1854,7 +1906,9 @@
     v.state = 'review';
     this.setVoiceButton(false);
     this.setHeard(View.heard(this.vm(), v));
-    var hh = this.ref('heard-h'); if (hh) hh.focus();
+    var choice = f.type === 'choice' || f.type === 'consent' || f.type === 'multi';
+    this.status(t('heardSay', lang, { text: v.shown, yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }));
+    var ed = this.ref('heard-edit') || this.ref('heard-h'); if (ed) ed.focus();
     if (this.easy) Player.play([{ key: null, text: t('heard', lang) + ' ' + v.shown }], lang, this);
   };
 
@@ -1983,6 +2037,7 @@
         '<p>' + t('previewText', lang) + '</p><span class="dm-btn dm-primary dm-preview-btn" aria-hidden="true">' + t('previewBtn', lang) + '</span></div>' +
         group('mode', t('s_mode', lang), MODES.map(function (m) { return [m, t('m_' + m, lang), null, p.pictures || m === 'simple' ? MODE_ICONS[m] : null]; }), p.mode) +
         group('easy', t('s_read', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.easy ? 'on' : 'off', t('s_readHint', lang)) +
+        group('autoRead', t('s_auto', lang), [['on', t('auto_on', lang)], ['off', t('auto_off', lang)]], p.autoRead, t('s_autoHint', lang)) +
         group('pictures', t('s_pictures', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.pictures ? 'on' : 'off') +
         group('voice', t('s_voice', lang), [['on', t('voice_on', lang)], ['off', t('voice_off', lang)]], store.get('voiceConsent', null) === true ? 'on' : 'off', t('s_voiceHint', lang)) +
         '<p class="dm-status" role="status" aria-live="polite"></p></form>' +
@@ -2050,12 +2105,21 @@
     return handle;
   }
 
+  /** A readable summary of finished answers, as on "Check your answers": [{ id, label, value }] for each question that
+   *  was shown and answered. Hosts use it for plain confirmations ("Your application was sent to …"). */
+  function describe(formId, answers, lang) {
+    var cfg = FORMS[formId], vm = { lang: lang || getPrefs().lang || 'en' }; answers = answers || {};
+    if (!cfg) return [];
+    return cfg.fields.filter(function (f) { return !f.reviewHide && evalShowIf(f.showIf, answers) && !isEmpty(answers[f.id]); })
+      .map(function (f) { return { id: f.id, label: L(f.reviewLabel || f.label, vm.lang), value: View.display(vm, f, answers[f.id]) }; });
+  }
+
   var API = window.SavannaOnboarding = {
     mount: mount, unmount: unmount,
-    version: '0.11.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
+    version: '0.12.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth, fromGregorian: gregToEth, gregorianMonths: GREG_MONTHS, parseSpoken: parseSpokenDate },
-    speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
+    describe: describe, speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
     player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
     prefs: getPrefs, setPrefs: setPrefs, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
     /** Adds the module's styles and fonts to the page (done automatically when a form or settings element appears). */

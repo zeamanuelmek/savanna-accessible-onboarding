@@ -19,9 +19,7 @@ async function signUpFromHome(page, words) {
   await pick(page, 'self'); await next(page);
   await page.fill('[data-ref=input]', 'Abebe Kebede'); await next(page);
   await page.fill('[data-ref=input]', '0911234567'); await next(page);
-  await pick(page, 'kebele'); await next(page);
-  await next(page); // ID number: optional
-  await next(page); // date of birth: optional
+  await next(page); // date of birth: optional (no ID question: that is "Add your ID (optional)", later)
   await pick(page, 'yes'); await next(page);
   expect(await heading(page)).toBe(words.check);
   await next(page);
@@ -77,9 +75,6 @@ test('GATE: the whole task with the keyboard only (Tab, Space, Enter)', async ({
   await tabTo('button[type=submit]'); await page.keyboard.press('Enter');
   await tabTo('[data-ref=input]'); await page.keyboard.type('Abebe Kebede'); await page.keyboard.press('Enter');
   await tabTo('[data-ref=input]'); await page.keyboard.type('0911234567'); await page.keyboard.press('Enter');
-  await tabTo('input[name=v]'); await page.keyboard.press('Space'); // Fayda
-  await tabTo('button[type=submit]'); await page.keyboard.press('Enter');
-  await tabTo('[data-ref=input]'); await page.keyboard.press('Enter'); // ID number: skip
   await tabTo('button[type=submit]'); await page.keyboard.press('Enter'); // date: skip
   await tabTo('input[name=v]'); await page.keyboard.press('Space'); // consent: yes
   await tabTo('button[type=submit]'); await page.keyboard.press('Enter');
@@ -201,6 +196,59 @@ test('profile page, jobs with the on-device filter, application and employer for
   await expect(page.locator('.sj-foot-links a[href="employer.html"]')).toHaveText('For employers: post a job'); // in the footer, not the learner menu
 });
 
+test('right after sign-up the dashboard offers "Add your ID (optional)", which opens on My profile', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await signUpFromHome(page, { check: 'Check your answers', ready: 'Your account is ready' });
+  await at(page, '/dashboard.html');
+  const link = page.locator('#sj-view a[href="profile.html?add=id"]');
+  await expect(link).toHaveText('Add your ID (optional)');
+  await link.click();
+  await page.waitForSelector('.dm-q');
+  expect(await heading(page)).toBe('Which ID do you have?');
+  await expect(page).toHaveTitle(/Add your ID \(optional\)/);
+  await expect(page.locator('.dm-opt:has(input[value=none]) .dm-badge')).toHaveText('Partner referral pending');
+  await pick(page, 'refugee'); await next(page);
+  await expect(page.locator('[data-act=speak]')).toHaveCount(0); // ID number: typed, never spoken
+  await expect(page.locator('.dm-hint').first()).toContainText('For your privacy, ID numbers are typed, not spoken.');
+  await next(page); await next(page);
+  expect(await heading(page)).toContain('Your ID details are saved');
+  expect((await profile(page)).id_route).toBe('refugee');
+  await at(page, '/dashboard.html');
+  await expect(page.locator('#sj-view a[href="profile.html?add=id"]')).toHaveCount(0); // done: no longer offered
+});
+
+test('job application and job post end with a plain confirmation on the Savanna pages, never raw data', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await signUpFromHome(page, { check: 'Check your answers', ready: 'Your account is ready' });
+  await page.evaluate(() => localStorage.setItem('savanna-onboarding.passport', JSON.stringify({ needs: ['remote'], sharing: 'ask' })));
+  await at(page, '/apply.html?job=s1');
+  await page.waitForSelector('.dm-q');
+  await next(page); await next(page); // name and phone: prefilled from the profile
+  await page.fill('[data-ref=input]', 'I like working with people.'); await next(page);
+  await page.fill('[data-ref=input]', 'Volunteering at my kebele.'); await next(page);
+  await next(page); // interview: optional
+  await pick(page, 'share'); await next(page);
+  await next(page); // Send my application
+  const slot = page.locator('.dm-done-slot');
+  await expect(slot.locator('h2')).toHaveText(/^Your application was sent to /);
+  await expect(slot.locator('.dm-review')).toContainText('I like working with people.');
+  await expect(slot).toContainText('Support Passport: shared');
+  await expect(slot).toContainText('This is a demo: nothing was actually sent.');
+  await expect(slot.locator('pre, code')).toHaveCount(0);
+  await at(page, '/employer.html');
+  await page.fill('[data-ref=input]', 'Data entry assistant'); await next(page);
+  await page.fill('[data-ref=input]', 'Addis Data'); await next(page);
+  await page.fill('[data-ref=input]', 'Addis Ababa'); await next(page);
+  await pick(page, 'remote'); await next(page);
+  await pick(page, 'remote'); await next(page);
+  await page.fill('[data-ref=input]', 'Type records.'); await next(page);
+  await page.fill('[data-ref=input]', 'jobs@example.org'); await next(page);
+  await next(page);
+  await expect(page.locator('.dm-done-slot h2')).toHaveText('Your job "Data entry assistant" is on the job board');
+  await expect(page.locator('.dm-done-slot')).toContainText('This is a demo');
+  await expect(page.locator('.dm-done-slot pre, .dm-done-slot code')).toHaveCount(0);
+});
+
 test('mount and unmount: the test host page uses only the public API', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/test-host/');
@@ -252,8 +300,8 @@ test('home: first "How do you like to register?", then "Sign up or log in"; Back
   await at(page, '/index.html');
   await expect(page.locator('.sj-split h1')).toHaveText('Welcome to your onboarding page');
   await expect(page.locator('.sj-split img')).toHaveCount(0); // generic: no ALX logo in the welcome panel
-  await expect(page.locator('.sj-a11y-t')).toHaveCount(0); // no "Make this page work for you." sentence on the home page
-  await expect(page.getByRole('region', { name: 'Make this page work for you.' })).toHaveCount(1);
+  await expect(page.getByText('Make this page work for you')).toHaveCount(0); // no visible sentence, on any page
+  await expect(page.getByRole('region', { name: 'Accessibility options' })).toHaveCount(1);
   await expect(page.locator('.sj-split a[href="signup.html"]')).toHaveCount(0); // sign up comes after the choice
   await page.locator('#sj-mode button[type=submit]').click(); // nothing chosen
   await expect(page.locator('#sj-mode-errors')).toBeFocused();
@@ -274,10 +322,10 @@ test('home: first "How do you like to register?", then "Sign up or log in"; Back
   expect(await heading(page)).toBe('Who is filling in this form?'); // the sign-up does not ask again
 });
 
-test('"Make this page work for you" bar: pressed states, saved, and applied before the page is drawn', async ({ page }) => {
+test('"Accessibility options" bar: pressed states, saved, and applied before the page is drawn', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/jobs.html');
-  const bar = page.getByRole('region', { name: 'Make this page work for you.' });
+  const bar = page.getByRole('region', { name: 'Accessibility options' });
   for (const [key, attr, value] of [['size', 'data-dm-size', 'large'], ['contrast', 'data-dm-contrast', 'high'], ['motion', 'data-dm-motion', 'reduce']]) {
     const b = bar.locator(`.sj-tog[data-tog=${key}]`);
     await expect(b).toHaveAttribute('aria-pressed', 'false');

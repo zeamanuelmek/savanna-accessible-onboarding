@@ -10,7 +10,7 @@
 | Item | Value |
 |---|---|
 | Product | Savanna Accessible Onboarding Module (web component, mount API) and its demo hosts |
-| Version / commit | Module 0.11.0; automated results from the Phase 9 commit (see `DEVELOPMENT_PROGRESS.md`) |
+| Version / commit | Module 0.12.0; automated results from the 15 Nov team-fixes commit (see `DEVELOPMENT_PROGRESS.md`) |
 | Standard | WCAG 2.2, Levels A and AA (55 success criteria; 4.1.1 Parsing is obsolete in WCAG 2.2) |
 | Report date | 14 Nov 2026 (automated part). Manual part: _to fill in_ |
 | Evaluated by | Automated: Playwright + axe-core 4.14, Chromium. Manual: _names / roles, including co-designers_ |
@@ -34,7 +34,7 @@
 | A4 | `tests/design.spec.mjs` | Contrast of every colour pair in normal and high-contrast modes; focus outline ≥ 3:1; base text size |
 | A5 | `tests/wcag.spec.mjs` | 1.4.12 text spacing, 1.3.4 landscape, 2.5.8 target size, 2.4.2 titles, 3.2.3 navigation order, 3.2.6 help position, 1.3.5 input purpose, 2.2.1 no time-out |
 | A6 | `tests/smoke.spec.mjs`, `tests/engine.spec.mjs` | Error summary and field errors, check your answers and change, autosave and resume, progress |
-| A7 | `tests/voice.spec.mjs`, `tests/readaloud.spec.mjs`, `tests/names.spec.mjs` | Voice consent and review, nothing used before checking; read aloud with pause/stop/Escape; audio never required |
+| A7 | `tests/voice.spec.mjs`, `tests/readaloud.spec.mjs`, `tests/names.spec.mjs`, `tests/summaries.spec.mjs` | Voice consent and review, nothing used before checking; recording start and "I heard" announced, focus on Stop and then on the editable transcript; read aloud with pause/stop/Escape; page summaries first in `<main>`; automatic reading only after the learner interacts, "Turn off automatic reading" remembered, Escape stops, no errors when sound is blocked; audio never required |
 | A8 | `tests/identity.spec.mjs`, `tests/career.spec.mjs` | ID badges in option names; private card; job board headings, links and announced count |
 | A9 | `tests/offline.spec.mjs`, `tests/security.spec.mjs` | Offline message as a status; security headers; no third-party requests |
 
@@ -57,7 +57,7 @@ Main task (confirmed): **sign up for Savanna and save a Support Passport.**
 | Finding | How the module addresses it | Related criteria | Evidence |
 |---|---|---|---|
 | Forms timed out | No time limits; answers saved on the device after every question; "Finish later" | 2.2.1 | A5 (no time-out after 3 hours), A6 (autosave, resume); co-designers to confirm |
-| Refugees were asked for ID they don't have | Six ID routes incl. refugee ID / proof of registration and "refer me through a partner"; ID number optional; no ID photo; honest badges, never "verified" | 3.3.2 | A8, journey tests |
+| Refugees were asked for ID they don't have | **Sign-up asks no ID** (since 15 Nov). "Add your ID (optional)" is on My profile and the dashboard, whenever the learner wants: six ID routes incl. refugee ID / proof of registration and "refer me through a partner"; ID number optional and typed, never spoken; no ID photo; honest badges, never "verified" | 3.3.2 | A8, journey tests |
 | Help was English only | All text in Amharic and English; language switch and help in the same place on every screen; screen-reader tip in both languages | 3.1.1, 3.1.2, 3.2.6 | A1 (language of parts), A5 (help position); Amharic review pending; see NVDA limitation |
 | Job boards broke under screen readers | Job titles as headings, named "Apply" links, count announced, native checkbox filter | 1.3.1, 2.4.4, 2.4.6, 4.1.3 | A1, A8; NVDA and TalkBack to do |
 
@@ -98,7 +98,7 @@ support, with who and when) · **Notes / limitations**.
 | 1.3.4 | Orientation | AA | A5: landscape phone, no sideways scrolling | Automated: no failures | Rotate a real phone | _to fill in_ | |
 | 1.3.5 | Identify Input Purpose | AA | A5: `autocomplete` nickname / name / tel; `type="tel"` | Automated: no failures | — | _to fill in_ | |
 | 1.4.1 | Use of Color | A | A1 axe; selected options also have a thicker border and bold text; errors have text | Automated: no failures | High contrast and greyscale check | _to fill in_ | |
-| 1.4.2 | Audio Control | A | A7: Pause, Stop, Escape; nothing plays until the learner turns read aloud on or presses Listen | Automated: no failures | With a screen reader running | _to fill in_ | |
+| 1.4.2 | Audio Control | A | A7. Nothing plays by itself on a first visit: the first control after the skip link is "Tap anywhere or press any key to hear this page", and browsers' autoplay rules are respected: on a new page the summary is tried at once only when automatic reading is on and the learner has already interacted with the site in this session, and if the browser blocks it (play promise rejected, or speech "not allowed") the prompt is shown instead, with no error. A summary can last longer than 3 seconds, so 1.4.2 is met by these controls: **Pause/Resume and Stop are always visible** in the "Accessibility options" bar on every page; **Escape stops the sound at once**; **"Turn off automatic reading" is the first control in the bar** (and in Settings) and is remembered, so a screen reader user switches our audio off with one key press. Tab never starts the audio. Read aloud in forms: Pause, Stop, Play again and Escape | Automated: no failures | With NVDA and TalkBack running: our audio does not cover the screen reader, and the off switch is easy to find | _to fill in_ | |
 | 1.4.3 | Contrast (Minimum) | AA | A4: all text pairs ≥ 4.5:1 in normal and high contrast; A1 axe color-contrast | Automated: no failures | — | _to fill in_ | |
 | 1.4.4 | Resize Text | AA | A2: 200% zoom and 200% text; A1: extra-large text setting | Automated: no failures | Browser zoom and phone font size by a person | _to fill in_ | |
 | 1.4.5 | Images of Text | AA | No images of text (the ALX logo is a logo) | Automated: no failures (review) | — | _to fill in_ | |
@@ -168,6 +168,12 @@ support, with who and when) · **Notes / limitations**.
   reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English."
   Still to check: TalkBack on Android (Google's speech service has Amharic on some phones).
 - **Amharic text is an AI draft** until a native speaker reviews it.
+- **Amharic audio is synthetic.** Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint. Afaan Oromo has no Microsoft voice: it is text only, plus the phone's
+  voice if it has one.
+- **Page summaries and automatic reading are in English only** for now. On a new page the summary is tried at once
+  (after an interaction earlier in the session); some browsers still block sound until the learner interacts with
+  that page, and then the prompt "Tap anywhere or press any key to hear this page" is shown. Within a page, each
+  new form step is read as it opens.
 - **Voice input** depends on the browser's speech service (cloud, with consent); it is optional and never required.
 - **Simulated parts** (log-in, SMS, trainer and employer systems) are out of scope for conformance but are built to
   the same standard.

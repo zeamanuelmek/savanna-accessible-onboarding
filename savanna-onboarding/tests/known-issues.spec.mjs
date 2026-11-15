@@ -3,7 +3,7 @@
 // does not do it yet. When a phase fixes the problem, Playwright reports the test as
 // "unexpectedly passed": remove its test.fail() line then, so it becomes a normal regression test.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, next, signupTo, fakeSpeechEngine, speakAnswer } from './helpers.mjs';
+import { freshStart, go, next, signupTo, identityTo, fakeSpeechEngine, speakAnswer } from './helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
@@ -63,14 +63,14 @@ test('MULTI-INSTANCE: two forms on one page do not share element ids (fixed in P
 });
 
 test('PRIVACY: answers from abandoned routes are not kept in the draft (fixed in Phase 2)', async ({ page }) => {
-  await signupTo(page, 'id_number');
+  await identityTo(page, 'id_number');
   await page.fill('[data-ref=input]', 'FAYDA-123456');
   await next(page);
   await page.locator('[data-act=back]').click(); // back to ID number
   await page.locator('[data-act=back]').click(); // back to ID route
   await page.locator('.dm-opt:has(input[value="none"])').click();
   await next(page);
-  const draft = await page.evaluate(() => localStorage.getItem('savanna-onboarding.draft.signup') || '');
+  const draft = await page.evaluate(() => localStorage.getItem('savanna-onboarding.draft.identity') || '');
   expect(draft).not.toContain('FAYDA-123456');
 });
 

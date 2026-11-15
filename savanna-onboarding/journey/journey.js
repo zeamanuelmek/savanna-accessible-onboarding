@@ -11,7 +11,7 @@
 
   /* ---------- page links: the shared views speak in '#/…' routes; here they become Savanna pages ---------- */
   var PAGES = { '#/': 'dashboard.html', '#/signup': 'signup.html', '#/profile': 'profile.html', '#/takeover': 'takeover.html',
-    '#/passport': 'passport.html', '#/jobs': 'jobs.html', '#/employer': 'employer.html', '#/settings': 'settings.html' };
+    '#/identity': 'profile.html?add=id', '#/passport': 'passport.html', '#/jobs': 'jobs.html', '#/employer': 'employer.html', '#/settings': 'settings.html' };
   H.setLinks(function (r) {
     if (r.indexOf('#/apply/') === 0) return 'apply.html?job=' + encodeURIComponent(r.slice('#/apply/'.length));
     return PAGES[r] || 'index.html';
@@ -31,6 +31,7 @@
       needLogin: 'Please log in', needLoginText: 'You need to log in to see this page.', noAccount: 'No account yet?',
       welcome: 'Welcome, {name}', idCard: 'Your ID status',
       ppNone: 'Not created yet. Tell us what helps you learn and work. It stays private.', ppCreate: 'Create my Support Passport',
+      addId: 'Add your ID (optional)', idNone: 'You can start learning without an ID. Add one only if you want to.',
       ppSaved: 'Saved. Who can see it: {who}.', ppOnlyMe: 'only you', ppTrainers: 'you and your ALX trainers', ppEmpty: 'You chose not to share anything for now.',
       ppOpen: 'Open my Support Passport',
       profText: 'Check or change your name, phone number and ID.', profOpen: 'Open my profile',
@@ -52,11 +53,13 @@
       delBtn: 'Delete my data', delYes: 'Yes, delete everything', delNo: 'No, keep my data', delSure: 'Are you sure?',
       deleted: 'Your data was deleted from this phone.',
       offline: 'You are offline. Pages you have opened before still work, and your answers stay on this phone.', online: 'You are back online.',
-      barText: 'Make this page work for you.', larger: 'Larger text', contrast: 'High contrast', motion: 'Stop motion',
+      barText: 'Accessibility options', larger: 'Larger text', contrast: 'High contrast', motion: 'Stop motion',
       artTitle: 'Welcome to your onboarding page', artText: 'Register in a few minutes, at your own pace, in the way that works best for you.',
       modeTitle: 'How do you like to register?',
       modeHint: 'This is only about how you like to fill in the form. We never ask why. You can change it at any time in Settings.',
       m_read_type: 'Read and type', m_listen: 'Listen and respond', m_speak: 'Speak my answers', m_simple: 'Simple steps with pictures and big text',
+      pauseAudio: 'Pause', resumeAudio: 'Resume', autoOff: 'Turn off automatic reading', autoOn: 'Turn on automatic reading',
+      hearPage: 'Tap anywhere or press any key to hear this page',
       listenQ: 'Listen to the question', stopAudio: 'Stop', cont: 'Continue', errMode: 'Choose one way to continue.',
       acctTitle: 'Sign up or log in', acctChosen: 'You chose: {mode}.', acctChange: 'Change how I register',
       acctNew: 'New to Savanna? Sign up one question at a time. There is no time limit.', acctHave: 'Already have an account? Log in with your phone number.',
@@ -81,6 +84,7 @@
       backIn: 'እንኳን ደህና መጡ፣ {name}።', toDashboard: 'ወደ ዳሽቦርዴ ሂድ',
       needLogin: 'እባክዎ ይግቡ', needLoginText: 'ይህን ገጽ ለማየት መግባት ያስፈልግዎታል።', noAccount: 'እስካሁን መለያ የለዎትም?',
       welcome: 'እንኳን ደህና መጡ፣ {name}', idCard: 'የመታወቂያዎ ሁኔታ',
+      addId: 'መታወቂያዎን ይጨምሩ (አማራጭ)', idNone: 'ያለ መታወቂያ መማር መጀመር ይችላሉ። ከፈለጉ ብቻ ይጨምሩ።',
       ppNone: 'ገና አልተፈጠረም። ለመማርና ለመሥራት የሚረዳዎትን ይንገሩን። የግል ሆኖ ይቆያል።', ppCreate: 'የድጋፍ ፓስፖርቴን ፍጠር',
       ppSaved: 'ተቀምጧል። ማየት የሚችለው፦ {who}።', ppOnlyMe: 'እርስዎ ብቻ', ppTrainers: 'እርስዎና የALX አሰልጣኞችዎ', ppEmpty: 'ለአሁን ምንም ላለማጋራት መርጠዋል።',
       ppOpen: 'የድጋፍ ፓስፖርቴን ክፈት',
@@ -103,11 +107,12 @@
       delBtn: 'መረጃዬን ሰርዝ', delYes: 'አዎ፣ ሁሉንም ሰርዝ', delNo: 'አይ፣ መረጃዬ ይቆይ', delSure: 'እርግጠኛ ነዎት?',
       deleted: 'መረጃዎ ከዚህ ስልክ ተሰርዟል።',
       offline: 'ከኢንተርኔት ውጪ ነዎት። ከዚህ በፊት የከፈቷቸው ገጾች አሁንም ይሠራሉ፤ መልሶችዎም በዚህ ስልክ ላይ ይቆያሉ።', online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።',
-      barText: 'ይህን ገጽ ለእርስዎ እንዲመች ያድርጉት።', larger: 'ትልቅ ጽሑፍ', contrast: 'ከፍተኛ ንፅፅር', motion: 'እንቅስቃሴ አቁም',
+      barText: 'የተደራሽነት አማራጮች', larger: 'ትልቅ ጽሑፍ', contrast: 'ከፍተኛ ንፅፅር', motion: 'እንቅስቃሴ አቁም',
       artTitle: 'ወደ ምዝገባ ገጽዎ እንኳን ደህና መጡ', artText: 'በጥቂት ደቂቃዎች፣ በራስዎ ፍጥነት፣ ለእርስዎ በሚመች መንገድ ይመዝገቡ።',
       modeTitle: 'እንዴት መመዝገብ ይፈልጋሉ?',
       modeHint: 'ይህ ቅጹን መሙላት የሚመርጡበትን መንገድ ብቻ ነው። ምክንያቱን በፍጹም አንጠይቅም። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።',
       m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
+      pauseAudio: 'ለአፍታ አቁም', resumeAudio: 'ቀጥል', autoOff: 'በራስ-ሰር ማንበብን አጥፋ', autoOn: 'በራስ-ሰር ማንበብን አብራ',
       listenQ: 'ጥያቄውን አዳምጥ', stopAudio: 'አቁም', cont: 'ቀጥል', errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
       acctTitle: 'ይመዝገቡ ወይም ይግቡ', acctChosen: 'የመረጡት፦ {mode}።', acctChange: 'የምመዘገብበትን መንገድ ቀይር',
       acctNew: 'ለሳቫና አዲስ ነዎት? በአንድ ጊዜ አንድ ጥያቄ እየመለሱ ይመዝገቡ። የጊዜ ገደብ የለም።', acctHave: 'መለያ አለዎት? በስልክ ቁጥርዎ ይግቡ።',
@@ -152,6 +157,7 @@
       idCard: 'Haala eenyummaa keetii',
       ppNone: 'Ammaaf hin uumamne. Waan barachuu fi hojjechuuf si gargaaru nutti himi. Dhuunfaan tura.',
       ppCreate: 'Paaspoortii Deeggarsaa koo uumi',
+      addId: 'Eenyummaa kee dabali (dirqama miti)', idNone: 'Eenyummaa malee barachuu jalqabuu dandeessa. Yoo barbaadde qofa dabali.',
       ppSaved: 'Kuufameera. Eenyutu arga: {who}.',
       ppOnlyMe: 'ati qofa',
       ppTrainers: 'atii fi leenjistoota kee ALX',
@@ -192,7 +198,7 @@
       deleted: 'Odeeffannoon kee bilbila kana irraa haqameera.',
       offline: 'Interneetii irraa ala jirta. Fuulli kanaan dura banatte amma iyyuu ni hojjeta, deebiin kee immoo bilbila kana irra tura.',
       online: 'Interneetiitti deebi\'teetta.',
-      barText: 'Fuula kana akka siif mijatu godhi.',
+      barText: 'Filannoowwan dhaqqabummaa',
       larger: 'Barreeffama guddaa',
       contrast: 'Garaagarummaa halluu ol\'aanaa',
       motion: 'Sochii dhaabi',
@@ -206,6 +212,7 @@
       m_simple: 'Tarkaanfii salphaa fakkii fi barreeffama gurguddaa wajjin',
       listenQ: 'Gaaffii dhaggeeffadhu',
       stopAudio: 'Dhaabi',
+      pauseAudio: 'Dhaabi xiqqoo', resumeAudio: 'Itti fufi', autoOff: 'Dubbisa ofumaan dhaabi', autoOn: 'Dubbisa ofumaan jalqabi',
       cont: 'Itti fufi',
       errMode: 'Itti fufuuf karaa tokko filadhu.',
       acctTitle: 'Galmaa\'i ykn seeni',
@@ -288,6 +295,7 @@
     document.body.classList.toggle('sj-noside', !side);
     var html =
       '<a class="sj-skip" href="#content">' + T('skip') + '</a>' +
+      (needPrompt && lang() === 'en' ? '<button type="button" class="sj-hear" id="sj-hear" lang="en">' + T('hearPage') + '</button>' : '') +
       toolbar() +
       '<header class="header d-flex align-items-center w-100 sj-header">' +
         '<div class="header-left align-items-center d-flex px-2">' +
@@ -311,7 +319,7 @@
       '<a href="showroom.html">' + T('showroom') + '</a> · <a href="test-host/">' + T('testHost') + '</a>';
     wireFrame();
   }
-  /* The bar from ALX's own accessible hackathon site: "Make this page work for you." Toggle buttons with a pressed
+  /* The bar from ALX's own accessible hackathon site, as a landmark named "Accessibility options". Toggle buttons with a pressed
      state (aria-pressed, plus a tick and dark fill that do not rely on colour alone). They change the module's
      saved preferences, so the choice follows the learner to every page and every form. */
   function toolbar() {
@@ -320,9 +328,12 @@
       return '<li><button type="button" class="sj-tog" data-tog="' + key + '" aria-pressed="' + on + '"' + (extra || '') + '>' +
         '<span class="sj-tick" aria-hidden="true">✓ </span>' + label + '</button></li>';
     }
-    // On the home page the sentence is not shown; the bar keeps it as its name for screen readers
-    return '<section class="sj-a11y' + (page === 'home' ? ' sj-a11y-bare' : '') + '" ' + (page === 'home' ? 'aria-label="' + esc(T('barText')) + '"' : 'aria-labelledby="sj-a11y-t"') + '><div class="sj-a11y-in">' +
-      (page === 'home' ? '' : '<p id="sj-a11y-t" class="sj-a11y-t">' + T('barText') + '</p>') + '<ul class="sj-a11y-list">' +
+    // No visible sentence: the bar is a landmark named "Accessibility options" (screen readers list it with D / regions)
+    return '<section class="sj-a11y sj-a11y-bare" aria-label="' + esc(T('barText')) + '"><div class="sj-a11y-in"><ul class="sj-a11y-list">' +
+      // sound first: the one-key "off" switch, then Pause and Stop (always visible)
+      '<li><button type="button" class="sj-tog sj-snd" data-tog="autoRead">' + T(p.autoRead === 'off' ? 'autoOn' : 'autoOff') + '</button></li>' +
+      '<li><button type="button" class="sj-tog sj-snd" data-audio="pause">' + T(D.player.state === 'paused' ? 'resumeAudio' : 'pauseAudio') + '</button></li>' +
+      '<li><button type="button" class="sj-tog sj-snd" data-audio="stop">' + T('stopAudio') + '</button></li>' +
       tog('size', p.size !== 'normal', T('larger')) +
       tog('contrast', p.contrast === 'high', T('contrast')) +
       tog('motion', p.motion === 'reduce', T('motion')) +
@@ -342,6 +353,7 @@
     if (key === 'size') D.setPrefs({ size: p.size === 'normal' ? 'large' : 'normal' });
     else if (key === 'contrast') D.setPrefs({ contrast: p.contrast === 'high' ? 'normal' : 'high' });
     else if (key === 'motion') D.setPrefs({ motion: p.motion === 'reduce' ? 'normal' : 'reduce' });
+    else if (key === 'autoRead') { if (p.autoRead !== 'off') D.stopSpeaking(); needPrompt = false; D.setPrefs({ autoRead: p.autoRead === 'off' ? 'on' : 'off' }); }
     else if (D.languages.indexOf(key) !== -1 && key !== lang()) D.setPrefs({ lang: key });
   }
   /* The header scrolls with the page until it reaches the top, then stays (sticky); the toolbar above it scrolls
@@ -385,6 +397,13 @@
     // only the toggle buttons: the "Accessibility settings" link shares their look but is a plain link (it used to
     // run toggle(null) too, which wiped the learner's language choice)
     Array.prototype.forEach.call(document.querySelectorAll('button.sj-tog[data-tog]'), function (b) { b.onclick = function () { toggle(b.getAttribute('data-tog')); }; });
+    Array.prototype.forEach.call(document.querySelectorAll('button[data-audio]'), function (b) {
+      b.onclick = function () {
+        var pl = D.player;
+        if (b.getAttribute('data-audio') === 'stop') D.stopSpeaking();
+        else if (pl.state === 'playing') pl.pause(); else if (pl.state === 'paused') pl.resume();
+      };
+    });
     placeSidebar();
     var lo = document.querySelector('[data-logout]');
     if (lo) lo.onclick = function () { setSession(null); try { sessionStorage.setItem('sj-flash', 'loggedOut'); } catch (e) {} };
@@ -422,6 +441,107 @@
   document.body.classList.add('signed_in');
   document.body.classList.toggle('sidebar-collapsed', collapsed);
 
+  /* ---------- page summaries and automatic reading (English only for now) ----------
+     Every page and every form step has a short, hand-written summary. It is the first text inside <main> (visually
+     hidden), so a screen reader reaches it first. After the learner's first tap or key press it is also read aloud
+     when each page or step opens, remembered across pages and visits (preference autoRead). Pause and Stop are always
+     in the bar, Escape stops the sound at once, and "Turn off automatic reading" is the first control in the bar
+     (also in Settings), so screen reader users can switch our audio off with one key (WCAG 1.4.2 Audio Control).
+     On a new page the summary is tried at once when automatic reading is on and the learner has already interacted
+     with the site in this session. Only if the browser blocks it (the play promise is rejected, or speech says
+     "not-allowed") is "Tap anywhere or press any key to hear this page" shown. Nothing throws when sound is blocked. */
+  // "Has interacted": with this page, or with the site earlier in this browser session (sessionStorage)
+  var INTERACTED = 'sj-interacted';
+  function sessionInteracted() { try { return sessionStorage.getItem(INTERACTED) === '1'; } catch (e) { return false; } }
+  var needPrompt = false, summaryText = '', lastRead = '', interacted = !!(navigator.userActivation && navigator.userActivation.hasBeenActive) || sessionInteracted();
+  var summaryOwner = { audioIssue: function () {} }; // no voice: the summary stays written in the page
+  var PAGE_SUMMARY = {
+    login: 'Log in. This log-in is simulated: no SMS is sent. Type the phone number you signed up with, then choose Send me a code. The code appears on the screen, and you can paste it. There is no time limit.',
+    dashboard: 'Your Savanna homepage. First come the things waiting for you, such as adding your ID or creating your Support Passport, then your course, your progress and your activities. The Menu button opens the sidebar.',
+    jobs: 'Jobs. First a checkbox shows only jobs that offer the support in your Support Passport; this is worked out on this phone only. Then the list of jobs: each job title is a heading, with its own Apply link.',
+    passport: 'Your Support Passport: what helps you, and who can see it. Below are buttons to change it and to manage sharing.',
+    settings: 'Accessibility settings: language, text size, contrast, motion, how you answer, reading aloud, automatic reading, pictures and voice. Every change is saved at once. At the bottom is Done.',
+    takeover: 'Take over your account. There is nothing to take over on this phone.',
+    needLogin: 'You need to log in to see this page. Below are Log in and Sign up.'
+  };
+  // Said before and after a form step's own summary, so the learner knows which page they are on
+  var FORM_PRE = { signup: 'Sign up for Savanna.', identity: 'Add your ID. This is optional.', takeover: 'Take over your account.', passport: 'Support Passport. It is private.',
+    apply: 'Job application.', employer: 'For employers: post a job.', profile: 'My profile.' };
+  var FORM_POST = { profile: 'Below the form are your ID status with Add your ID, your Support Passport, and Delete my data from this phone.' };
+  function homeSummary() {
+    if (signedIn()) return 'Welcome back. Below is a button to go to your dashboard.';
+    if (home.step === 'account') return 'Step 2 of 2: sign up or log in. Choose Sign up if you are new to Savanna, or Log in if you already have an account. Above them is a button to change how you register.';
+    return 'Welcome to Savanna. Step 1 of 2: choose how you like to register: read and type, listen and respond, speak my answers, or simple steps with pictures and big text. Then choose Continue. The accessibility options and the language are at the top of the page.';
+  }
+  function pageSummary() {
+    if (PROTECTED.indexOf(page) !== -1 && !signedIn()) return PAGE_SUMMARY.needLogin;
+    return page === 'home' ? homeSummary() : PAGE_SUMMARY[page] || '';
+  }
+  // force: a new page or step (read even if the words are the same); otherwise only read when the words changed
+  function setSummary(text, force) {
+    var main = document.getElementById('content');
+    if (!main) return;
+    var el = document.getElementById('sj-summary');
+    if (!el) { el = document.createElement('p'); el.id = 'sj-summary'; el.className = 'sj-vh'; el.setAttribute('lang', 'en'); }
+    if (main.firstChild !== el) main.insertBefore(el, main.firstChild); // the first text inside main
+    summaryText = lang() === 'en' ? text || '' : '';
+    el.textContent = summaryText;
+    el.hidden = !summaryText;
+    if (force || summaryText !== lastRead) autoRead();
+  }
+  function readSummary() { if (summaryText && lang() === 'en') { lastRead = summaryText; try { D.player.play([{ key: null, text: summaryText }], 'en', summaryOwner); } catch (e) {} } }
+  function showPrompt(on) {
+    needPrompt = on;
+    var b = document.getElementById('sj-hear');
+    if (on && !b && lang() === 'en') {
+      var skip = document.querySelector('.sj-skip');
+      if (skip) skip.insertAdjacentHTML('afterend', '<button type="button" class="sj-hear" id="sj-hear" lang="en">' + T('hearPage') + '</button>');
+    } else if (!on && b) {
+      var had = document.activeElement === b;
+      b.parentNode.removeChild(b);
+      if (had) { var tg = document.querySelector('[data-tog="autoRead"]'); if (tg) tg.focus(); } // the off switch is next
+    }
+  }
+  function autoRead() {
+    var pr = D.prefs();
+    if (!summaryText || pr.autoRead === 'off') { showPrompt(false); return; }
+    // a form in "read aloud" mode reads each question itself; the summary is then not read on top of it
+    if (pr.easy && view && view.querySelector('savanna-onboarding-form')) return;
+    if (pr.autoRead === 'on' && interacted) readSummary(); else showPrompt(true);
+  }
+  // the browser refused to play: ask for a tap or key press, then read
+  document.addEventListener('savanna-onboarding:audioblocked', function () {
+    if (summaryText && D.prefs().autoRead !== 'off' && lang() === 'en') { lastRead = ''; showPrompt(true); }
+  });
+  // The first tap or key press (not Shift, Control, Escape...) turns automatic reading on and reads this page.
+  // Done after the browser has handled the press, so the page never moves under the learner's finger.
+  // Tab is not "a key" here: keyboard and screen reader users move with it, and must be able to reach the prompt
+  var IGNORE_KEYS = ['Tab', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Insert', 'NumLock', 'Escape'];
+  function firstInteraction(e) {
+    if (e.type === 'keydown' && IGNORE_KEYS.indexOf(e.key) !== -1) return;
+    if (e.type === 'click' && e.target && e.target.closest && e.target.closest('[data-tog="autoRead"]')) { interacted = true; try { sessionStorage.setItem(INTERACTED, '1'); } catch (x) {} return; } // the off switch itself
+    interacted = true;
+    try { sessionStorage.setItem(INTERACTED, '1'); } catch (x) {}
+    if (!needPrompt) return;
+    var pr = D.prefs();
+    if (pr.autoRead === 'off' || lang() !== 'en') return;
+    if (pr.autoRead === 'ask') { try { var raw = D.store.get('prefs', {}) || {}; raw.autoRead = 'on'; D.store.set('prefs', raw); } catch (x) {} }
+    var tg = document.querySelector('[data-tog="autoRead"]'); if (tg) tg.textContent = T('autoOff');
+    setTimeout(function () { showPrompt(false); readSummary(); }, 0);
+  }
+  document.addEventListener('click', firstInteraction, true);
+  document.addEventListener('keydown', firstInteraction, true);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && D.player.state !== 'idle') D.stopSpeaking(); }); // Escape stops at once
+  // each new form step brings its own summary
+  document.addEventListener('savanna-onboarding:step', function (e) {
+    var d = e.detail || {};
+    if (!d.summary) { setSummary(''); return; }
+    setSummary([FORM_PRE[d.form] || '', d.summary, (d.mode === 'review' && FORM_POST[d.form]) || ''].join(' ').trim(), true);
+  });
+  D.player.on(function (pl) {
+    var b = document.querySelector('button[data-audio="pause"]'); if (b) b.textContent = T(pl.state === 'paused' ? 'resumeAudio' : 'pauseAudio');
+  });
+
   /* ---------- pages ---------- */
   var view;
   function focusH1() { var h = view.querySelector('h1'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); } }
@@ -451,9 +571,12 @@
       Array.prototype.forEach.call(document.querySelectorAll('[data-sj-name]'), function (n) { n.textContent = (p.name || '').split(' ')[0]; });
       var g = document.querySelector('[data-sj-greeting]'); if (g) g.textContent = h < 12 ? 'Good morning,' : h < 18 ? 'Good afternoon,' : 'Good evening,';
       view.innerHTML = p.takeover_pending ? '<div class="notice"><p><strong>' + T('takeover') + '.</strong> ' + T('takeText') + '</p><p class="mb-0"><a class="btn primary" href="takeover.html">' + T('takeover') + '</a></p></div>'
-        : !pp ? '<div class="notice"><p><strong>' + T('passport') + '.</strong> ' + T('ppNone') + '</p><p class="mb-0"><a class="btn primary" href="passport.html">' + T('ppCreate') + '</a></p></div>' : '';
+        : (!p.id_route ? '<div class="notice sj-add-id"><p>' + T('idNone') + '</p><p class="mb-0"><a class="btn" href="profile.html?add=id">' + T('addId') + '</a></p></div>' : '') +
+          (!pp ? '<div class="notice"><p><strong>' + T('passport') + '.</strong> ' + T('ppNone') + '</p><p class="mb-0"><a class="btn primary" href="passport.html">' + T('ppCreate') + '</a></p></div>' : '');
     },
     profile: function () {
+      // "Add your ID (optional)" opens here, on My profile (profile.html?add=id)
+      if (new URLSearchParams(location.search).get('add') === 'id') { title('addId'); H.render('identity', view); return; }
       title('profile');
       H.render('profile', view);
       // moved here from the old dashboard: ID status, Support Passport status and "Delete my data from this phone"
@@ -461,7 +584,7 @@
       extra.className = 'sj-cards sj-profile-cards';
       var ppBody = !pp ? '<p>' + T('ppNone') + '</p>'
         : '<p>' + (D.prefs().pictures ? '<span aria-hidden="true">🔒 </span>' : '') + T('ppSaved', { who: T(pp.sharing === 'trainers' ? 'ppTrainers' : 'ppOnlyMe') }) + '</p>' + ((pp.needs || []).length ? '' : '<p>' + T('ppEmpty') + '</p>');
-      extra.innerHTML = card(T('idCard'), H.statusPanel(p), null) + card(T('passport'), ppBody, 'passport.html', T(pp ? 'ppOpen' : 'ppCreate')) +
+      extra.innerHTML = card(T('idCard'), H.statusPanel(p, true), null) + card(T('passport'), ppBody, 'passport.html', T(pp ? 'ppOpen' : 'ppCreate')) +
         // The consent promises "you can change or delete your answers at any time": this is the delete path.
         '<li class="card homepage-card rounded-3 sj-card"><h2 class="h5">' + T('delTitle') + '</h2><p>' + T('delText') + '</p>' +
         '<p class="mb-0"><button type="button" class="btn danger" id="sj-del" aria-expanded="false" aria-controls="sj-del-confirm">' + T('delBtn') + '</button></p>' +
@@ -558,13 +681,13 @@
       if (errLink) errLink.onclick = function (e) { e.preventDefault(); document.getElementById('sj-mode-0').focus(); };
       document.getElementById('sj-listen').onclick = function () {
         if (D.player.state !== 'idle' && D.player.owner === homeAudio) { D.stopSpeaking(); return; }
-        var items = [{ key: null, text: T('modeTitle') + ' ' + T('modeHint') }].concat(MODES.map(function (m) { return { key: null, text: T('m_' + m) }; }));
+        var items = [{ key: 'home-question', text: T('modeTitle') + ' ' + T('modeHint') }].concat(MODES.map(function (m) { return { key: 'welcome-option-' + m.replace('_', '-'), text: T('m_' + m) }; }));
         D.player.play(items, lang(), homeAudio);
       };
       listenLabel();
     }
     var ch = document.getElementById('sj-change');
-    if (ch) ch.onclick = function () { home.step = 'mode'; try { history.pushState({ step: 'mode' }, '', 'index.html'); } catch (x) {} homePage(); focusStep(); };
+    if (ch) ch.onclick = function () { home.step = 'mode'; try { history.pushState({ step: 'mode' }, '', 'index.html'); } catch (x) {} homePage(); focusStep(); setSummary(homeSummary(), true); };
   }
   function focusStep() { var h = document.getElementById('sj-step-h'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); } }
   function listenLabel() {
@@ -662,6 +785,7 @@
     H.backUrl = backTarget().href; // "Back" on a form's first question returns to where the learner came from
     if (PROTECTED.indexOf(page) !== -1 && !signedIn()) { title('needLogin'); needLogin(); }
     else (PAGES_RENDER[page] || PAGES_RENDER.home)();
+    if (!view.querySelector('savanna-onboarding-form')) setSummary(pageSummary(), first);
     if (first) {
       remember();
       var flash = null; try { flash = sessionStorage.getItem('sj-flash'); sessionStorage.removeItem('sj-flash'); } catch (e) {}

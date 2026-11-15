@@ -5,7 +5,7 @@
 //  - language of parts: Amharic text sits inside lang="am"; English sentences on an Amharic page are marked lang="en"
 //  - 400% zoom: at 320 CSS px wide there is no sideways scrolling (phone project)
 import { test, expect } from '@playwright/test';
-import { freshStart, go, next, signupTo, axe, summarise } from './helpers.mjs';
+import { freshStart, go, next, signupTo, identityTo, axe, summarise } from './helpers.mjs';
 
 const fakeVoice = (p, consent) => p.evaluate(c => { window.SavannaOnboarding.setSpeech({ input: { supported: () => true, start: (l, h) => { setTimeout(() => { h.result(['Abebe Kebede', 'Abebe Kebedde']); h.end(); }, 10); return { stop() {}, abort() {} }; } } }); if (c) localStorage.setItem('savanna-onboarding.voiceConsent', 'true'); }, consent);
 
@@ -34,7 +34,8 @@ const screens = {
   'signup: welcome error': async p => { await go(p, '#/signup'); await next(p); },
   'signup: choice question': async p => signupTo(p, 'filler'),
   'signup: text question with error': async p => { await signupTo(p, 'name'); await next(p); },
-  'signup: ID choice': async p => signupTo(p, 'id_route'),
+  'add your ID: ID choice': async p => identityTo(p, 'id_route'),
+  'add your ID: ID number': async p => identityTo(p, 'id_number'),
   'signup: Ethiopian date': async p => signupTo(p, 'dob'),
   'signup: date error': async p => { await signupTo(p, 'dob'); await p.selectOption('[data-ref=input]', '30'); await p.selectOption('[data-ref=m]', '13'); await p.selectOption('[data-ref=y]', '2017'); await next(p); }, // 30 Pagume does not exist
   'signup: date typed, with voice (speak)': async p => { await signupTo(p, 'dob', 'speak'); },
@@ -45,7 +46,7 @@ const screens = {
   'signup: finish later': async p => { await signupTo(p, 'name'); await p.locator('[data-act=later]').click(); },
   'voice: consent panel': async p => { await go(p, '#/'); await fakeVoice(p, false); await signupTo(p, 'name'); await p.locator('[data-act=speak]').click(); await p.locator('.dm-heard, .dm-panel [data-act=voice-allow]').first().waitFor(); },
   'voice: check what I said': async p => { await go(p, '#/'); await fakeVoice(p, true); await signupTo(p, 'name'); await p.locator('[data-act=speak]').click(); await p.locator('[data-ref=heard-edit]').waitFor(); },
-  'read aloud: Listen on every answer, player showing': async p => { await signupTo(p, 'id_route'); await p.locator('[data-act=easy]').click(); await p.evaluate(() => window.SavannaOnboarding.setSpeech({ output: { speak: () => true, stop() {}, pause() {}, resume() {} } })); await p.locator('[data-act=listen]').click(); await p.locator('[data-act=stop-audio]').waitFor(); },
+  'read aloud: Listen on every answer, player showing': async p => { await identityTo(p, 'id_route'); await p.locator('[data-act=easy]').click(); await p.evaluate(() => window.SavannaOnboarding.setSpeech({ output: { speak: () => true, stop() {}, pause() {}, resume() {} } })); await p.locator('[data-act=listen]').click(); await p.locator('[data-act=stop-audio]').waitFor(); },
   'pictures and big buttons': async p => { await go(p, '#/'); await p.evaluate(() => window.SavannaOnboarding.setPrefs({ pictures: true, easy: true })); await go(p, '#/passport'); },
   'offline message on a question': async p => { await signupTo(p, 'name'); await p.context().setOffline(true); await p.locator('.dm-offline:not([hidden])').waitFor(); },
   'signup: help open': async p => { await signupTo(p, 'filler'); await p.locator('.dm-bar [data-act=help]').click(); },
@@ -60,7 +61,7 @@ const screens = {
   'apply': async p => go(p, '#/apply/s1'),
   'settings': async p => go(p, '#/settings'),
   'high contrast: question': async p => { await p.evaluate(() => window.SavannaOnboarding.setPrefs({ contrast: 'high' })); await signupTo(p, 'filler'); },
-  'large text: question': async p => { await p.evaluate(() => window.SavannaOnboarding.setPrefs({ size: 'xlarge' })); await signupTo(p, 'id_route'); }
+  'large text: question': async p => { await p.evaluate(() => window.SavannaOnboarding.setPrefs({ size: 'xlarge' })); await identityTo(p, 'id_route'); }
 };
 
 /** Structural and language checks that axe does not make. Returns a list of problems (empty = pass). */

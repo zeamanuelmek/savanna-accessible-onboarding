@@ -52,7 +52,7 @@ test('during the gate task nothing is requested from any other site', async ({ p
   await pick(page, 'self'); await next(page);
   await page.fill('[data-ref=input]', 'Abebe'); await next(page);
   await page.fill('[data-ref=input]', '0911234567'); await next(page);
-  await pick(page, 'kebele'); await next(page); await next(page); await next(page);
+  await next(page); // date of birth: optional
   await pick(page, 'yes'); await next(page); await next(page);
   await page.locator('.dm-done-slot a[href="passport.html"]').click();
   await page.waitForSelector('.dm-q');

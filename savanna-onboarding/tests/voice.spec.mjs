@@ -1,7 +1,7 @@
 // Phase 3: answer input by voice, as a reviewed state machine. The browser's speech engine is replaced by a fake,
 // so these tests check our behaviour (consent, review, never saving unreviewed speech, errors, fallbacks), not Google.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, say, speakAnswer, formLanguage } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, say, speakAnswer, hostLanguage } from './helpers.mjs';
 
 const fakeSpeech = (page, o) => fakeSpeechEngine(page, o);
 const draftText = page => page.evaluate(() => localStorage.getItem('savanna-onboarding.draft.signup') || '');
@@ -19,7 +19,8 @@ test('consent is asked before the first use, and the microphone status is clear'
   await page.locator('[data-act=voice-allow]').click();
   await expect(page.locator('[data-act=speak]')).toHaveAttribute('aria-pressed', 'true');
   await expect(page.locator('[data-act=speak]')).toContainText('Stop listening');
-  await expect(page.locator('.dm-status')).toContainText('Microphone on');
+  await expect(page.locator('.dm-status')).toHaveText('Recording. Speak now, then press Stop when you have finished.');
+  await expect(page.locator('[data-act=speak]')).toBeFocused(); // focus is on Stop
 });
 
 test('the transcript can be corrected before it is used, and is saved only on Continue', async ({ page }) => {
@@ -27,7 +28,8 @@ test('the transcript can be corrected before it is used, and is saved only on Co
   await signupTo(page, 'name');
   await say(page, { alts: ['Abebe Kebedde', 'Abebe Kebede'] });
   await speakAnswer(page);
-  await expect(page.locator('[data-ref=heard-h]')).toBeFocused();
+  await expect(page.locator('[data-ref=heard-edit]')).toBeFocused(); // focus on the editable transcript
+  await expect(page.locator('.dm-status')).toHaveText('I heard: Abebe Kebedde. Choose Use this answer, Say it again, or Type it instead.');
   await expect(page.locator('[data-ref=heard-edit]')).toHaveValue('Abebe Kebedde');
   await expect(page.locator('[data-ref=input]')).toHaveValue(''); // not in the answer yet
   await page.locator('[data-act=heard-alt]').first().click(); // "Or did you say: Abebe Kebede"
@@ -67,7 +69,7 @@ test('Continue while a voice answer waits for checking does not skip the check',
   await signupTo(page, 'name');
   await say(page, { alts: ['Unchecked Words'] });
   await speakAnswer(page);
-  await expect(page.locator('[data-ref=heard-h]')).toBeFocused();
+  await expect(page.locator('[data-ref=heard-edit]')).toBeFocused();
   await next(page);
   expect(await heading(page)).toContain('What should we call you'); // still on the same question
   await expect(page.locator('.dm-status')).toContainText('First check the answer from your voice');
@@ -87,7 +89,7 @@ test('"Type it instead" throws the transcript away; changing language does too',
   await say(page, { alts: ['Spoken Name'] });
   await speakAnswer(page);
   await expect(page.locator('.dm-heard')).toHaveCount(1);
-  await formLanguage(page, 'am');
+  await hostLanguage(page, 'am');
   await expect(page.locator('.dm-heard')).toHaveCount(0);
   expect(await draftText(page)).not.toContain('Spoken Name');
 });
@@ -157,7 +159,7 @@ test('the microphone stays on through pauses: only Stop ends it, and the words a
   await mic.click();
   await expect.poll(() => page.evaluate(() => window.__starts)).toBe(2); // listening again at once
   await expect(mic).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.dm-status')).toContainText('press Stop listening when you have finished');
+  await expect(page.locator('.dm-status')).toHaveText('Recording. Speak now, then press Stop when you have finished.');
   await expect(page.locator('.dm-heard')).toHaveCount(0); // nothing shown before Stop
   await say(page, { alts: ['two three four five six seven'] });
   await mic.click(); // Stop
@@ -179,4 +181,17 @@ test('another speech engine can be plugged in through the adapter (setSpeech)', 
   await pick(page, 'self'); await next(page);
   await page.locator('[data-act=speak]').click();
   await expect(page.locator('[data-ref=heard-edit]')).toHaveValue('Adapter Words');
+});
+
+test('recording feedback in Amharic too: announced start and what was heard', async ({ page }) => {
+  await fakeSpeech(page);
+  await signupTo(page, 'name');
+  await hostLanguage(page, 'am');
+  await say(page, { alts: ['አበበ'] });
+  await page.locator('[data-act=speak]').click();
+  await expect(page.locator('.dm-status')).toHaveText('እየተቀዳ ነው። አሁን ይናገሩ፤ ሲጨርሱ «ማዳመጥ አቁም»ን ይጫኑ።');
+  await expect(page.locator('[data-act=speak]')).toBeFocused();
+  await page.locator('[data-act=speak]').click();
+  await expect(page.locator('.dm-status')).toHaveText('የሰማሁት፦ አበበ። «ይህን መልስ ተጠቀም»፣ «እንደገና ይናገሩ» ወይም «በመጻፍ ይመልሱ»ን ይምረጡ።');
+  await expect(page.locator('[data-ref=heard-edit]')).toBeFocused();
 });

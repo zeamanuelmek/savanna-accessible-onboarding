@@ -4,7 +4,7 @@
 > API and no endpoint**. The module sends nothing over the network. It hands data to the host page as browser
 > events; the host decides where the data goes. Privacy rule: **nothing leaves the host without consent.**
 >
-> This page is the contract a developer needs. It matches module version `0.11.0` (Phase 9). The schemas use
+> This page is the contract a developer needs. It matches module version `0.12.0` (15 Nov, before Phase 10). The schemas use
 > JSON Schema 2020-12. Amharic labels are a draft pending native-speaker review; stored **values** are always the
 > English codes below, never translated text.
 
@@ -17,6 +17,8 @@ All events are `CustomEvent`s. Each is also sent with the old `dimts:` prefix (d
 | `savanna-onboarding:ready` | `document` | The script has loaded | `null` |
 | `savanna-onboarding:prefs` | `document` | The learner changed a setting | [Preferences](#2-preferences) |
 | `savanna-onboarding:complete` | the form element (bubbles) | The learner pressed the final button on "Check your answers" | [Completion envelope](#3-completion-envelope) |
+| `savanna-onboarding:audioblocked` | `document` | The browser refused to play sound (autoplay rules: no interaction with this page yet). The player stopped quietly | `null`. The Savanna pages then show "Tap anywhere or press any key to hear this page" |
+| `savanna-onboarding:step` | the form element (bubbles) | A new screen of the form opened (a question, "Check your answers", done) | `{ form, mode, step, summary }`: `mode` is `welcome`, `question`, `review`, `done` or `saved`; `summary` is a short hand-written English summary of the screen, for example `"Step 3 of 5: your phone number. You can type it or say it. Below are Continue and Back."` (empty in other languages for now). The Savanna pages put it first in `<main>` and read it aloud when automatic reading is on. |
 
 ```js
 document.addEventListener('savanna-onboarding:complete', function (e) {
@@ -43,7 +45,10 @@ They are never sent to employers.
     "easy":     { "type": "boolean", "description": "Read questions aloud" },
     "mode":     { "enum": ["", "read_type", "listen", "speak", "simple"] },
     "size":     { "enum": ["normal", "large", "xlarge"] },
-    "contrast": { "enum": ["normal", "high"] }
+    "contrast": { "enum": ["normal", "high"] },
+    "motion":   { "enum": ["normal", "reduce"], "description": "Stop motion" },
+    "pictures": { "type": "boolean", "description": "Simple steps with pictures and big text" },
+    "autoRead": { "enum": ["ask", "on", "off"], "description": "Automatic reading of page summaries. ask = not chosen yet (the first tap or key press turns it on)" }
   },
   "required": ["lang", "easy", "mode", "size", "contrast"],
   "additionalProperties": false
@@ -62,7 +67,7 @@ checks it and chooses "Use this answer".
   "$id": "savanna-onboarding/complete",
   "type": "object",
   "properties": {
-    "form":     { "enum": ["signup", "profile", "takeover", "passport", "employer", "apply"], "description": "Or the id of a form the host registered itself" },
+    "form":     { "enum": ["signup", "identity", "profile", "takeover", "passport", "employer", "apply"], "description": "Or the id of a form the host registered itself" },
     "instance": { "type": ["string", "null"], "description": "The element's instance attribute (for example the job id on apply)" },
     "lang":     { "enum": ["am", "en", "om"], "description": "Language the learner used (om = Afaan Oromo)" },
     "answers":  { "type": "object", "description": "One of the answer schemas below, chosen by `form`" }
@@ -116,26 +121,45 @@ checks it and chooses "Use this answer".
     "learner_consent": { "const": "yes", "description": "Only when filler = partner. The learner must agree" },
     "name":            { "type": "string", "description": "What the learner wants to be called (\"What should we call you?\"). Amharic (Ethiopic) or Latin letters, spaces, ' - . only. Not necessarily the full legal name" },
     "phone":           { "$ref": "#/$defs/phone" },
-    "id_route":        { "$ref": "#/$defs/idRoute" },
-    "id_number":       { "type": "string", "description": "Optional; may be empty. Only when id_route is not none. NEVER verified" },
-    "referral_partner":{ "$ref": "#/$defs/referralPartner", "description": "Only when id_route = none" },
     "dob":             { "oneOf": [{ "$ref": "#/$defs/ethDate" }, { "const": "" }], "description": "Optional" },
     "consent":         { "const": "yes" }
   },
-  "required": ["filler", "name", "phone", "id_route", "consent"]
+  "required": ["filler", "name", "phone", "consent"]
+}
+```
+
+Sign-up asks **no ID** (since 15 Nov): 5 questions for a learner alone, 8 with a partner organisation. Nobody needs an
+ID to start learning (21 Oct co-design finding: refugees were asked for ID they do not have).
+
+### 3.1a `identity`: "Add your ID (optional)"
+
+Opened from My profile and from the dashboard, whenever the learner wants. The six ID routes, the honest trust
+badges and the "I have none of these, refer me through a partner" path, prefilled from the profile so nothing is
+asked twice. Never offered with voice input (`sensitive`): ID numbers are typed, not spoken.
+
+```json
+{
+  "$id": "savanna-onboarding/answers/identity",
+  "type": "object",
+  "properties": {
+    "id_route":        { "$ref": "#/$defs/idRoute" },
+    "id_number":       { "type": "string", "description": "Optional; may be empty. Only when id_route is not none. NEVER verified" },
+    "referral_partner":{ "$ref": "#/$defs/referralPartner", "description": "Only when id_route = none" }
+  },
+  "required": ["id_route"]
 }
 ```
 
 ### 3.2 `profile`: profile update
 
 Starts on the summary, prefilled from the profile the host saved. Same fields and values as `signup`, without the
-partner questions and the consent question: `name`, `phone`, `id_route`, `id_number` (only if the learner typed a new
-one), `referral_partner`, `dob` — plus **`full_name`** (optional, string, same letters rule as `name`; the only
-place the full name is asked).
+partner questions and the consent question: `name`, `phone`, `dob` — plus **`full_name`** (optional, string, same
+letters rule as `name`; the only place the full name is asked). The ID has its own form, `identity`.
 
 ### 3.2a `takeover`: learner takes over after partner sign-up
 
-Same fields and values as `profile`. Shown to the learner (alone) after a partner organisation signed them up. The
+Fields `name`, `phone` and `dob`, as in `profile`. Shown to the learner (alone) after a partner organisation signed
+them up. The learner adds an ID later, alone, in `identity`, if they want to. The
 host should then remove the staff member's name and keep only the organisation (the demo does this).
 
 ### 3.3 `passport`: Support Passport
@@ -209,9 +233,9 @@ The demo page (`app.js`) shows one way a host can use the answers. A real host c
 
 | Record (device key) | Built from | Notes |
 |---|---|---|
-| `profile` | `signup`, then `profile` / `takeover` | `{ name, full_name, phone, lang, id_route, assurance_level, referral_partner, registered_by, takeover_pending, dob, updated }`. **The ID number itself is not kept**, only the status. `registered_by` is `{ org, staff }` until the learner takes over, then `{ org }` only. |
+| `profile` | `signup`, then `identity` / `profile` / `takeover` | `{ name, full_name, phone, lang, id_route, assurance_level, referral_partner, registered_by, takeover_pending, dob, updated }`. **The ID number itself is not kept**, only the status. `registered_by` is `{ org, staff }` until the learner takes over, then `{ org }` only. |
 | `passport` | `passport` | `{ needs, other_need, sharing, updated }`. Stays on the device. `sharing` is `"ask"` (private, the default) or `"trainers"`; the learner can change it on the Support Passport card at any time. |
-| `applications` | `apply` | `{ at, packet, withdrawn? }`. The packet is shown as "What the employer receives" (below). Withdrawing removes `supportThatHelps` and sets `withdrawn`. |
+| `applications` | `apply` | `{ at, packet, withdrawn? }`. On the Savanna pages the learner sees a plain confirmation ("Your application was sent to …", a readable summary from `SavannaOnboarding.describe('apply', answers, lang)`, "Support Passport: shared / not shared", and a line saying it is a demo and nothing was sent). The raw packet (below) is shown only on the developer pages (`showroom.html`, `test-host/`). Withdrawing removes `supportThatHelps` and sets `withdrawn`. |
 | `jobs` | `employer` | Shown on the job board and as JSON-LD (section 5). |
 
 `assurance_level` is the honest ID trust status from `SavannaOnboarding.trustLevel(answers)`. It never says
@@ -219,6 +243,7 @@ The demo page (`app.js`) shows one way a host can use the answers. A real host c
 
 | Value | Badge (en / am) | When |
 |---|---|---|
+| `no_id_yet` | No ID added yet / ገና መታወቂያ አልተጨመረም | After sign-up, until the learner adds an ID (optional) |
 | `self_declared` | Self-declared / በራስ የተገለጸ | An ID type was chosen, no number given |
 | `document_number_recorded` | Number recorded — not verified / ቁጥር ተመዝግቧል — አልተረጋገጠም | A number was given (not checked) |
 | `partner_referral_pending` | Partner referral pending / የአጋር ድርጅት ማረጋገጫ በመጠበቅ ላይ | "I have none of these, refer me" |
@@ -226,7 +251,7 @@ The demo page (`app.js`) shows one way a host can use the answers. A real host c
 Badge texts: `SavannaOnboarding.TRUST`. Partner help is recorded separately in `registered_by` (it says who helped,
 not how trustworthy the ID is). The old value `partner_assisted` is no longer produced.
 
-Application packet (what the employer receives in the demo):
+Application packet (what the employer receives in the demo; shown as JSON on the developer pages only):
 
 ```json
 {

@@ -165,6 +165,7 @@ test.describe('offline audio download (Settings)', () => {
   });
 
   test('before recordings exist, Settings says so instead of offering an empty download', async ({ page }) => {
+    await page.route('**/assets/audio/manifest.json', r => r.fulfill({ contentType: 'application/json', body: '{}' })); // a site with no clips yet
     await go(page, '#/settings');
     await expect(page.locator('.dm-offline-audio')).toContainText('Amharic recordings are not available yet.');
     await expect(page.locator('[data-act=audio-download]')).toHaveCount(0);
