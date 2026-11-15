@@ -18,7 +18,8 @@ IndexedDB stay cut-first. We never claim more than this page says, and we never 
 
 | What | Why |
 |---|---|
-| **Voice input** (speech to text) | The browser sends the audio to a cloud service. Offline, the microphone says at once that voice needs a connection; typing and tapping work. A local engine (for example Addis AI, if it ever runs on the phone) would be needed to change this |
+| **Voice input** (speech to text) | The audio goes to a cloud service (Addis AI for Amharic and Afaan Oromo through the host's proxy; the browser's service for English). Offline, the microphone says at once that voice needs a connection; typing and tapping work |
+| **Online voice** (Addis AI text to speech) | Needs a connection. Recorded clips play offline; text already spoken once is kept in the browser's cache and plays again offline |
 | The very first visit | The files must be downloaded once |
 | Clips never played before | Not downloaded in advance: all 73 clips (about 10 minutes of speech) come to roughly 5–7 MB at 64–96 kbps, which costs learners money on 3G. The phone's voice or the on-screen words are used instead. The team can change this (see below) |
 | Device read-aloud in Amharic | Most phones have no Amharic voice; recordings are the offline path |

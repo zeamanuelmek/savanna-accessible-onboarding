@@ -1552,3 +1552,41 @@ conformance report and the demo script.
   readaloud and summaries (48 passed, after one fix: focus returns to Listen after Stop); smoke, voice, engine,
   names, known-issues (128 passed); identity, career, offline, security (60 passed); **a11y 180 scans, 0 serious
   or critical** (new screen: the Accessibility panel open).
+
+---
+
+## Addis AI speech for Amharic and Afaan Oromo (15 Nov, branch `addis-ai`, not pushed)
+
+Read from Addis AI's official docs (docs.addisassistant.com, linked from platform.addisassistant.com): STT
+`POST https://api.addisassistant.com/api/v2/stt` (multipart `audio` + `request_data` `{"language_code"}`, answer
+`data.transcription`; 10 MB, 60 s; WAV, MP3, M4A, WebM); TTS `POST /api/v1/voice/generations` (`text`, `voice_id`,
+`language`, `output_format` `mp3_44100`; answer JSON with a signed `data.audio_url`); auth header `x-api-key`;
+errors 401 (key), 402 (balance), 429 (busy). **Afaan Oromo is supported in both directions** (`om`; voices
+`am-hamen`, `om-bikila`).
+
+- **Module (serverless, no key):** a speech-proxy adapter. The host passes `mount({ speechProxy: '/api' })` or
+  `SavannaOnboarding.setSpeechProxy('/api')`. For Amharic and Afaan Oromo only: voice answers are recorded in the
+  page (MediaRecorder, at most 30 s) and sent to `/api/stt?lang=`; reading aloud uses `/api/tts` when no recorded
+  clip exists (clips first), cached in the browser by text + language. English keeps the browser's engines. Any
+  failure (no proxy, no key, no credit, offline, busy) falls back to the browser's speech with a plain message; a
+  proxy that is not set up is not asked again in that tab. Same reviewed voice state machine; never on ID or
+  support-needs questions. Consent names Addis AI (Ethiopia) and Google (three languages; the Amharic consent clip
+  regenerated). Proxy requests use `referrerPolicy: 'same-origin'`, so the site's no-referrer policy does not turn
+  the Origin into "null".
+- **Reference proxy (demo host only):** `api/_addis.js` + Vercel functions `api/stt.js`, `api/tts.js`; the same as
+  an optional Node service in Docker Compose (`docker compose --profile addis up`, `proxy/server.cjs`; nginx sends
+  `/api/` to it and still starts without it). Key only from `ADDIS_API_KEY` (`.env.example`; `.env` git-ignored
+  and excluded from Vercel); never logged or returned. Balance protection: 30 s recordings / 2 MB, 600 characters,
+  per-IP rate limit, own origin only (or `Sec-Fetch-Site: same-origin`), TTS cache by text + language + voice.
+- Decision 13 updated in CLAUDE.md. Docs: privacy-security, for-developers (3b-2), offline-plan, api-schema intro,
+  README (how to set the key; real vs simulated), conformance report (limitation).
+- Tests: `tests/addis.spec.mjs` (mocked endpoints, no real calls): TTS via proxy and cache, clip first, English
+  untouched, 402 fallback message, not-configured asked once, STT Amharic and Oromo, 30-second stop, STT failure,
+  consent wording, a real Origin; the proxy in Node with a fake fetch (documented requests, cache, 402/401 mapping,
+  origin, limits, key never logged); no key in any deployed file. Existing tests run with the proxy treated as not
+  set up. Runs (one worker, phone and desktop, in batches): addis 26 passed; voice/readaloud/summaries/names/
+  date-language 138 passed (after updating 2 consent-wording checks); smoke/engine/known-issues/offline/security/
+  identity/career 138 passed (secrets scan now allows `.env.example` with an empty key and flags only a `.env`
+  tracked by git); journey/gate/keyboard/wcag/design 80 passed, 4 skipped; a11y 180 scans, 0 serious or critical.
+- **Not yet done: a real call to Addis AI** (needs the key; tests never call it). Local proxy without a key answers
+  `not_configured`, other origins `origin`, GET 405 (checked).

@@ -45,7 +45,7 @@ Decisions from the 13 Nov deliverables and the 14 Nov training and opening deck 
 10. **Minimum offline mode (Phase 6 is not cut entirely).** Answers are saved on the device first, and the module plus recorded audio stay available offline. Sync and anything beyond that stay cut-first. Plan: `savanna-onboarding/docs/offline-plan.md`. Cloud voice input never works offline. **Phase 7 round:** Settings adds a learner-controlled "Download Amharic audio for offline use (about X MB)" with progress and "Remove downloaded audio"; the default stays "stored once played". **Built in Phase 6 (14 Nov):** `savanna-onboarding/sw.js` + offline messages; clips are kept when first played, not downloaded in advance (data cost).
 11. **One speech adapter.** Speech input and speech output sit behind one adapter interface. **Addis AI** (Amharic speech-to-text and text-to-speech) is noted as an optional future engine, **not a dependency**. The default stays the free browser engine plus recorded audio.
 12. **Testing on the cheapest phone.** Manual testing includes the cheapest Android phone the team can borrow (in addition to the 3G-speed test).
-13. **Integration target: Level 1 (script tag) + Level 3 (schema.org JobPosting).** No server and no invented endpoints. The data and events the module gives the host are documented in `savanna-onboarding/docs/api-schema.md` as JSON Schema.
+13. **Integration target: Level 1 (script tag) + Level 3 (schema.org JobPosting).** The module never requires a server. The demo host includes an optional reference proxy for Addis AI (updated 15 Nov). No invented endpoints. The data and events the module gives the host are documented in `savanna-onboarding/docs/api-schema.md` as JSON Schema.
 
 Decisions from the Phase 2 review (14 Nov):
 

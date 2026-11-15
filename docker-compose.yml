@@ -8,6 +8,10 @@
 #   http://localhost:8080/test-host/       test host page (any site: script tags + mount/unmount)
 #   http://localhost:8080/showroom.html    developer and test page
 # Use another port with:  PORT=9000 docker compose up
+#
+# Optional: Addis AI speech for Amharic and Afaan Oromo (paid; needs a key). Copy .env.example to .env, set
+# ADDIS_API_KEY, then:   docker compose --profile addis up
+# Without it, the site works exactly the same with the browser's own speech (the module falls back by itself).
 services:
   savanna-onboarding:
     image: nginx:1.27-alpine
@@ -21,4 +25,18 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+    restart: unless-stopped
+
+  # Optional reference proxy for Addis AI (the module itself never needs a server). Free official Node image.
+  addis-proxy:
+    profiles: ["addis"]
+    image: node:22-alpine
+    working_dir: /app
+    command: ["node", "proxy/server.cjs"]
+    environment:
+      ADDIS_API_KEY: ${ADDIS_API_KEY:-}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-}
+    volumes:
+      - ./proxy:/app/proxy:ro
+      - ./savanna-onboarding/api:/app/savanna-onboarding/api:ro
     restart: unless-stopped

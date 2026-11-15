@@ -5,6 +5,7 @@
 // - no secrets in the repository
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
+import { execSync } from 'node:child_process';
 import path from 'node:path';
 import { freshStart, pick, next } from './helpers.mjs';
 
@@ -75,13 +76,16 @@ test('no secrets in the repository (keys, tokens, passwords, private keys, .env 
     [/(api[_-]?key|secret|password|token)\s*[:=]\s*["'][^"'\s]{12,}["']/i, 'hard-coded credential']
   ];
   const found = [];
+  const tracked = new Set(execSync('git ls-files', { cwd: root, encoding: 'utf8' }).split(/\r?\n/).filter(Boolean));
   (function walk(dir) {
     for (const f of fs.readdirSync(dir)) {
       const full = path.join(dir, f);
       if (skip.test(full)) continue;
       const st = fs.statSync(full);
       if (st.isDirectory()) { walk(full); continue; }
-      if (/^\.env/.test(f)) found.push(`${path.relative(root, full)}: .env file`);
+      if (f === '.env.example') { if (/^ADDIS_API_KEY=\S/m.test(fs.readFileSync(full, 'utf8'))) found.push('.env.example: has a key'); }
+      else if (/^\.env/.test(f) && tracked.has(path.relative(root, full).split(path.sep).join('/'))) found.push(`${path.relative(root, full)}: .env file in git`);
+      if (/^\.env/.test(f)) continue; // a local, git-ignored .env is how the key is meant to be set
       if (st.size > 2e6 || /\.(woff2?|ttf|png|jpe?g|mp3|m4a|riv|svg)$/i.test(f)) continue;
       const text = fs.readFileSync(full, 'utf8');
       for (const [re, what] of PATTERNS) if (re.test(text)) found.push(`${path.relative(root, full)}: ${what}`);

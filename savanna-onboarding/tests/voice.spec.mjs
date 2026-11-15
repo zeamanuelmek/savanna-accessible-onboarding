@@ -13,7 +13,7 @@ test('consent is asked before the first use, and the microphone status is clear'
   await signupTo(page, 'name');
   await page.locator('[data-act=speak]').click();
   await expect(page.locator('[data-ref=vc]')).toBeFocused();
-  await expect(page.locator('.dm-heard, [data-ref=heard]')).toContainText('sends your recording to Google');
+  await expect(page.locator('.dm-heard, [data-ref=heard]')).toContainText('Addis AI (Ethiopia) for Amharic and Afaan Oromo, and Google (in Chrome) for English');
   expect(await page.evaluate(() => window.__starts)).toBe(0); // nothing started before consent
   await say(page, { hold: true });
   await page.locator('[data-act=voice-allow]').click();
@@ -132,7 +132,7 @@ test('voice consent can be withdrawn in Settings, and is asked again afterwards'
   await fakeSpeech(page);
   await go(page, '#/settings');
   await expect(page.locator('input[name=voice][value=on]')).toBeChecked();
-  await expect(page.locator('fieldset', { hasText: 'Voice answers' })).toContainText('sends your recording to Google');
+  await expect(page.locator('fieldset', { hasText: 'Voice answers' })).toContainText('sent to Addis AI (Ethiopia) for Amharic and Afaan Oromo, and to Google (in Chrome) for English');
   await page.locator('.dm-opt:has(input[name=voice][value=off])').click();
   await expect(page.locator('input[name=voice][value=off]')).toBeChecked();
   await expect.poll(() => page.evaluate(() => localStorage.getItem('savanna-onboarding.voiceConsent'))).toBe('false');

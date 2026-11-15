@@ -1,8 +1,10 @@
 # Data and events the module gives the host
 
-> **Integration level:** Level 1 (script tag) + Level 3 (schema.org `JobPosting`). There is **no server, no REST
-> API and no endpoint**. The module sends nothing over the network. It hands data to the host page as browser
-> events; the host decides where the data goes. Privacy rule: **nothing leaves the host without consent.**
+> **Integration level:** Level 1 (script tag) + Level 3 (schema.org `JobPosting`). The module **never requires a
+> server, REST API or endpoint**. It sends no answers over the network: it hands data to the host page as browser
+> events, and the host decides where the data goes. The one exception is optional speech: when the host passes its
+> own proxy (`speechProxy`, see `for-developers.md` 3b-2), Amharic and Afaan Oromo recordings and screen text go to
+> that proxy (after consent for voice). Privacy rule: **nothing leaves the host without consent.**
 >
 > This page is the contract a developer needs. It matches module version `0.12.0` (15 Nov, before Phase 10). The schemas use
 > JSON Schema 2020-12. Amharic labels are a draft pending native-speaker review; stored **values** are always the

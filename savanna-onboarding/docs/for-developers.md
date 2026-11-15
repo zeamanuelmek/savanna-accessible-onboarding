@@ -146,8 +146,36 @@ SavannaOnboarding.setSpeech({
   (`stop()` → deliver what was heard → `h.end()`). The default engine does this by restarting the browser's recogniser
   whenever it stops by itself after a silence (Android Chrome does so after about a second), and joining the words.
 
-  The default is the browser's own engine (free; needs a connection; audio goes to Google). **Addis AI** (Amharic speech
-  to text and text to speech) is a possible future engine behind this adapter, **not a dependency**.
+  The default is the browser's own engine (free; needs a connection; audio goes to Google).
+
+### 3b-2. Amharic and Afaan Oromo through your own speech proxy (for example Addis AI)
+
+The module holds **no key** and calls **no third party**. Give it the address of a proxy on your own site:
+
+```js
+SavannaOnboarding.mount('#signup', { form: 'signup', speechProxy: '/api' });
+// or once for the page:  SavannaOnboarding.setSpeechProxy('/api');   (null turns it off)
+```
+
+Then, for Amharic and Afaan Oromo only (English keeps the browser's engines):
+
+- **Voice answers** are recorded in the page (at most 30 seconds) and sent to `POST /api/stt?lang=am|om` with the
+  recording as the body (`audio/webm` or `audio/mp4`). Answer: `{ "text": "…" }`. The words are shown for checking,
+  exactly as before.
+- **Reading aloud**, when there is no recorded clip: `POST /api/tts` with `{ "text": "…", "lang": "am"|"om" }`.
+  Answer: the MP3. Recorded clips always come first. Results are cached in the browser by text + language.
+- **Errors** are `{ "error": "not_configured" | "no_credit" | "busy" | "rate_limited" | "origin" | … }`. On any
+  error, or with no proxy (404), the module falls back to the browser's speech with a plain message, and a proxy that
+  is not set up is not asked again in that tab. `SavannaOnboarding.speechProxy()` tells you the state.
+
+**Reference proxy** (in this repository, for our demo): `api/_addis.js`, used by the Vercel functions `api/stt.js`
+and `api/tts.js`, and by `proxy/server.cjs` in Docker Compose (`docker compose --profile addis up`). It reads the key
+only from `ADDIS_API_KEY`, adds it as Addis AI's `x-api-key` header, and uses only Addis AI's documented endpoints
+(`/api/v2/stt`, `/api/v1/voice/generations` with the voices `am-hamen` and `om-bikila`). See
+`docs/privacy-security.md` for the limits that protect the balance.
+
+**Your own engine instead:** `SavannaOnboarding.setSpeech({ input, output })` with the interface above. A test fake
+for both directions is in `tests/addis.spec.mjs` (mocked `/api/stt` and `/api/tts`, a fake microphone and recorder).
 
 ## 3c. Read aloud and recorded audio (Phase 4)
 

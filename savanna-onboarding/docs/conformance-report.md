@@ -168,6 +168,9 @@ support, with who and when) · **Notes / limitations**.
   reader spells Amharic letters one by one, turn on Automatic reading (under Accessibility) to hear recorded Amharic, or switch to English."
   Still to check: TalkBack on Android (Google's speech service has Amharic on some phones).
 - **Amharic text is an AI draft** until a native speaker reviews it.
+- **Addis AI speech** (voice answers and reading aloud in Amharic and Afaan Oromo, through the demo's optional proxy)
+  is tested with mocked endpoints only; real recognition quality for Ethiopian names and accents is not yet tested
+  with learners. Without a key, credit or connection it falls back to the browser's speech with a plain message.
 - **Amharic audio is synthetic.** Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint. Afaan Oromo has no Microsoft voice: it is text only, plus the phone's
   voice if it has one.
 - **Page summaries and automatic reading are in English only** for now. On a new page the summary is tried at once

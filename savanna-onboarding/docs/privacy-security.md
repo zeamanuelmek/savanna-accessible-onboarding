@@ -31,14 +31,17 @@ the ID number out of the profile. A shared or borrowed phone is the main risk (s
 
 | What | Where to | When | Consent |
 |---|---|---|---|
-| **Voice recordings** (speech to text) | The browser's speech service (Google, in Chrome) | Only when the learner presses "Answer by voice" | **Asked before first use**, with the reason ("this browser sends your recording to Google"). Withdrawable in Settings. **Never offered** on ID or support-needs questions, or the date. The text is shown for checking and is not used until "Use this answer" |
+| **Voice recordings** (speech to text), Amharic and Afaan Oromo | **Addis AI (Ethiopia)**, through the host's proxy (demo: `/api/stt`, a Vercel function or the optional Docker service). The page sends the recording to its own site only; the proxy adds the key and forwards it | Only when the learner presses "Answer by voice"; at most 30 seconds | **Asked before first use**, naming Addis AI (Ethiopia) for Amharic and Afaan Oromo and Google for English. Withdrawable in Settings. **Never offered** on ID or support-needs questions. The text is shown for checking and is not used until "Use this answer" |
+| **Voice recordings**, English (and Amharic or Oromo when Addis AI is not available) | The browser's speech service (Google, in Chrome) | As above | The same consent (it names Google) |
+| **Text to be read aloud**, Amharic and Afaan Oromo, when no recorded clip exists | Addis AI, through the host's proxy (`/api/tts`) | When reading aloud plays a question or answer with no recording | Covered by choosing reading aloud. The text is the screen's own wording (questions, answers, messages), **never the learner's answers**. Cached in the browser and the proxy, so the same words are sent once |
 | Answers (`savanna-onboarding:complete` event) | **The host page only**, inside the browser | When the learner submits a form | Submitting after "Check your answers". The module itself sends nothing over the network; the host decides what to do (see `api-schema.md`) |
 | Support needs to an employer | The host (demo: shown on screen; nothing is sent) | Only if the learner says "yes, share" **for that job** | Per application; the learner sees exactly what would be shared; withdrawable on the card. `supportForEmployer()` enforces it; the learner's own words are never shared |
 | Page files (scripts, fonts, styles, recordings) | Downloaded **from the same site** | When pages open; recordings when played or downloaded | Not personal data |
 
 **Checked by a test:** during the whole gate task, no request goes to any other site — no CDN, no analytics, no
 Google Fonts, no tracking (`security.spec.mjs`). The Web Speech request is made by the browser itself, only after
-consent, and is not visible to page code.
+consent, and is not visible to page code. Addis AI is reached only by the host's proxy (server side), never by the
+page; the module and the pages contain no Addis AI address and no key (`addis.spec.mjs`).
 
 ## 3. Deleting and withdrawing
 
@@ -56,8 +59,20 @@ consent, and is not visible to page code.
 ## 4. Secrets
 
 **None in the repository.** `security.spec.mjs` scans every file for private keys, AWS/GitHub/Slack/Google keys,
-`sk-` API keys, hard-coded passwords or tokens, and `.env` files: none found. The project needs no keys: no paid API,
-no server, no database. Vercel deploys from the public build settings only.
+`sk-` API keys, hard-coded passwords or tokens, and `.env` files tracked by git: none found. `addis.spec.mjs` checks
+that no Addis AI key (`sk_…`, or the value of `ADDIS_API_KEY` when set) is in any deployed file.
+
+**The Addis AI key (optional, paid).** The module needs no key and no server. Only the demo host's optional
+reference proxy uses one, read **only** from the environment variable `ADDIS_API_KEY`: on Vercel in Project Settings
+→ Environment Variables; for Docker in a local `.env` file (git-ignored and excluded from the Vercel deploy; copy
+`.env.example`). The proxy never logs the key, never returns it, and never passes on Addis AI's error text.
+**Protecting the balance:** recordings stop at 30 seconds and the proxy refuses more than 2 MB; text to be spoken is
+at most 600 characters; a per-IP rate limit (20 recordings and 120 texts per 10 minutes); only our own site's origin
+(the `Origin` header must be listed in `ALLOWED_ORIGINS` or match the proxy's host); speech results are cached by text
++ language + voice (in memory on the proxy, and in the browser), so the same words are never paid for twice. Without
+a key, with no credit or when Addis AI fails, everything falls back to the browser's speech with a plain message.
+Limits: the rate limit and the memory cache are per server instance (Vercel may run several); the `Origin` check
+stops other websites, not someone calling the proxy from their own program.
 
 ## 5. Security headers
 

@@ -184,6 +184,27 @@ and preloaded, so pages no longer appear in a fallback font for a moment.
 
 ---
 
+## Amharic and Afaan Oromo speech with Addis AI (optional, paid)
+
+The module needs no server. Our demo host adds an **optional reference proxy** for Addis AI (Ethiopia): voice
+answers in Amharic and Afaan Oromo, and reading aloud in those languages when no recorded clip exists. English keeps
+the browser's own engines; recorded clips always come first. **Without a key nothing changes**: the site uses the
+browser's speech, exactly as before.
+
+**Set the key** (never in code; the key is read only from the environment variable `ADDIS_API_KEY`):
+
+- **Vercel:** Project → Settings → Environment Variables → add `ADDIS_API_KEY` (Production), then redeploy. The
+  functions are `api/stt.js` and `api/tts.js`.
+- **Docker:** copy `.env.example` to `.env` (git-ignored), set `ADDIS_API_KEY=…`, then
+  `docker compose --profile addis up` and open http://localhost:8080.
+- **Another site:** run your own proxy (ours is `api/_addis.js`) and pass `mount(…, { speechProxy: '/api' })`.
+  Details: [`docs/for-developers.md`](docs/for-developers.md) section 3b-2.
+
+The consent before the first voice answer names Addis AI (Ethiopia) for Amharic and Afaan Oromo, and Google for
+English. Voice is never offered on ID or support-needs questions. Limits that protect the balance (30-second
+recordings, 600 characters of text, a per-IP rate limit, our own site only, a cache so the same words are never paid
+twice) are in [`docs/privacy-security.md`](docs/privacy-security.md).
+
 ## Future: local speech (not built)
 
 The speech adapter (`SavannaOnboarding.setSpeech({ input, output })`, see `for-developers.md`) can connect to a
@@ -230,13 +251,14 @@ work; nothing of it is built.
 | Pictures and bigger buttons | implemented: a separate setting from automatic reading |
 | Amharic audio for offline use | implemented: Settings offers "Download Amharic audio for offline use (about X MB)" with progress, and "Remove downloaded audio". Otherwise each recording is kept the first time it plays |
 | Screen readers and Amharic | **known limitation:** NVDA with its default Windows voice spells Amharic letter by letter. Mitigations: recorded Amharic (read aloud), one-tap English, correct `lang` tags, and a tip on the welcome screen and in Help |
-| Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Google, so consent is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions. When recording starts, "Recording. Speak now, then press Stop when you have finished" is announced, a short beep plays and focus moves to Stop; afterwards "I heard: … Choose Use this answer, Say it again, or Type it instead" is announced and focus moves to the editable words (in Amharic, English and Afaan Oromo). Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
+| Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Addis AI (Ethiopia) for Amharic and Afaan Oromo when the host has the proxy and a key, otherwise to Google, so consent naming both is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions. When recording starts, "Recording. Speak now, then press Stop when you have finished" is announced, a short beep plays and focus moves to Stop; afterwards "I heard: … Choose Use this answer, Say it again, or Type it instead" is announced and focus moves to the editable words (in Amharic, English and Afaan Oromo). Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
 | "Finish later" SMS | **simulated**: a labelled preview, no SMS is sent |
 | ID verification | unavailable: IDs are never verified. Each ID choice shows an honest badge ("Self-declared · not verified", "Partner referral pending"); after sign-up the status is "No ID added yet"; after "Add your ID (optional)" it is "Self-declared", "Number recorded — not verified" or "Partner referral pending" |
 | Private Support Passport | implemented on the device: private by default, "who can see this" on the card, trainer sharing can be turned on and off, sharing with an employer only per application (the learner sees exactly what would be shared) and can be withdrawn. **Simulated:** there is no trainer or employer system, so nothing is actually sent; withdrawing changes only the copy on the phone |
 | Partner-assisted sign-up | implemented: learner consent, then a handover and learner takeover step |
 | Amharic text | AI draft: needs native-speaker review |
-| Backend / API | unavailable by design: the module sends nothing; the host page decides where data goes. Data and events: [`docs/api-schema.md`](docs/api-schema.md) |
+| Addis AI speech (Amharic and Afaan Oromo) | implemented behind the host's proxy, **tested with mocked endpoints only; not yet tried with the real service or a real key**. Voice answers (recorded in the page, at most 30 seconds) and reading aloud when no recording exists. Falls back to the browser's speech with a plain message when the proxy, the key or the credit is missing |
+| Backend / API | unavailable by design: the module sends no answers anywhere; the host page decides where data goes (speech for Amharic and Afaan Oromo goes only to the host's own proxy, when the host sets one). Data and events: [`docs/api-schema.md`](docs/api-schema.md) |
 | Offline (minimum) | implemented and tested in the browser's offline mode: after one visit, the pages, module, fonts and styles open with no connection (`sw.js`); answers are saved on the phone; a clear offline message; recordings are kept once played. **Voice input never works offline.** Not yet tested on a real phone in flight mode. See [`docs/offline-plan.md`](docs/offline-plan.md) |
 | Docker Compose | written (`docker compose up`); **not yet run on a machine with Docker** (planned clean-machine check in Phase 10) |
 

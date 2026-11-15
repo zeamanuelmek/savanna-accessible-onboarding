@@ -99,7 +99,9 @@
       back: 'Back', next: 'Continue', submit: 'Submit', listen: 'Listen to the question',
       speak: 'Answer by voice', stop: 'Stop listening', listening: 'Microphone on. Listening… speak now, and press Stop listening when you have finished.',
       heard: 'I heard:', yes: 'Use this answer', again: 'Say it again', type: 'Type it instead',
-      recStart: 'Recording. Speak now, then press Stop when you have finished.', heardSay: 'I heard: {text}. Choose {yes}, {again}, or {type}.',
+      recStart: 'Recording. Speak now, then press Stop when you have finished.',
+      voiceRemoteFailed: 'The speech service did not answer. Please try again, or type your answer.', voiceNoCredit: 'The speech service is not available right now. Please type your answer.',
+      remoteVoiceOff: 'The online voice is not available right now. Everything is written on the screen.', heardSay: 'I heard: {text}. Choose {yes}, {again}, or {type}.',
       micAsk: 'Your browser may ask to use the microphone. Choose Allow.', micOn: 'Microphone on',
       processing: 'Working out what you said…',
       heardCheck: 'Check it and fix it if needed. Nothing is kept until you choose "Use this answer".',
@@ -113,7 +115,7 @@
       voiceNoMic: 'No microphone was found. Please type or tap your answer.',
       voiceLangUnsupported: 'Voice answers in this language are not available in this browser. Please type or tap your answer.',
       s_voice: 'Voice answers', voice_on: 'Allowed', voice_off: 'Not allowed',
-      s_voiceHint: 'To turn your voice into text, this browser sends your recording to Google. Voice is never offered for ID or support questions.',
+      s_voiceHint: 'To turn your voice into text, your recording is sent to Addis AI (Ethiopia) for Amharic and Afaan Oromo, and to Google (in Chrome) for English. Voice is never offered for ID or support questions.',
       progress: 'Question {n} of {total}', optional: '(optional)', problem: 'There is a problem',
       review: 'Check your answers', reviewHint: 'Make sure everything is right before you send it.',
       change: 'Change', notGiven: 'Not given', later: 'Finish later', help: 'Get help',
@@ -126,7 +128,7 @@
       savedText: 'Nothing is lost. Open this link on this phone to continue:',
       smsPreview: 'In the live version we would send you this SMS:',
       voiceConsentTitle: 'Before you use your voice',
-      voiceConsent: 'To turn your voice into text, this browser sends your recording to Google. You can type or tap instead. You can turn this off at any time in Settings. Do you want to use your voice?',
+      voiceConsent: 'To turn your voice into text, your recording is sent to a speech service: Addis AI (Ethiopia) for Amharic and Afaan Oromo, and Google (in Chrome) for English, or when Addis AI is not available. You can type or tap instead. You can turn this off at any time in Settings. Do you want to use your voice?',
       voiceAllow: 'Yes, use my voice', voiceDeny: 'No, I will type or tap',
       voiceUnsupported: 'Voice answers are not available in this browser. Try Chrome on Android, or type or tap your answer.',
       voiceNoMatch: 'I did not catch one of the choices. Please say it again or tap your answer.',
@@ -186,7 +188,9 @@
       back: 'ተመለስ', next: 'ቀጥል', submit: 'ላክ', listen: 'ጥያቄውን አዳምጥ',
       speak: 'በድምፅ ይመልሱ', stop: 'ማዳመጥ አቁም', listening: 'ማይክሮፎኑ በርቷል። እያዳመጥኩ ነው… አሁን ይናገሩ፤ ሲጨርሱ «ማዳመጥ አቁም»ን ይጫኑ።',
       heard: 'የሰማሁት፦', yes: 'ይህን መልስ ተጠቀም', again: 'እንደገና ይናገሩ', type: 'በመጻፍ ይመልሱ',
-      recStart: 'እየተቀዳ ነው። አሁን ይናገሩ፤ ሲጨርሱ «{stop}»ን ይጫኑ።', heardSay: 'የሰማሁት፦ {text}። «{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።',
+      recStart: 'እየተቀዳ ነው። አሁን ይናገሩ፤ ሲጨርሱ «{stop}»ን ይጫኑ።',
+      voiceRemoteFailed: 'የንግግር አገልግሎቱ አልመለሰም። እባክዎ እንደገና ይሞክሩ፣ ወይም መልስዎን ይጻፉ።', voiceNoCredit: 'የንግግር አገልግሎቱ አሁን አይገኝም። እባክዎ መልስዎን ይጻፉ።',
+      remoteVoiceOff: 'የኦንላይን ድምፁ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', heardSay: 'የሰማሁት፦ {text}። «{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።',
       micAsk: 'ብራውዘርዎ ማይክሮፎኑን ለመጠቀም ፈቃድ ሊጠይቅ ይችላል። «ፍቀድ»ን ይምረጡ።', micOn: 'ማይክሮፎኑ በርቷል',
       processing: 'የተናገሩትን እየለየሁ ነው…',
       heardCheck: 'ያረጋግጡት፤ ካስፈለገም ያስተካክሉት። «ይህን መልስ ተጠቀም»ን እስኪመርጡ ድረስ ምንም አይቀመጥም።',
@@ -200,7 +204,7 @@
       voiceNoMic: 'ማይክሮፎን አልተገኘም። እባክዎ መልስዎን ይጻፉ ወይም ይንኩ።',
       voiceLangUnsupported: 'በዚህ ቋንቋ በድምፅ መመለስ በዚህ ብራውዘር አይቻልም። እባክዎ መልስዎን ይጻፉ ወይም ይንኩ።',
       s_voice: 'በድምፅ መመለስ', voice_on: 'ተፈቅዷል', voice_off: 'አልተፈቀደም',
-      s_voiceHint: 'ድምፅዎን ወደ ጽሑፍ ለመቀየር ይህ ብራውዘር ቅጂዎን ወደ Google ይልካል። ለመታወቂያ ወይም ለድጋፍ ጥያቄዎች ድምፅ በፍጹም አይቀርብም።',
+      s_voiceHint: 'ድምፅዎን ወደ ጽሑፍ ለመቀየር ቅጂዎ ለአማርኛና ለአፋን ኦሮሞ ወደ Addis AI (ኢትዮጵያ)፣ ለእንግሊዝኛ ወደ Google (በChrome) ይላካል። ለመታወቂያ ወይም ለድጋፍ ጥያቄዎች ድምፅ በፍጹም አይቀርብም።',
       progress: 'ጥያቄ {n} ከ{total}', optional: '(አማራጭ)', problem: 'ችግር አለ',
       review: 'መልሶችዎን ያረጋግጡ', reviewHint: 'ከመላክዎ በፊት ሁሉም ትክክል መሆኑን ያረጋግጡ።',
       change: 'ቀይር', notGiven: 'አልተሰጠም', later: 'በኋላ ልጨርስ', help: 'እርዳታ',
@@ -213,7 +217,7 @@
       savedText: 'ምንም አልጠፋም። ለመቀጠል ይህን ሊንክ በዚህ ስልክ ይክፈቱ፦',
       smsPreview: 'በእውነተኛው ስሪት ይህን አጭር መልእክት እንልክልዎታለን፦',
       voiceConsentTitle: 'ድምፅዎን ከመጠቀምዎ በፊት',
-      voiceConsent: 'ድምፅዎን ወደ ጽሑፍ ለመቀየር ይህ ብራውዘር ቅጂዎን ወደ Google ይልካል። በምትኩ መጻፍ ወይም መንካት ይችላሉ። ይህን በማንኛውም ጊዜ በቅንብሮች ውስጥ ማጥፋት ይችላሉ። ድምፅዎን መጠቀም ይፈልጋሉ?',
+      voiceConsent: 'ድምፅዎን ወደ ጽሑፍ ለመቀየር ቅጂዎ ወደ የንግግር አገልግሎት ይላካል፦ ለአማርኛና ለአፋን ኦሮሞ Addis AI (ኢትዮጵያ)፣ ለእንግሊዝኛ ወይም Addis AI በማይገኝበት ጊዜ Google (በChrome)። በምትኩ መጻፍ ወይም መንካት ይችላሉ። ይህን በማንኛውም ጊዜ በቅንብሮች ውስጥ ማጥፋት ይችላሉ። ድምፅዎን መጠቀም ይፈልጋሉ?',
       voiceAllow: 'አዎ፣ ድምፄን ተጠቀም', voiceDeny: 'አይ፣ እጽፋለሁ ወይም እነካለሁ',
       voiceUnsupported: 'በዚህ ብራውዘር በድምፅ መመለስ አይቻልም። በአንድሮይድ ላይ Chrome ይሞክሩ ወይም ይጻፉ።',
       voiceNoMatch: 'ከምርጫዎቹ አንዱን አልሰማሁም። እባክዎ እንደገና ይናገሩ ወይም መልስዎን ይንኩ።',
@@ -280,6 +284,9 @@
       listening: 'Maayikiraafoonni banameera. Dhaggeeffachaa jira… amma dubbadhu, yoo xumurte "Dhaggeeffachuu dhaabi" tuqi.',
       heard: 'Kan ani dhage\'e:',
       recStart: 'Waraabamaa jira. Amma dubbadhu, yoo xumurte "{stop}" tuqi.',
+      voiceRemoteFailed: 'Tajaajilli dubbii deebii hin kennine. Maaloo irra deebi\'ii yaali, ykn deebii kee barreessi.',
+      voiceNoCredit: 'Tajaajilli dubbii amma hin jiru. Maaloo deebii kee barreessi.',
+      remoteVoiceOff: 'Sagaleen toora interneetii amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.',
       heardSay: 'Kan ani dhage\'e: {text}. "{yes}", "{again}" ykn "{type}" filadhu.',
       yes: 'Deebii kana fayyadami',
       again: 'Irra deebi\'ii jedhi',
@@ -303,7 +310,7 @@
       s_voice: 'Deebii sagaleen',
       voice_on: 'Hayyamameera',
       voice_off: 'Hin hayyamamne',
-      s_voiceHint: 'Sagalee kee gara barreeffamaatti jijjiiruuf, biraawuzarri kun waraabbii kee Google\'tti erga. Gaaffii eenyummaa ykn deeggarsaa irratti sagaleen gonkumaa hin dhiyaatu.',
+      s_voiceHint: 'Sagalee kee gara barreeffamaatti jijjiiruuf, waraabbiin kee Afaan Amaaraa fi Afaan Oromootiif gara Addis AI (Itoophiyaa), Ingiliffaaf immoo gara Google (Chrome keessatti) ergama. Gaaffii eenyummaa ykn deeggarsaa irratti sagaleen gonkumaa hin dhiyaatu.',
       progress: 'Gaaffii {n} kan {total} keessaa',
       optional: '(dirqama miti)',
       problem: 'Rakkoon jira',
@@ -325,7 +332,7 @@
       savedText: 'Homtuu hin badne. Itti fufuuf geessituu kana bilbila kana irratti bani:',
       smsPreview: 'Gosa dhugaa keessatti ergaa gabaabaa (SMS) kana siif ergina turre:',
       voiceConsentTitle: 'Osoo sagalee kee hin fayyadamin dura',
-      voiceConsent: 'Sagalee kee gara barreeffamaatti jijjiiruuf, biraawuzarri kun waraabbii kee Google\'tti erga. Kanaa mannaa barreessuu ykn tuquu dandeessa. Yeroo kamiyyuu Qindaa\'ina keessatti cufuu dandeessa. Sagalee kee fayyadamuu barbaaddaa?',
+      voiceConsent: 'Sagalee kee gara barreeffamaatti jijjiiruuf, waraabbiin kee tajaajila dubbii tokkotti ergama: Afaan Amaaraa fi Afaan Oromootiif Addis AI (Itoophiyaa), Ingiliffaaf ykn yeroo Addis AI hin jirretti Google (Chrome keessatti). Kanaa mannaa barreessuu ykn tuquu dandeessa. Yeroo kamiyyuu Qindaa\'ina keessatti cufuu dandeessa. Sagalee kee fayyadamuu barbaaddaa?',
       voiceAllow: 'Eeyyee, sagalee koo fayyadami',
       voiceDeny: 'Lakki, nan barreessa ykn nan tuqa',
       voiceUnsupported: 'Deebiin sagaleen biraawuzara kana irratti hin jiru. Chrome Android irratti yaali, ykn deebii kee barreessi ykn tuqi.',
@@ -621,7 +628,111 @@
       };
     }
   };
-  var speech = { input: browserInput, output: {
+  /* REMOTE SPEECH THROUGH THE HOST'S PROXY (for example Addis AI for Amharic and Afaan Oromo). The module holds no key
+     and calls no third party: the host passes the address of its own proxy with mount({ speechProxy: '/api' }) or
+     SavannaOnboarding.setSpeechProxy('/api'). Contract (same origin):
+       POST <proxy>/stt?lang=am|om  body: the recording (audio/webm or audio/mp4)  -> { "text": "…" }
+       POST <proxy>/tts  JSON { "text": "…", "lang": "am"|"om" }                -> audio/mpeg
+       errors -> { "error": "not_configured" | "no_credit" | "busy" | … }
+     Used only for Amharic and Afaan Oromo; English keeps the browser's own engines. Recorded clips always come first.
+     Recordings stop at 30 seconds. Anything that fails (no proxy, no key, no credit, offline) falls back to the
+     browser's engines with a plain message, and the proxy is not asked again in this tab when it is not set up. */
+  var REMOTE = { url: null, langs: ['am', 'om'], down: false, maxSeconds: 30, timeoutMs: 20000 };
+  try { REMOTE.down = sessionStorage.getItem('savanna-onboarding.remoteDown') === '1'; } catch (e) {}
+  function setSpeechProxy(url) { REMOTE.url = url ? String(url).replace(/\/+$/, '') : null; }
+  function remoteOn(lang) { return !!REMOTE.url && !REMOTE.down && REMOTE.langs.indexOf(lang) !== -1 && navigator.onLine !== false && !!window.fetch; }
+  function remoteDown() { REMOTE.down = true; try { sessionStorage.setItem('savanna-onboarding.remoteDown', '1'); } catch (e) {} }
+  /** POST to the proxy; resolves with the Response, rejects with a short code. Not set up -> remembered for this tab. */
+  function remoteFetch(path, init) {
+    var ctl = window.AbortController ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, REMOTE.timeoutMs) : null;
+    if (ctl) init.signal = ctl.signal;
+    init.credentials = 'same-origin';
+    init.referrerPolicy = 'same-origin'; // so the browser sends our Origin (the site's no-referrer policy would send "null")
+    return fetch(REMOTE.url + path, init).then(function (r) {
+      clearTimeout(timer);
+      if (r.ok) return r;
+      if (r.status === 404 || r.status === 405 || r.status === 501) { remoteDown(); throw 'not_configured'; } // no proxy here
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        var code = (j && j.error) || 'unavailable';
+        if (code === 'not_configured' || code === 'origin') remoteDown();
+        throw code;
+      });
+    }, function () { clearTimeout(timer); throw 'unavailable'; });
+  }
+  /** Text-to-speech: an object URL of the MP3. Cached in the browser by text + language + voice, never paid twice. */
+  var TTS_CACHE = 'savanna-onboarding-tts';
+  function ttsKey(text, lang) {
+    var h = 0, s = lang + '|proxy-default|' + text; // the voice is the proxy's choice for the language
+    for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+    return REMOTE.url + '/tts?lang=' + lang + '&n=' + s.length + '&h=' + (h >>> 0).toString(36);
+  }
+  function remoteTts(text, lang) {
+    var key = ttsKey(text, lang), store = window.caches && window.isSecureContext !== false ? window.caches : null;
+    var cached = store ? store.open(TTS_CACHE).then(function (c) { return c.match(key); }).catch(function () { return null; }) : Promise.resolve(null);
+    return cached.then(function (hit) {
+      if (hit) return hit.blob();
+      return remoteFetch('/tts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: text.slice(0, 600), lang: lang }) })
+        .then(function (r) { return r.blob(); })
+        .then(function (b) {
+          if (store) store.open(TTS_CACHE).then(function (c) { return c.put(key, new Response(b, { headers: { 'Content-Type': 'audio/mpeg' } })); }).catch(function () {});
+          return b;
+        });
+    }).then(function (b) { return URL.createObjectURL(b); });
+  }
+  /** Speech-to-text of one recording. */
+  function remoteStt(blob, lang) {
+    var type = (blob.type || 'audio/webm').split(';')[0];
+    return remoteFetch('/stt?lang=' + encodeURIComponent(lang), { method: 'POST', headers: { 'Content-Type': type }, body: blob })
+      .then(function (r) { return r.json(); }).then(function (j) { return (j && typeof j.text === 'string') ? j.text.trim() : ''; });
+  }
+  function recorderType() {
+    if (!window.MediaRecorder) return null;
+    var types = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+    for (var i = 0; i < types.length; i++) { try { if (!MediaRecorder.isTypeSupported || MediaRecorder.isTypeSupported(types[i])) return types[i]; } catch (e) {} }
+    return null;
+  }
+  /* Records with the microphone until Stop (at most 30 seconds), then sends the recording to the proxy. Same
+     interface as the browser engine, so the reviewed voice state machine is unchanged. */
+  var remoteInput = {
+    supported: function () { return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia && recorderType()); },
+    start: function (lang, h) {
+      var stopped = false, rec = null, stream = null, chunks = [], timer = null, ended = false;
+      function end() { if (!ended) { ended = true; h.end(); } }
+      function release() { clearTimeout(timer); if (stream) stream.getTracks().forEach(function (t) { try { t.stop(); } catch (e) {} }); stream = null; }
+      navigator.mediaDevices.getUserMedia({ audio: true }).then(function (st) {
+        stream = st;
+        if (stopped) { release(); end(); return; }
+        var type = recorderType();
+        rec = new MediaRecorder(st, { mimeType: type, audioBitsPerSecond: 32000 });
+        rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+        rec.onstop = function () {
+          release();
+          if (stopped === 'abort') { end(); return; }
+          var blob = new Blob(chunks, { type: rec.mimeType || type });
+          if (!blob.size) { h.error('no-speech'); end(); return; }
+          remoteStt(blob, lang).then(function (text) {
+            if (!text) h.error('no-speech'); else h.result([text]);
+            end();
+          }, function (code) { h.error(code === 'no_credit' ? 'remote-no-credit' : 'remote-failed'); end(); });
+        };
+        rec.start();
+        timer = setTimeout(function () { if (rec && rec.state === 'recording') { stopped = 'stop'; rec.stop(); } }, REMOTE.maxSeconds * 1000); // protects the balance
+      }, function (e) {
+        h.error(e && (e.name === 'NotAllowedError' || e.name === 'SecurityError') ? 'not-allowed' : 'audio-capture'); end();
+      });
+      return {
+        stop: function () { if (stopped) return; stopped = 'stop'; if (rec && rec.state === 'recording') rec.stop(); },
+        abort: function () { stopped = 'abort'; chunks = []; if (rec && rec.state === 'recording') rec.stop(); else { release(); end(); } }
+      };
+    }
+  };
+  /* The default input: Amharic and Afaan Oromo through the proxy when the host set one up; otherwise (and for English)
+     the browser's engine. */
+  var autoInput = {
+    supported: function (lang) { return (remoteOn(lang) && remoteInput.supported()) || browserInput.supported(lang); },
+    start: function (lang, h) { return (remoteOn(lang) && remoteInput.supported() ? remoteInput : browserInput).start(lang, h); }
+  };
+  var speech = { input: autoInput, output: {
     speak: function (text, lang, audioUrl, done) { return speak(text, lang, audioUrl, done); },
     stop: function () { stopSpeaking(); },
     pause: function () { try { window.speechSynthesis.pause(); } catch (e) {} },
@@ -791,6 +902,7 @@
       this.stop(true);
       var self = this;
       this.items = items; this.i = 0; this.lang = lang; this.owner = owner || null; this.state = 'playing';
+      this._pending = false; this._remoteReported = false;
       this.last = { items: items, lang: lang, owner: owner || null };
       this.emit();
       loadAudioManifest().then(function () { if (self.items === items && self.state === 'playing') self.next(); });
@@ -829,6 +941,21 @@
     },
     voice: function (it, done) {
       if (this.state !== 'playing') return;
+      var self = this, items = this.items;
+      // no recorded clip: the online voice for Amharic and Afaan Oromo (through the host's proxy), once per piece
+      if (!it._remote && it.text && remoteOn(this.lang)) {
+        it._remote = true;
+        remoteTts(it.text, this.lang).then(function (url) {
+          if (self.items !== items || self.state === 'idle') { URL.revokeObjectURL(url); return; }
+          it.url = url; it._checked = true; self.i--; // play it like a recording (Pause, Stop, Escape all work)
+          if (self.state === 'playing') self.next(); else self._pending = true;
+        }, function (code) {
+          if (self.items !== items || self.state === 'idle') return;
+          if (!self._remoteReported) { self._remoteReported = true; self.report('remoteVoiceOff'); }
+          self.voice(it, done); // the phone's voice, or the "everything is on the screen" message
+        });
+        return;
+      }
       if (!speech.output.speak(it.text, this.lang, null, done)) { this.report('noAudio'); this.state = 'idle'; this.items = []; this.emit(); }
     },
     report: function (code) { if (this.owner && this.owner.audioIssue) this.owner.audioIssue(code); },
@@ -841,6 +968,7 @@
     resume: function () {
       if (this.state !== 'paused') return;
       this.state = 'playing';
+      if (this._pending) { this._pending = false; this.emit(); this.next(); return; }
       if (this.audio) { try { var pr = this.audio.play(); if (pr && pr.catch) pr.catch(function () {}); } catch (e) {} }
       else if (speech.output.resume) speech.output.resume();
       this.emit();
@@ -1889,8 +2017,8 @@
   SavannaOnboardingForm.prototype.startVoice = function () {
     var lang = this.lang, self = this, f = this.state.field();
     if (!voiceAllowed(f)) return; // never on sensitive questions
-    if (!speech.input.supported()) { this.status(t('voiceUnsupported', lang)); return; }
-    if (navigator.onLine === false && speech.input === browserInput) { this.status(t('voiceNetwork', lang)); return; }
+    if (!speech.input.supported(lang)) { this.status(t('voiceUnsupported', lang)); return; }
+    if (navigator.onLine === false && (speech.input === browserInput || speech.input === autoInput)) { this.status(t('voiceNetwork', lang)); return; }
     if (store.get('voiceConsent', null) !== true) {
       this.voice = { state: 'consent', field: f };
       this.setHeard(View.voiceConsent(this.vm()));
@@ -1913,7 +2041,7 @@
       error: function (code) {
         if (self.voice !== v || code === 'aborted') return;
         v.state = 'error'; self.setVoiceButton(false);
-        self.status(t({ 'not-allowed': 'voiceDenied', network: 'voiceNetwork', 'no-speech': 'voiceNoSpeech', 'audio-capture': 'voiceNoMic', 'language-not-supported': 'voiceLangUnsupported' }[code] || 'voiceError', lang));
+        self.status(t({ 'not-allowed': 'voiceDenied', network: 'voiceNetwork', 'no-speech': 'voiceNoSpeech', 'audio-capture': 'voiceNoMic', 'language-not-supported': 'voiceLangUnsupported', 'remote-failed': 'voiceRemoteFailed', 'remote-no-credit': 'voiceNoCredit' }[code] || 'voiceError', lang));
       },
       end: function () {
         if (self.voice !== v) return;
@@ -2137,6 +2265,7 @@
       if (o.headingLevel) el.setAttribute('heading-level', String(o.headingLevel));
     }
     if (o.lang) el.setAttribute('lang', o.lang);
+    if (o.speechProxy) setSpeechProxy(o.speechProxy); // the host's own proxy for Amharic and Afaan Oromo speech
     if (typeof o.onComplete === 'function') {
       el.addEventListener('savanna-onboarding:complete', function (e) { o.onComplete(e.detail, el.querySelector('.dm-done-slot')); });
     }
@@ -2163,7 +2292,9 @@
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth, fromGregorian: gregToEth, gregorianMonths: GREG_MONTHS, parseSpoken: parseSpokenDate },
     describe: describe, speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
     player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
-    prefs: getPrefs, setPrefs: setPrefs, readingOn: readingOn, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
+    prefs: getPrefs, setPrefs: setPrefs, readingOn: readingOn,
+    /** The host's speech proxy (for example '/api'): Amharic and Afaan Oromo speech through it; null turns it off. */
+    setSpeechProxy: setSpeechProxy, speechProxy: function () { return { url: REMOTE.url, down: REMOTE.down, languages: REMOTE.langs.slice() }; }, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
     /** Adds the module's styles and fonts to the page (done automatically when a form or settings element appears). */
     styles: function () { injectCss(); applyPrefs(); }
   };

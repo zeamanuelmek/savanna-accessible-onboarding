@@ -5,6 +5,9 @@
      calling window.SavannaDemoHost.render(name, container, arg) with page links instead of hash routes. */
 (function () {
   var D = window.SavannaOnboarding, store = D.store, L = D.label;
+  // Demo host: Amharic and Afaan Oromo speech through our optional Addis AI reference proxy (api/). Without a key, or
+  // without the proxy (static servers, docker compose without --profile addis), the module falls back by itself.
+  D.setSpeechProxy('/api');
   var view = document.getElementById('view');
   // Route names stay '#/…' inside the views; a host can map them to its own URLs.
   var linkFor = function (r) { return r; };

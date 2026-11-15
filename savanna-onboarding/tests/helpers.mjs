@@ -7,7 +7,9 @@ export const APP = '/showroom.html';
 /** Open the demo with a clean device: no drafts, no profile, chosen language. */
 // Automatic reading of page summaries is off by default here, so other tests are not talked over; the summary tests
 // (tests/summaries.spec.mjs) turn it on or leave it to be asked ('ask').
-export async function freshStart(page, { lang = 'en', prefs = {}, extra = {} } = {}) {
+// The Addis AI speech proxy is treated as "not set up" unless a test asks for it (remote: true), as on a static server.
+export async function freshStart(page, { lang = 'en', prefs = {}, extra = {}, remote = false } = {}) {
+  if (!remote) await page.addInitScript(() => sessionStorage.setItem('savanna-onboarding.remoteDown', '1'));
   await page.addInitScript(([p, x]) => {
     if (sessionStorage.getItem('__seeded')) return; // seed once per test, keep data across reloads
     localStorage.clear();
