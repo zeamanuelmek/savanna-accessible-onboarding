@@ -95,7 +95,7 @@ const page = `<!doctype html>
     <div class="sj-alx" lang="en">
 ${asset(main).trimEnd()}
     </div>
-    <div class="sj"><footer class="sj-foot"><p id="sj-foot"></p><p class="sj-foot-links"></p></footer></div>
+    <div class="sj"><footer class="sj-foot"><p class="sj-foot-links"></p></footer></div>
   </main>
   <div class="sj-alx-dialogs" lang="en">
 ${asset(dialogs)}

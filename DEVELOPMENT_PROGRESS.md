@@ -1394,3 +1394,28 @@ Asked by the team outside the phase plan, before Phase 10.
   answers say so, and everything stays written on screen. Recorded audio exists for Amharic only.
 - Tests: `tests/date-language.spec.mjs` (new, 9 tests), accessibility screens for the typed date and an Oromo
   question; older tests updated.
+
+---
+
+## Team requests (15 Nov, evening): clean-up, home design, simple steps, Back, language dropdown, settings
+
+- **Removed** the "Demo of the Savanna Accessible Onboarding Module…" sentence from every page (the footer keeps its
+  links) and the ALX logo from the header (visitors who are not logged in get a plain "Home" link).
+- **Home page:** room on both sides (16px on phones, up to 48px on wide screens, max 76rem), the two panels as one
+  rounded card, three "what to expect" points in the welcome panel, the screen-reader tip folded into a disclosure,
+  "Log in" in the header for returning learners.
+- **Emoji only in "Simple steps with pictures and big text"** (the pictures setting). Simple steps now looks
+  different: a large picture per question (per question for sign-up and the Support Passport, per type elsewhere),
+  step circles, answers as picture tiles, a full-width "Continue →". All pictures are `aria-hidden`.
+- **Back on question 1** of every form in the Savanna pages (mount option `backUrl`); sign-up goes back to "Sign up or
+  log in".
+- **Language dropdown** in the bar and inside every form (disclosure button + list; each language in its own name).
+- **Accessibility settings, deep check.** Found and fixed:
+  1. **Bug: opening Accessibility settings from the bar reset the language to Amharic** (the link shared the toggle
+     buttons' class, so it also ran the language toggle with no language). The module now also ignores invalid
+     preference values.
+  2. "Stop motion" was in the bar but not in Settings: added. Added a live preview.
+  3. No way back from Settings, and Log in had no Back: both now have "← Back to …", Settings has "Done: back to …"
+     (the page the learner came from, kept for this tab; Settings never sends the learner back to Log in).
+  Checked and fine: axe 0 issues (normal, high contrast, extra-large, Oromo, 320px), focus stays on the changed
+  setting, bar and Settings stay in step, page title follows the language.

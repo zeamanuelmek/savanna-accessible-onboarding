@@ -113,7 +113,7 @@ recommend the same fixes to ALX:
 | In the starter | In our pages |
 |---|---|
 | The menu ("hamburger") is a `<div>`, so the keyboard and screen readers cannot use it | A real `<button>` with a visible "Menu" label and `aria-expanded` |
-| The logo link has no text | The logo is an image with the alternative text "Savanna home" |
+| The logo link has no text | No logo (the module is for any organisation); visitors who are not logged in get a plain "Home" link |
 | The sidebar is not a navigation landmark, and the list contains `<hr>` elements | A `<nav aria-label="Savanna">` with a clean list; the current page has `aria-current="page"` |
 | Sidebar text and icons are grey `#98a3ae` (2.6:1, below the 4.5:1 minimum) | Navy text and icons |
 
@@ -143,11 +143,23 @@ say so when chosen. The ID status, Support Passport status and "Delete my data f
 old dashboard to **My profile**. Pages for visitors who are not logged in (home, sign-up, log-in) have no sidebar,
 as on ALX's own sign-up page; "Log in" or "Sign up" is at the top right.
 
-**"Make this page work for you." bar** (from ALX's accessible hackathon site) at the top of every page: Larger text,
-High contrast, Stop motion, English, አማርኛ. They are toggle buttons with `aria-pressed`; the pressed state also shows
-a tick and a dark fill, not colour alone. The choices are the module's own saved preferences, so they follow the
+**"Make this page work for you." bar** (from ALX's accessible hackathon site) at the top of every page (on the home
+page without the sentence): Larger text, High contrast, Stop motion (toggle buttons with `aria-pressed`; the pressed
+state also shows a tick and a dark fill, not colour alone), a **Language** dropdown (a disclosure button showing the
+current language; the list names each language in its own language; Escape closes it and returns focus), and
+**Accessibility settings**. The choices are the module's own saved preferences, so they follow the
 learner to every page and form. The bar scrolls away; the 72px header below it stays at the top (sticky), so on a
 small screen or at 400% zoom the part that stays on screen is never taller than the header.
+
+**Accessibility settings** has every choice of the bar and more (motion, read aloud, pictures, voice consent), with a
+live preview, "← Back to …" at the top and "Done: back to …" at the bottom: both return to the page the learner came
+from in this tab (never to Log in, so the two pages cannot send each other round in a loop). Log in also has
+"← Back to …". The first question of every form has "← Back" to where the learner came from (sign-up: "Sign up or log
+in"); a host passes it as `mount(…, { backUrl })`.
+
+**Simple steps with pictures and big text** is the only place with pictures (emoji): a large picture above each
+question, step circles, answers as picture tiles and a full-width Continue. Pictures are decorative (`aria-hidden`);
+the words carry the meaning. Everywhere else the words stand alone.
 
 **No font or size flash.** `journey/early.js` (a small script in `<head>`, not deferred) applies the saved language,
 text size, contrast and motion settings before the page is drawn, and the fonts are declared in `journey/journey.css`

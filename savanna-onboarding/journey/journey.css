@@ -151,18 +151,26 @@ html[data-dm-contrast=high] .sj .card-plain, html[data-dm-contrast=high] .sj .jo
 #sidebar a:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: -3px !important; box-shadow: none !important; }
 
 /* Home, in the layout of ALX's own sign-up page: welcome panel left, the first steps right. Stacked on phones. */
-body.sj-home .sj { max-width: none; padding: 0 0 2rem; }
-body.sj-home .sj-foot { margin: 2rem 1rem 0; }
-.sj-split { display: grid; grid-template-columns: minmax(0, 1fr); background: #fff; }
-@media (min-width: 62em) { .sj-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: calc(100vh - 72px); } }
+/* The page has room on both sides (16px on phones, more on larger screens) and the two panels form one card */
+body.sj-home .sj { max-width: 76rem; padding: 1rem 1rem 2rem; }
+@media (min-width: 48em) { body.sj-home .sj { padding: 2rem 2rem 2.5rem; } }
+@media (min-width: 75em) { body.sj-home .sj { padding: 2.5rem 3rem 3rem; } }
+body.sj-home .sj-foot { margin: 2rem 0 0; }
+.sj-split { display: grid; grid-template-columns: minmax(0, 1fr); background: #fff; border: 1px solid var(--so-border-subtle); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 43, 86, .08); }
+@media (min-width: 62em) { .sj-split { grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); min-height: min(42rem, calc(100vh - 12rem)); } }
+.sj-expect { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; gap: .75rem; }
+.sj-expect li { position: relative; padding-left: 2.1rem; font-weight: 500; line-height: 1.4; }
+.sj-expect li::before { content: ""; position: absolute; left: 0; top: .1em; width: 1.4rem; height: 1.4rem; border-radius: 50%; background: rgba(255, 255, 255, .18); border: 2px solid rgba(255, 255, 255, .85); }
+.sj-expect li::after { content: ""; position: absolute; left: .5rem; top: .38em; width: .4rem; height: .7rem; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 .sj-split-art { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: .5rem; padding: 2rem 1.25rem;
   color: #fff; background: radial-gradient(circle at 85% 15%, rgba(255,255,255,.12) 0 18%, transparent 19%), radial-gradient(circle at 10% 95%, rgba(255,255,255,.08) 0 25%, transparent 26%), linear-gradient(160deg, #2b1462 0%, #43268f 50%, #5648b7 100%); }
 @media (min-width: 62em) { .sj-split-art { padding: 3rem 3rem; } }
-.sj-split-logo { width: 9rem; height: auto; margin: -1.5rem 0 0 -1rem; filter: brightness(0) invert(1); } /* Savanna's ALX logo, drawn white */
+@media (max-width: 30em) { .sj-split-art { padding: 1.5rem 1.25rem; } .sj .sj-split-art h1 { font-size: 1.7em; } }
 .sj .sj-split-art h1 { color: #fff; font-size: clamp(1.8em, 4.5vw, 3em); font-weight: 700; line-height: 1.15; margin: 0 0 .75rem; max-width: 14em; }
 .sj .sj-split-art p { font-size: 1.15em; font-weight: 500; max-width: 26em; margin: 0; }
-.sj-split-form { padding: 1.5rem 1rem 2rem; width: 100%; }
-@media (min-width: 48em) { .sj-split-form { padding: 2.5rem 2rem; } }
+.sj-split-form { padding: 1.5rem 1.25rem 2rem; width: 100%; }
+@media (min-width: 48em) { .sj-split-form { padding: 2.5rem 2.5rem; } }
+@media (min-width: 75em) { .sj-split-form { padding: 3rem 3.5rem; } }
 .sj .sj-split-form .dm-q { margin-top: 0; }
 .sj-choice { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 1rem; }
 .sj-choice li { border: var(--so-border-width) solid var(--so-border-subtle); border-radius: var(--so-radius-card); padding: 1rem 1.1rem; }
@@ -239,3 +247,25 @@ html[data-dm-contrast=high] .sj-alx .sj-greeting a { color: #000; }
 /* ALX shortens long titles with "…" (events, courses); in our copy they wrap, so nothing is hidden at large text sizes */
 .sj-alx .text-truncate, .sj-alx-dialogs .text-truncate { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; overflow-wrap: anywhere; }
 .sj-a11y-bare .sj-a11y-in { justify-content: flex-end; }
+.sj-back { margin: 0 0 .75rem; } .sj-back a { display: inline-flex; align-items: center; gap: .35rem; min-height: 44px; font-weight: 600; }
+.sj-done { margin-top: 1.5rem; padding: 1rem 1.25rem; background: var(--so-surface); border: 1px solid var(--so-border-subtle); border-radius: var(--so-radius-card); }
+.sj-done .actions { margin: 0; }
+.sj-home-link { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: .25rem .6rem; color: var(--so-navy); font-weight: 600; text-decoration: none; border-radius: var(--so-radius-sm); }
+.sj-home-link:hover { background: var(--so-surface-alt); color: var(--so-navy); }
+.sj-home-link:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: 2px !important; }
+.sj-foot { margin-top: 2rem; padding-top: .75rem; }
+.sj-tip summary { cursor: pointer; font-weight: 600; min-height: 44px; display: flex; align-items: center; color: var(--so-heading); }
+.sj-tip[open] summary { margin-bottom: .25rem; }
+.sj-tip p { margin: .4rem 0 0; }
+/* Language dropdown in the "Make this page work for you" bar */
+.sj-lang-wrap { position: relative; }
+.sj-lang-btn { display: inline-flex; align-items: center; gap: .45rem; }
+.sj-lang-menu { position: absolute; right: 0; top: calc(100% + .35rem); z-index: 1200; min-width: 12rem; list-style: none; margin: 0; padding: .35rem; background: #fff; border: 2px solid var(--so-navy); border-radius: var(--so-radius); box-shadow: 0 6px 18px rgba(0, 43, 86, .15); }
+.sj-lang-menu button { display: flex; align-items: center; gap: .5rem; width: 100%; min-height: 44px; padding: .35rem .75rem; border: 0; border-radius: var(--so-radius-sm); background: none; color: var(--so-navy); font: inherit; font-weight: 500; text-align: left; cursor: pointer; }
+.sj-lang-menu button:hover, .sj-lang-menu button[aria-current] { background: var(--so-surface-alt); }
+.sj-lang-menu button[aria-current] { font-weight: 700; }
+.sj-lang-menu .sj-tick { display: inline-block; width: 1rem; }
+.sj-lang-menu button:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: -2px !important; }
+@media (max-width: 30em) { .sj-lang-menu { left: 0; right: auto; } }
+html[data-dm-contrast=high] .sj-lang-menu { border-color: #000; }
+html[data-dm-contrast=high] .sj-lang-menu button { color: #000; }

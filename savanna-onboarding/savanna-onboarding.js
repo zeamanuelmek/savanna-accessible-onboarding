@@ -69,9 +69,14 @@
     target.dispatchEvent(new CustomEvent('savanna-onboarding:' + name, { bubbles: !!bubbles, detail: detail }));
     target.dispatchEvent(new CustomEvent('dimts:' + name, { bubbles: !!bubbles, detail: detail }));
   }
+  // Values a preference may take; anything else is ignored (a host bug can never wipe the learner's choices)
+  var PREF_VALUES = { lang: LANGS, size: ['normal', 'large', 'xlarge'], contrast: ['normal', 'high'], motion: ['normal', 'reduce'], mode: [''].concat(MODES) };
   function setPrefs(patch) {
     var p = getPrefs();
-    Object.keys(patch).forEach(function (k) { p[k] = patch[k]; });
+    Object.keys(patch || {}).forEach(function (k) {
+      if (PREF_VALUES[k] && PREF_VALUES[k].indexOf(patch[k]) === -1) return;
+      p[k] = patch[k];
+    });
     store.set('prefs', p);
     applyPrefs();
     emit(document, 'prefs', p);
@@ -160,6 +165,9 @@
       noAudio: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.',
       clipFailed: 'A recording could not be played, so the phone\'s voice is reading instead.',
       size_normal: 'Normal', size_large: 'Large', size_xlarge: 'Extra large',
+      s_motion: 'Motion', motion_normal: 'Allow animations', motion_reduce: 'Stop motion',
+      s_motionHint: 'Stops animations, sliding and smooth scrolling.',
+      s_preview: 'Preview', previewText: 'This is how text and buttons look with your settings.', previewBtn: 'Example button',
       contrast_normal: 'Standard', contrast_high: 'High contrast',
       on: 'On', off: 'Off',
       settingsSaved: 'Saved. This setting now applies everywhere this tool is used on this phone.',
@@ -239,6 +247,9 @@
       play: 'አዳምጥ', pause: 'ለአፍታ አቁም', resume: 'ማጫወት ቀጥል', stopAudio: 'አቁም', replay: 'እንደገና አጫውት',
       noAudio: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
       clipFailed: 'ቅጂው መጫወት አልቻለም፤ ስለዚህ የስልኩ ድምፅ እያነበበ ነው።',
+      s_motion: 'እንቅስቃሴ', motion_normal: 'እንቅስቃሴ ፍቀድ', motion_reduce: 'እንቅስቃሴ አቁም',
+      s_motionHint: 'እንቅስቃሴዎችን፣ መንሸራተትንና ቀስ ብሎ መሸብለልን ያቆማል።',
+      s_preview: 'ቅድመ እይታ', previewText: 'በቅንብሮችዎ ጽሑፍና አዝራሮች እንደዚህ ይታያሉ።', previewBtn: 'የምሳሌ አዝራር',
       size_normal: 'መደበኛ', size_large: 'ትልቅ', size_xlarge: 'በጣም ትልቅ',
       contrast_normal: 'መደበኛ', contrast_high: 'ከፍተኛ ንፅፅር',
       on: 'በርቷል', off: 'ጠፍቷል',
@@ -372,6 +383,9 @@
       replay: 'Irra deebi\'ii taphachiisi',
       noAudio: 'Kanaaf ammaaf waraabbiin hin jiru, bilbilli kun immoo afaan kanaaf sagalee hin qabu. Wanti hundi iskiriinii irratti barreeffameera.',
       clipFailed: 'Waraabbiin tokko taphachuu hin dandeenye, kanaaf sagaleen bilbilaa dubbisaa jira.',
+      s_motion: 'Sochii', motion_normal: 'Sochii hayyami', motion_reduce: 'Sochii dhaabi',
+      s_motionHint: 'Sochii, mucucaachuu fi gadi-ol suuta socho\'uu dhaaba.',
+      s_preview: 'Dursa ilaali', previewText: 'Qindaa\'ina keetiin barreeffamni fi qabduuwwan akkana mul\'atu.', previewBtn: 'Qabduu fakkeenyaa',
       size_normal: 'Idilee',
       size_large: 'Guddaa',
       size_xlarge: 'Baay\'ee guddaa',
@@ -1080,6 +1094,14 @@
     '.dm textarea.dm-input{min-height:8em}',
     '.dm-input[aria-invalid=true]{border-color:var(--so-error);border-width:3px}',
     '.dm-date{display:flex;flex-wrap:wrap;gap:.75em}',
+    '.dm-lang{position:relative;display:inline-flex}',
+    '.dm-lang-menu{position:absolute;right:0;top:calc(100% + .3em);z-index:20;display:flex;flex-direction:column;min-width:11em;padding:.3em;background:var(--so-surface);border:var(--so-border-width) solid var(--so-border-strong);border-radius:var(--so-radius);box-shadow:0 6px 18px rgba(0,43,86,.15)}',
+    '.dm-lang-menu[hidden]{display:none}',
+    '.dm-lang-menu button{display:flex;align-items:center;gap:.4em;min-height:44px;padding:.3em .7em;border:0;border-radius:var(--so-radius-sm);background:none;color:var(--so-heading);font:inherit;text-align:left;cursor:pointer}',
+    '.dm-lang-menu button:hover,.dm-lang-menu button[aria-current]{background:var(--so-surface-alt)}.dm-lang-menu button[aria-current]{font-weight:700}',
+    '.dm-lang-tick{display:inline-block;width:1em}',
+    '.dm-preview{border:var(--so-border-width) dashed var(--so-border);border-radius:var(--so-radius);padding:.75em 1em;margin:0 0 1.5em;background:var(--so-surface)}',
+    '.dm-preview-h{font-weight:600;margin:0 0 .25em;color:var(--so-heading)}.dm-preview-btn{pointer-events:none}',
     '.dm-cal{border:0;margin:0 0 1em;padding:0;min-width:0}.dm-cal legend{font-weight:600;margin-bottom:.5em;padding:0}.dm-cal-opts{margin:0}',
     '.dm-date div{display:flex;flex-direction:column;gap:.25em;max-width:100%}',
     '.dm-date label{font-weight:500}',
@@ -1137,6 +1159,19 @@
     '.dm-settings fieldset{margin:0 0 1.5em}',
     '.dm-settings legend{font-weight:600;font-size:1.2em;margin-bottom:.4em;color:var(--so-heading)}',
     '.dm-easy .dm-q{font-size:2em}',
+    /* Simple steps: a big picture per question, step circles, answers as picture tiles, a full-width Continue */
+    '.dm-pic{display:grid;place-items:center;width:5.5rem;height:5.5rem;margin:.25em 0 .5em;border-radius:50%;background:var(--so-surface-alt);font-size:3rem;line-height:1}',
+    '.dm-steps{display:flex;flex-wrap:wrap;gap:.4em;margin:.35em 0 1em}',
+    '.dm-step{display:grid;place-items:center;min-width:2.1em;height:2.1em;padding:0 .3em;border-radius:var(--so-radius-pill);border:var(--so-border-width) solid var(--so-border);background:var(--so-surface);color:var(--so-heading);font-weight:600}',
+    '.dm-step-done{background:var(--so-heading);border-color:var(--so-heading);color:var(--so-surface)}',
+    '.dm-step-now{border-width:3px;border-color:var(--so-primary);transform:scale(1.15)}',
+    '.dm-easy .dm-opts{grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr))}',
+    '.dm-easy .dm-opt:has(.dm-ico){flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:.4em;min-height:9rem;padding:1em .75em;position:relative}',
+    '.dm-easy .dm-opt:has(.dm-ico) input{position:absolute;top:.75em;left:.75em}',
+    '.dm-easy .dm-opt:has(.dm-ico) .dm-ico{font-size:3em}',
+    '.dm-easy .dm-opt-row{flex-direction:column}',
+    '.dm-easy .dm-actions .dm-primary{flex:1 1 100%;min-height:60px;font-size:1.15em}',
+    '.dm-easy .dm-actions .dm-primary::after{content:" →" / ""}',
     '.dm-easy .dm-ico{font-size:2.1em}',
     '.dm-easy .dm-opt{min-height:68px;font-size:1.15em}',
 
@@ -1162,6 +1197,11 @@
      Elements the controller needs are also marked data-ref="…" (stable hooks for code and tests).
      ===================================================================================================== */
   var MODE_ICONS = { read_type: '⌨️', listen: '🎧', speak: '🎤', simple: '🖼️' };
+  /* Pictures (emoji) are part of "Simple steps with pictures and big text" only (the "Pictures and bigger buttons"
+     setting). Everywhere else the words stand alone. Pictures are always decorative: the words carry the meaning. */
+  function pic(on, e) { return on && e ? '<span class="dm-ico" aria-hidden="true">' + e + '</span> ' : ''; }
+  // In "Simple steps", each question gets a large picture: its own (field.picture) or one for its type.
+  var TYPE_PICTURES = { text: '✏️', tel: '📱', email: '✉️', textarea: '📝', choice: '👆', multi: '☑️', consent: '🤝', ethdate: '📅' };
   var View = {
     id: function (vm, name) { return vm.uid + '-' + name; },
 
@@ -1179,10 +1219,10 @@
     /* "Listen" and the player controls (Pause/Resume, Stop, Play again). Shown and labelled by the controller. */
     listenTools: function (vm) {
       var lang = vm.lang;
-      return '<button type="button" class="dm-btn" data-act="listen">🔊 ' + t('listen', lang) + '</button>' +
+      return '<button type="button" class="dm-btn" data-act="listen">' + pic(vm.pictures, '🔊') + t('listen', lang) + '</button>' +
         '<span class="dm-player" data-ref="player" hidden>' +
-        '<button type="button" class="dm-btn" data-act="pause"><span aria-hidden="true">⏸ </span><span data-ref="pause-label">' + t('pause', lang) + '</span></button>' +
-        '<button type="button" class="dm-btn" data-act="stop-audio"><span aria-hidden="true">⏹ </span>' + t('stopAudio', lang) + '</button>' +
+        '<button type="button" class="dm-btn" data-act="pause">' + pic(vm.pictures, '⏸️') + '<span data-ref="pause-label">' + t('pause', lang) + '</span></button>' +
+        '<button type="button" class="dm-btn" data-act="stop-audio">' + pic(vm.pictures, '⏹️') + t('stopAudio', lang) + '</button>' +
         '<button type="button" class="dm-btn" data-act="replay"><span aria-hidden="true">↻ </span>' + t('replay', lang) + '</button></span>';
     },
     /* One answer option, with its own Listen button when read aloud is on. The button sits beside the label (never
@@ -1190,18 +1230,23 @@
     option: function (vm, label, play, i) {
       if (!vm.easy) return label;
       return '<div class="dm-opt-row">' + label + '<button type="button" class="dm-btn dm-play" data-act="play-opt" data-i="' + i + '" aria-label="' + esc(t('play', vm.lang) + ': ' + play) + '">' +
-        '<span aria-hidden="true">🔊 </span>' + t('play', vm.lang) + '</button></div>';
+        pic(vm.pictures, '🔊') + t('play', vm.lang) + '</button></div>';
     },
 
     bar: function (vm, showBack) {
       var lang = vm.lang, helpId = View.id(vm, 'help');
       return '<div class="dm-bar">' +
-        '<div>' + (showBack ? '<button type="button" class="dm-link" data-act="back">← ' + t('back', lang) + '</button>' : '') + '</div>' +
+        '<div>' + (showBack ? '<button type="button" class="dm-link" data-act="back">← ' + t('back', lang) + '</button>'
+          // the first screen: "Back" leaves the form, to the page the host names (mount option backUrl)
+          : vm.backUrl ? '<a class="dm-link" href="' + esc(vm.backUrl) + '">← ' + t('back', lang) + '</a>' : '') + '</div>' +
         '<div class="dm-bar-r">' +
-        LANGS.filter(function (l) { return l !== lang; }).map(function (l) {
-          return '<button type="button" class="dm-btn dm-small" data-act="lang" data-lang="' + l + '" lang="' + l + '">' + LANG_NAMES[l] + '</button>';
-        }).join('') +
-        '<button type="button" class="dm-btn dm-small" data-act="easy" aria-pressed="' + vm.easy + '">🔊 ' + t(vm.easy ? 'easyOn' : 'easyOff', lang) + '</button>' +
+        // Language: one dropdown (a disclosure button and a short list), each language named in its own language
+        '<span class="dm-lang"><button type="button" class="dm-btn dm-small" data-act="lang-menu" aria-expanded="false" aria-controls="' + View.id(vm, 'langs') + '">' +
+          '<span class="dm-vh">' + t('s_lang', lang) + ': </span><span lang="' + lang + '">' + LANG_NAMES[lang] + '</span><span aria-hidden="true"> ▾</span></button>' +
+          '<span id="' + View.id(vm, 'langs') + '" class="dm-lang-menu" data-ref="langs" hidden>' + LANGS.map(function (l) {
+            return '<button type="button" data-act="lang" data-lang="' + l + '" lang="' + l + '"' + (l === lang ? ' aria-current="true"' : '') + '><span aria-hidden="true" class="dm-lang-tick">' + (l === lang ? '✓' : '') + '</span>' + LANG_NAMES[l] + '</button>';
+          }).join('') + '</span></span>' +
+        '<button type="button" class="dm-btn dm-small" data-act="easy" aria-pressed="' + vm.easy + '">' + pic(vm.pictures, '🔊') + t(vm.easy ? 'easyOn' : 'easyOff', lang) + '</button>' +
         '<button type="button" class="dm-btn dm-small" data-act="help" aria-expanded="' + !!vm.helpOpen + '" aria-controls="' + helpId + '">' + t('help', lang) + '</button>' +
         '</div></div>' +
         '<div id="' + helpId + '" data-ref="help" class="dm-panel"' + (vm.helpOpen ? '' : ' hidden') + '><h2>' + t('helpTitle', lang) + '</h2><p>' + esc(L(vm.cfg.help, lang) || t('helpText', lang)) + '</p>' + View.srTip() +
@@ -1226,7 +1271,7 @@
         (err ? View.errorLine(vm, err) : '') +
         '<div class="dm-opts">' + MODES.map(function (m, i) {
           return View.option(vm, '<label class="dm-opt"><input' + (i === 0 ? ' id="' + View.id(vm, 'input') + '" data-ref="input"' : '') + ' type="radio" name="mode" value="' + m + '"' + (vm.prefsMode === m ? ' checked' : '') + '>' +
-            '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span><span>' + t('m_' + m, lang) + '</span></label>', t('m_' + m, lang), i);
+            (vm.pictures || m === 'simple' ? '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span>' : '') + '<span>' + t('m_' + m, lang) + '</span></label>', t('m_' + m, lang), i);
         }).join('') + '</div></fieldset>' +
         '<div class="dm-tools">' + View.listenTools(vm) + '</div>' +
         View.status() +
@@ -1241,9 +1286,14 @@
       var opt = f.optional ? ' <span class="dm-opt-tag">' + t('optional', lang) + '</span>' : '';
       var h = View.bar(vm, s.step > 0 || s.returnToReview || !!vm.welcomeOn);
       h += '<p class="dm-progress">' + t('progress', lang, { n: p.n, total: p.total }) + '</p>';
-      h += '<div class="dm-meter" aria-hidden="true"><span style="width:' + Math.round(p.n / p.total * 100) + '%"></span></div>';
+      if (vm.pictures) { // "Simple steps": one circle per question, done ones ticked, the current one large
+        var dots = '';
+        for (var k = 1; k <= p.total; k++) dots += '<span class="dm-step' + (k < p.n ? ' dm-step-done' : k === p.n ? ' dm-step-now' : '') + '">' + (k < p.n ? '✓' : k) + '</span>';
+        h += '<div class="dm-steps" aria-hidden="true">' + dots + '</div>';
+      } else h += '<div class="dm-meter" aria-hidden="true"><span style="width:' + Math.round(p.n / p.total * 100) + '%"></span></div>';
       if (vm.error) h += View.errorSummary(vm, vm.error);
       h += '<form class="dm-form" novalidate>';
+      if (vm.pictures) h += '<div class="dm-pic" aria-hidden="true">' + (f.picture || TYPE_PICTURES[f.type] || '❓') + '</div>';
       if (group) h += '<fieldset' + (describedBy ? ' aria-describedby="' + describedBy + '"' : '') + '><legend><h1 class="dm-q" tabindex="-1">' + esc(label) + opt + '</h1></legend>';
       else h += '<h1 class="dm-q" tabindex="-1"><label for="' + View.id(vm, 'input') + '">' + esc(label) + opt + '</label></h1>';
       if (f.body) h += '<div class="dm-note">' + esc(L(f.body, lang)) + '</div>';
@@ -1254,7 +1304,7 @@
       if (group) h += '</fieldset>';
       h += '<div class="dm-tools">' + View.listenTools(vm);
       var canSpeak = voiceAllowed(f, vm) && speech.input.supported();
-      if (canSpeak) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">🎤 ' + t('speak', lang) + '</button>';
+      if (canSpeak) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">' + pic(vm.pictures, '🎤') + t('speak', lang) + '</button>';
       h += '</div>';
       // A learner who chose "speak my answers" is told plainly when this browser (e.g. an app's WebView) cannot listen.
       if (voiceAllowed(f, vm) && !canSpeak && vm.prefsMode === 'speak') h += '<p class="dm-note">' + t('voiceUnsupported', lang) + '</p>';
@@ -1287,7 +1337,7 @@
         return '<div class="dm-opts">' + optionsOf(f).map(function (o, i) {
           var checked = sel.indexOf(o.value) !== -1 ? ' checked' : '';
           return View.option(vm, '<label class="dm-opt"><input' + (i === 0 ? ' id="' + inputId + '" data-ref="input"' : '') + ' type="' + (multi ? 'checkbox' : 'radio') + '" name="v" value="' + esc(o.value) + '"' + checked + '>' +
-            (o.icon ? '<span class="dm-ico" aria-hidden="true">' + o.icon + '</span>' : '') + '<span>' + esc(L(o.label, lang)) +
+            (o.icon && vm.pictures ? '<span class="dm-ico" aria-hidden="true">' + o.icon + '</span>' : '') + '<span>' + esc(L(o.label, lang)) +
             (o.badge ? ' <span class="dm-badge">' + esc(L(o.badge, lang)) + '</span>' : '') + '</span></label>', L(o.label, lang), i);
         }).join('') + '</div>';
       }
@@ -1434,7 +1484,14 @@
     if (!this._listening) {
       this._listening = true;
       this.addEventListener('click', this.onClick.bind(this));
-      this.addEventListener('keydown', function (e) { if (e.key === 'Escape' && Player.state !== 'idle') { Player.stop(); } });
+      this.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        var lm = self.querySelector('[data-act=lang-menu][aria-expanded=true]');
+        if (lm) { self.langMenu(false, true); return; }
+        if (Player.state !== 'idle') Player.stop();
+      });
+      this._onDocClick = function (e) { if (!self.contains(e.target) || !e.target.closest('.dm-lang')) self.langMenu(false); };
+      document.addEventListener('click', this._onDocClick);
       // A multi-line answer box is shown whole when it gets focus (browsers only reveal its first line), so a learner
       // using zoom sees all of it (found by the Phase 9 gate dry run at 200% zoom).
       this.addEventListener('focusin', function (e) { if (e.target.tagName === 'TEXTAREA' && e.target.scrollIntoView) e.target.scrollIntoView({ block: 'nearest' }); });
@@ -1487,7 +1544,7 @@
     return {
       askHelperOpen: !!this.askHelperOpen,
       cfg: this.cfg, s: s, lang: this.lang, easy: this.easy, pictures: getPrefs().pictures, offline: navigator.onLine === false, uid: this.uid, error: this.error, helpOpen: this.helpOpen,
-      welcomeOn: this.welcomeOn, startAtReview: this.startAtReview, prefsMode: mode, voiceFirst: mode === 'speak',
+      welcomeOn: this.welcomeOn, backUrl: this.getAttribute('back-url') || '', startAtReview: this.startAtReview, prefsMode: mode, voiceFirst: mode === 'speak',
       resumeLink: location.href.split('#')[0].split('?')[0] + '?resume=' + s.resumeCode + location.hash
     };
   };
@@ -1611,7 +1668,9 @@
       s.back(this.welcomeOn);
       this.save(); this.render(true); return;
     }
+    if (act === 'lang-menu') { this.langMenu(b.getAttribute('aria-expanded') !== 'true'); return; }
     if (act === 'lang') {
+      if (b.getAttribute('data-lang') === this.lang) { this.langMenu(false, true); return; }
       this.collect();
       var to = b.getAttribute('data-lang');
       this.lang = LANGS.indexOf(to) !== -1 ? to : (this.lang === 'am' ? 'en' : 'am'); this.error = ''; this.savePrefs(); this.render(true); return;
@@ -1663,6 +1722,12 @@
     if (act === 'heard-type') { this.voiceReset(); this.status(t('voiceDiscarded', this.lang)); var ti = this.ref('input'); if (ti) ti.focus(); return; }
   };
 
+  SavannaOnboardingForm.prototype.langMenu = function (open, focusBtn) {
+    var b = this.querySelector('[data-act=lang-menu]'), m = this.ref('langs');
+    if (!b || !m) return;
+    b.setAttribute('aria-expanded', String(open)); m.hidden = !open;
+    if (open) (m.querySelector('[aria-current]') || m.querySelector('button')).focus(); else if (focusBtn) b.focus();
+  };
   SavannaOnboardingForm.prototype.status = function (msg) { var s = this.querySelector('.dm-status'); if (s) { s.textContent = ''; setTimeout(function () { s.textContent = msg; }, 50); } };
   SavannaOnboardingForm.prototype.setHeard = function (html) { var h = this.ref('heard'); if (h) h.innerHTML = shiftHeadings(html, this.headingLevel()); };
 
@@ -1723,7 +1788,7 @@
     if (!b) return;
     b.setAttribute('aria-pressed', String(on));
     b.classList.toggle('dm-mic-on', on);
-    b.textContent = on ? '⏹ ' + t('stop', lang) : '🎤 ' + t('speak', lang);
+    b.innerHTML = pic(getPrefs().pictures, on ? '⏹️' : '🎤') + esc(t(on ? 'stop' : 'speak', lang));
   };
   SavannaOnboardingForm.prototype.voiceReset = function () {
     if (this.voice && this.voice.session) this.voice.session.abort();
@@ -1912,7 +1977,11 @@
         group('lang', t('s_lang', lang), LANGS.map(function (l) { return [l, LANG_NAMES[l], l]; }), p.lang) +
         group('size', t('s_size', lang), [['normal', t('size_normal', lang)], ['large', t('size_large', lang)], ['xlarge', t('size_xlarge', lang)]], p.size) +
         group('contrast', t('s_contrast', lang), [['normal', t('contrast_normal', lang)], ['high', t('contrast_high', lang)]], p.contrast) +
-        group('mode', t('s_mode', lang), MODES.map(function (m) { return [m, t('m_' + m, lang), null, MODE_ICONS[m]]; }), p.mode) +
+        group('motion', t('s_motion', lang), [['normal', t('motion_normal', lang)], ['reduce', t('motion_reduce', lang)]], p.motion, t('s_motionHint', lang)) +
+        // a live preview: the learner sees the effect of text size and contrast at once
+        '<div class="dm-preview" aria-labelledby="so-preview-h" role="group"><p id="so-preview-h" class="dm-preview-h">' + t('s_preview', lang) + '</p>' +
+        '<p>' + t('previewText', lang) + '</p><span class="dm-btn dm-primary dm-preview-btn" aria-hidden="true">' + t('previewBtn', lang) + '</span></div>' +
+        group('mode', t('s_mode', lang), MODES.map(function (m) { return [m, t('m_' + m, lang), null, p.pictures || m === 'simple' ? MODE_ICONS[m] : null]; }), p.mode) +
         group('easy', t('s_read', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.easy ? 'on' : 'off', t('s_readHint', lang)) +
         group('pictures', t('s_pictures', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.pictures ? 'on' : 'off') +
         group('voice', t('s_voice', lang), [['on', t('voice_on', lang)], ['off', t('voice_off', lang)]], store.get('voiceConsent', null) === true ? 'on' : 'off', t('s_voiceHint', lang)) +
@@ -1938,6 +2007,7 @@
        lang: 'am' | 'en'         starting language (otherwise the learner's saved choice)
        instance: 'id'            keeps a separate draft (for example one per job)
        welcome: true             start with the "how would you like to answer?" screen
+       backUrl: 'page.html'      the first screen shows "Back" to this page (otherwise it has no Back)
        focus: true               move focus to the question (default true)
        headingLevel: 2           when the host page has its own <h1>: the question becomes an <h2>
        onComplete(detail, slot)  called with the same detail as the savanna-onboarding:complete event, and the
@@ -1966,6 +2036,7 @@
       el.setAttribute('form', o.form);
       if (o.instance) el.setAttribute('instance', o.instance);
       if (o.welcome) el.setAttribute('welcome', '');
+      if (o.backUrl) el.setAttribute('back-url', o.backUrl);
       if (o.headingLevel) el.setAttribute('heading-level', String(o.headingLevel));
     }
     if (o.lang) el.setAttribute('lang', o.lang);

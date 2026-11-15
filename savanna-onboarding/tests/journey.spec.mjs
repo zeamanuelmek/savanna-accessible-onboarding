@@ -3,7 +3,7 @@
 // The GATE task first: "sign up for Savanna and save a Support Passport", end to end, by mouse, in both languages,
 // and with the keyboard only.
 import { test, expect } from '@playwright/test';
-import { freshStart, pick, next, heading } from './helpers.mjs';
+import { freshStart, pick, next, heading, barLanguage } from './helpers.mjs';
 
 const at = (page, path) => page.goto(path).then(() => page.waitForFunction(() => !!window.SavannaOnboarding));
 const profile = page => page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.profile') || 'null'));
@@ -98,18 +98,25 @@ test('GATE: the whole task with the keyboard only (Tab, Space, Enter)', async ({
   expect((await passport(page)).sharing).toBe('ask');
 });
 
-test('Savanna frame: menu button, labelled navigation, logo with a name, language switch', async ({ page }, info) => {
+test('Savanna frame: menu button, labelled navigation, no logo, language dropdown', async ({ page }, info) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/index.html');
   await expect(page.locator('#sidebar')).toHaveCount(0); // the home page has no sidebar menu
   await expect(page.locator('.sj-menu')).toHaveCount(0);
-  await expect(page.getByRole('link', { name: 'Savanna home' })).toHaveCount(1);
-  await page.locator('.sj-tog[data-tog=am]').click();
+  await expect(page.locator('.sj-header img')).toHaveCount(0); // no logo: the module is for any organisation
+  const langBtn = page.getByRole('button', { name: 'Language: English' });
+  await expect(langBtn).toHaveAttribute('aria-expanded', 'false');
+  await langBtn.click();
+  await expect(langBtn).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#sj-lang-menu button')).toHaveText([/አማርኛ/, /English/, /Afaan Oromoo/]);
+  await expect(page.locator('#sj-lang-menu button[aria-current]')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(langBtn).toBeFocused();
+  await barLanguage(page, 'am');
   await expect(page.locator('html')).toHaveAttribute('lang', 'am');
   await expect(page.locator('.sj h1')).toHaveText('ወደ ምዝገባ ገጽዎ እንኳን ደህና መጡ');
-  await expect(page.locator('.sj-tog[data-tog=am]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.sj-tog[data-tog=am]')).toBeFocused();
-  await page.locator('.sj-tog[data-tog=en]').click();
+  await expect(page.getByRole('button', { name: 'ቋንቋ: አማርኛ' })).toBeFocused(); // focus stays on the Language button
+  await barLanguage(page, 'en');
   await page.evaluate(() => {
     localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: 'kebele', assurance_level: 'self_declared' }));
     localStorage.setItem('savanna-demo.session', '{"at":"x"}');
@@ -358,4 +365,68 @@ test('nobody logged in: the dashboard asks to log in and shows none of the learn
   await expect(page.locator('#sj-view h1')).toHaveText('Please log in');
   await expect(page.locator('.sj-alx')).toBeHidden();
   await expect(page.locator('#sidebar')).toHaveCount(0);
+});
+
+test('Accessibility settings: opening them keeps the language; Back and Done return to where the learner was; no loop with Log in', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await at(page, '/index.html');
+  await page.getByRole('link', { name: 'Accessibility settings' }).click();
+  await page.waitForURL('**/settings.html'); await page.waitForFunction(() => !!window.SavannaOnboarding);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en'); // it used to fall back to Amharic (bug fixed 15 Nov)
+  await expect(page.locator('.dm-settings h1')).toBeFocused();
+  // every setting of the bar is also here, with a live preview
+  await expect(page.getByRole('group', { name: 'Motion' })).toHaveCount(1);
+  await expect(page.getByRole('group', { name: 'Preview' })).toHaveCount(1);
+  await page.getByRole('radio', { name: 'Stop motion' }).check();
+  await expect(page.locator('html')).toHaveAttribute('data-dm-motion', 'reduce');
+  await expect(page.locator('.sj-tog[data-tog=motion]')).toHaveAttribute('aria-pressed', 'true'); // bar and settings agree
+  await expect(page.locator('.sj-back a')).toHaveText(/Back to the home page/);
+  await expect(page.locator('#sj-set-done a')).toHaveText('Done: back to the home page');
+  // log in from here, then back: settings again, and settings still goes back home (never to log in)
+  await page.locator('.sj-head-link').click(); await page.waitForURL('**/login.html');
+  await expect(page.locator('.sj-back a')).toHaveText(/Back to settings/);
+  await page.locator('.sj-back a').click(); await page.waitForURL('**/settings.html');
+  await expect(page.locator('.sj-back a')).toHaveText(/Back to the home page/);
+  // language changed in Settings: Back and Done follow it
+  await page.locator('input[name=lang][value=om]').check();
+  await expect(page.locator('#sj-set-done a')).toHaveText("Xumureera: gara fuula jalqabaa deebi'i");
+  await page.locator('#sj-set-done a').click(); await page.waitForURL('**/index.html');
+});
+
+test('sign-up question 1 has Back, to "Sign up or log in"', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await at(page, '/index.html');
+  await pick(page, 'read_type'); await page.locator('#sj-mode button[type=submit]').click();
+  await page.locator('.sj-split a[href="signup.html"]').click();
+  await page.waitForSelector('.dm-q');
+  const back = page.locator('.dm-bar').getByRole('link', { name: '← Back' });
+  await expect(back).toHaveAttribute('href', 'index.html?step=account');
+  await back.click();
+  await expect(page.locator('#sj-step-h')).toHaveText('Sign up or log in');
+});
+
+test('no demo sentence in the footer, and no logo in the header, on any page', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  for (const p of ['/index.html', '/signup.html', '/login.html', '/jobs.html', '/settings.html', '/employer.html']) {
+    await at(page, p);
+    await expect(page.locator('body')).not.toContainText('Demo of the Savanna Accessible Onboarding Module');
+    await expect(page.locator('.sj-header img')).toHaveCount(0);
+  }
+});
+
+test('emoji only in "Simple steps with pictures"; there, a picture per question, step circles and picture tiles', async ({ page }) => {
+  const EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}\u{23E9}-\u{23FA}]/u;
+  await freshStart(page, { lang: 'en' });
+  await at(page, '/index.html');
+  await pick(page, 'read_type'); await page.locator('#sj-mode button[type=submit]').click();
+  await page.locator('.sj-split a[href="signup.html"]').click();
+  await page.waitForSelector('.dm-q');
+  expect(await page.locator('main').innerText()).not.toMatch(EMOJI);
+  await expect(page.locator('.dm-pic, .dm-steps')).toHaveCount(0);
+  await page.evaluate(() => window.SavannaOnboarding.setPrefs(window.SavannaOnboarding.prefsForMode('simple')));
+  await at(page, '/signup.html');
+  await expect(page.locator('.dm-pic')).toHaveText('👥');
+  await expect(page.locator('.dm-steps .dm-step-now')).toHaveText('1');
+  await expect(page.locator('.dm-opt .dm-ico')).toHaveCount(2); // picture tiles
+  for (const sel of ['.dm-pic', '.dm-steps']) await expect(page.locator(sel)).toHaveAttribute('aria-hidden', 'true'); // decorative: the words carry the meaning
 });

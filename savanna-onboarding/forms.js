@@ -33,23 +33,23 @@
   D.register('signup', {
     title: { en: 'Join Savanna', am: 'ሳቫናን ይቀላቀሉ', om: 'Savanna\'tti galmaa\'i' },
     fields: [
-      { id: 'filler', type: 'choice', reviewLabel: { en: 'Who filled in this form', am: 'ቅጹን የሞላው', om: 'Eenyutu unka kana guute' },
+      { id: 'filler', picture: '👥', type: 'choice', reviewLabel: { en: 'Who filled in this form', am: 'ቅጹን የሞላው', om: 'Eenyutu unka kana guute' },
         label: { en: 'Who is filling in this form?', am: 'ይህን ቅጽ የሚሞላው ማን ነው?', om: 'Eenyutu unka kana guutaa jira?' },
         options: [
           { value: 'self', icon: '🙋', label: { en: 'Me, for myself', am: 'እኔ፣ ለራሴ', om: 'Ana, ofii kootiif' }, say: ['me', 'myself', 'እኔ', 'ራሴ'] },
           { value: 'partner', icon: '🤝', label: { en: 'A partner organisation, together with the learner', am: 'አጋር ድርጅት፣ ከተማሪው ጋር', om: 'Dhaabbata michuu, barataa wajjin' }, say: ['partner', 'organisation', 'አጋር', 'ድርጅት'] }
         ] },
-      { id: 'partner_org', type: 'choice', showIf: { field: 'filler', equals: 'partner' },
+      { id: 'partner_org', picture: '🏢', type: 'choice', showIf: { field: 'filler', equals: 'partner' },
         label: { en: 'Which organisation are you from?', am: 'ከየትኛው ድርጅት ነዎት?', om: 'Dhaabbata kam irraa dhufte?' },
         options: [
           { value: 'aaapd', label: { en: 'AAAPD', am: 'AAAPD (የአዲስ አበባ አካል ጉዳተኞች ማኅበር)', om: 'AAAPD' }, say: ['aaapd'] },
           { value: 'tib', label: { en: 'Tomorrow is Better', am: 'Tomorrow is Better', om: 'Tomorrow is Better' }, say: ['tomorrow'] },
           { value: 'other', label: { en: 'Another organisation', am: 'ሌላ ድርጅት', om: 'Dhaabbata biraa' }, say: ['another', 'other', 'ሌላ'] }
         ] },
-      { id: 'staff_name', type: 'text', showIf: { field: 'filler', equals: 'partner' }, autocomplete: 'off',
+      { id: 'staff_name', picture: '🧑‍💼', type: 'text', showIf: { field: 'filler', equals: 'partner' }, autocomplete: 'off',
         label: { en: 'What is your name? (staff member)', am: 'የእርስዎ ስም ማን ነው? (ሠራተኛ)', om: 'Maqaan kee eenyu? (hojjetaa)' },
         hint: { en: 'The learner sees your name when they take over the account. After that it is removed; only your organisation is kept.', am: 'ተማሪው መለያውን ሲረከብ ስምዎን ያያል። ከዚያ በኋላ ይሰረዛል፤ የድርጅትዎ ስም ብቻ ይቀመጣል።', om: 'Barataan yeroo herrega fudhatu maqaa kee arga. Achii booda ni haqama; kan hafu dhaabbata kee qofa.' } },
-      { id: 'learner_consent', type: 'consent', requiredValue: 'yes', showIf: { field: 'filler', equals: 'partner' },
+      { id: 'learner_consent', picture: '🤝', type: 'consent', requiredValue: 'yes', showIf: { field: 'filler', equals: 'partner' },
         reviewLabel: { en: 'Learner agreed to partner help', am: 'ተማሪው በአጋር እርዳታ ተስማምቷል', om: 'Barataan gargaarsa michuutiif walii gale' },
         label: { en: 'Learner: do you agree that this person fills in the form with you?', am: 'ተማሪ፦ ይህ ሰው ቅጹን አብሮዎት እንዲሞላ ይስማማሉ?', om: 'Barataa: namni kun si wajjin unka kana akka guutu walii galtaa?' },
         hint: { en: 'Please read this aloud to the learner. The learner answers by voice or by tapping.', am: 'እባክዎ ይህን ለተማሪው ጮክ ብለው ያንብቡ። ተማሪው በድምፅ ወይም በመንካት ይመልሳል።', om: 'Maaloo kana barataadhaaf sagaleen dubbisi. Barataan sagaleen ykn tuquun deebisa.' },
@@ -57,13 +57,13 @@
           { value: 'yes', icon: '✅', label: { en: 'Yes, I agree', am: 'አዎ፣ እስማማለሁ', om: 'Eeyyee, walii nan gala' }, say: ['yes', 'agree', 'አዎ', 'እስማማለሁ'] },
           { value: 'no', icon: '✋', label: { en: 'No', am: 'አልስማማም', om: 'Lakki' }, say: ['no', 'አልስማማም'] }
         ] },
-      withName({ id: 'name', type: 'text', autocomplete: 'nickname', reviewLabel: { en: 'Name we call you', am: 'የምንጠራዎ ስም', om: 'Maqaa ittiin si waamnu' },
+      withName({ id: 'name', picture: '🙂', type: 'text', autocomplete: 'nickname', reviewLabel: { en: 'Name we call you', am: 'የምንጠራዎ ስም', om: 'Maqaa ittiin si waamnu' },
         label: { en: 'What should we call you?', am: 'ምን ብለን እንጥራዎ?', om: 'Maqaa akkamiin si waamuu qabna?' },
         hint: { en: 'Amharic or English letters are both fine. You can add your full name later in My profile, if you want to.', am: 'የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።', om: 'Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta\'u. Yoo barbaadde, maqaa kee guutuu booda Piroofaayilii koo keessatti dabaluu dandeessa.' } }),
-      { id: 'phone', type: 'tel', autocomplete: 'tel',
+      { id: 'phone', picture: '📱', type: 'tel', autocomplete: 'tel',
         label: { en: 'What is your phone number?', am: 'ስልክ ቁጥርዎ ስንት ነው?', om: 'Lakkoofsi bilbila keetii meeqa?' },
         hint: { en: 'We use it only to send you a link to continue. For example 0911 234 567.', am: 'ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።', om: 'Kan itti fayyadamnu geessituu itti fufuu siif erguuf qofa. Fakkeenyaaf 0911 234 567.' } },
-      { id: 'id_route', type: 'choice', sensitive: true, reviewLabel: { en: 'ID', am: 'መታወቂያ', om: 'Eenyummaa' },
+      { id: 'id_route', picture: '🪪', type: 'choice', sensitive: true, reviewLabel: { en: 'ID', am: 'መታወቂያ', om: 'Eenyummaa' },
         label: { en: 'Which ID do you have?', am: 'የትኛው መታወቂያ አለዎት?', om: 'Waraqaa eenyummaa kam qabda?' },
         hint: { en: 'Any of these is fine. You can start learning even without an ID. Nobody checks IDs automatically: we record what you tell us.', am: 'ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ። መታወቂያዎች በራስ-ሰር አይረጋገጡም፤ የሚነግሩንን እንመዘግባለን።', om: 'Kamiyyuu ni ta\'a. Waraqaa eenyummaa malees barachuu jalqabuu dandeessa. Namni eenyummaa ofumaan mirkaneessu hin jiru: waan ati nutti himtu galmeessina.' },
         options: [
@@ -74,10 +74,10 @@
           { value: 'other', icon: '🗂️', label: { en: 'Another document', am: 'ሌላ ሰነድ', om: 'Sanada biraa' }, say: ['another', 'document', 'ሰነድ'], badge: NOT_CHECKED },
           { value: 'none', icon: '🤝', label: { en: 'I have none of these. Refer me through a partner.', am: 'ምንም የለኝም። በአጋር ድርጅት በኩል ይመዝግቡኝ።', om: 'Kana keessaa tokkollee hin qabu. Karaa michuu na ergi.' }, say: ['none', 'refer', 'ምንም', 'የለኝም'], badge: D.TRUST.partner_referral_pending }
         ] },
-      { id: 'id_number', type: 'text', optional: true, sensitive: true, clearIfChanged: 'id_route', showIf: { field: 'id_route', in: ['fayda', 'kebele', 'passport', 'refugee', 'other'] },
+      { id: 'id_number', picture: '🔢', type: 'text', optional: true, sensitive: true, clearIfChanged: 'id_route', showIf: { field: 'id_route', in: ['fayda', 'kebele', 'passport', 'refugee', 'other'] },
         label: { en: 'What is the number on your ID?', am: 'በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው?', om: 'Lakkoofsi waraqaa eenyummaa kee irra jiru meeqa?' },
         hint: { en: 'You can skip this and add it later. We never ask for a photo of your ID. If you add the number, your status becomes "Number recorded — not verified".', am: 'ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል።', om: 'Kana dabarsitee booda dabaluu dandeessa. Suuraa eenyummaa kee gonkumaa hin gaafannu. Yoo lakkoofsa dabalte, haalli kee "Lakkoofsi galmeeffameera — hin mirkanoofne" ta\'a.' } },
-      { id: 'referral_partner', type: 'choice', sensitive: true, showIf: { field: 'id_route', equals: 'none' },
+      { id: 'referral_partner', picture: '🤝', type: 'choice', sensitive: true, showIf: { field: 'id_route', equals: 'none' },
         label: { en: 'Which organisation can confirm who you are?', am: 'ማንነትዎን የትኛው ድርጅት ሊያረጋግጥ ይችላል?', om: 'Dhaabbanni kam eenyummaa kee mirkaneessuu danda\'a?' },
         hint: { en: 'They will contact you. You can start learning while you wait.', am: 'እነሱ ያገኙዎታል። እየጠበቁ መማር መጀመር ይችላሉ።', om: 'Isaan si quunnamu. Osoo eegduu barachuu jalqabuu dandeessa.' },
         options: [
@@ -86,10 +86,10 @@
           { value: 'unhcr_partner', label: { en: 'A refugee support organisation', am: 'የስደተኞች ድጋፍ ድርጅት', om: 'Dhaabbata deeggarsa baqattootaa' }, say: ['refugee', 'ስደተኞች'] },
           { value: 'unsure', label: { en: "I'm not sure. Please help me choose.", am: 'እርግጠኛ አይደለሁም። እንድመርጥ እርዱኝ።', om: 'Hin mirkaneeffadhu. Maaloo akkan filadhu na gargaari.' }, say: ['not sure', 'help', 'እርግጠኛ', 'እርዱኝ'] }
         ] },
-      { id: 'dob', type: 'ethdate', optional: true,
+      { id: 'dob', picture: '🎂', type: 'ethdate', optional: true,
         label: { en: 'When were you born?', am: 'መቼ ተወለዱ?', om: 'Yoom dhalatte?' },
         hint: { en: 'First choose the Ethiopian or the Gregorian calendar. You can skip this if you are not sure.', am: 'መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።', om: 'Dura dhaha Itoophiyaa ykn dhaha Gorgooriyaan filadhu. Yoo hin mirkaneeffatin kana dabarsuu dandeessa.' } },
-      { id: 'consent', type: 'consent', requiredValue: 'yes', reviewLabel: { en: 'Agreed to how we use your answers', am: 'መልሶች በሚያዙበት መንገድ ተስማምተዋል', om: 'Akkaataa deebii kee itti fayyadamnuuf walii gale' },
+      { id: 'consent', picture: '✅', type: 'consent', requiredValue: 'yes', reviewLabel: { en: 'Agreed to how we use your answers', am: 'መልሶች በሚያዙበት መንገድ ተስማምተዋል', om: 'Akkaataa deebii kee itti fayyadamnuuf walii gale' },
         label: { en: 'Do you agree to how we keep your answers?', am: 'መልሶችዎን በምንይዝበት መንገድ ይስማማሉ?', om: 'Akkaataa deebii kee itti kuufnuuf walii galtaa?' },
         body: { en: 'We keep only what you tell us here. We never ask for medical papers. Nothing is shared with anyone without asking you first. You can change or delete your answers at any time.', am: 'እዚህ የሚነግሩንን ብቻ እንይዛለን። የሕክምና ወረቀት በፍጹም አንጠይቅም። መጀመሪያ እርስዎን ሳንጠይቅ ለማንም አናጋራም። መልሶችዎን በማንኛውም ጊዜ መቀየር ወይም መሰረዝ ይችላሉ።', om: 'Kan kuufnu waan ati asitti nutti himtu qofa. Waraqaa yaalaa gonkumaa hin gaafannu. Osoo dura si hin gaafatin namaaf homtuu hin qoodamu. Yeroo kamiyyuu deebii kee jijjiiruu ykn haquu dandeessa.' },
         options: [
@@ -106,20 +106,20 @@
   D.register('passport', {
     title: { en: 'My Support Passport', am: 'የድጋፍ ፓስፖርቴ', om: 'Paaspoortii Deeggarsaa koo' },
     fields: [
-      { id: 'want', type: 'choice', sensitive: true, reviewLabel: { en: 'Share what helps you', am: 'የሚረዳዎትን ማጋራት', om: 'Waan si gargaaru qoodi' },
+      { id: 'want', picture: '💬', type: 'choice', sensitive: true, reviewLabel: { en: 'Share what helps you', am: 'የሚረዳዎትን ማጋራት', om: 'Waan si gargaaru qoodi' },
         label: { en: 'Would you like to tell us what helps you learn and work?', am: 'ለመማርና ለመሥራት የሚረዳዎትን ሊነግሩን ይፈልጋሉ?', om: 'Waan barachuu fi hojjechuuf si gargaaru nutti himuu barbaaddaa?' },
         hint: { en: "You don't have to. We never ask about a condition or for medical papers.", am: 'ግዴታ አይደለም። ስለ ጤና ሁኔታ ወይም የሕክምና ወረቀት በፍጹም አንጠይቅም።', om: 'Dirqama miti. Waa\'ee haala fayyaa ykn waraqaa yaalaa gonkumaa hin gaafannu.' },
         options: [
           { value: 'yes', icon: '✅', label: { en: 'Yes', am: 'አዎ', om: 'Eeyyee' }, say: ['yes', 'አዎ'] },
           { value: 'later', icon: '⏭️', label: { en: 'Not now', am: 'አሁን አይደለም', om: 'Amma miti' }, say: ['not now', 'later', 'no', 'አሁን አይደለም', 'በኋላ'] }
         ] },
-      { id: 'needs', type: 'multi', options: 'NEEDS', sensitive: true, showIf: { field: 'want', equals: 'yes' },
+      { id: 'needs', picture: '🧩', type: 'multi', options: 'NEEDS', sensitive: true, showIf: { field: 'want', equals: 'yes' },
         prefill: { from: 'passport', key: 'needs' },
         label: { en: 'What would help you? Choose all that fit.', am: 'ምን ይረዳዎታል? የሚስማሙትን ሁሉ ይምረጡ።', om: 'Maaltu si gargaara? Kan siif ta\'u hunda filadhu.' } },
-      { id: 'other_need', type: 'textarea', optional: true, sensitive: true, showIf: { field: 'want', equals: 'yes' },
+      { id: 'other_need', picture: '📝', type: 'textarea', optional: true, sensitive: true, showIf: { field: 'want', equals: 'yes' },
         label: { en: 'Is there anything else that helps you?', am: 'የሚረዳዎት ሌላ ነገር አለ?', om: 'Wanti biraa si gargaaru jiraa?' },
         hint: { en: 'Write it in your own words.', am: 'በራስዎ ቃላት ይጻፉ።', om: 'Jechoota keetiin barreessi.' } },
-      { id: 'sharing', type: 'choice', sensitive: true, default: 'ask', showIf: { field: 'want', equals: 'yes' },
+      { id: 'sharing', picture: '🔒', type: 'choice', sensitive: true, default: 'ask', showIf: { field: 'want', equals: 'yes' },
         label: { en: 'Who can see this?', am: 'ይህን ማን ማየት ይችላል?', om: 'Eenyutu kana arguu danda\'a?' },
         hint: { en: 'Private is chosen for you. You can change this at any time.', am: 'ለእርስዎ «የግል» ተመርጧል። በማንኛውም ጊዜ መቀየር ይችላሉ።', om: 'Dhuunfaan siif filatameera. Yeroo kamiyyuu kana jijjiiruu dandeessa.' },
         options: [

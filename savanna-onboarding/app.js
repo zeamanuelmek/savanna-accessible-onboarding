@@ -11,6 +11,8 @@
   function R(r) { return linkFor(r); }
   function hideHostLang() { var b = document.getElementById('host-lang'); if (b) b.hidden = true; }
 
+  // Pictures (emoji) only with "Simple steps with pictures and big text" (the "Pictures and bigger buttons" setting)
+  function pic(e) { return D.prefs().pictures ? '<span aria-hidden="true">' + e + ' </span>' : ''; }
   function lang() { return (store.get('prefs', {}).lang) || 'am'; }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   var TX = {
@@ -258,7 +260,7 @@
   // Every host form goes through the module's public mount() API.
   function mountForm(formId, instance, onDone) {
     view.innerHTML = '<div class="form-wrap"></div>';
-    return D.mount(view.firstChild, { form: formId, instance: instance || null, welcome: formId === 'signup' && API_HOST.signupWelcome, onComplete: onDone }).element;
+    return D.mount(view.firstChild, { form: formId, instance: instance || null, welcome: formId === 'signup' && API_HOST.signupWelcome, backUrl: API_HOST.backUrl || null, onComplete: onDone }).element;
   }
 
   function home() {
@@ -267,7 +269,7 @@
       '<p class="actions"><a class="btn primary big" href="' + R('#/signup') + '">' + T('start') + ' →</a> <a class="btn big ghost" href="' + R('#/settings') + '">⚙️ ' + T('settings') + '</a></p></section>' +
       '<h2>' + T('cards') + '</h2><ul class="cards">' +
       [['#/signup', 'c1', '🪪'], ['#/passport', 'c2', '🔒'], ['#/jobs', 'c3', '💼'], ['#/employer', 'c4', '🏢']].map(function (c) {
-        return '<li class="card"><span class="card-ico" aria-hidden="true">' + c[2] + '</span><h3><a href="' + c[0] + '">' + T(c[1]) + '</a></h3><p>' + T(c[1] + 't') + '</p></li>';
+        return '<li class="card">' + (D.prefs().pictures ? '<span class="card-ico" aria-hidden="true">' + c[2] + '</span>' : '') + '<h3><a href="' + c[0] + '">' + T(c[1]) + '</a></h3><p>' + T(c[1] + 't') + '</p></li>';
       }).join('') + '</ul>' +
       '<p><button type="button" class="btn" id="reset">' + T('reset') + '</button></p><p role="status" id="reset-status"></p>';
     document.getElementById('reset').addEventListener('click', function () {
@@ -361,7 +363,7 @@
       view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1>' +
         (list.length ? '<ul class="needs">' + list.map(function (n) { return '<li><span aria-hidden="true">' + needIcon(n) + '</span> ' + esc(needLabel(n)) + '</li>'; }).join('') + '</ul>' : '<p>' + T('nothing') + '</p>') +
         (p.other_need ? '<p><strong>' + T('ownWords') + '</strong> ' + esc(p.other_need) + '</p>' : '') +
-        '<section class="card-plain" aria-labelledby="who-h"><h2 id="who-h">' + T('whoSees') + '</h2><p>🔒 ' + T('who_' + sharing) + '</p>' +
+        '<section class="card-plain" aria-labelledby="who-h"><h2 id="who-h">' + T('whoSees') + '</h2><p>' + pic('🔒') + T('who_' + sharing) + '</p>' +
         '<p class="muted">' + T('neverShared') + '</p>' +
         '<p><button type="button" class="btn" id="sharing">' + T(sharing === 'trainers' ? 'stopTrainers' : 'allowTrainers') + '</button></p>' +
         (sharing === 'trainers' ? '<p class="muted">' + T('trainersDemo') + '</p>' : '') + '</section>' +
@@ -411,7 +413,7 @@
     if (needs.length) list.sort(function (a, b) { return b.k - a.k; });
     if (filterOn) list = list.filter(function (x) { return x.k === needs.length; });
     var h = '<h1 tabindex="-1">' + T('jobsTitle') + '</h1>';
-    if (needs.length) h += '<div class="filter"><label><input type="checkbox" id="flt"' + (filterOn ? ' checked' : '') + '> ' + T('filterAll') + '</label><p class="muted">🔒 ' + T('filterNote') + '</p></div>';
+    if (needs.length) h += '<div class="filter"><label><input type="checkbox" id="flt"' + (filterOn ? ' checked' : '') + '> ' + T('filterAll') + '</label><p class="muted">' + pic('🔒') + T('filterNote') + '</p></div>';
     else h += '<div class="notice"><p>' + T('noPassport') + '</p><p><a class="btn" href="' + R('#/passport') + '">' + T('makePassport') + '</a></p></div>';
     h += '<p role="status" id="jobs-status" class="muted"></p>';
     if (!list.length) h += '<p>' + T('none') + '</p>';
@@ -422,7 +424,7 @@
         '<p' + en + '>' + esc(j.description) + '</p>' +
         (needs.length ? '<p class="match">' + T('match', { k: x.k, n: needs.length }) + '</p>' : '') +
         '<h3>' + T('offers') + '</h3><ul class="needs small">' + j.offers.map(function (o) { return '<li' + (needs.indexOf(o) !== -1 ? ' class="hit"' : '') + '><span aria-hidden="true">' + needIcon(o) + '</span> ' + esc(needLabel(o)) + '</li>'; }).join('') + '</ul>' +
-        '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '">🔊 ' + T('listen') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></button> <a class="btn primary" href="' + R('#/apply/' + j.id) + '">' + T('apply') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></a></p></article></li>';
+        '<p class="actions"><button type="button" class="btn" data-listen="' + j.id + '">' + pic('🔊') + T('listen') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></button> <a class="btn primary" href="' + R('#/apply/' + j.id) + '">' + T('apply') + '<span class="vh"' + en + '> ' + esc(j.title) + '</span></a></p></article></li>';
     }).join('') + '</ul>';
     h += '<script type="application/ld+json">' + JSON.stringify(jobs().map(jobPostingLd)) /* every job, whatever the private filter shows */.replace(/</g, '\\u003c') + '</' + 'script>';
     view.innerHTML = h;
@@ -511,6 +513,8 @@
   var API_HOST = window.SavannaDemoHost = {
     // The Savanna journey asks "how would you like to answer?" on its home page, so its sign-up starts at the first question.
     signupWelcome: true,
+    // Where "Back" on a form's first screen goes (the Savanna journey sets it; the showroom has none).
+    backUrl: null,
     T: T, lang: lang, esc: esc, jobs: jobs, statusPanel: statusPanel,
     setLinks: function (fn) { linkFor = fn; },
     render: function (name, container, arg) { view = container; window.__editPassport = false; VIEWS[name](arg); }

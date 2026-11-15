@@ -1,6 +1,6 @@
 // Functional baseline: features the prototype claims to have, checked end to end.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, formLanguage } from './helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
@@ -112,7 +112,7 @@ test('settings apply text size and contrast to the page', async ({ page }) => {
 
 test('language switch changes the question to Amharic', async ({ page }) => {
   await signupTo(page, 'name');
-  await page.locator('[data-act=lang][data-lang=am]').click();
+  await formLanguage(page, 'am');
   expect(await heading(page)).toBe('ምን ብለን እንጥራዎ?');
   await expect(page.locator('.dm')).toHaveAttribute('lang', 'am');
 });

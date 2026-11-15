@@ -1,7 +1,7 @@
 // Phase 3: answer input by voice, as a reviewed state machine. The browser's speech engine is replaced by a fake,
 // so these tests check our behaviour (consent, review, never saving unreviewed speech, errors, fallbacks), not Google.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, say, speakAnswer } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, say, speakAnswer, formLanguage } from './helpers.mjs';
 
 const fakeSpeech = (page, o) => fakeSpeechEngine(page, o);
 const draftText = page => page.evaluate(() => localStorage.getItem('savanna-onboarding.draft.signup') || '');
@@ -87,7 +87,7 @@ test('"Type it instead" throws the transcript away; changing language does too',
   await say(page, { alts: ['Spoken Name'] });
   await speakAnswer(page);
   await expect(page.locator('.dm-heard')).toHaveCount(1);
-  await page.locator('[data-act=lang][data-lang=am]').click();
+  await formLanguage(page, 'am');
   await expect(page.locator('.dm-heard')).toHaveCount(0);
   expect(await draftText(page)).not.toContain('Spoken Name');
 });

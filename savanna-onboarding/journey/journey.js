@@ -62,7 +62,13 @@
       acctNew: 'New to Savanna? Sign up one question at a time. There is no time limit.', acctHave: 'Already have an account? Log in with your phone number.',
       account: 'your account', learning: 'Access my learning', resources: 'My resources', courses: 'My courses', rooms: 'Conference rooms',
       servers: 'Servers', sandboxes: 'Sandboxes', video: 'Video on demand', campus: 'My Campus', peers: 'Peers', myProfile: 'My Profile',
-      inert: '"{name}" is part of Savanna, but not of this demo.'
+      inert: '"{name}" is part of Savanna, but not of this demo.',
+      srTipTitle: 'Tip for screen reader users', language: 'Language',
+      ex1: 'One question at a time, in Amharic, English or Afaan Oromo', ex2: 'No time limit: your answers are saved as you go', ex3: 'We never ask about a disability or for medical papers',
+      backTo: 'Back to {page}', doneBack: 'Done: back to {page}', p_home: 'the home page', p_dashboard: 'my homepage',
+      p_signup: 'sign-up', p_login: 'log in', p_jobs: 'jobs', p_apply: 'the job application', p_employer: 'the employer form',
+      p_profile: 'my profile', p_passport: 'my Support Passport', p_takeover: 'taking over my account', p_settings: 'settings',
+      setSavedNote: 'Every change is saved at once, on this phone, and applies to every page.'
     },
     am: {
       skip: 'ወደ ዋናው ይዘት ይዝለሉ', menu: 'ምናሌ', logoAlt: 'የሳቫና መነሻ', navLabel: 'ሳቫና',
@@ -107,7 +113,13 @@
       acctNew: 'ለሳቫና አዲስ ነዎት? በአንድ ጊዜ አንድ ጥያቄ እየመለሱ ይመዝገቡ። የጊዜ ገደብ የለም።', acctHave: 'መለያ አለዎት? በስልክ ቁጥርዎ ይግቡ።',
       account: 'የእርስዎ መለያ', learning: 'ትምህርቴን ክፈት', resources: 'የእኔ ግብዓቶች', courses: 'ኮርሶቼ', rooms: 'የስብሰባ ክፍሎች',
       servers: 'ሰርቨሮች', sandboxes: 'የሙከራ ቦታዎች', video: 'በፍላጎት የሚታዩ ቪዲዮዎች', campus: 'የእኔ ካምፓስ', peers: 'አብረውኝ የሚማሩ', myProfile: 'የእኔ መገለጫ',
-      inert: '«{name}» የሳቫና አካል ነው፤ በዚህ ማሳያ ውስጥ ግን የለም።'
+      inert: '«{name}» የሳቫና አካል ነው፤ በዚህ ማሳያ ውስጥ ግን የለም።',
+      srTipTitle: 'ለስክሪን አንባቢ ተጠቃሚዎች ምክር', language: 'ቋንቋ',
+      ex1: 'በአንድ ጊዜ አንድ ጥያቄ፣ በአማርኛ፣ በእንግሊዝኛ ወይም በአፋን ኦሮሞ', ex2: 'የጊዜ ገደብ የለም፤ መልሶችዎ እየሄዱ ይቀመጣሉ', ex3: 'ስለ አካል ጉዳት ወይም የሕክምና ወረቀት በፍጹም አንጠይቅም',
+      backTo: 'ወደ {page} ተመለስ', doneBack: 'ጨርሻለሁ፦ ወደ {page} ተመለስ', p_home: 'መነሻ ገጽ', p_dashboard: 'መነሻ ገጼ',
+      p_signup: 'ምዝገባ', p_login: 'መግቢያ', p_jobs: 'ሥራዎች', p_apply: 'የሥራ ማመልከቻ', p_employer: 'የቀጣሪ ቅጽ',
+      p_profile: 'መገለጫዬ', p_passport: 'የድጋፍ ፓስፖርቴ', p_takeover: 'መለያዬን መረከብ', p_settings: 'ቅንብሮች',
+      setSavedNote: 'እያንዳንዱ ለውጥ ወዲያውኑ በዚህ ስልክ ይቀመጣል፤ በሁሉም ገጾች ላይ ይሠራል።'
     },
     // Afaan Oromo: DRAFT for review by a native speaker (team review planned)
     om: {
@@ -212,7 +224,13 @@
       campus: 'Kaampasii koo',
       peers: 'Hiriyoota barumsaa',
       myProfile: 'Piroofaayilii koo',
-      inert: '"{name}" kutaa Savanna ti, garuu agarsiisa kana keessa hin jiru.'
+      inert: '"{name}" kutaa Savanna ti, garuu agarsiisa kana keessa hin jiru.',
+      srTipTitle: 'Gorsa fayyadamtoota dubbisaa iskiriiniitiif', language: 'Afaan',
+      ex1: 'Yeroo tokkotti gaaffii tokko, Afaan Amaaraa, Ingiliffaa ykn Afaan Oromootiin', ex2: 'Daangaan yeroo hin jiru: deebiin kee yeroo deemtu kuufama', ex3: 'Waa\'ee qaama miidhamuu ykn waraqaa yaalaa gonkumaa hin gaafannu',
+      backTo: 'Gara {page} deebi\'i', doneBack: 'Xumureera: gara {page} deebi\'i', p_home: 'fuula jalqabaa', p_dashboard: 'fuula koo',
+      p_signup: 'galmee', p_login: 'seensa', p_jobs: 'hojiiwwan', p_apply: 'iyyannoo hojii', p_employer: 'unka qacaraa',
+      p_profile: 'piroofaayilii koo', p_passport: 'Paaspoortii Deeggarsaa koo', p_takeover: 'herrega koo fudhachuu', p_settings: 'qindaa\'ina',
+      setSavedNote: 'Jijjiiramni hundi battalumatti bilbila kana irratti kuufama, fuula hundattis ni hojjeta.'
     }
   };
   function lang() { return H.lang(); }
@@ -262,7 +280,6 @@
         '<li><a href="index.html" data-logout>' + T('logout') + '</a></li></ul></div>';
     }
     if (page === 'login') return '<a class="sj-head-link" href="signup.html">' + T('signup') + '</a>';
-    if (page === 'home' && home.step === 'mode') return ''; // first choose how to use Savanna; sign up and log in come next
     return '<a class="sj-head-link" href="login.html">' + T('login') + '</a>';
   }
   function frame() {
@@ -275,7 +292,8 @@
       '<header class="header d-flex align-items-center w-100 sj-header">' +
         '<div class="header-left align-items-center d-flex px-2">' +
           (side ? '<button type="button" class="hamburger sj-menu" aria-expanded="' + open + '" aria-controls="sidebar"><i class="fa-solid fa-bars" aria-hidden="true"></i><span class="sj-menu-label">' + T('menu') + '</span></button>' : '') +
-          '<a class="logo-container p-1" href="' + (signedIn() ? 'dashboard.html' : 'index.html') + '"><img class="sj-logo" src="vendor/savanna-static-pages/assets/img/holberton-logo-full-alx.png" alt="' + esc(T('logoAlt')) + '"></a>' +
+          // no logo (the module is for any organisation); visitors who are not logged in get a plain "Home" link
+          (!side && page !== 'home' ? '<a class="sj-home-link" href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>' + T('home') + '</span></a>' : '') +
         '</div>' +
         '<div class="header-right d-flex align-items-center flex-grow-1 justify-content-end pe-3">' + headerRight() + '</div>' +
       '</header>' +
@@ -286,10 +304,9 @@
     var main = document.getElementById('content');
     if (!main) {
       main = document.createElement('main'); main.className = 'content'; main.id = 'content'; main.tabIndex = -1;
-      main.innerHTML = '<div class="sj"><p id="sj-offline" class="notice" role="status" hidden></p><div id="sj-view"></div><footer class="sj-foot"><p id="sj-foot"></p><p class="sj-foot-links"></p></footer></div>';
+      main.innerHTML = '<div class="sj"><p id="sj-offline" class="notice" role="status" hidden></p><div id="sj-view"></div><footer class="sj-foot"><p class="sj-foot-links"></p></footer></div>';
       document.body.appendChild(main);
     }
-    document.getElementById('sj-foot').innerHTML = T('foot');
     main.querySelector('.sj-foot-links').innerHTML = (signedIn() ? '' : '<a href="jobs.html">' + T('jobs') + '</a> · ') + '<a href="employer.html">' + T('employer') + '</a> · ' +
       '<a href="showroom.html">' + T('showroom') + '</a> · <a href="test-host/">' + T('testHost') + '</a>';
     wireFrame();
@@ -309,9 +326,14 @@
       tog('size', p.size !== 'normal', T('larger')) +
       tog('contrast', p.contrast === 'high', T('contrast')) +
       tog('motion', p.motion === 'reduce', T('motion')) +
-      tog('en', lang() === 'en', 'English', ' lang="en"') +
-      tog('am', lang() === 'am', 'አማርኛ', ' lang="am"') +
-      tog('om', lang() === 'om', 'Afaan Oromoo', ' lang="om"') +
+      // one "Language" dropdown instead of a button per language; each language is named in its own language
+      '<li class="sj-lang-wrap"><button type="button" class="sj-tog sj-lang-btn" aria-expanded="false" aria-controls="sj-lang-menu">' +
+        '<i class="fa-solid fa-globe" aria-hidden="true"></i><span class="sj-vh">' + T('language') + ': </span><span lang="' + lang() + '">' + D.languageNames[lang()] + '</span>' +
+        '<i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>' +
+        '<ul id="sj-lang-menu" class="sj-lang-menu" hidden>' + D.languages.map(function (l) {
+          return '<li><button type="button" data-lang="' + l + '" lang="' + l + '"' + (l === lang() ? ' aria-current="true"' : '') + '>' +
+            '<span class="sj-tick" aria-hidden="true">' + (l === lang() ? '✓' : '') + '</span>' + D.languageNames[l] + '</button></li>';
+        }).join('') + '</ul></li>' +
       '<li><a class="sj-tog sj-tog-link" href="settings.html"' + (page === 'settings' ? ' aria-current="page"' : '') + '><i class="fa-solid fa-universal-access" aria-hidden="true"></i> ' + T('settings') + '</a></li>' +
       '</ul></div></section>';
   }
@@ -320,7 +342,7 @@
     if (key === 'size') D.setPrefs({ size: p.size === 'normal' ? 'large' : 'normal' });
     else if (key === 'contrast') D.setPrefs({ contrast: p.contrast === 'high' ? 'normal' : 'high' });
     else if (key === 'motion') D.setPrefs({ motion: p.motion === 'reduce' ? 'normal' : 'reduce' });
-    else if (key !== lang()) D.setPrefs({ lang: key });
+    else if (D.languages.indexOf(key) !== -1 && key !== lang()) D.setPrefs({ lang: key });
   }
   /* The header scrolls with the page until it reaches the top, then stays (sticky); the toolbar above it scrolls
      away, so on a small screen or at 400% zoom the fixed part is never more than the 72px header. The sidebar
@@ -344,29 +366,53 @@
   function wireFrame() {
     var menu = document.querySelector('.sj-menu');
     if (menu) menu.onclick = function () { setMenu(this.getAttribute('aria-expanded') !== 'true'); };
+    var lb = document.querySelector('.sj-lang-btn');
+    if (lb) lb.onclick = function () { setLangMenu(lb.getAttribute('aria-expanded') !== 'true'); };
+    Array.prototype.forEach.call(document.querySelectorAll('#sj-lang-menu button[data-lang]'), function (b) {
+      b.onclick = function () {
+        var to = b.getAttribute('data-lang');
+        langFocus = true; // after the page is redrawn in the new language, focus returns to the Language button
+        if (to === lang()) { setLangMenu(false, true); return; }
+        D.setPrefs({ lang: to });
+      };
+    });
     var acct = document.querySelector('.sj-acct');
     if (acct) acct.onclick = function () { setAcct(acct.getAttribute('aria-expanded') !== 'true'); };
     // Savanna sections that are not part of this demo (as in ALX's frozen starter, where these links go nowhere)
     Array.prototype.forEach.call(document.querySelectorAll('[data-sj-inert]'), function (a) {
       a.onclick = function (e) { e.preventDefault(); notice(T('inert', { name: a.textContent })); };
     });
-    Array.prototype.forEach.call(document.querySelectorAll('.sj-tog'), function (b) { b.onclick = function () { toggle(b.getAttribute('data-tog')); }; });
+    // only the toggle buttons: the "Accessibility settings" link shares their look but is a plain link (it used to
+    // run toggle(null) too, which wiped the learner's language choice)
+    Array.prototype.forEach.call(document.querySelectorAll('button.sj-tog[data-tog]'), function (b) { b.onclick = function () { toggle(b.getAttribute('data-tog')); }; });
     placeSidebar();
     var lo = document.querySelector('[data-logout]');
     if (lo) lo.onclick = function () { setSession(null); try { sessionStorage.setItem('sj-flash', 'loggedOut'); } catch (e) {} };
   }
   /* Account menu: a disclosure button with a list of links (not an ARIA menu, so every screen reader reads it as
      links). Escape or a click elsewhere closes it. */
+  var langFocus = false;
+  function setLangMenu(open, focusBtn) {
+    var b = document.querySelector('.sj-lang-btn'), m = document.getElementById('sj-lang-menu');
+    if (!b || !m) return;
+    b.setAttribute('aria-expanded', String(open)); m.hidden = !open;
+    if (open) (m.querySelector('[aria-current]') || m.querySelector('button')).focus(); else if (focusBtn) b.focus();
+  }
   function setAcct(open, focusBtn) {
     var b = document.querySelector('.sj-acct'), m = document.getElementById('sj-acct-menu');
     if (!b || !m) return;
     b.setAttribute('aria-expanded', String(open)); m.hidden = !open;
     if (open) m.querySelector('a').focus(); else if (focusBtn) b.focus();
   }
-  document.addEventListener('click', function (e) { if (!e.target.closest || !e.target.closest('.sj-acct-wrap')) setAcct(false); });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest || !e.target.closest('.sj-acct-wrap')) setAcct(false);
+    if (!e.target.closest || !e.target.closest('.sj-lang-wrap')) setLangMenu(false);
+  });
   document.addEventListener('keydown', function (e) {
     var ab = document.querySelector('.sj-acct');
     if (e.key === 'Escape' && ab && ab.getAttribute('aria-expanded') === 'true') { setAcct(false, true); return; }
+    var lbt = document.querySelector('.sj-lang-btn');
+    if (e.key === 'Escape' && lbt && lbt.getAttribute('aria-expanded') === 'true') { setLangMenu(false, true); return; }
     var btn = document.querySelector('.sj-menu');
     if (e.key === 'Escape' && narrow.matches && btn && btn.getAttribute('aria-expanded') === 'true') setMenu(false, true);
   });
@@ -414,7 +460,7 @@
       var p = profile(), pp = store.get('passport', null), extra = document.createElement('ul');
       extra.className = 'sj-cards sj-profile-cards';
       var ppBody = !pp ? '<p>' + T('ppNone') + '</p>'
-        : '<p>🔒 ' + T('ppSaved', { who: T(pp.sharing === 'trainers' ? 'ppTrainers' : 'ppOnlyMe') }) + '</p>' + ((pp.needs || []).length ? '' : '<p>' + T('ppEmpty') + '</p>');
+        : '<p>' + (D.prefs().pictures ? '<span aria-hidden="true">🔒 </span>' : '') + T('ppSaved', { who: T(pp.sharing === 'trainers' ? 'ppTrainers' : 'ppOnlyMe') }) + '</p>' + ((pp.needs || []).length ? '' : '<p>' + T('ppEmpty') + '</p>');
       extra.innerHTML = card(T('idCard'), H.statusPanel(p), null) + card(T('passport'), ppBody, 'passport.html', T(pp ? 'ppOpen' : 'ppCreate')) +
         // The consent promises "you can change or delete your answers at any time": this is the delete path.
         '<li class="card homepage-card rounded-3 sj-card"><h2 class="h5">' + T('delTitle') + '</h2><p>' + T('delText') + '</p>' +
@@ -441,7 +487,14 @@
       H.render('apply', view, id);
     },
     employer: function () { title('employer'); H.render('employer', view); },
-    settings: function () { title('settings'); H.render('settings', view); }
+    settings: function () {
+      title('settings');
+      H.render('settings', view);
+      view.insertAdjacentHTML('afterbegin', '<div id="sj-set-back"></div>');
+      view.insertAdjacentHTML('beforeend', '<div id="sj-set-done" class="sj-done"></div>');
+      settingsExtras();
+      var h = view.querySelector('.dm-q'); if (h) h.focus();
+    }
   };
 
   /* Home, in the layout of ALX's own sign-up page: a welcome panel on the left, and on the right first
@@ -468,22 +521,23 @@
       right = (err ? '<div class="dm-errors" role="alert" tabindex="-1" id="sj-mode-errors"><h3>' + T('problem') + '</h3><ul><li><a href="#sj-mode-0">' + esc(err) + '</a></li></ul></div>' : '') +
         '<form class="dm-form" id="sj-mode" novalidate><fieldset aria-describedby="sj-mode-hint' + (err ? ' sj-mode-err' : '') + '"><legend><h2 class="dm-q" id="sj-step-h">' + T('modeTitle') + '</h2></legend>' +
         '<p id="sj-mode-hint" class="dm-hint">' + T('modeHint') + '</p>' +
-        '<div class="dm-note dm-sr-tip"><p lang="en">If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.</p>' +
+        '<details class="dm-note dm-sr-tip sj-tip"><summary>' + T('srTipTitle') + '</summary><p lang="en">If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.</p>' +
         '<p lang="am">የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «ጮክ ብሎ ማንበብ»ን ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።</p>' +
-        '<p lang="om">Yoo dubbisaan iskiriinii kee qubee Afaan Amaaraa tokko tokkoon dubbise, sagalee Afaan Amaaraa waraabame dhaggeeffachuuf «Sagaleen dubbisi» bani, ykn gara Ingiliffaatti jijjiiri.</p></div>' +
+        '<p lang="om">Yoo dubbisaan iskiriinii kee qubee Afaan Amaaraa tokko tokkoon dubbise, sagalee Afaan Amaaraa waraabame dhaggeeffachuuf «Sagaleen dubbisi» bani, ykn gara Ingiliffaatti jijjiiri.</p></details>' +
         (err ? '<span id="sj-mode-err" class="dm-err"><span class="dm-vh">Error: </span>' + esc(err) + '</span>' : '') +
         '<div class="dm-opts">' + MODES.map(function (m, i) {
           return '<label class="dm-opt"><input type="radio" name="mode" value="' + m + '"' + (i === 0 ? ' id="sj-mode-0"' : '') + (home.mode === m ? ' checked' : '') + '>' +
-            '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span><span>' + T('m_' + m) + '</span></label>';
+            (m === 'simple' ? '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span>' : '') + '<span>' + T('m_' + m) + '</span></label>';
         }).join('') + '</div></fieldset>' +
-        '<div class="dm-tools"><button type="button" class="dm-btn" id="sj-listen"><span aria-hidden="true">🔊 </span><span id="sj-listen-t">' + T('listenQ') + '</span></button></div>' +
+        '<div class="dm-tools"><button type="button" class="dm-btn" id="sj-listen"><span id="sj-listen-t">' + T('listenQ') + '</span></button></div>' +
         '<p class="dm-status" id="sj-mode-status" role="status" aria-live="polite"></p>' +
         '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + T('cont') + '</button></div></form>';
     }
     view.innerHTML = '<div class="sj-split">' +
       // Generic on purpose: the module can be installed by any organisation, not only ALX
       '<section class="sj-split-art" aria-labelledby="sj-art-h">' +
-        '<h1 id="sj-art-h">' + T('artTitle') + '</h1><p>' + T('artText') + '</p></section>' +
+        '<h1 id="sj-art-h">' + T('artTitle') + '</h1><p>' + T('artText') + '</p>' +
+        '<ul class="sj-expect"><li>' + T('ex1') + '</li><li>' + T('ex2') + '</li><li>' + T('ex3') + '</li></ul></section>' +
       '<section class="sj-split-form dm" aria-labelledby="sj-step-h">' + right + '</section></div>';
     if (signedIn()) view.querySelector('.sj-split-form').removeAttribute('aria-labelledby');
     var form = document.getElementById('sj-mode');
@@ -496,6 +550,7 @@
         D.stopSpeaking();
         home.error = ''; home.mode = c.value; home.step = 'account';
         try { history.pushState({ step: 'account' }, '', 'index.html?step=account'); } catch (x) {}
+        remember(); // so "Back" from sign-up or log in returns to this step
         D.setPrefs(D.prefsForMode(c.value)); // re-draws this page (now step 2) through the prefs listener
         focusStep();
       };
@@ -529,7 +584,7 @@
   function digits(s) { var d = String(s || '').replace(/\D/g, ''); return d.indexOf('251') === 0 ? '0' + d.slice(3) : d; }
   function loginPage() {
     var err = login.error, field = login.step === 'phone' ? 'sj-phone' : 'sj-code';
-    var h = '<div class="form-wrap"><h1>' + T('loginTitle') + '</h1>' +
+    var h = backLink() + '<div class="form-wrap"><h1>' + T('loginTitle') + '</h1>' +
       '<div class="notice"><p><strong>' + T('simLabel') + '.</strong> ' + T('simText') + '</p></div>';
     if (err) h += '<div class="sj-errors" role="alert" tabindex="-1"><h2>' + T('problem') + '</h2><ul><li><a href="#' + field + '">' + esc(err) + '</a></li></ul></div>';
     h += '<form id="sj-login" novalidate>';
@@ -569,6 +624,32 @@
   }
   function say(msg) { setTimeout(function () { var s = document.getElementById('sj-status'); if (s) s.textContent = msg; }, 80); }
 
+  /* Where the learner came from, in this tab, so Settings and Log in can offer "Back to …". (The browser's referrer is
+     not available: our security headers send none.) */
+  var TRAIL = 'sj-trail';
+  function trail() { try { return JSON.parse(sessionStorage.getItem(TRAIL) || '[]'); } catch (e) { return []; } }
+  function remember() {
+    var here = { href: location.pathname.split('/').pop() + location.search, page: page }, t = trail();
+    if (!here.href) here.href = 'index.html';
+    if (!t.length || t[t.length - 1].href !== here.href) t.push(here);
+    try { sessionStorage.setItem(TRAIL, JSON.stringify(t.slice(-8))); } catch (e) {}
+  }
+  function backTarget() {
+    var t = trail();
+    // Settings never sends the learner "back" to Log in (that would loop: settings -> log in -> settings -> ...)
+    var skip = page === 'settings' ? ['settings', 'login'] : [page];
+    for (var i = t.length - 1; i >= 0; i--) if (skip.indexOf(t[i].page) === -1) return t[i];
+    return signedIn() ? { href: 'dashboard.html', page: 'dashboard' } : { href: 'index.html', page: 'home' };
+  }
+  function backLink() {
+    var b = backTarget();
+    return '<p class="sj-back"><a href="' + esc(b.href) + '"><span aria-hidden="true">← </span>' + T('backTo', { page: T('p_' + b.page) }) + '</a></p>';
+  }
+  function settingsExtras() { // "Back to …" above, "Done: back to …" below; redrawn when the language changes
+    var top = document.getElementById('sj-set-back'), bottom = document.getElementById('sj-set-done'), b = backTarget();
+    if (top) top.innerHTML = backLink();
+    if (bottom) bottom.innerHTML = '<p class="muted">' + T('setSavedNote') + '</p><p class="actions"><a class="btn primary big" href="' + esc(b.href) + '">' + T('doneBack', { page: T('p_' + b.page) }) + '</a></p>';
+  }
   function notice(msg) {
     var n = document.getElementById('sj-note');
     if (!n) { n = document.createElement('p'); n.id = 'sj-note'; n.className = 'notice'; n.setAttribute('role', 'status'); view.parentNode.insertBefore(n, view); }
@@ -578,9 +659,11 @@
     view = document.getElementById('sj-view');
     // ALX's own dashboard content is only for a logged-in learner
     Array.prototype.forEach.call(document.querySelectorAll('.sj-alx, .sj-alx-dialogs'), function (el) { el.hidden = !signedIn(); });
+    H.backUrl = backTarget().href; // "Back" on a form's first question returns to where the learner came from
     if (PROTECTED.indexOf(page) !== -1 && !signedIn()) { title('needLogin'); needLogin(); }
     else (PAGES_RENDER[page] || PAGES_RENDER.home)();
     if (first) {
+      remember();
       var flash = null; try { flash = sessionStorage.getItem('sj-flash'); sessionStorage.removeItem('sj-flash'); } catch (e) {}
       if (flash) { var n = document.createElement('p'); n.className = 'notice'; n.setAttribute('role', 'status'); view.insertBefore(n, view.firstChild); setTimeout(function () { n.textContent = T(flash); }, 80); }
     }
@@ -608,7 +691,9 @@
     var keepMode = page === 'home' && document.getElementById('sj-mode') && a && a.name === 'mode' ? a.value : null;
     frame();
     if (!view.querySelector('savanna-onboarding-form, savanna-onboarding-settings')) renderPage(false);
-    if (tog) { var b = document.querySelector('.sj-tog[data-tog="' + tog + '"]'); if (b) b.focus(); }
+    else if (page === 'settings') { settingsExtras(); title('settings'); }
+    if (langFocus) { langFocus = false; var lbn = document.querySelector('.sj-lang-btn'); if (lbn) lbn.focus(); }
+    else if (tog) { var b = document.querySelector('.sj-tog[data-tog="' + tog + '"]'); if (b) b.focus(); }
     else if (keepMode) { var r = view.querySelector('input[name=mode][value="' + keepMode + '"]'); if (r) r.focus(); }
   });
 

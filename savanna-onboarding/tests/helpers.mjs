@@ -93,3 +93,14 @@ export async function speakAnswer(page) {
   await page.waitForFunction(() => document.querySelector('[data-act=speak]')?.getAttribute('aria-pressed') === 'true');
   await mic.click();
 }
+
+/** Choose a language from the "Make this page work for you" bar's Language dropdown. */
+export async function barLanguage(page, l) {
+  await page.locator('.sj-lang-btn').click();
+  await page.locator('#sj-lang-menu button[data-lang="' + l + '"]').click();
+}
+/** Choose a language from a form's own Language dropdown. */
+export async function formLanguage(page, l) {
+  await page.locator('.dm-bar [data-act=lang-menu]').click();
+  await page.locator('.dm-bar [data-act=lang][data-lang="' + l + '"]').click();
+}
