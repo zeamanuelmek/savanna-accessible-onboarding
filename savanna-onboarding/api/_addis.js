@@ -5,8 +5,9 @@
    (proxy/server.cjs). Only Addis AI's documented API is used (docs.addisassistant.com, read 15 Nov 2026):
      STT  POST https://api.addisassistant.com/api/v2/stt                multipart: audio + request_data {"language_code"}
           -> { "status": "success", "data": { "transcription": "…", "confidence": 0.98 } }
-     TTS  POST https://api.addisassistant.com/api/v1/voice/generations  JSON: text, voice_id, language, output_format
-          -> JSON with a signed data.audio_url (the proxy downloads it and returns the MP3)
+     TTS  POST https://api.addisassistant.com/api/v1/voice/generations  JSON: text, voice_id, language, output_format,
+          client_request_id (REQUIRED for paid generation: without it Addis AI answers 422 CLIENT_REQUEST_ID_REQUIRED,
+          found 15 Nov) -> JSON with the MP3 inline in data.audio (a data: URL) and a signed data.audio_url
      Auth header x-api-key. Languages: am and om for both. Voices: am-hamen, om-bikila.
 
    Our contract with the module (same origin as the page):
@@ -90,6 +91,17 @@ function readBody(req, limit) {
   });
 }
 
+/** Logs Addis AI's own error message (to see the reason next time), cut to 300 characters, without the key and
+ *  without the learner's text. Never sent to the browser. */
+async function logUpstream(kind, r, text) {
+  let msg = '';
+  try { msg = await r.text(); } catch (e) {}
+  const key = process.env.ADDIS_API_KEY || '';
+  if (key) msg = msg.split(key).join('[key]');
+  if (text) msg = msg.split(text).join('[text]');
+  console.warn('[addis-proxy] ' + kind + ' upstream ' + r.status + ': ' + msg.replace(/\s+/g, ' ').slice(0, 300));
+}
+
 /** Addis AI's HTTP status -> our short code (the key and the upstream message are never passed on). */
 function upstreamCode(status) {
   if (status === 401 || status === 403) return { status: 503, code: 'not_configured' }; // missing or invalid key
@@ -136,16 +148,20 @@ async function handleTts(req, res) {
     const r = await fetch(API + '/api/v1/voice/generations', {
       method: 'POST',
       headers: { 'x-api-key': key, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, voice_id: voice, language: lang, output_format: 'mp3_44100' }),
+      // the same words always get the same request id (a hash), so a repeat is an idempotent replay, not a new charge
+      body: JSON.stringify({ text, voice_id: voice, language: lang, output_format: 'mp3_44100', client_request_id: 'savanna-' + k.slice(0, 40) }),
       signal: AbortSignal.timeout(LIMITS.upstreamMs)
     });
-    if (!r.ok) { const u = upstreamCode(r.status); console.warn('[addis-proxy] tts upstream status', r.status); return fail(res, u.status, u.code); }
+    if (!r.ok) { const u = upstreamCode(r.status); await logUpstream('tts', r, text); return fail(res, u.status, u.code); }
     const json = await r.json();
-    const url = json && json.data && json.data.audio_url;
-    if (!url) { console.warn('[addis-proxy] tts: no audio_url in the response'); return fail(res, 502, 'unavailable'); }
-    const a = await fetch(url, { signal: AbortSignal.timeout(LIMITS.upstreamMs) });
-    if (!a.ok) return fail(res, 502, 'unavailable');
-    const buf = Buffer.from(await a.arrayBuffer());
+    const d = (json && json.data) || {};
+    let buf = null;
+    if (typeof d.audio === 'string' && /^data:audio\/[a-z0-9.+-]+;base64,/i.test(d.audio)) buf = Buffer.from(d.audio.slice(d.audio.indexOf(',') + 1), 'base64');
+    else if (d.audio_url) {
+      const a = await fetch(d.audio_url, { headers: { 'x-api-key': key }, signal: AbortSignal.timeout(LIMITS.upstreamMs) });
+      if (a.ok) buf = Buffer.from(await a.arrayBuffer());
+    }
+    if (!buf || !buf.length) { console.warn('[addis-proxy] tts: no audio in the response'); return fail(res, 502, 'unavailable'); }
     cachePut(k, buf);
     return send(res, 200, buf, { 'X-Cache': 'miss' });
   } catch (e) {
@@ -172,7 +188,7 @@ async function handleStt(req, res) {
     form.append('audio', new Blob([audio], { type }), 'answer.' + ext);
     form.append('request_data', JSON.stringify({ language_code: lang }));
     const r = await fetch(API + '/api/v2/stt', { method: 'POST', headers: { 'x-api-key': key }, body: form, signal: AbortSignal.timeout(LIMITS.upstreamMs) });
-    if (!r.ok) { const u = upstreamCode(r.status); console.warn('[addis-proxy] stt upstream status', r.status); return fail(res, u.status, u.code); }
+    if (!r.ok) { const u = upstreamCode(r.status); await logUpstream('stt', r, ''); return fail(res, u.status, u.code); }
     const json = await r.json();
     const text = json && json.data && typeof json.data.transcription === 'string' ? json.data.transcription.trim() : '';
     return send(res, 200, { text });

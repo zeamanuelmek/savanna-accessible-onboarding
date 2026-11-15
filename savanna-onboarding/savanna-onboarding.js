@@ -664,11 +664,14 @@
      Used only for Amharic and Afaan Oromo; English keeps the browser's own engines. Recorded clips always come first.
      Recordings stop at 30 seconds. Anything that fails (no proxy, no key, no credit, offline) falls back to the
      browser's engines with a plain message, and the proxy is not asked again in this tab when it is not set up. */
-  var REMOTE = { url: null, langs: ['am', 'om'], down: false, maxSeconds: 30, timeoutMs: 20000 };
-  try { REMOTE.down = sessionStorage.getItem('savanna-onboarding.remoteDown') === '1'; } catch (e) {}
+  // Paused only when the proxy is not set up (no proxy, no key, wrong origin), and tried again after 60 seconds. A
+  // passing failure ("unavailable", "busy") never switches it off: the next piece simply tries again.
+  var REMOTE = { url: null, langs: ['am', 'om'], downUntil: 0, maxSeconds: 30, timeoutMs: 20000, retryMs: 60000 };
+  try { var du = sessionStorage.getItem('savanna-onboarding.remoteDown'); REMOTE.downUntil = du === '1' ? Infinity : +du || 0; } catch (e) {}
   function setSpeechProxy(url) { REMOTE.url = url ? String(url).replace(/\/+$/, '') : null; }
-  function remoteOn(lang) { return !!REMOTE.url && !REMOTE.down && REMOTE.langs.indexOf(lang) !== -1 && navigator.onLine !== false && !!window.fetch; }
-  function remoteDown() { REMOTE.down = true; try { sessionStorage.setItem('savanna-onboarding.remoteDown', '1'); } catch (e) {} }
+  function remoteIsDown() { return Date.now() < REMOTE.downUntil; }
+  function remoteOn(lang) { return !!REMOTE.url && !remoteIsDown() && REMOTE.langs.indexOf(lang) !== -1 && navigator.onLine !== false && !!window.fetch; }
+  function remoteDown() { REMOTE.downUntil = Date.now() + REMOTE.retryMs; try { sessionStorage.setItem('savanna-onboarding.remoteDown', String(REMOTE.downUntil)); } catch (e) {} }
   /** POST to the proxy; resolves with the Response, rejects with a short code. Not set up -> remembered for this tab. */
   function remoteFetch(path, init) {
     var ctl = window.AbortController ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, REMOTE.timeoutMs) : null;
@@ -2517,7 +2520,7 @@
     /** Pieces to read an element's content (headings, paragraphs, lists), each in its own language: for Player.play. */
     itemsFromElement: itemsFromElement,
     /** The host's speech proxy (for example '/api'): Amharic and Afaan Oromo speech through it; null turns it off. */
-    setSpeechProxy: setSpeechProxy, speechProxy: function () { return { url: REMOTE.url, down: REMOTE.down, languages: REMOTE.langs.slice() }; }, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
+    setSpeechProxy: setSpeechProxy, speechProxy: function () { return { url: REMOTE.url, down: remoteIsDown(), languages: REMOTE.langs.slice() }; }, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
     /** Adds the module's styles and fonts to the page (done automatically when a form or settings element appears). */
     styles: function () { injectCss(); applyPrefs(); }
   };

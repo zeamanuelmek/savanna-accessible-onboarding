@@ -261,7 +261,8 @@ test.describe('the reference proxy (Node, fake fetch, no network)', () => {
     expect(Buffer.from(r.body).toString()).toBe('ID3-mp3-bytes');
     expect(sent[0].url).toBe('https://api.addisassistant.com/api/v1/voice/generations');
     expect(sent[0].init.headers['x-api-key']).toBe(KEY);
-    expect(JSON.parse(sent[0].init.body)).toEqual({ text: 'ሰላም', voice_id: 'am-hamen', language: 'am', output_format: 'mp3_44100' });
+    // client_request_id is required by Addis AI for paid generation (422 without it); the same words, the same id
+    expect(JSON.parse(sent[0].init.body)).toEqual({ text: 'ሰላም', voice_id: 'am-hamen', language: 'am', output_format: 'mp3_44100', client_request_id: expect.stringMatching(/^savanna-[0-9a-f]{40}$/) });
     r = await call(handleTts, { body }); // the same words again
     expect(r.headers['x-cache']).toBe('hit');
     expect(sent.length).toBe(2); // generation + download, only once
@@ -269,6 +270,23 @@ test.describe('the reference proxy (Node, fake fetch, no network)', () => {
     expect(om.status).toBe(200);
     expect(JSON.parse(sent[2].init.body).voice_id).toBe('om-bikila');
     expect(JSON.stringify(r.headers) + String(r.body)).not.toContain(KEY);
+  });
+
+  test('TTS: the MP3 inline in data.audio is used (no second download); Addis AI error reason is logged without the key or the text', async () => {
+    process.env.ADDIS_API_KEY = KEY;
+    const { handleTts } = addis();
+    const mp3 = Buffer.from('ID3-inline-mp3');
+    let calls = 0;
+    global.fetch = async () => { calls++; return new Response(JSON.stringify({ data: { audio: 'data:audio/mpeg;base64,' + mp3.toString('base64'), audio_url: 'https://cdn.example/x.mp3' } }), { status: 201 }); };
+    const r = await call(handleTts, { body: JSON.stringify({ text: 'ደህና', lang: 'am' }) });
+    expect([r.status, Buffer.from(r.body).toString()]).toEqual([200, 'ID3-inline-mp3']);
+    expect(calls).toBe(1);
+    global.fetch = async () => new Response(JSON.stringify({ error: { code: 'CLIENT_REQUEST_ID_REQUIRED', message: 'client_request_id is required. text was: ሰላም ' + KEY } }), { status: 422 });
+    const bad = await call(handleTts, { body: JSON.stringify({ text: 'ሰላም', lang: 'am' }) });
+    expect(bad.status).toBe(502);
+    const line = logs.find(l => l.includes('tts upstream 422'));
+    expect(line).toContain('CLIENT_REQUEST_ID_REQUIRED');
+    expect(line).not.toContain('ሰላም'); // the learner's text is never logged
   });
 
   test('STT: multipart audio + request_data with language_code; transcription returned; 402 -> no_credit', async () => {
