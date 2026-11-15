@@ -1352,3 +1352,23 @@ Asked by the team outside the phase plan, before Phase 10.
 - The home welcome texts are new and have **no recorded Amharic audio** yet (read aloud uses the phone's voice).
   Amharic is a draft for review.
 - The ALX photo from ALX's sign-up page is not in the starter kit, so the panel uses a purple gradient.
+
+---
+
+## Team request (15 Nov): ALX's self-paced homepage as the dashboard; home page without a sidebar
+
+- **Home page:** no sidebar and no Menu button (also on sign-up and log-in, as on ALX's own sign-up page).
+- **Dashboard** (`dashboard.html`) is now ALX's self-paced learner homepage, built by `tools/dashboard-page.cjs` from
+  the starter's page (re-pulled: still commit `9e83ac7`; vendored unchanged with its badge image, Bootstrap and
+  Popper by `tools/vendor-savanna.cjs`). 11 listed changes to ALX's markup (learner name, accessibility fixes).
+  `journey/dashboard.js` replaces ALX's `static-page.js`.
+- **Menu placement:** see README "Where our menu went". Sidebar = ALX's items and order + Jobs in "My Campus";
+  account menu top right (Support Passport, My profile, Accessibility settings, Log out); Accessibility settings
+  also in the top bar; For employers in the footer; ID status, Support Passport status and Delete my data on
+  My profile.
+- **Accessibility of ALX's page in our copy:** axe 0 issues on phone and desktop, also with the course switcher and
+  the dialog open; no sideways scrolling at 320px (the switcher and gauge now shrink, titles wrap).
+- **Simulated:** ALX's course data (Amara's VA-1 course) is the starter's sample, shown with the learner's own name.
+  Its links (Start Learning, events, My courses…) go nowhere, as in the starter.
+- Tests: updated for the new layout; new tests for the dashboard content, sidebar order, activities, dialog,
+  account menu, and the logged-out dashboard.

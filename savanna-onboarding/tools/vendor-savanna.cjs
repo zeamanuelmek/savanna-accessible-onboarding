@@ -5,8 +5,10 @@
 // Re-run after pulling the starter if ALX updates it.
 //
 // What is copied: assets/css/application_alx.css and app.css (Savanna's own stylesheets), every font and image those two
-// stylesheets reference, and the ALX logo used in the header. What is NOT copied: the Adobe Typekit fonts and their
-// stylesheet (licensed to ALX's domains), the frozen pages themselves, and Bootstrap's JavaScript (not needed).
+// stylesheets reference, the ALX logo used in the header, the self-paced learner homepage (our dashboard is built from
+// it by tools/dashboard-page.cjs), its badge image and Bootstrap's scripts with Popper (its dropdown and modal). What is NOT
+// copied: the Adobe Typekit fonts and their stylesheet (licensed to ALX's domains), the other two frozen pages, and
+// static-page.js (replaced by journey/dashboard.js; it would take over our accessible menu button).
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -14,7 +16,7 @@ const { execSync } = require('child_process');
 const src = path.resolve(process.argv[2] || path.join(__dirname, '..', '..', '..', 'Savanna-static-pages'));
 const out = path.join(__dirname, '..', 'vendor', 'savanna-static-pages');
 const CSS = ['application_alx.css', 'app.css'];
-const EXTRA = ['assets/img/holberton-logo-full-alx.png'];
+const EXTRA = ['assets/img/holberton-logo-full-alx.png', 'pages/homepage-v1-self-paced.html', 'assets/img/graduation-badge-alx.svg', 'assets/js/popper.js', 'assets/js/bootstrap.bundle.js'];
 
 if (!fs.existsSync(path.join(src, 'assets', 'css', 'application_alx.css'))) {
   console.error('Starter not found at ' + src); process.exit(1);
@@ -56,9 +58,11 @@ https://github.com/alx-africa/Savanna-static-pages, commit \`${commit}\`.
 - **These files belong to ALX** and are **not** covered by this project's licence. They are included only so the demo
   can show the module inside real Savanna pages. They are byte-for-byte copies: nothing here is edited.
 - Copied: \`assets/css/application_alx.css\`, \`assets/css/app.css\`, the fonts and images those two stylesheets
-  reference, and the ALX logo. ${copied} files.
-- **Not copied:** the Adobe Typekit fonts and their stylesheet (licensed to ALX's own domains), the frozen pages,
-  Bootstrap's JavaScript.${missing.length ? '\n- Referenced by the CSS but missing from the starter (so the browser shows nothing for them): ' + missing.length + ' files.' : ''}
+  reference, the ALX logo, the self-paced learner homepage \`pages/homepage-v1-self-paced.html\` (our
+  \`dashboard.html\` is built from it by \`tools/dashboard-page.cjs\`), its badge image and Bootstrap's scripts (with Popper).
+  ${copied} files.
+- **Not copied:** the Adobe Typekit fonts and their stylesheet (licensed to ALX's own domains), the other two frozen
+  pages, \`static-page.js\` (replaced by our \`journey/dashboard.js\`).${missing.length ? '\n- Referenced by the CSS but missing from the starter (so the browser shows nothing for them): ' + missing.length + ' files.' : ''}
 
 To update: pull the starter, then run \`node tools/vendor-savanna.cjs\` from \`savanna-onboarding/\`.
 `;

@@ -41,8 +41,8 @@ async function savePassport(page, words) {
 }
 
 for (const [lang, words] of Object.entries({
-  en: { check: 'Check your answers', ready: 'Your account is ready', saved: 'Your Support Passport is saved', dash: 'Welcome, Abebe Kebede' },
-  am: { check: 'መልሶችዎን ያረጋግጡ', ready: 'መለያዎ ዝግጁ ነው', saved: 'የድጋፍ ፓስፖርትዎ ተቀምጧል', dash: 'እንኳን ደህና መጡ፣ Abebe Kebede' }
+  en: { check: 'Check your answers', ready: 'Your account is ready', saved: 'Your Support Passport is saved', dash: 'Abebe' },
+  am: { check: 'መልሶችዎን ያረጋግጡ', ready: 'መለያዎ ዝግጁ ነው', saved: 'የድጋፍ ፓስፖርትዎ ተቀምጧል', dash: 'Abebe' }
 })) {
   test(`GATE (${lang}): sign up for Savanna and save a Support Passport, inside the Savanna pages`, async ({ page }) => {
     await freshStart(page, { lang });
@@ -52,7 +52,7 @@ for (const [lang, words] of Object.entries({
     expect((await passport(page)).needs.sort()).toEqual(['captions', 'remote']);
     expect((await profile(page)).name).toBe('Abebe Kebede');
     await at(page, '/dashboard.html');
-    await expect(page.locator('.sj h1')).toHaveText(words.dash);
+    await expect(page.locator('h1.sj-greeting [data-sj-name]')).toHaveText(words.dash); // ALX's self-paced homepage
     await expect(page.locator('#sidebar a[aria-current=page]')).toHaveAttribute('href', 'dashboard.html');
     await expect(page.locator('html')).toHaveAttribute('lang', lang);
   });
@@ -101,8 +101,21 @@ test('GATE: the whole task with the keyboard only (Tab, Space, Enter)', async ({
 test('Savanna frame: menu button, labelled navigation, logo with a name, language switch', async ({ page }, info) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/index.html');
-  await expect(page.locator('nav#sidebar')).toHaveAttribute('aria-label', 'Savanna'); // hidden on phones until the menu opens
+  await expect(page.locator('#sidebar')).toHaveCount(0); // the home page has no sidebar menu
+  await expect(page.locator('.sj-menu')).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Savanna home' })).toHaveCount(1);
+  await page.locator('.sj-tog[data-tog=am]').click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'am');
+  await expect(page.locator('.sj h1')).toHaveText('ከALX ጋር ወደ ጉዞዎ እንኳን ደህና መጡ');
+  await expect(page.locator('.sj-tog[data-tog=am]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.sj-tog[data-tog=am]')).toBeFocused();
+  await page.locator('.sj-tog[data-tog=en]').click();
+  await page.evaluate(() => {
+    localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: 'kebele', assurance_level: 'self_declared' }));
+    localStorage.setItem('savanna-demo.session', '{"at":"x"}');
+  });
+  await at(page, '/jobs.html');
+  await expect(page.locator('nav#sidebar')).toHaveAttribute('aria-label', 'Savanna'); // hidden on phones until the menu opens
   const menu = page.getByRole('button', { name: 'Menu' });
   await expect(menu).toHaveAttribute('aria-controls', 'sidebar');
   if (info.project.name === 'mobile') {
@@ -115,18 +128,11 @@ test('Savanna frame: menu button, labelled navigation, logo with a name, languag
     await expect(menu).toHaveAttribute('aria-expanded', 'false');
     await expect(menu).toBeFocused();
   } else {
-    await expect(menu).toHaveAttribute('aria-expanded', 'false'); // the home page starts as a full-width welcome
-    await expect(page.getByRole('link', { name: 'Jobs' })).toHaveCount(1); // icon rail: link names stay for screen readers
-    await menu.click();
     await expect(menu).toHaveAttribute('aria-expanded', 'true');
-    await menu.click();
-    await expect(page.getByRole('link', { name: 'Jobs' })).toHaveCount(1);
+    await menu.click(); // collapse to the icon rail: link names stay for screen readers
+    await expect(menu).toHaveAttribute('aria-expanded', 'false');
+    await expect(page.locator('#sidebar').getByRole('link', { name: 'Jobs' })).toHaveCount(1);
   }
-  await page.locator('.sj-tog[data-tog=am]').click();
-  await expect(page.locator('html')).toHaveAttribute('lang', 'am');
-  await expect(page.locator('.sj h1')).toHaveText('ከALX ጋር ወደ ጉዞዎ እንኳን ደህና መጡ');
-  await expect(page.locator('.sj-tog[data-tog=am]')).toHaveAttribute('aria-pressed', 'true');
-  await expect(page.locator('.sj-tog[data-tog=am]')).toBeFocused();
 });
 
 test('pages for learners ask to log in when nobody is logged in', async ({ page }) => {
@@ -163,8 +169,9 @@ test('simulated log-in: labelled, no password to remember, code can be pasted, n
   await page.waitForTimeout(1500); // no time limit
   await page.locator('#sj-login button[type=submit]').click();
   await page.waitForURL('**/dashboard.html');
-  await expect(page.locator('.sj h1')).toHaveText('Welcome, Abebe Kebede');
-  await page.locator('#sidebar a[data-logout]').evaluate(a => a.click());
+  await expect(page.locator('h1.sj-greeting [data-sj-name]')).toHaveText('Abebe');
+  await page.getByRole('button', { name: /Abebe/ }).click(); // account menu, top right
+  await page.locator('#sj-acct-menu').getByRole('link', { name: 'Log out' }).click();
   await page.waitForURL('**/index.html');
   await expect(page.locator('#sj-view .notice')).toContainText('You have logged out');
 });
@@ -184,7 +191,7 @@ test('profile page, jobs with the on-device filter, application and employer for
   await expect(page.locator('[data-ref=input]')).toHaveValue('Abebe Kebede'); // prefilled from the profile
   await at(page, '/employer.html');
   expect(await heading(page)).toBe('What is the job title?');
-  await expect(page.locator('#sidebar a[aria-current=page]')).toHaveAttribute('href', 'employer.html');
+  await expect(page.locator('.sj-foot-links a[href="employer.html"]')).toHaveText('For employers: post a job'); // in the footer, not the learner menu
 });
 
 test('mount and unmount: the test host page uses only the public API', async ({ page }) => {
@@ -195,7 +202,7 @@ test('mount and unmount: the test host page uses only the public API', async ({ 
   await expect(page.locator('#slot savanna-onboarding-form')).toHaveCount(1);
   await expect(page.locator('#slot .dm-q')).toBeFocused();
   await expect(page.locator('#slot h2.dm-q')).toHaveCount(1); // headingLevel 2: the page keeps its own h1
-  await expect(page.locator('h1')).toHaveCount(1);
+  await expect(page.locator('h1:visible')).toHaveCount(1); // (the closed dialogs have their own titles)
   await pick(page, 'later'); await next(page); await next(page);
   await expect(page.locator('#log')).toContainText('"form": "passport"');
   await expect(page.locator('#log')).toContainText('savanna-onboarding:complete');
@@ -288,4 +295,64 @@ test('fonts are declared and preloaded in the page head, so text never flashes i
   expect(await page.evaluate(() => document.querySelector('#savanna-onboarding-styles').textContent.includes('@font-face'))).toBe(false);
   expect(await page.evaluate(() => [...document.fonts].some(f => f.family.includes('Poppins') && f.status === 'loaded'))).toBe(true);
   expect(await page.evaluate(() => getComputedStyle(document.querySelector('.sj-header')).position)).toBe('sticky');
+});
+
+const signedIn = page => page.evaluate(() => {
+  localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: 'kebele', assurance_level: 'self_declared' }));
+  localStorage.setItem('savanna-demo.session', '{"at":"x"}');
+});
+
+test('after onboarding the learner lands on ALX\'s self-paced homepage, with Savanna\'s own menu', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await at(page, '/index.html'); await signedIn(page);
+  await at(page, '/dashboard.html');
+  // ALX's page content, word for word
+  for (const t of ['Course Progression', 'My activities', 'My Pacing Boost', 'My upcoming events', 'VA-1: VA Foundations & Professional Identity'])
+    await expect(page.locator('.sj-alx').getByText(t, { exact: true }).first()).toBeVisible();
+  await expect(page.locator('.sj-alx')).toHaveAttribute('lang', 'en'); // ALX's text is English, also when the page is in Amharic
+  await expect(page.locator('h1:visible')).toHaveCount(1); // (the closed dialogs have their own titles)
+  // Savanna's sidebar: the same items and order as ALX's page, plus Jobs in "My Campus"; My Profile at the bottom
+  const names = await page.locator('#sidebar a').evaluateAll(as => as.map(a => a.textContent.trim()));
+  expect(names).toEqual(['Home', 'Access my learning', 'My courses', 'Conference rooms', 'Servers', 'Sandboxes', 'Video on demand', 'Peers', 'Jobs', 'My Profile']);
+  await expect(page.locator('#sidebar ul[aria-label="My resources"] a')).toHaveCount(5);
+  // My activities: choosing a module shows it, and the buttons say which is chosen
+  const m3 = page.getByRole('button', { name: 'Module 3: VA Skills and Mindsets' });
+  await expect(m3).toHaveAttribute('aria-pressed', 'false');
+  await m3.click();
+  await expect(m3).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('[data-section-host]')).toContainText('Mastery Project: VA Profile Video');
+  // Program details dialog (Bootstrap's own): opens, and Escape closes it
+  await page.getByRole('button', { name: 'Program details' }).click();
+  await expect(page.getByRole('dialog', { name: 'ALX program' })).toBeVisible();
+  await page.waitForFunction(() => !!document.activeElement.closest('#program-structure-modal')); // focus moves into the dialog
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog', { name: 'ALX program' })).toBeHidden();
+  // a Savanna section that is not in the demo says so, instead of doing nothing
+  if (await page.locator('.sj-menu').getAttribute('aria-expanded') === 'false') await page.locator('.sj-menu').click();
+  await page.locator('#sidebar').getByRole('link', { name: 'Servers' }).click();
+  await expect(page.locator('#sj-note')).toContainText('"Servers" is part of Savanna, but not of this demo.');
+});
+
+test('account menu (top right): Support Passport, My profile, Accessibility settings, Log out; keyboard and Escape', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await at(page, '/index.html'); await signedIn(page);
+  await at(page, '/dashboard.html');
+  const btn = page.getByRole('button', { name: /Abebe/ });
+  await expect(btn).toHaveAttribute('aria-expanded', 'false');
+  await btn.focus(); await page.keyboard.press('Enter');
+  await expect(btn).toHaveAttribute('aria-expanded', 'true');
+  const menu = page.locator('#sj-acct-menu');
+  expect(await menu.locator('a').allInnerTexts()).toEqual(['Support Passport', 'My profile', 'Accessibility settings', 'Log out']);
+  await expect(menu.locator('a').first()).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(menu).toBeHidden();
+  await expect(btn).toBeFocused();
+});
+
+test('nobody logged in: the dashboard asks to log in and shows none of the learner\'s Savanna content', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await at(page, '/dashboard.html');
+  await expect(page.locator('#sj-view h1')).toHaveText('Please log in');
+  await expect(page.locator('.sj-alx')).toBeHidden();
+  await expect(page.locator('#sidebar')).toHaveCount(0);
 });

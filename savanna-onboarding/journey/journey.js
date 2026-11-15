@@ -59,7 +59,10 @@
       m_read_type: 'Read and type', m_listen: 'Listen and respond', m_speak: 'Speak my answers', m_simple: 'Simple steps with pictures and big text',
       listenQ: 'Listen to the question', stopAudio: 'Stop', cont: 'Continue', errMode: 'Choose one way to continue.',
       acctTitle: 'Sign up or log in', acctChosen: 'You chose: {mode}.', acctChange: 'Change how I use Savanna',
-      acctNew: 'New to Savanna? Sign up one question at a time. There is no time limit.', acctHave: 'Already have an account? Log in with your phone number.'
+      acctNew: 'New to Savanna? Sign up one question at a time. There is no time limit.', acctHave: 'Already have an account? Log in with your phone number.',
+      account: 'your account', learning: 'Access my learning', resources: 'My resources', courses: 'My courses', rooms: 'Conference rooms',
+      servers: 'Servers', sandboxes: 'Sandboxes', video: 'Video on demand', campus: 'My Campus', peers: 'Peers', myProfile: 'My Profile',
+      inert: '"{name}" is part of Savanna, but not of this demo.'
     },
     am: {
       skip: 'ወደ ዋናው ይዘት ይዝለሉ', menu: 'ምናሌ', logoAlt: 'የሳቫና መነሻ', navLabel: 'ሳቫና',
@@ -101,7 +104,10 @@
       m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
       listenQ: 'ጥያቄውን አዳምጥ', stopAudio: 'አቁም', cont: 'ቀጥል', errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
       acctTitle: 'ይመዝገቡ ወይም ይግቡ', acctChosen: 'የመረጡት፦ {mode}።', acctChange: 'ሳቫናን የምጠቀምበትን መንገድ ቀይር',
-      acctNew: 'ለሳቫና አዲስ ነዎት? በአንድ ጊዜ አንድ ጥያቄ እየመለሱ ይመዝገቡ። የጊዜ ገደብ የለም።', acctHave: 'መለያ አለዎት? በስልክ ቁጥርዎ ይግቡ።'
+      acctNew: 'ለሳቫና አዲስ ነዎት? በአንድ ጊዜ አንድ ጥያቄ እየመለሱ ይመዝገቡ። የጊዜ ገደብ የለም።', acctHave: 'መለያ አለዎት? በስልክ ቁጥርዎ ይግቡ።',
+      account: 'የእርስዎ መለያ', learning: 'ትምህርቴን ክፈት', resources: 'የእኔ ግብዓቶች', courses: 'ኮርሶቼ', rooms: 'የስብሰባ ክፍሎች',
+      servers: 'ሰርቨሮች', sandboxes: 'የሙከራ ቦታዎች', video: 'በፍላጎት የሚታዩ ቪዲዮዎች', campus: 'የእኔ ካምፓስ', peers: 'አብረውኝ የሚማሩ', myProfile: 'የእኔ መገለጫ',
+      inert: '«{name}» የሳቫና አካል ነው፤ በዚህ ማሳያ ውስጥ ግን የለም።'
     }
   };
   function lang() { return H.lang(); }
@@ -115,36 +121,60 @@
   function signedIn() { return !!(session() && profile()); }
   var PROTECTED = ['dashboard', 'profile', 'passport', 'takeover', 'apply'];
 
-  /* ---------- Savanna frame: header + sidebar + main, with accessibility fixes ---------- */
+  /* ---------- Savanna frame: header + sidebar + main, with accessibility fixes ----------
+     Signed in: Savanna's own sidebar, with the same items, groups and order as ALX's learner homepage
+     (homepage-v1-self-paced), plus "Jobs" in "My Campus". Our other links sit where sites usually put them:
+     the learner's account menu (top right), the accessibility bar (top), and the footer (for employers).
+     Signed out (home, sign-up, log-in...): no sidebar, as on ALX's own sign-up page; "Log in" or "Sign up" top right. */
   var narrow = window.matchMedia('(max-width: 767.98px)');
+  function hasSidebar() { return signedIn() && page !== 'home'; }
+  var NAV = [
+    { items: [['dashboard.html', 'home', 'fa-home'], ['#', 'learning', 'fa-chalkboard-teacher']] },
+    { label: 'resources', items: [['#', 'courses', 'fa-graduation-cap'], ['#', 'rooms', 'fa-comments'], ['#', 'servers', 'fa-server'], ['#', 'sandboxes', 'fa-terminal'], ['#', 'video', 'fa-film']] },
+    { label: 'campus', items: [['#', 'peers', 'fa-users'], ['jobs.html', 'jobs', 'fa-briefcase']] },
+    { bottom: true, items: [['profile.html', 'myProfile', 'fa-user']] }
+  ];
   function navItems() {
-    var items = signedIn()
-      ? [['dashboard.html', 'dashboard', 'fa-home'], ['profile.html', 'profile', 'fa-user'], ['passport.html', 'passport', 'fa-shield-halved'],
-         ['jobs.html', 'jobs', 'fa-briefcase'], ['settings.html', 'settings', 'fa-universal-access'], ['employer.html', 'employer', 'fa-building'], ['#logout', 'logout', 'fa-right-from-bracket']]
-      : [['index.html', 'home', 'fa-home'], ['signup.html', 'signup', 'fa-user-plus'], ['login.html', 'login', 'fa-right-to-bracket'],
-         ['jobs.html', 'jobs', 'fa-briefcase'], ['settings.html', 'settings', 'fa-universal-access'], ['employer.html', 'employer', 'fa-building']];
-    var current = page === 'apply' ? 'jobs' : page === 'takeover' ? 'profile' : page;
-    return items.map(function (i) {
-      var cur = i[1] === current || (i[1] === 'home' && current === 'home');
-      var attrs = i[0] === '#logout' ? ' href="index.html" data-logout' : ' href="' + i[0] + '"';
-      return '<li' + (i[1] === 'employer' ? ' class="sj-sep"' : '') + '><a' + attrs + (cur ? ' aria-current="page"' : '') + '><span class="icon' + (cur ? ' active' : '') + '"><i aria-hidden="true" class="fa-solid ' + i[2] + '"></i></span>' +
-        '<span class="ps-3 sj-label">' + T(i[1]) + '</span></a></li>';
+    var current = { dashboard: 'home', apply: 'jobs', jobs: 'jobs', profile: 'myProfile', takeover: 'myProfile', passport: 'myProfile' }[page];
+    return NAV.map(function (g) {
+      return '<ul class="px-2' + (g.bottom ? ' sj-nav-bottom' : '') + (g.label ? ' sj-nav-group' : '') + '"' + (g.label ? ' aria-label="' + esc(T(g.label)) + '"' : '') + '>' +
+        g.items.map(function (i) {
+          var cur = i[1] === current;
+          return '<li><a href="' + i[0] + '"' + (i[0] === '#' ? ' data-sj-inert' : '') + (cur ? ' aria-current="page"' : '') + '><span class="icon' + (cur ? ' active' : '') + '"><i aria-hidden="true" class="fa-solid ' + i[2] + '"></i></span>' +
+            '<span class="ps-3 sj-label">' + T(i[1]) + '</span></a></li>';
+        }).join('') + '</ul>';
     }).join('');
+  }
+  function headerRight() {
+    if (signedIn()) {
+      var p = profile();
+      return '<div class="sj-acct-wrap"><button type="button" class="sj-acct" aria-expanded="false" aria-controls="sj-acct-menu">' +
+        '<i class="fa-solid fa-circle-user" aria-hidden="true"></i><span class="sj-acct-name">' + esc((p.name || '').split(' ')[0]) + '</span><span class="vh sj-vh"> — ' + T('account') + '</span><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>' +
+        '<ul id="sj-acct-menu" class="sj-acct-menu" hidden>' +
+        '<li><a href="passport.html"' + (page === 'passport' ? ' aria-current="page"' : '') + '>' + T('passport') + '</a></li>' +
+        '<li><a href="profile.html"' + (page === 'profile' ? ' aria-current="page"' : '') + '>' + T('profile') + '</a></li>' +
+        '<li><a href="settings.html"' + (page === 'settings' ? ' aria-current="page"' : '') + '>' + T('settings') + '</a></li>' +
+        '<li><a href="index.html" data-logout>' + T('logout') + '</a></li></ul></div>';
+    }
+    if (page === 'login') return '<a class="sj-head-link" href="signup.html">' + T('signup') + '</a>';
+    if (page === 'home' && home.step === 'mode') return ''; // first choose how to use Savanna; sign up and log in come next
+    return '<a class="sj-head-link" href="login.html">' + T('login') + '</a>';
   }
   function frame() {
     document.documentElement.lang = lang();
-    var open = !document.body.classList.contains('sidebar-collapsed');
+    var side = hasSidebar(), open = side && !document.body.classList.contains('sidebar-collapsed');
+    document.body.classList.toggle('sj-noside', !side);
     var html =
       '<a class="sj-skip" href="#content">' + T('skip') + '</a>' +
       toolbar() +
       '<header class="header d-flex align-items-center w-100 sj-header">' +
         '<div class="header-left align-items-center d-flex px-2">' +
-          '<button type="button" class="hamburger sj-menu" aria-expanded="' + open + '" aria-controls="sidebar"><i class="fa-solid fa-bars" aria-hidden="true"></i><span class="sj-menu-label">' + T('menu') + '</span></button>' +
+          (side ? '<button type="button" class="hamburger sj-menu" aria-expanded="' + open + '" aria-controls="sidebar"><i class="fa-solid fa-bars" aria-hidden="true"></i><span class="sj-menu-label">' + T('menu') + '</span></button>' : '') +
           '<a class="logo-container p-1" href="' + (signedIn() ? 'dashboard.html' : 'index.html') + '"><img class="sj-logo" src="vendor/savanna-static-pages/assets/img/holberton-logo-full-alx.png" alt="' + esc(T('logoAlt')) + '"></a>' +
         '</div>' +
+        '<div class="header-right d-flex align-items-center flex-grow-1 justify-content-end pe-3">' + headerRight() + '</div>' +
       '</header>' +
-      '<nav class="sidebar navigation bg-white border-end position-fixed overflow-scroll bottom-0 start-0' + (open ? ' expanded' : '') + '" id="sidebar" aria-label="' + esc(T('navLabel')) + '">' +
-        '<ul class="px-2">' + navItems() + '</ul></nav>';
+      (side ? '<nav class="sidebar navigation bg-white border-end position-fixed overflow-scroll bottom-0 start-0' + (open ? ' expanded' : '') + '" id="sidebar" aria-label="' + esc(T('navLabel')) + '">' + navItems() + '</nav>' : '');
     var shell = document.getElementById('sj-frame');
     if (!shell) { shell = document.createElement('div'); shell.id = 'sj-frame'; document.body.insertBefore(shell, document.body.firstChild); }
     shell.innerHTML = html;
@@ -155,7 +185,8 @@
       document.body.appendChild(main);
     }
     document.getElementById('sj-foot').innerHTML = T('foot');
-    main.querySelector('.sj-foot-links').innerHTML = '<a href="showroom.html">' + T('showroom') + '</a> · <a href="test-host/">' + T('testHost') + '</a>';
+    main.querySelector('.sj-foot-links').innerHTML = (signedIn() ? '' : '<a href="jobs.html">' + T('jobs') + '</a> · ') + '<a href="employer.html">' + T('employer') + '</a> · ' +
+      '<a href="showroom.html">' + T('showroom') + '</a> · <a href="test-host/">' + T('testHost') + '</a>';
     wireFrame();
   }
   /* The bar from ALX's own accessible hackathon site: "Make this page work for you." Toggle buttons with a pressed
@@ -174,6 +205,7 @@
       tog('motion', p.motion === 'reduce', T('motion')) +
       tog('en', lang() === 'en', 'English', ' lang="en"') +
       tog('am', lang() === 'am', 'አማርኛ', ' lang="am"') +
+      '<li><a class="sj-tog sj-tog-link" href="settings.html"' + (page === 'settings' ? ' aria-current="page"' : '') + '><i class="fa-solid fa-universal-access" aria-hidden="true"></i> ' + T('settings') + '</a></li>' +
       '</ul></div></section>';
   }
   function toggle(key) {
@@ -194,6 +226,7 @@
   window.addEventListener('resize', placeSidebar);
   function setMenu(open, focusBtn) {
     var btn = document.querySelector('.sj-menu'), nav = document.getElementById('sidebar');
+    if (!btn || !nav) return;
     document.body.classList.toggle('sidebar-collapsed', !open);
     nav.classList.toggle('expanded', open);
     btn.setAttribute('aria-expanded', String(open));
@@ -202,19 +235,37 @@
     if (!open && focusBtn) btn.focus();
   }
   function wireFrame() {
-    document.querySelector('.sj-menu').onclick = function () { setMenu(this.getAttribute('aria-expanded') !== 'true'); };
+    var menu = document.querySelector('.sj-menu');
+    if (menu) menu.onclick = function () { setMenu(this.getAttribute('aria-expanded') !== 'true'); };
+    var acct = document.querySelector('.sj-acct');
+    if (acct) acct.onclick = function () { setAcct(acct.getAttribute('aria-expanded') !== 'true'); };
+    // Savanna sections that are not part of this demo (as in ALX's frozen starter, where these links go nowhere)
+    Array.prototype.forEach.call(document.querySelectorAll('[data-sj-inert]'), function (a) {
+      a.onclick = function (e) { e.preventDefault(); notice(T('inert', { name: a.textContent })); };
+    });
     Array.prototype.forEach.call(document.querySelectorAll('.sj-tog'), function (b) { b.onclick = function () { toggle(b.getAttribute('data-tog')); }; });
     placeSidebar();
     var lo = document.querySelector('[data-logout]');
     if (lo) lo.onclick = function () { setSession(null); try { sessionStorage.setItem('sj-flash', 'loggedOut'); } catch (e) {} };
   }
+  /* Account menu: a disclosure button with a list of links (not an ARIA menu, so every screen reader reads it as
+     links). Escape or a click elsewhere closes it. */
+  function setAcct(open, focusBtn) {
+    var b = document.querySelector('.sj-acct'), m = document.getElementById('sj-acct-menu');
+    if (!b || !m) return;
+    b.setAttribute('aria-expanded', String(open)); m.hidden = !open;
+    if (open) m.querySelector('a').focus(); else if (focusBtn) b.focus();
+  }
+  document.addEventListener('click', function (e) { if (!e.target.closest || !e.target.closest('.sj-acct-wrap')) setAcct(false); });
   document.addEventListener('keydown', function (e) {
+    var ab = document.querySelector('.sj-acct');
+    if (e.key === 'Escape' && ab && ab.getAttribute('aria-expanded') === 'true') { setAcct(false, true); return; }
     var btn = document.querySelector('.sj-menu');
     if (e.key === 'Escape' && narrow.matches && btn && btn.getAttribute('aria-expanded') === 'true') setMenu(false, true);
   });
   // Phones start with the menu closed (Savanna's sidebar covers the page there); larger screens remember the choice.
   var collapsed = narrow.matches; try { if (!narrow.matches) collapsed = localStorage.getItem('sidebar-collapsed') === '1'; } catch (e) {}
-  if (page === 'home') { collapsed = true; document.body.classList.add('sj-home'); } // the home page is a full-width welcome
+  if (page === 'home') document.body.classList.add('sj-home'); // the home page is a full-width welcome, with no sidebar
   document.body.classList.add('signed_in');
   document.body.classList.toggle('sidebar-collapsed', collapsed);
 
@@ -239,23 +290,31 @@
       H.render('signup', view);
     },
     login: function () { title('login'); loginPage(); },
+    /* ALX's self-paced learner homepage (dashboard.html, built by tools/dashboard-page.cjs). We only add the
+       learner's name and greeting, and a short note above it when something is waiting for them. */
     dashboard: function () {
       title('dashboard');
-      var p = profile(), pp = store.get('passport', null);
+      var p = profile(), pp = store.get('passport', null), h = new Date().getHours();
+      Array.prototype.forEach.call(document.querySelectorAll('[data-sj-name]'), function (n) { n.textContent = (p.name || '').split(' ')[0]; });
+      var g = document.querySelector('[data-sj-greeting]'); if (g) g.textContent = h < 12 ? 'Good morning,' : h < 18 ? 'Good afternoon,' : 'Good evening,';
+      view.innerHTML = p.takeover_pending ? '<div class="notice"><p><strong>' + T('takeover') + '.</strong> ' + T('takeText') + '</p><p class="mb-0"><a class="btn primary" href="takeover.html">' + T('takeover') + '</a></p></div>'
+        : !pp ? '<div class="notice"><p><strong>' + T('passport') + '.</strong> ' + T('ppNone') + '</p><p class="mb-0"><a class="btn primary" href="passport.html">' + T('ppCreate') + '</a></p></div>' : '';
+    },
+    profile: function () {
+      title('profile');
+      H.render('profile', view);
+      // moved here from the old dashboard: ID status, Support Passport status and "Delete my data from this phone"
+      var p = profile(), pp = store.get('passport', null), extra = document.createElement('ul');
+      extra.className = 'sj-cards sj-profile-cards';
       var ppBody = !pp ? '<p>' + T('ppNone') + '</p>'
         : '<p>🔒 ' + T('ppSaved', { who: T(pp.sharing === 'trainers' ? 'ppTrainers' : 'ppOnlyMe') }) + '</p>' + ((pp.needs || []).length ? '' : '<p>' + T('ppEmpty') + '</p>');
-      view.innerHTML = '<h1>' + T('welcome', { name: esc(p.name) }) + '</h1><ul class="sj-cards">' +
-        (p.takeover_pending ? card(T('takeover'), '<p>' + T('takeText') + '</p>', 'takeover.html', T('takeover'), true) : '') +
-        card(T('passport'), ppBody, 'passport.html', T(pp ? 'ppOpen' : 'ppCreate'), !pp && !p.takeover_pending) +
-        card(T('idCard'), H.statusPanel(p), null) +
-        card(T('profile'), '<p>' + T('profText') + '</p>', 'profile.html', T('profOpen')) +
-        card(T('jobs'), '<p>' + T('jobsText') + '</p>', 'jobs.html', T('jobsOpen')) +
-        card(T('settings'), '<p>' + T('setText') + '</p>', 'settings.html', T('setOpen')) +
+      extra.innerHTML = card(T('idCard'), H.statusPanel(p), null) + card(T('passport'), ppBody, 'passport.html', T(pp ? 'ppOpen' : 'ppCreate')) +
         // The consent promises "you can change or delete your answers at any time": this is the delete path.
         '<li class="card homepage-card rounded-3 sj-card"><h2 class="h5">' + T('delTitle') + '</h2><p>' + T('delText') + '</p>' +
         '<p class="mb-0"><button type="button" class="btn danger" id="sj-del" aria-expanded="false" aria-controls="sj-del-confirm">' + T('delBtn') + '</button></p>' +
         '<div id="sj-del-confirm" hidden><p><strong>' + T('delSure') + '</strong></p><p class="actions">' +
-        '<button type="button" class="btn danger" id="sj-del-yes">' + T('delYes') + '</button> <button type="button" class="btn" id="sj-del-no">' + T('delNo') + '</button></p></div></li></ul>';
+        '<button type="button" class="btn danger" id="sj-del-yes">' + T('delYes') + '</button> <button type="button" class="btn" id="sj-del-no">' + T('delNo') + '</button></p></div></li>';
+      view.appendChild(extra);
       var del = document.getElementById('sj-del'), box = document.getElementById('sj-del-confirm');
       del.onclick = function () { var open = box.hidden; box.hidden = !open; del.setAttribute('aria-expanded', String(open)); if (open) document.getElementById('sj-del-no').focus(); };
       document.getElementById('sj-del-no').onclick = function () { box.hidden = true; del.setAttribute('aria-expanded', 'false'); del.focus(); };
@@ -266,7 +325,6 @@
         location.href = 'index.html';
       };
     },
-    profile: function () { title('profile'); H.render('profile', view); },
     takeover: function () { title('takeover'); H.render('takeover', view); },
     passport: function () { title('passport'); H.render('passport', view); },
     jobs: function () { title('jobs'); H.render('jobs', view); },
@@ -402,8 +460,15 @@
   }
   function say(msg) { setTimeout(function () { var s = document.getElementById('sj-status'); if (s) s.textContent = msg; }, 80); }
 
+  function notice(msg) {
+    var n = document.getElementById('sj-note');
+    if (!n) { n = document.createElement('p'); n.id = 'sj-note'; n.className = 'notice'; n.setAttribute('role', 'status'); view.parentNode.insertBefore(n, view); }
+    n.textContent = ''; setTimeout(function () { n.textContent = msg; }, 80);
+  }
   function renderPage(first) {
     view = document.getElementById('sj-view');
+    // ALX's own dashboard content is only for a logged-in learner
+    Array.prototype.forEach.call(document.querySelectorAll('.sj-alx, .sj-alx-dialogs'), function (el) { el.hidden = !signedIn(); });
     if (PROTECTED.indexOf(page) !== -1 && !signedIn()) { title('needLogin'); needLogin(); }
     else (PAGES_RENDER[page] || PAGES_RENDER.home)();
     if (first) {
@@ -419,6 +484,14 @@
     frame(); // the sidebar now shows the signed-in pages
     var slot = document.querySelector('.dm-done-slot .actions');
     if (slot && !(profile() || {}).takeover_pending) slot.insertAdjacentHTML('beforeend', ' <a class="btn" href="dashboard.html">' + T('toDashboard') + '</a>');
+  });
+  // After the Support Passport is saved, the next step is the learner's Savanna homepage.
+  document.addEventListener('savanna-onboarding:complete', function (e) {
+    if (e.detail.form !== 'passport' || page !== 'passport') return;
+    setTimeout(function () {
+      var slot = document.querySelector('.dm-done-slot');
+      if (slot && !slot.querySelector('a[href="dashboard.html"]')) slot.insertAdjacentHTML('beforeend', '<p class="actions"><a class="btn primary" href="dashboard.html">' + T('toDashboard') + '</a></p>');
+    }, 0);
   });
   // Language changes come from the header button, any form's language switch, or Settings.
   document.addEventListener('savanna-onboarding:prefs', function () {

@@ -173,3 +173,68 @@ html[data-dm-contrast=high] .sj-split-art { background: #000; }
 html[data-dm-contrast=high] .sj-choice li { border: 3px solid #000; }
 html[data-dm-motion=reduce] { scroll-behavior: auto !important; }
 html[data-dm-motion=reduce] *, html[data-dm-motion=reduce] *::before, html[data-dm-motion=reduce] *::after { transition: none !important; animation: none !important; }
+
+/* Pages with no sidebar (home, sign-up, log-in and other pages when nobody is logged in), as on ALX's sign-up page */
+body.sj-noside .content, body.sj-noside > main.content { margin-left: 0 !important; }
+.sj-header .header-right { gap: .75rem; min-width: 0; }
+.sj-head-link { display: inline-flex; align-items: center; min-height: 44px; padding: .3rem .9rem; border: 2px solid var(--so-navy); border-radius: var(--so-radius-sm); color: var(--so-navy); font-weight: 600; text-decoration: none; }
+.sj-head-link:hover { background: var(--so-surface-alt); color: var(--so-navy); }
+
+/* Account menu (top right): the learner's own pages and Log out */
+.sj-acct-wrap { position: relative; }
+.sj-acct { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; padding: .3rem .8rem; border: 2px solid var(--so-navy); border-radius: var(--so-radius-pill); background: #fff; color: var(--so-navy); font: inherit; font-weight: 600; cursor: pointer; max-width: 60vw; }
+.sj-acct .fa-circle-user { font-size: 1.3rem; }
+.sj-acct-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sj-acct:hover { background: var(--so-surface-alt); }
+.sj-vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sj-acct-menu { position: absolute; right: 0; top: calc(100% + .4rem); z-index: 1100; min-width: 15rem; max-width: calc(100vw - 2rem); list-style: none; margin: 0; padding: .4rem; background: #fff; border: 2px solid var(--so-navy); border-radius: var(--so-radius); box-shadow: 0 6px 18px rgba(0, 43, 86, .15); }
+.sj-acct-menu a { display: flex; align-items: center; min-height: 44px; padding: .4rem .8rem; border-radius: var(--so-radius-sm); color: var(--so-navy); font-weight: 500; text-decoration: none; }
+.sj-acct-menu a:hover, .sj-acct-menu a[aria-current] { background: var(--so-surface-alt); }
+.sj-acct-menu a[aria-current] { font-weight: 700; }
+.sj-acct-menu a:focus-visible, .sj-head-link:focus-visible, .sj-acct:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: 2px !important; }
+.sj-tog-link { display: inline-flex; align-items: center; gap: .35rem; text-decoration: none; }
+.sj-tog-link[aria-current] { background: var(--so-surface-alt); }
+html[data-dm-contrast=high] .sj-acct, html[data-dm-contrast=high] .sj-acct-menu, html[data-dm-contrast=high] .sj-head-link { border-color: #000; color: #000; }
+
+/* Sidebar groups as on ALX's page (Home · My resources · My Campus · My Profile at the bottom) */
+#sidebar ul { margin: .5rem 0; padding-left: .5rem; }
+#sidebar .sj-nav-group { border-top: 1px solid var(--so-border-subtle); padding-top: .5rem; }
+#sidebar .sj-nav-bottom { margin-top: auto; border-top: 1px solid var(--so-border-subtle); padding-top: .5rem; margin-bottom: .5rem; }
+@media (min-width: 768px) { #sidebar { display: flex; flex-direction: column; } }
+@media (max-width: 767.98px) { #sidebar.expanded { display: flex; flex-direction: column; } }
+
+/* ALX's self-paced homepage inside our frame */
+.sj-dash-top { padding-bottom: 0; }
+.sj-dash-top:empty, .sj-dash-top #sj-view:empty { display: none; }
+#student-current-curriculum { position: static !important; transform: none !important; }
+.sj-alx { padding: 0 1rem 1rem; font-family: var(--so-font); }
+@media (min-width: 48em) { .sj-alx { padding: 0 1.5rem 1.5rem; } }
+.sj-alx #student-current-curriculum { margin: 0 -1rem 1rem; padding-left: 1rem !important; padding-right: 1rem !important; }
+@media (min-width: 48em) { .sj-alx #student-current-curriculum { margin: 0 -1.5rem 1rem; padding-left: 1.5rem !important; padding-right: 1.5rem !important; } }
+.sj-switcher { background: none; border: 0; padding: .25rem; color: inherit; text-align: left; border-radius: var(--so-radius-sm); }
+.sj-switcher > span { display: flex; }
+.sj-alx .curriculum-switcher-label { min-width: 0; }
+.sj-greeting { color: var(--so-heading); font-weight: 400; }
+.sj-greeting:focus { outline: none; }
+.sj-alx :focus-visible, .sj-alx-dialogs :focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: 2px !important; box-shadow: none !important; }
+/* ALX's red #db3e3e is 4.4:1 on white, just under 4.5:1: inside our copy of the page it is the module's #da3a3a
+   (4.52:1, DESIGN_TOKENS.md, decision 6). On the pink progress badge, a darker red (5.7:1). */
+.sj-alx, .sj-alx-dialogs { --bs-primary: #da3a3a; --bs-primary-rgb: 218, 58, 58; --bs-link-color: #da3a3a; --bs-link-color-rgb: 218, 58, 58; }
+.sj-alx .text-primary, .sj-alx-dialogs .text-primary, .sj-alx .card-header { color: #da3a3a !important; }
+.sj-alx .btn-outline-primary { --bs-btn-color: #da3a3a; --bs-btn-border-color: #da3a3a; --bs-btn-hover-bg: #da3a3a; --bs-btn-hover-border-color: #da3a3a; --bs-btn-active-bg: #bf2424; --bs-btn-active-border-color: #bf2424; }
+.sj-alx .program-progress-badge { color: #a51f1f !important; }
+html[data-dm-contrast=high] .sj-alx .text-primary, html[data-dm-contrast=high] .sj-alx .card-header, html[data-dm-contrast=high] .sj-alx .program-progress-badge { color: #000 !important; }
+.sj-alx a:not(.btn) { color: #da3a3a; }
+html[data-dm-contrast=high] .sj-alx a:not(.btn) { color: #000; }
+.sj-alx .sj-greeting a { color: #bf2424; text-decoration: underline; text-underline-offset: 4px; } /* on the light grey page background; underlined so it is not told apart by colour alone */
+html[data-dm-contrast=high] .sj-alx .sj-greeting a { color: #000; }
+/* 320px wide (400% zoom): ALX's course switcher would not shrink and cut its text short; here it wraps instead */
+.sj-alx #student-switch-curriculum, .sj-alx #student-switch-curriculum .btn-group { min-width: 0; max-width: 100%; }
+.sj-alx .sj-switcher { flex-shrink: 1 !important; min-width: 0; max-width: 100%; }
+.sj-alx .sj-switcher .text-truncate { white-space: normal; overflow-wrap: anywhere; }
+.sj-alx .text-nowrap { white-space: normal !important; }
+.sj-alx .current-curriculum-aside { flex-wrap: wrap; min-width: 0; }
+.sj-alx .curriculum-score-card .card-body > .position-relative { width: 100% !important; max-width: 250px; }
+@media (max-width: 400px) { .sj-alx .curriculum-score-card .card-body { padding: 1rem !important; } .sj-alx .curriculum-score-card p { margin-left: 0 !important; margin-right: 0 !important; } }
+/* ALX shortens long titles with "…" (events, courses); in our copy they wrap, so nothing is hidden at large text sizes */
+.sj-alx .text-truncate, .sj-alx-dialogs .text-truncate { white-space: normal !important; overflow: visible !important; text-overflow: clip !important; overflow-wrap: anywhere; }

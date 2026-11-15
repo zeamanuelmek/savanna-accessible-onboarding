@@ -49,7 +49,9 @@ test('every answer has its own Listen button when read aloud is on, named after 
   await expect(page.getByRole('button', { name: 'Listen: Me, for myself' })).toHaveCount(1);
   await fakeVoice(page);
   await page.getByRole('button', { name: 'Listen: A partner organisation, together with the learner' }).click();
-  await expect.poll(() => said(page)).toEqual(['A partner organisation, together with the learner']);
+  // (turning read aloud on may also have started reading the question; the option is what is read last, and alone)
+  await expect.poll(async () => (await said(page)).slice(-1)).toEqual(['A partner organisation, together with the learner']);
+  expect((await said(page)).filter(t => t !== 'Who is filling in this form?')).toEqual(['A partner organisation, together with the learner']);
   await expect(page.locator('input[value=partner]')).not.toBeChecked(); // listening never chooses for you
 });
 

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-12T19:15:24.675Z",
+  "generated": "2026-11-15T07:34:11.602Z",
   "note": "Measured from the frozen Savanna reference pages served on http://localhost (not an ALX domain).",
   "results": {
     "homepage-v1-paced": {
@@ -137,7 +137,7 @@
         ],
         [
           "50%",
-          2
+          1
         ]
       ],
       "samples": [
@@ -210,11 +210,11 @@
       ],
       "fontRequests": [
         {
-          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
           "status": 200
         },
         {
-          "url": "http://localhost:4173/reference/assets/fonts/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2",
           "status": 200
         },
         {
@@ -226,11 +226,11 @@
           "status": 200
         },
         {
-          "url": "http://localhost:4173/reference/assets/fonts/fa-regular-400.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
           "status": 200
         },
         {
-          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/fa-regular-400.woff2",
           "status": 200
         },
         {
@@ -467,10 +467,6 @@
       ],
       "fontRequests": [
         {
-          "url": "http://localhost:4173/reference/assets/fonts/fa-solid-900.woff2",
-          "status": 200
-        },
-        {
           "url": "http://localhost:4173/reference/assets/fonts/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
           "status": 200
         },
@@ -488,6 +484,10 @@
         },
         {
           "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLDz8Z1xlFd2JQEk.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/reference/assets/fonts/fa-solid-900.woff2",
           "status": 200
         }
       ]

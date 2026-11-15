@@ -123,6 +123,26 @@ Also added: a "Skip to main content" link, and focused items never hide under th
 "How would you like to use Savanna?" (read and type, listen, speak, simple steps with pictures), then "Sign up or log
 in". The choice is saved as the learner's preference, so the sign-up form starts straight at its first question.
 
+**Dashboard = ALX's self-paced learner homepage.** After onboarding, the learner lands on `dashboard.html`, built by
+`tools/dashboard-page.cjs` from the starter's `pages/homepage-v1-self-paced.html` (vendored unchanged): curriculum
+bar and course switcher, greeting, Course Progression, My activities, My Pacing Boost, My upcoming events and the
+"Program details" dialog, word for word. Our copy changes only what the generator lists: the learner's own name and
+greeting; the course switcher is a real `<button>`; its menu is not a broken list; the progress bar has a name; the
+pacing tooltip opens on keyboard focus; the greeting is the `<h1>` and headings are in order; ALX's red `#db3e3e`
+(4.4:1) becomes `#da3a3a` (4.52:1); long titles wrap instead of being cut off with "…"; the curriculum bar sits in
+the page flow. `journey/dashboard.js` replaces ALX's `static-page.js` (module tabs say which is chosen).
+
+**Where our menu went (signed in).** Savanna's sidebar has ALX's items in ALX's order: Home · Access my learning ·
+*My resources* (My courses, Conference rooms, Servers, Sandboxes, Video on demand) · *My Campus* (Peers, **Jobs**) ·
+My Profile at the bottom. Our links are in standard places: **Jobs** in "My Campus" (a campus resource for
+learners); **My profile** is ALX's "My Profile"; **Support Passport, My profile, Accessibility settings, Log out** in
+the account menu at the top right (a disclosure button with plain links); **Accessibility settings** also at the end
+of the "Make this page work for you" bar on every page; **For employers: post a job** in the footer (employers are
+not learners). "My dashboard" became ALX's "Home". Savanna sections that are not in the demo (My courses, Servers…)
+say so when chosen. The ID status, Support Passport status and "Delete my data from this phone" cards moved from the
+old dashboard to **My profile**. Pages for visitors who are not logged in (home, sign-up, log-in) have no sidebar,
+as on ALX's own sign-up page; "Log in" or "Sign up" is at the top right.
+
 **"Make this page work for you." bar** (from ALX's accessible hackathon site) at the top of every page: Larger text,
 High contrast, Stop motion, English, አማርኛ. They are toggle buttons with `aria-pressed`; the pressed state also shows
 a tick and a dark fill, not colour alone. The choices are the module's own saved preferences, so they follow the

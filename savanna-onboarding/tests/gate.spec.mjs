@@ -111,7 +111,7 @@ test('GATE dry run: keyboard only, 200% zoom, sound off', async ({ page }, info)
   expect(pp.sharing).toBe('ask');
 });
 
-test('privacy: the learner can delete their data from the dashboard (the consent promises it)', async ({ page }) => {
+test('privacy: the learner can delete their data from My profile (the consent promises it)', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await page.goto('/index.html');
   await page.evaluate(() => {
@@ -121,7 +121,7 @@ test('privacy: the learner can delete their data from the dashboard (the consent
     localStorage.setItem('savanna-onboarding.draft.passport', '{"answers":{"want":"yes"}}');
     localStorage.setItem('savanna-demo.session', '{"at":"x"}');
   });
-  await page.goto('/dashboard.html');
+  await page.goto('/profile.html');
   const del = page.getByRole('button', { name: 'Delete my data' });
   await expect(del).toHaveAttribute('aria-expanded', 'false');
   await del.click();

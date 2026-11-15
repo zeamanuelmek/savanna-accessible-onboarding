@@ -1,7 +1,7 @@
-// Writes the Savanna journey pages (index.html, signup.html, ...). They are identical apart from data-page:
+// Writes the Savanna journey pages (index.html, signup.html, ...; dashboard.html is built by tools/dashboard-page.cjs). They are identical apart from data-page:
 // journey/journey.js draws Savanna's frame and the page content. Run from savanna-onboarding/: node tools/journey-pages.cjs
 const fs = require('fs'), path = require('path');
-const pages = { index: 'home', login: 'login', signup: 'signup', dashboard: 'dashboard', profile: 'profile', takeover: 'takeover',
+const pages = { index: 'home', login: 'login', signup: 'signup', profile: 'profile', takeover: 'takeover',
   passport: 'passport', jobs: 'jobs', apply: 'apply', employer: 'employer', settings: 'settings' };
 for (const [file, id] of Object.entries(pages)) {
   fs.writeFileSync(path.join(__dirname, '..', file + '.html'), `<!doctype html>
