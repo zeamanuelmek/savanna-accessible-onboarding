@@ -117,7 +117,21 @@ recommend the same fixes to ALX:
 | The sidebar is not a navigation landmark, and the list contains `<hr>` elements | A `<nav aria-label="Savanna">` with a clean list; the current page has `aria-current="page"` |
 | Sidebar text and icons are grey `#98a3ae` (2.6:1, below the 4.5:1 minimum) | Navy text and icons |
 
-Also added: a "Skip to main content" link, and focused items never hide under the fixed header.
+Also added: a "Skip to main content" link, and focused items never hide under the header.
+
+**Home page.** It follows the layout of ALX's own sign-up page: a welcome panel on the left, and on the right first
+"How would you like to use Savanna?" (read and type, listen, speak, simple steps with pictures), then "Sign up or log
+in". The choice is saved as the learner's preference, so the sign-up form starts straight at its first question.
+
+**"Make this page work for you." bar** (from ALX's accessible hackathon site) at the top of every page: Larger text,
+High contrast, Stop motion, English, አማርኛ. They are toggle buttons with `aria-pressed`; the pressed state also shows
+a tick and a dark fill, not colour alone. The choices are the module's own saved preferences, so they follow the
+learner to every page and form. The bar scrolls away; the 72px header below it stays at the top (sticky), so on a
+small screen or at 400% zoom the part that stays on screen is never taller than the header.
+
+**No font or size flash.** `journey/early.js` (a small script in `<head>`, not deferred) applies the saved language,
+text size, contrast and motion settings before the page is drawn, and the fonts are declared in `journey/journey.css`
+and preloaded, so pages no longer appear in a fallback font for a moment.
 
 ---
 

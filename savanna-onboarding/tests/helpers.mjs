@@ -59,3 +59,37 @@ export async function signupTo(page, stopAt) {
     await act(); await next(page);
   }
 }
+
+/** Fake browser speech engine, behaving like the real one in continuous mode: words arrive while listening, and
+ *  listening ends only on stop() or after an error. window.__say = { alts: [...] } | { error: 'network' } | { hold: true }
+ *  decides what is heard next (once); { alts, autoEnd: true } imitates the browser stopping by itself after a pause. */
+export function fakeSpeechEngine(page, { consent = true, transcript = null } = {}) {
+  return page.addInitScript(([c, t]) => {
+    if (c) localStorage.setItem('savanna-onboarding.voiceConsent', 'true');
+    window.__starts = 0; window.__used = false;
+    window.__say = t != null ? { alts: [t] } : { alts: ['nothing'] };
+    window.SpeechRecognition = class {
+      start() { window.__starts++; this.t = setTimeout(() => this.deliver(), 30); }
+      deliver() {
+        const say = window.__say;
+        if (!say || say.hold || window.__used) return;
+        window.__used = true;
+        if (say.error) { this.onerror?.({ error: say.error }); this.end(); return; }
+        this.onresult?.({ resultIndex: 0, results: [Object.assign(say.alts.map(x => ({ transcript: x })), { isFinal: true })] });
+        if (say.autoEnd) this.end();
+      }
+      end() { clearTimeout(this.t); if (this.ended) return; this.ended = true; setTimeout(() => this.onend?.(), 0); }
+      stop() { this.deliver(); this.end(); }
+      abort() { this.end(); }
+    };
+  }, [consent, transcript]);
+}
+/** What the fake engine hears next. */
+export const say = (page, value) => page.evaluate(v => { window.__say = v; window.__used = false; }, value);
+/** Answer by voice: press the microphone, then press it again to stop (the microphone never stops by itself). */
+export async function speakAnswer(page) {
+  const mic = page.locator('[data-act=speak]');
+  await mic.click();
+  await page.waitForFunction(() => document.querySelector('[data-act=speak]')?.getAttribute('aria-pressed') === 'true');
+  await mic.click();
+}

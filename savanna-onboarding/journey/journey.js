@@ -26,8 +26,6 @@
       takeover: 'Take over your account', apply: 'Apply',
       foot: 'Demo of the Savanna Accessible Onboarding Module inside Savanna\'s own page design (ALX starter kit). The log-in is simulated, all data stays in this browser, sample jobs are fictional, and the Amharic is a draft for native-speaker review.',
       showroom: 'Developer and test page', testHost: 'Test host page',
-      heroTitle: 'Learn with Savanna',
-      heroText: 'Sign up in a few minutes, one question at a time. Choose how you want to answer: read and type, listen, speak, or simple steps with pictures. We never ask why.',
       heroNoId: 'No ID? You can still start learning: a partner organisation can confirm who you are.',
       backIn: 'Welcome back, {name}.', toDashboard: 'Go to my dashboard',
       needLogin: 'Please log in', needLoginText: 'You need to log in to see this page.', noAccount: 'No account yet?',
@@ -53,7 +51,15 @@
       delText: 'This deletes your profile, Support Passport, applications and saved answers from this phone. Your settings stay. This cannot be undone.',
       delBtn: 'Delete my data', delYes: 'Yes, delete everything', delNo: 'No, keep my data', delSure: 'Are you sure?',
       deleted: 'Your data was deleted from this phone.',
-      offline: 'You are offline. Pages you have opened before still work, and your answers stay on this phone.', online: 'You are back online.'
+      offline: 'You are offline. Pages you have opened before still work, and your answers stay on this phone.', online: 'You are back online.',
+      barText: 'Make this page work for you.', larger: 'Larger text', contrast: 'High contrast', motion: 'Stop motion',
+      artTitle: 'Welcome to your journey with ALX', artText: 'Your gateway to gaining in-demand skills and joining our talent community!',
+      modeTitle: 'How would you like to use Savanna?',
+      modeHint: 'This is only about how you like to use Savanna. We never ask why. You can change it at any time in Settings.',
+      m_read_type: 'Read and type', m_listen: 'Listen and respond', m_speak: 'Speak my answers', m_simple: 'Simple steps with pictures and big text',
+      listenQ: 'Listen to the question', stopAudio: 'Stop', cont: 'Continue', errMode: 'Choose one way to continue.',
+      acctTitle: 'Sign up or log in', acctChosen: 'You chose: {mode}.', acctChange: 'Change how I use Savanna',
+      acctNew: 'New to Savanna? Sign up one question at a time. There is no time limit.', acctHave: 'Already have an account? Log in with your phone number.'
     },
     am: {
       skip: 'ወደ ዋናው ይዘት ይዝለሉ', menu: 'ምናሌ', logoAlt: 'የሳቫና መነሻ', navLabel: 'ሳቫና',
@@ -62,8 +68,6 @@
       takeover: 'መለያዎን ይረከቡ', apply: 'አመልክት',
       foot: 'የ<span lang="en">Savanna Accessible Onboarding Module</span> ማሳያ፣ በሳቫና የራሱ የገጽ ንድፍ ውስጥ (የALX ማስጀመሪያ ኪት)። መግባቱ የተመሰለ ነው፤ ሁሉም መረጃ በዚህ ብራውዘር ውስጥ ይቆያል፤ የናሙና ሥራዎቹ ልብ ወለድ ናቸው፤ አማርኛው በአፍ መፍቻ ተናጋሪ የሚገመገም ረቂቅ ነው።',
       showroom: 'የገንቢዎችና የሙከራ ገጽ', testHost: 'የሙከራ አስተናጋጅ ገጽ',
-      heroTitle: 'በሳቫና ይማሩ',
-      heroText: 'በጥቂት ደቂቃዎች፣ በአንድ ጊዜ አንድ ጥያቄ እየመለሱ ይመዝገቡ። መመለስ የሚፈልጉበትን መንገድ ይምረጡ፦ አንብበው መጻፍ፣ ማዳመጥ፣ በድምፅ መመለስ ወይም ከሥዕል ጋር ቀላል ደረጃዎች። ምክንያቱን በፍጹም አንጠይቅም።',
       heroNoId: 'መታወቂያ የለዎትም? አሁንም መማር መጀመር ይችላሉ፤ አጋር ድርጅት ማንነትዎን ሊያረጋግጥ ይችላል።',
       backIn: 'እንኳን ደህና መጡ፣ {name}።', toDashboard: 'ወደ ዳሽቦርዴ ሂድ',
       needLogin: 'እባክዎ ይግቡ', needLoginText: 'ይህን ገጽ ለማየት መግባት ያስፈልግዎታል።', noAccount: 'እስካሁን መለያ የለዎትም?',
@@ -89,7 +93,15 @@
       delText: 'ይህ መገለጫዎን፣ የድጋፍ ፓስፖርትዎን፣ ማመልከቻዎችዎንና የተቀመጡ መልሶችዎን ከዚህ ስልክ ይሰርዛል። ቅንብሮችዎ ይቆያሉ። ይህ ሊቀለበስ አይችልም።',
       delBtn: 'መረጃዬን ሰርዝ', delYes: 'አዎ፣ ሁሉንም ሰርዝ', delNo: 'አይ፣ መረጃዬ ይቆይ', delSure: 'እርግጠኛ ነዎት?',
       deleted: 'መረጃዎ ከዚህ ስልክ ተሰርዟል።',
-      offline: 'ከኢንተርኔት ውጪ ነዎት። ከዚህ በፊት የከፈቷቸው ገጾች አሁንም ይሠራሉ፤ መልሶችዎም በዚህ ስልክ ላይ ይቆያሉ።', online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።'
+      offline: 'ከኢንተርኔት ውጪ ነዎት። ከዚህ በፊት የከፈቷቸው ገጾች አሁንም ይሠራሉ፤ መልሶችዎም በዚህ ስልክ ላይ ይቆያሉ።', online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።',
+      barText: 'ይህን ገጽ ለእርስዎ እንዲመች ያድርጉት።', larger: 'ትልቅ ጽሑፍ', contrast: 'ከፍተኛ ንፅፅር', motion: 'እንቅስቃሴ አቁም',
+      artTitle: 'ከALX ጋር ወደ ጉዞዎ እንኳን ደህና መጡ', artText: 'ተፈላጊ ክህሎቶችን ለማግኘትና የተሰጥኦ ማኅበረሰባችንን ለመቀላቀል መግቢያዎ!',
+      modeTitle: 'ሳቫናን እንዴት መጠቀም ይፈልጋሉ?',
+      modeHint: 'ይህ ሳቫናን መጠቀም የሚመርጡበትን መንገድ ብቻ ነው። ምክንያቱን በፍጹም አንጠይቅም። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።',
+      m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
+      listenQ: 'ጥያቄውን አዳምጥ', stopAudio: 'አቁም', cont: 'ቀጥል', errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
+      acctTitle: 'ይመዝገቡ ወይም ይግቡ', acctChosen: 'የመረጡት፦ {mode}።', acctChange: 'ሳቫናን የምጠቀምበትን መንገድ ቀይር',
+      acctNew: 'ለሳቫና አዲስ ነዎት? በአንድ ጊዜ አንድ ጥያቄ እየመለሱ ይመዝገቡ። የጊዜ ገደብ የለም።', acctHave: 'መለያ አለዎት? በስልክ ቁጥርዎ ይግቡ።'
     }
   };
   function lang() { return H.lang(); }
@@ -120,18 +132,15 @@
     }).join('');
   }
   function frame() {
-    var other = lang() === 'am' ? 'en' : 'am';
     document.documentElement.lang = lang();
     var open = !document.body.classList.contains('sidebar-collapsed');
     var html =
       '<a class="sj-skip" href="#content">' + T('skip') + '</a>' +
-      '<header class="header d-flex align-items-center position-fixed top-0 w-100 sj-header">' +
+      toolbar() +
+      '<header class="header d-flex align-items-center w-100 sj-header">' +
         '<div class="header-left align-items-center d-flex px-2">' +
           '<button type="button" class="hamburger sj-menu" aria-expanded="' + open + '" aria-controls="sidebar"><i class="fa-solid fa-bars" aria-hidden="true"></i><span class="sj-menu-label">' + T('menu') + '</span></button>' +
           '<a class="logo-container p-1" href="' + (signedIn() ? 'dashboard.html' : 'index.html') + '"><img class="sj-logo" src="vendor/savanna-static-pages/assets/img/holberton-logo-full-alx.png" alt="' + esc(T('logoAlt')) + '"></a>' +
-        '</div>' +
-        '<div class="header-right d-flex align-items-center flex-grow-1 justify-content-end pe-3">' +
-          '<button type="button" class="sj-lang" data-lang="' + other + '" lang="' + other + '">' + (other === 'en' ? 'English' : 'አማርኛ') + '</button>' +
         '</div>' +
       '</header>' +
       '<nav class="sidebar navigation bg-white border-end position-fixed overflow-scroll bottom-0 start-0' + (open ? ' expanded' : '') + '" id="sidebar" aria-label="' + esc(T('navLabel')) + '">' +
@@ -149,6 +158,40 @@
     main.querySelector('.sj-foot-links').innerHTML = '<a href="showroom.html">' + T('showroom') + '</a> · <a href="test-host/">' + T('testHost') + '</a>';
     wireFrame();
   }
+  /* The bar from ALX's own accessible hackathon site: "Make this page work for you." Toggle buttons with a pressed
+     state (aria-pressed, plus a tick and dark fill that do not rely on colour alone). They change the module's
+     saved preferences, so the choice follows the learner to every page and every form. */
+  function toolbar() {
+    var p = D.prefs();
+    function tog(key, on, label, extra) {
+      return '<li><button type="button" class="sj-tog" data-tog="' + key + '" aria-pressed="' + on + '"' + (extra || '') + '>' +
+        '<span class="sj-tick" aria-hidden="true">✓ </span>' + label + '</button></li>';
+    }
+    return '<section class="sj-a11y" aria-labelledby="sj-a11y-t"><div class="sj-a11y-in">' +
+      '<p id="sj-a11y-t" class="sj-a11y-t">' + T('barText') + '</p><ul class="sj-a11y-list">' +
+      tog('size', p.size !== 'normal', T('larger')) +
+      tog('contrast', p.contrast === 'high', T('contrast')) +
+      tog('motion', p.motion === 'reduce', T('motion')) +
+      tog('en', lang() === 'en', 'English', ' lang="en"') +
+      tog('am', lang() === 'am', 'አማርኛ', ' lang="am"') +
+      '</ul></div></section>';
+  }
+  function toggle(key) {
+    var p = D.prefs();
+    if (key === 'size') D.setPrefs({ size: p.size === 'normal' ? 'large' : 'normal' });
+    else if (key === 'contrast') D.setPrefs({ contrast: p.contrast === 'high' ? 'normal' : 'high' });
+    else if (key === 'motion') D.setPrefs({ motion: p.motion === 'reduce' ? 'normal' : 'reduce' });
+    else if (key !== lang()) D.setPrefs({ lang: key });
+  }
+  /* The header scrolls with the page until it reaches the top, then stays (sticky); the toolbar above it scrolls
+     away, so on a small screen or at 400% zoom the fixed part is never more than the 72px header. The sidebar
+     starts just under the header wherever it is. */
+  function placeSidebar() {
+    var hd = document.querySelector('.sj-header'), nav = document.getElementById('sidebar');
+    if (hd && nav) nav.style.top = Math.max(0, Math.round(hd.getBoundingClientRect().bottom)) + 'px';
+  }
+  window.addEventListener('scroll', placeSidebar, { passive: true });
+  window.addEventListener('resize', placeSidebar);
   function setMenu(open, focusBtn) {
     var btn = document.querySelector('.sj-menu'), nav = document.getElementById('sidebar');
     document.body.classList.toggle('sidebar-collapsed', !open);
@@ -160,7 +203,8 @@
   }
   function wireFrame() {
     document.querySelector('.sj-menu').onclick = function () { setMenu(this.getAttribute('aria-expanded') !== 'true'); };
-    document.querySelector('.sj-lang').onclick = function () { D.setPrefs({ lang: this.getAttribute('data-lang') }); };
+    Array.prototype.forEach.call(document.querySelectorAll('.sj-tog'), function (b) { b.onclick = function () { toggle(b.getAttribute('data-tog')); }; });
+    placeSidebar();
     var lo = document.querySelector('[data-logout]');
     if (lo) lo.onclick = function () { setSession(null); try { sessionStorage.setItem('sj-flash', 'loggedOut'); } catch (e) {} };
   }
@@ -170,6 +214,7 @@
   });
   // Phones start with the menu closed (Savanna's sidebar covers the page there); larger screens remember the choice.
   var collapsed = narrow.matches; try { if (!narrow.matches) collapsed = localStorage.getItem('sidebar-collapsed') === '1'; } catch (e) {}
+  if (page === 'home') { collapsed = true; document.body.classList.add('sj-home'); } // the home page is a full-width welcome
   document.body.classList.add('signed_in');
   document.body.classList.toggle('sidebar-collapsed', collapsed);
 
@@ -187,16 +232,10 @@
   }
 
   var PAGES_RENDER = {
-    home: function () {
-      title('home');
-      var p = profile();
-      view.innerHTML = '<section class="sj-hero"><h1>' + T('heroTitle') + '</h1><p class="lead">' + T('heroText') + '</p>' +
-        (signedIn() ? '<p>' + T('backIn', { name: esc(p.name) }) + '</p><p class="actions"><a class="btn primary big" href="dashboard.html">' + T('toDashboard') + '</a></p>'
-          : '<p class="actions"><a class="btn primary big" href="signup.html">' + T('signup') + '</a> <a class="btn big" href="login.html">' + T('login') + '</a></p>') +
-        '<p class="muted">' + T('heroNoId') + '</p></section>';
-    },
+    home: function () { title('home'); homePage(); },
     signup: function () {
       title('signup');
+      H.signupWelcome = !D.prefs().mode;
       H.render('signup', view);
     },
     login: function () { title('login'); loginPage(); },
@@ -239,6 +278,83 @@
     employer: function () { title('employer'); H.render('employer', view); },
     settings: function () { title('settings'); H.render('settings', view); }
   };
+
+  /* Home, in the layout of ALX's own sign-up page: a welcome panel on the left, and on the right first
+     "How would you like to use Savanna?" (read and type, listen, speak, simple), then "Sign up or log in".
+     The choice is saved as the learner's preference, so the sign-up form starts straight at its first question. */
+  var MODES = ['read_type', 'listen', 'speak', 'simple'], MODE_ICONS = { read_type: '⌨️', listen: '🎧', speak: '🎤', simple: '🖼️' };
+  var home = { step: new URLSearchParams(location.search).get('step') === 'account' ? 'account' : 'mode', mode: D.prefs().mode || '', error: '' };
+  var homeAudio = { audioIssue: function (code) { var st = document.getElementById('sj-mode-status'); if (st && code === 'noAudio') st.textContent = D.label({ en: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.', am: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።' }, lang()); } };
+  function homePage() {
+    D.styles(); // the module's option, button and error styles
+    var right;
+    if (signedIn()) {
+      right = '<h2 class="dm-q">' + T('backIn', { name: esc(profile().name) }) + '</h2>' +
+        '<p class="actions"><a class="btn primary big" href="dashboard.html">' + T('toDashboard') + '</a></p>';
+    } else if (home.step === 'account') {
+      right = '<h2 class="dm-q" id="sj-step-h">' + T('acctTitle') + '</h2>' +
+        (home.mode ? '<p>' + T('acctChosen', { mode: T('m_' + home.mode) }) + ' <button type="button" class="sj-linkbtn" id="sj-change">' + T('acctChange') + '</button></p>' : '') +
+        '<ul class="sj-choice">' +
+        '<li><p>' + T('acctNew') + '</p><a class="btn primary big" href="signup.html">' + T('signup') + '</a></li>' +
+        '<li><p>' + T('acctHave') + '</p><a class="btn big" href="login.html">' + T('login') + '</a></li></ul>' +
+        '<p class="muted">' + T('heroNoId') + '</p>';
+    } else {
+      var err = home.error;
+      right = (err ? '<div class="dm-errors" role="alert" tabindex="-1" id="sj-mode-errors"><h3>' + T('problem') + '</h3><ul><li><a href="#sj-mode-0">' + esc(err) + '</a></li></ul></div>' : '') +
+        '<form class="dm-form" id="sj-mode" novalidate><fieldset aria-describedby="sj-mode-hint' + (err ? ' sj-mode-err' : '') + '"><legend><h2 class="dm-q" id="sj-step-h">' + T('modeTitle') + '</h2></legend>' +
+        '<p id="sj-mode-hint" class="dm-hint">' + T('modeHint') + '</p>' +
+        '<div class="dm-note dm-sr-tip"><p lang="en">If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.</p>' +
+        '<p lang="am">የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «ጮክ ብሎ ማንበብ»ን ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።</p></div>' +
+        (err ? '<span id="sj-mode-err" class="dm-err"><span class="dm-vh">Error: </span>' + esc(err) + '</span>' : '') +
+        '<div class="dm-opts">' + MODES.map(function (m, i) {
+          return '<label class="dm-opt"><input type="radio" name="mode" value="' + m + '"' + (i === 0 ? ' id="sj-mode-0"' : '') + (home.mode === m ? ' checked' : '') + '>' +
+            '<span class="dm-ico" aria-hidden="true">' + MODE_ICONS[m] + '</span><span>' + T('m_' + m) + '</span></label>';
+        }).join('') + '</div></fieldset>' +
+        '<div class="dm-tools"><button type="button" class="dm-btn" id="sj-listen"><span aria-hidden="true">🔊 </span><span id="sj-listen-t">' + T('listenQ') + '</span></button></div>' +
+        '<p class="dm-status" id="sj-mode-status" role="status" aria-live="polite"></p>' +
+        '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + T('cont') + '</button></div></form>';
+    }
+    view.innerHTML = '<div class="sj-split">' +
+      '<section class="sj-split-art" aria-labelledby="sj-art-h"><img class="sj-split-logo" src="vendor/savanna-static-pages/assets/img/holberton-logo-full-alx.png" alt="ALX">' +
+        '<h1 id="sj-art-h">' + T('artTitle') + '</h1><p>' + T('artText') + '</p></section>' +
+      '<section class="sj-split-form dm" aria-labelledby="sj-step-h">' + right + '</section></div>';
+    if (signedIn()) view.querySelector('.sj-split-form').removeAttribute('aria-labelledby');
+    var form = document.getElementById('sj-mode');
+    if (form) {
+      form.onchange = function (e) { if (e.target.name === 'mode') home.mode = e.target.value; };
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        var c = form.querySelector('input[name=mode]:checked');
+        if (!c) { home.error = T('errMode'); homePage(); document.getElementById('sj-mode-errors').focus(); return; }
+        D.stopSpeaking();
+        home.error = ''; home.mode = c.value; home.step = 'account';
+        try { history.pushState({ step: 'account' }, '', 'index.html?step=account'); } catch (x) {}
+        D.setPrefs(D.prefsForMode(c.value)); // re-draws this page (now step 2) through the prefs listener
+        focusStep();
+      };
+      var errLink = view.querySelector('#sj-mode-errors a');
+      if (errLink) errLink.onclick = function (e) { e.preventDefault(); document.getElementById('sj-mode-0').focus(); };
+      document.getElementById('sj-listen').onclick = function () {
+        if (D.player.state !== 'idle' && D.player.owner === homeAudio) { D.stopSpeaking(); return; }
+        var items = [{ key: null, text: T('modeTitle') + ' ' + T('modeHint') }].concat(MODES.map(function (m) { return { key: null, text: T('m_' + m) }; }));
+        D.player.play(items, lang(), homeAudio);
+      };
+      listenLabel();
+    }
+    var ch = document.getElementById('sj-change');
+    if (ch) ch.onclick = function () { home.step = 'mode'; try { history.pushState({ step: 'mode' }, '', 'index.html'); } catch (x) {} homePage(); focusStep(); };
+  }
+  function focusStep() { var h = document.getElementById('sj-step-h'); if (h) { h.setAttribute('tabindex', '-1'); h.focus(); } }
+  function listenLabel() {
+    var t = document.getElementById('sj-listen-t');
+    if (t) t.textContent = T(D.player.state !== 'idle' && D.player.owner === homeAudio ? 'stopAudio' : 'listenQ');
+  }
+  D.player.on(listenLabel);
+  window.addEventListener('popstate', function () {
+    if (page !== 'home') return;
+    home.step = new URLSearchParams(location.search).get('step') === 'account' ? 'account' : 'mode';
+    homePage(); focusStep();
+  });
 
   /* Simulated log-in (WCAG 3.3.8): no password to remember, no puzzle, no time limit; the code can be pasted or
      filled in by the phone (autocomplete="one-time-code"). Clearly labelled as simulated. */
@@ -306,10 +422,12 @@
   });
   // Language changes come from the header button, any form's language switch, or Settings.
   document.addEventListener('savanna-onboarding:prefs', function () {
-    var active = document.activeElement && (document.activeElement.className || '').indexOf('sj-lang') !== -1;
+    var a = document.activeElement, tog = a && a.getAttribute && a.getAttribute('data-tog');
+    var keepMode = page === 'home' && document.getElementById('sj-mode') && a && a.name === 'mode' ? a.value : null;
     frame();
     if (!view.querySelector('savanna-onboarding-form, savanna-onboarding-settings')) renderPage(false);
-    if (active) document.querySelector('.sj-lang').focus();
+    if (tog) { var b = document.querySelector('.sj-tog[data-tog="' + tog + '"]'); if (b) b.focus(); }
+    else if (keepMode) { var r = view.querySelector('input[name=mode][value="' + keepMode + '"]'); if (r) r.focus(); }
   });
 
   /* Minimum offline mode: the service worker keeps the pages, module, fonts and styles on this phone (sw.js).

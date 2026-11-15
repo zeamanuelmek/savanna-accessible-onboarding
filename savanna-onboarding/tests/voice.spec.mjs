@@ -1,30 +1,9 @@
 // Phase 3: answer input by voice, as a reviewed state machine. The browser's speech engine is replaced by a fake,
 // so these tests check our behaviour (consent, review, never saving unreviewed speech, errors, fallbacks), not Google.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, say, speakAnswer } from './helpers.mjs';
 
-/** Fake speech engine. window.__say = { alts: [...] } or { error: 'network' } decides what the next "listen" returns. */
-function fakeSpeech(page, { consent = true } = {}) {
-  return page.addInitScript(c => {
-    if (c) localStorage.setItem('savanna-onboarding.voiceConsent', 'true');
-    window.__starts = 0;
-    window.SpeechRecognition = class {
-      start() {
-        window.__starts++;
-        const say = window.__say || { alts: ['nothing'] };
-        setTimeout(() => {
-          if (say.hold) return; // stays listening until stop()
-          if (say.error) this.onerror?.({ error: say.error });
-          else this.onresult?.({ results: [say.alts.map(t => ({ transcript: t }))] });
-          this.onend?.();
-        }, 30);
-      }
-      stop() { this.onend?.(); }
-      abort() {}
-    };
-  }, consent);
-}
-const say = (page, value) => page.evaluate(v => { window.__say = v; }, value);
+const fakeSpeech = (page, o) => fakeSpeechEngine(page, o);
 const draftText = page => page.evaluate(() => localStorage.getItem('savanna-onboarding.draft.signup') || '');
 
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
@@ -47,7 +26,7 @@ test('the transcript can be corrected before it is used, and is saved only on Co
   await fakeSpeech(page);
   await signupTo(page, 'name');
   await say(page, { alts: ['Abebe Kebedde', 'Abebe Kebede'] });
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('[data-ref=heard-h]')).toBeFocused();
   await expect(page.locator('[data-ref=heard-edit]')).toHaveValue('Abebe Kebedde');
   await expect(page.locator('[data-ref=input]')).toHaveValue(''); // not in the answer yet
@@ -68,7 +47,7 @@ test('a spoken choice is shown for checking and only selected after "Use this an
   await fakeSpeech(page);
   await signupTo(page, 'filler');
   await say(page, { alts: ['it is me myself'] });
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('.dm-heard')).toContainText('This matches: Me, for myself');
   await expect(page.locator('input[value=self]')).not.toBeChecked();
   await page.locator('[data-act=heard-yes]').click();
@@ -79,7 +58,7 @@ test('a spoken phone number becomes digits', async ({ page }) => {
   await fakeSpeech(page);
   await signupTo(page, 'phone');
   await say(page, { alts: ['zero nine one one two three four five six seven'] });
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('[data-ref=heard-edit]')).toHaveValue('0911234567');
 });
 
@@ -87,7 +66,7 @@ test('Continue while a voice answer waits for checking does not skip the check',
   await fakeSpeech(page);
   await signupTo(page, 'name');
   await say(page, { alts: ['Unchecked Words'] });
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('[data-ref=heard-h]')).toBeFocused();
   await next(page);
   expect(await heading(page)).toContain('What should we call you'); // still on the same question
@@ -100,12 +79,13 @@ test('"Type it instead" throws the transcript away; changing language does too',
   await signupTo(page, 'name');
   await page.fill('[data-ref=input]', 'Typed Name');
   await say(page, { alts: ['Spoken Name'] });
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await page.locator('[data-act=heard-type]').click();
   await expect(page.locator('.dm-heard')).toHaveCount(0);
   await expect(page.locator('[data-ref=input]')).toHaveValue('Typed Name');
   await expect(page.locator('[data-ref=input]')).toBeFocused();
-  await page.locator('[data-act=speak]').click();
+  await say(page, { alts: ['Spoken Name'] });
+  await speakAnswer(page);
   await expect(page.locator('.dm-heard')).toHaveCount(1);
   await page.locator('[data-act=lang]').click();
   await expect(page.locator('.dm-heard')).toHaveCount(0);
@@ -116,7 +96,7 @@ test('no match for a choice asks the learner to try again or tap', async ({ page
   await fakeSpeech(page);
   await signupTo(page, 'filler');
   await say(page, { alts: ['banana'] });
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('.dm-status')).toContainText('did not catch one of the choices');
   await expect(page.locator('.dm-heard')).toHaveCount(0);
 });
@@ -128,6 +108,7 @@ for (const [code, message] of [['not-allowed', 'microphone is blocked'], ['netwo
     await signupTo(page, 'name');
     await say(page, { error: code });
     await page.locator('[data-act=speak]').click();
+    if (code === 'no-speech') await page.locator('[data-act=speak]').click(); // silence is not an error until the learner presses Stop
     await expect(page.locator('.dm-status')).toContainText(message);
     await expect(page.locator('[data-act=speak]')).toHaveAttribute('aria-pressed', 'false');
     await expect(page.locator('[data-ref=input]')).toBeEnabled();
@@ -166,6 +147,22 @@ test('pressing the microphone again stops listening', async ({ page }) => {
   await expect(page.locator('[data-act=speak]')).toHaveAttribute('aria-pressed', 'true');
   await page.locator('[data-act=speak]').click();
   await expect(page.locator('[data-act=speak]')).toHaveAttribute('aria-pressed', 'false');
+});
+
+test('the microphone stays on through pauses: only Stop ends it, and the words are joined (phone number)', async ({ page }) => {
+  await fakeSpeech(page);
+  await signupTo(page, 'phone');
+  await say(page, { alts: ['zero nine one one'], autoEnd: true }); // the browser stops by itself after a pause
+  const mic = page.locator('[data-act=speak]');
+  await mic.click();
+  await expect.poll(() => page.evaluate(() => window.__starts)).toBe(2); // listening again at once
+  await expect(mic).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.dm-status')).toContainText('press Stop listening when you have finished');
+  await expect(page.locator('.dm-heard')).toHaveCount(0); // nothing shown before Stop
+  await say(page, { alts: ['two three four five six seven'] });
+  await mic.click(); // Stop
+  await expect(mic).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-ref=heard-edit]')).toHaveValue('0911234567');
 });
 
 test('another speech engine can be plugged in through the adapter (setSpeech)', async ({ page }) => {

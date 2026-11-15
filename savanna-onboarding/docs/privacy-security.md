@@ -20,7 +20,7 @@ Everything is in the browser on the learner's phone. There is no server and no d
 | `savanna-onboarding.jobs`, `.jobFilter` | (Demo host) jobs posted on this phone; filter on/off | No | Until "Delete my data" |
 | `savanna-demo.session` | (Demo host) simulated log-in | No | Until log-out or "Delete my data" |
 | `sidebar-collapsed` | (Demo host) menu open or closed | No | Until changed |
-| Cache Storage `savanna-onboarding-v2` | (Sample service worker) pages, scripts, fonts, styles, recordings played once | No | Until a new version replaces it, or the browser data is cleared |
+| Cache Storage `savanna-onboarding-v3` | (Sample service worker) pages, scripts, fonts, styles, recordings played once | No | Until a new version replaces it, or the browser data is cleared |
 | Cache Storage `savanna-onboarding-audio` | Recordings the learner chose to download | No | Until "Remove downloaded audio" |
 
 Data is stored as **plain text** in the browser. Anyone with the unlocked phone and its browser can read it. This was

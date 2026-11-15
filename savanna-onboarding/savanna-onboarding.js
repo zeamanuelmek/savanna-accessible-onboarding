@@ -49,12 +49,13 @@
   function getPrefs() {
     var p = store.get('prefs', {});
     return { lang: p.lang || 'am', easy: !!p.easy, pictures: p.pictures != null ? !!p.pictures : p.mode === 'simple',
-      mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal' };
+      mode: p.mode || '', size: p.size || 'normal', contrast: p.contrast || 'normal', motion: p.motion === 'reduce' ? 'reduce' : 'normal' };
   }
   function applyPrefs() {
     var p = getPrefs(), root = document.documentElement;
     root.setAttribute('data-dm-size', p.size);
     root.setAttribute('data-dm-contrast', p.contrast);
+    root.setAttribute('data-dm-motion', p.motion); // "Stop motion": no animations, transitions or smooth scrolling
   }
   /* Events are named savanna-onboarding:<name>. The old dimts:<name> event is also sent (deprecated alias). */
   function emit(target, name, detail, bubbles) {
@@ -80,7 +81,7 @@
   var UI = {
     en: {
       back: 'Back', next: 'Continue', submit: 'Submit', listen: 'Listen to the question',
-      speak: 'Answer by voice', stop: 'Stop listening', listening: 'Microphone on. Listening… speak now.',
+      speak: 'Answer by voice', stop: 'Stop listening', listening: 'Microphone on. Listening… speak now, and press Stop listening when you have finished.',
       heard: 'I heard:', yes: 'Use this answer', again: 'Say it again', type: 'Type it instead',
       micAsk: 'Your browser may ask to use the microphone. Choose Allow.', micOn: 'Microphone on',
       processing: 'Working out what you said…',
@@ -157,7 +158,7 @@
     },
     am: {
       back: 'ተመለስ', next: 'ቀጥል', submit: 'ላክ', listen: 'ጥያቄውን አዳምጥ',
-      speak: 'በድምፅ ይመልሱ', stop: 'ማዳመጥ አቁም', listening: 'ማይክሮፎኑ በርቷል። እያዳመጥኩ ነው… አሁን ይናገሩ።',
+      speak: 'በድምፅ ይመልሱ', stop: 'ማዳመጥ አቁም', listening: 'ማይክሮፎኑ በርቷል። እያዳመጥኩ ነው… አሁን ይናገሩ፤ ሲጨርሱ «ማዳመጥ አቁም»ን ይጫኑ።',
       heard: 'የሰማሁት፦', yes: 'ይህን መልስ ተጠቀም', again: 'እንደገና ይናገሩ', type: 'በመጻፍ ይመልሱ',
       micAsk: 'ብራውዘርዎ ማይክሮፎኑን ለመጠቀም ፈቃድ ሊጠይቅ ይችላል። «ፍቀድ»ን ይምረጡ።', micOn: 'ማይክሮፎኑ በርቷል',
       processing: 'የተናገሩትን እየለየሁ ነው…',
@@ -338,24 +339,50 @@
        output.speak(text, lang, audioUrl)      -> false when no voice is available for that language
        output.stop()                                                                                       */
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  /* The microphone stays on until the learner presses Stop. Browsers end recognition by themselves after a short
+     pause (Android Chrome after about a second of silence, even in continuous mode), which cut phone numbers off
+     half-way. So each time the browser stops on its own, listening starts again and the words are added together.
+     What was heard is handed over only once, after the learner pressed Stop. */
   var browserInput = {
     supported: function () { return !!SR; },
     start: function (lang, h) {
-      var rec = new SR();
-      rec.lang = lang === 'am' ? 'am-ET' : 'en-US';
-      rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = false;
-      rec.onresult = function (ev) {
-        var alts = [], r = ev.results[0];
-        for (var i = 0; i < r.length; i++) alts.push(r[i].transcript);
-        h.result(alts);
+      var heard = [], stopped = false, fatal = null, rec = null, quickEnds = 0, startedAt = 0;
+      function segment(r) { var a = []; for (var i = 0; i < r.length; i++) a.push(r[i].transcript); return a; }
+      function finish() {
+        if (fatal) { h.error(fatal); h.end(); return; }
+        if (!heard.length) { if (stopped !== 'abort') h.error('no-speech'); h.end(); return; }
+        // best guess = the best words of each part; other guesses only when everything came in one part
+        var best = heard.map(function (a) { return (a[0] || '').trim(); }).filter(Boolean).join(' ');
+        h.result(heard.length === 1 ? [best].concat(heard[0].slice(1)) : [best]);
+        h.end();
+      }
+      function open() {
+        rec = new SR();
+        rec.lang = lang === 'am' ? 'am-ET' : 'en-US';
+        rec.interimResults = false; rec.maxAlternatives = 3; rec.continuous = true;
+        rec.onresult = function (ev) {
+          for (var i = ev.resultIndex; i < ev.results.length; i++) if (ev.results[i].isFinal) heard.push(segment(ev.results[i]));
+        };
+        rec.onerror = function (ev) {
+          var e = ev && ev.error;
+          if (e === 'no-speech' || e === 'aborted') return; // a pause is not an error: keep listening until Stop
+          fatal = e === 'service-not-allowed' ? 'not-allowed' : e === 'language-not-supported' || e === 'bad-grammar' ? 'language-not-supported' : e || 'failed';
+        };
+        rec.onend = function () {
+          if (stopped || fatal) { finish(); return; }
+          // the browser stopped by itself: listen again. Guard against a browser that refuses at once, over and over.
+          quickEnds = Date.now() - startedAt < 400 ? quickEnds + 1 : 0;
+          if (quickEnds >= 5) { fatal = 'failed'; finish(); return; }
+          try { open(); } catch (e) { fatal = 'failed'; finish(); }
+        };
+        startedAt = Date.now();
+        rec.start();
+      }
+      open();
+      return {
+        stop: function () { if (stopped) return; stopped = 'stop'; try { rec.stop(); } catch (e) { finish(); } },
+        abort: function () { if (stopped) return; stopped = 'abort'; heard = []; try { rec.abort(); } catch (e) {} }
       };
-      rec.onerror = function (ev) {
-        var e = ev && ev.error;
-        h.error(e === 'service-not-allowed' ? 'not-allowed' : e === 'language-not-supported' || e === 'bad-grammar' ? 'language-not-supported' : e || 'failed');
-      };
-      rec.onend = function () { h.end(); };
-      rec.start();
-      return { stop: function () { try { rec.stop(); } catch (e) {} }, abort: function () { try { rec.abort(); } catch (e) {} } };
     }
   };
   var speech = { input: browserInput, output: {
@@ -759,6 +786,8 @@
   };
   function fontFaces() {
     if (!BASE) return ''; // inline install: the host provides fonts, the stack below falls back cleanly
+    // the host page already declares (and preloads) the same fonts, e.g. the Savanna journey's journey.css
+    try { if (getComputedStyle(document.documentElement).getPropertyValue('--so-host-fonts').trim()) return ''; } catch (e) {}
     var out = [];
     [400, 500, 600, 700].forEach(function (w) {
       ['latin-ext', 'latin'].forEach(function (sub) {
@@ -914,7 +943,8 @@
     'html[data-dm-contrast=high] .dm-panel,html[data-dm-contrast=high] .dm-note,html[data-dm-contrast=high] .dm-success,html[data-dm-contrast=high] .dm-heard{border:3px solid #000}',
     'html[data-dm-contrast=high] .dm-opt:has(input:checked){border-width:5px;box-shadow:none}',
     '@media (forced-colors:active){.dm-opt:has(input:checked){border-width:4px}.dm-meter span{background:CanvasText}}',
-    '@media (prefers-reduced-motion:reduce){.dm *{transition:none!important;animation:none!important}}'
+    '@media (prefers-reduced-motion:reduce){.dm *{transition:none!important;animation:none!important}}',
+    'html[data-dm-motion=reduce]{scroll-behavior:auto!important}html[data-dm-motion=reduce] *,html[data-dm-motion=reduce] *::before,html[data-dm-motion=reduce] *::after{transition:none!important;animation:none!important}'
   ].join('\n');
 
   function injectCss() {
@@ -1707,7 +1737,9 @@
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth },
     speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
     player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
-    prefs: getPrefs, setPrefs: setPrefs
+    prefs: getPrefs, setPrefs: setPrefs, prefsForMode: prefsForMode,
+    /** Adds the module's styles and fonts to the page (done automatically when a form or settings element appears). */
+    styles: function () { injectCss(); applyPrefs(); }
   };
   window.Dimts = API; // deprecated alias
   emit(document, 'ready', null);

@@ -1317,3 +1317,38 @@ New test files: `names.spec.mjs` (6), `gate.spec.mjs` (2), `wcag.spec.mjs` (8), 
 ### Next step
 
 Wait for "go to Phase 10".
+
+---
+
+## Team requests (15 Nov): voice stop, font flash, new home page, accessibility bar
+
+Asked by the team outside the phase plan, before Phase 10.
+
+### What changed
+
+- `savanna-onboarding/savanna-onboarding.js` — **voice input stays on until the learner presses Stop.** The browser
+  ends recognition by itself after a short pause (Android Chrome after about a second), which cut phone numbers off.
+  Now listening restarts each time the browser stops on its own, the words are joined, and nothing is shown until
+  Stop. A pause is no longer an error; "I did not hear anything" appears only if Stop is pressed with nothing heard.
+  The status says "press Stop listening when you have finished". Also: a "Stop motion" preference
+  (`data-dm-motion`), and `styles()` / `prefsForMode()` in the public API.
+- `journey/early.js` (new) — a small script in `<head>` that applies the saved language, text size, contrast and
+  motion before the page is drawn; it also preloads the Amharic font when the page is in Amharic.
+- `journey/journey.css` — fonts declared here (and preloaded by every page), so text no longer flashes in a fallback
+  font; the module then skips its own copy (`--so-host-fonts`). Toolbar, sticky header and split home layout styles.
+- `journey/journey.js` — **"Make this page work for you."** bar on every page (Larger text, High contrast, Stop
+  motion, English, አማርኛ; toggle buttons with `aria-pressed`), replacing the single language button. Header is now
+  sticky under the bar. **New home page** in the layout of ALX's sign-up page: welcome panel left; right: step 1 "How
+  would you like to use Savanna?" (the four ways), step 2 "Sign up or log in" (`index.html?step=account`, Back works).
+  The journey's sign-up then starts at its first question.
+- `app.js` — `signupWelcome` switch (the showroom keeps the welcome screen).
+- `tools/journey-pages.cjs` + the 11 pages — early script and font preloads. `sw.js` — caches `early.js`, cache v3.
+- Tests: one shared realistic fake speech engine (`tests/helpers.mjs`); new tests for the microphone staying on
+  through pauses, the two-step home, the bar, early settings and fonts. Docs: README, for-developers.
+
+### Real vs simulated / to check
+
+- Voice: tested with a fake engine only. **Try it on a real Android phone** (the browser may beep at each restart).
+- The home welcome texts are new and have **no recorded Amharic audio** yet (read aloud uses the phone's voice).
+  Amharic is a draft for review.
+- The ALX photo from ALX's sign-up page is not in the starter kit, so the panel uses a purple gradient.

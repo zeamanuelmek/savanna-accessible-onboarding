@@ -12,9 +12,10 @@ const passport = page => page.evaluate(() => JSON.parse(localStorage.getItem('sa
 /** Sign up from the Savanna home page, as a learner would. */
 async function signUpFromHome(page, words) {
   await at(page, '/index.html');
-  await page.locator('.sj-hero a[href="signup.html"]').click();
+  await pick(page, 'read_type'); // home, step 1: how would you like to use Savanna?
+  await page.locator('#sj-mode button[type=submit]').click();
+  await page.locator('.sj-split a[href="signup.html"]').click(); // step 2: sign up or log in
   await page.waitForSelector('.dm-q');
-  await pick(page, 'read_type'); await next(page);
   await pick(page, 'self'); await next(page);
   await page.fill('[data-ref=input]', 'Abebe Kebede'); await next(page);
   await page.fill('[data-ref=input]', '0911234567'); await next(page);
@@ -68,10 +69,10 @@ test('GATE: the whole task with the keyboard only (Tab, Space, Enter)', async ({
     throw new Error('could not reach ' + selector);
   }
   const choose = async v => { await tabTo(`input[value="${v}"], input[name=v]:first-of-type`); };
-  await tabTo('.sj-hero a[href="signup.html"]'); await page.keyboard.press('Enter');
-  await page.waitForSelector('.dm-q');
   await tabTo('input[name=mode]'); await page.keyboard.press('Space');
-  await tabTo('button[type=submit]'); await page.keyboard.press('Enter');
+  await tabTo('#sj-mode button[type=submit]'); await page.keyboard.press('Enter');
+  await tabTo('.sj-split a[href="signup.html"]'); await page.keyboard.press('Enter');
+  await page.waitForSelector('.dm-q');
   await tabTo('input[name=v]'); await page.keyboard.press('Space'); // Me, for myself
   await tabTo('button[type=submit]'); await page.keyboard.press('Enter');
   await tabTo('[data-ref=input]'); await page.keyboard.type('Abebe Kebede'); await page.keyboard.press('Enter');
@@ -114,13 +115,18 @@ test('Savanna frame: menu button, labelled navigation, logo with a name, languag
     await expect(menu).toHaveAttribute('aria-expanded', 'false');
     await expect(menu).toBeFocused();
   } else {
+    await expect(menu).toHaveAttribute('aria-expanded', 'false'); // the home page starts as a full-width welcome
+    await expect(page.getByRole('link', { name: 'Jobs' })).toHaveCount(1); // icon rail: link names stay for screen readers
+    await menu.click();
     await expect(menu).toHaveAttribute('aria-expanded', 'true');
-    await menu.click(); // collapse to the icon rail: link names stay for screen readers
+    await menu.click();
     await expect(page.getByRole('link', { name: 'Jobs' })).toHaveCount(1);
   }
-  await page.locator('.sj-lang').click();
+  await page.locator('.sj-tog[data-tog=am]').click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'am');
-  await expect(page.locator('.sj h1')).toHaveText('በሳቫና ይማሩ');
+  await expect(page.locator('.sj h1')).toHaveText('ከALX ጋር ወደ ጉዞዎ እንኳን ደህና መጡ');
+  await expect(page.locator('.sj-tog[data-tog=am]')).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.sj-tog[data-tog=am]')).toBeFocused();
 });
 
 test('pages for learners ask to log in when nobody is logged in', async ({ page }) => {
@@ -225,4 +231,61 @@ test('the showroom stays reachable as the developer and test page', async ({ pag
   await page.locator('.sj-foot a[href="showroom.html"]').click();
   await page.waitForSelector('#nav a', { state: 'attached' });
   await expect(page).toHaveTitle(/Savanna Accessible Onboarding Module/);
+});
+
+test('home: first "How would you like to use Savanna?", then "Sign up or log in"; Back returns to the first step', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await at(page, '/index.html');
+  await expect(page.locator('.sj-split h1')).toHaveText('Welcome to your journey with ALX');
+  await expect(page.locator('.sj-split a[href="signup.html"]')).toHaveCount(0); // sign up comes after the choice
+  await page.locator('#sj-mode button[type=submit]').click(); // nothing chosen
+  await expect(page.locator('#sj-mode-errors')).toBeFocused();
+  await expect(page.locator('#sj-mode-errors')).toContainText('Choose one way to continue.');
+  await pick(page, 'simple');
+  await page.locator('#sj-mode button[type=submit]').click();
+  await expect(page.locator('#sj-step-h')).toHaveText('Sign up or log in');
+  await expect(page.locator('#sj-step-h')).toBeFocused();
+  await expect(page.locator('.sj-split a[href="login.html"]')).toBeVisible();
+  const prefs = await page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.prefs')));
+  expect(prefs).toMatchObject({ mode: 'simple', pictures: true, size: 'large' });
+  await page.goBack();
+  await expect(page.locator('#sj-step-h')).toHaveText('How would you like to use Savanna?');
+  await expect(page.locator('input[value=simple]')).toBeChecked();
+  await page.goForward();
+  await page.locator('.sj-split a[href="signup.html"]').click();
+  await page.waitForSelector('.dm-q');
+  expect(await heading(page)).toBe('Who is filling in this form?'); // the sign-up does not ask again
+});
+
+test('"Make this page work for you" bar: pressed states, saved, and applied before the page is drawn', async ({ page }) => {
+  await freshStart(page, { lang: 'en' });
+  await at(page, '/jobs.html');
+  const bar = page.getByRole('region', { name: 'Make this page work for you.' });
+  for (const [key, attr, value] of [['size', 'data-dm-size', 'large'], ['contrast', 'data-dm-contrast', 'high'], ['motion', 'data-dm-motion', 'reduce']]) {
+    const b = bar.locator(`.sj-tog[data-tog=${key}]`);
+    await expect(b).toHaveAttribute('aria-pressed', 'false');
+    await b.click();
+    await expect(b).toHaveAttribute('aria-pressed', 'true');
+    await expect(b).toBeFocused();
+    await expect(page.locator('html')).toHaveAttribute(attr, value);
+  }
+  // on the next page the settings are on <html> before any of the module's scripts run (no jump in size or font)
+  await page.route('**/savanna-onboarding.js', r => r.abort());
+  await page.goto('/settings.html');
+  await expect(page.locator('html')).toHaveAttribute('data-dm-size', 'large');
+  await expect(page.locator('html')).toHaveAttribute('data-dm-contrast', 'high');
+  await expect(page.locator('html')).toHaveAttribute('data-dm-motion', 'reduce');
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+});
+
+test('fonts are declared and preloaded in the page head, so text never flashes in another font', async ({ page }) => {
+  await freshStart(page, { lang: 'am' });
+  await page.goto('/index.html');
+  expect(await page.locator('link[rel=preload][as=font]').count()).toBeGreaterThanOrEqual(4); // Poppins + Ethiopic (Amharic)
+  await page.waitForFunction(() => !!window.SavannaOnboarding);
+  await page.evaluate(() => document.fonts.ready);
+  // the page's own font declarations are the ones used (the module does not add a second copy)
+  expect(await page.evaluate(() => document.querySelector('#savanna-onboarding-styles').textContent.includes('@font-face'))).toBe(false);
+  expect(await page.evaluate(() => [...document.fonts].some(f => f.family.includes('Poppins') && f.status === 'loaded'))).toBe(true);
+  expect(await page.evaluate(() => getComputedStyle(document.querySelector('.sj-header')).position)).toBe('sticky');
 });

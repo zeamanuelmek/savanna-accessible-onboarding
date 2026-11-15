@@ -2,7 +2,7 @@
 // when voice is used, "Ask someone to type this for me", the full name as an optional part of My profile, and voice
 // matching for choice questions that uses whole words and never guesses between two answers.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, speakAnswer } from './helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
@@ -20,12 +20,9 @@ test('the sign-up asks only what to call the learner, in Amharic or Latin letter
 });
 
 test('a spoken name always comes with "Voice may get names wrong. Please check and correct it."', async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem('savanna-onboarding.voiceConsent', 'true');
-    window.SpeechRecognition = class { start() { setTimeout(() => { this.onresult?.({ results: [[{ transcript: 'Salem' }]] }); this.onend?.(); }, 30); } stop() {} abort() {} };
-  });
+  await fakeSpeechEngine(page, { transcript: 'Salem' });
   await signupTo(page, 'name');
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('.dm-heard-warn')).toHaveText('Voice may get names wrong. Please check and correct it.');
   await page.fill('[data-ref=heard-edit]', 'Selam');
   await page.locator('[data-act=heard-yes]').click();
@@ -93,12 +90,9 @@ test('voice matching for choices: whole words, Amharic endings, and never a gues
 });
 
 test('two answers heard for one choice: the learner is asked again, nothing is chosen', async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem('savanna-onboarding.voiceConsent', 'true');
-    window.SpeechRecognition = class { start() { setTimeout(() => { this.onresult?.({ results: [[{ transcript: 'yes no' }]] }); this.onend?.(); }, 30); } stop() {} abort() {} };
-  });
+  await fakeSpeechEngine(page, { transcript: 'yes no' });
   await signupTo(page, 'consent');
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('.dm-status')).toContainText('I heard more than one answer');
   await expect(page.locator('input[name=v]:checked')).toHaveCount(0);
 });

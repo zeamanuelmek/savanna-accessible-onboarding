@@ -136,6 +136,10 @@ SavannaOnboarding.setSpeech({
 });
 ```
 
+  An engine should keep listening until `stop()` is called: the learner, not a pause, decides when they have finished
+  (`stop()` → deliver what was heard → `h.end()`). The default engine does this by restarting the browser's recogniser
+  whenever it stops by itself after a silence (Android Chrome does so after about a second), and joining the words.
+
   The default is the browser's own engine (free; needs a connection; audio goes to Google). **Addis AI** (Amharic speech
   to text and text to speech) is a possible future engine behind this adapter, **not a dependency**.
 

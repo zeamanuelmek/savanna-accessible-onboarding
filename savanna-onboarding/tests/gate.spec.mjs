@@ -57,12 +57,12 @@ test('GATE dry run: keyboard only, 200% zoom, sound off', async ({ page }, info)
 
   await page.goto('/index.html');
   await page.waitForFunction(() => !!window.SavannaOnboarding);
-  await checkScreen('Savanna home');
-  await tabTo('.sj-hero a[href="signup.html"]'); await enter();
-  await page.waitForSelector('.dm-q');
-  await checkScreen('welcome');
+  await checkScreen('Savanna home: how would you like to use Savanna?');
   await tabTo('input[name=mode]'); await space(); // Read and type
-  await tabTo('button[type=submit]'); await enter();
+  await tabTo('#sj-mode button[type=submit]'); await enter();
+  await checkScreen('Savanna home: sign up or log in');
+  await tabTo('.sj-split a[href="signup.html"]'); await enter();
+  await page.waitForSelector('.dm-q');
   await checkScreen('who is filling in');
   await tabTo('input[name=v]'); await space(); // Me, for myself
   await tabTo('button[type=submit]'); await enter();

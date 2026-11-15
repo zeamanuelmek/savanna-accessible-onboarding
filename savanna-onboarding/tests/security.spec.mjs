@@ -46,9 +46,9 @@ test('during the gate task nothing is requested from any other site', async ({ p
   page.on('request', r => { const u = new URL(r.url()); if (/^https?:$/.test(u.protocol) && u.origin !== origin) elsewhere.push(r.url()); });
   await freshStart(page, { lang: 'en' });
   await page.goto('/index.html');
-  await page.locator('.sj-hero a[href="signup.html"]').click();
+  await pick(page, 'read_type'); await page.locator('#sj-mode button[type=submit]').click();
+  await page.locator('.sj-split a[href="signup.html"]').click();
   await page.waitForSelector('.dm-q');
-  await pick(page, 'read_type'); await next(page);
   await pick(page, 'self'); await next(page);
   await page.fill('[data-ref=input]', 'Abebe'); await next(page);
   await page.fill('[data-ref=input]', '0911234567'); await next(page);

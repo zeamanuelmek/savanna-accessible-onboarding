@@ -7,11 +7,11 @@
    Pages: network first (always fresh when online), the saved copy when offline. Other files: the saved copy at once,
    refreshed in the background. Nothing is sent anywhere; only this site's own files are handled.
    A host such as Savanna can register this file, or copy the CORE list into its own service worker. */
-var CACHE = 'savanna-onboarding-v2';
+var CACHE = 'savanna-onboarding-v3';
 var CORE = [
   './', 'index.html', 'signup.html', 'login.html', 'dashboard.html', 'profile.html', 'passport.html', 'takeover.html',
   'jobs.html', 'apply.html', 'employer.html', 'settings.html', 'showroom.html', 'test-host/',
-  'savanna-onboarding.js', 'forms.js', 'app.js', 'app.css', 'journey/journey.js', 'journey/journey.css',
+  'savanna-onboarding.js', 'forms.js', 'app.js', 'app.css', 'journey/journey.js', 'journey/journey.css', 'journey/early.js',
   'assets/audio/manifest.json',
   'assets/fonts/noto-sans-ethiopic-ethiopic.woff2',
   'assets/fonts/poppins-400-latin.woff2', 'assets/fonts/poppins-400-latin-ext.woff2',

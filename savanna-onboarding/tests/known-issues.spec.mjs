@@ -3,24 +3,16 @@
 // does not do it yet. When a phase fixes the problem, Playwright reports the test as
 // "unexpectedly passed": remove its test.fail() line then, so it becomes a normal regression test.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, next, signupTo } from './helpers.mjs';
+import { freshStart, go, next, signupTo, fakeSpeechEngine, speakAnswer } from './helpers.mjs';
 
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
-function fakeSpeech(page, transcript) {
-  return page.addInitScript(t => {
-    localStorage.setItem('savanna-onboarding.voiceConsent', 'true');
-    window.SpeechRecognition = class {
-      start() { setTimeout(() => { this.onresult?.({ results: [[{ transcript: t }]] }); this.onend?.(); }, 30); }
-      stop() {} abort() {}
-    };
-  }, transcript);
-}
+const fakeSpeech = (page, transcript) => fakeSpeechEngine(page, { transcript });
 
 test('PRIVACY: unconfirmed speech is never saved (fixed in Phase 3)', async ({ page }) => {
   await fakeSpeech(page, 'Secret Spoken Name');
   await signupTo(page, 'name');
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('[data-ref=heard-h]')).toContainText('Secret Spoken Name');
   const draft = await page.evaluate(() => localStorage.getItem('savanna-onboarding.draft.signup') || '');
   expect(draft).not.toContain('Secret Spoken Name');
@@ -29,7 +21,7 @@ test('PRIVACY: unconfirmed speech is never saved (fixed in Phase 3)', async ({ p
 test('PRIVACY: "Say it again" discards the previous transcript (fixed in Phase 3)', async ({ page }) => {
   await fakeSpeech(page, 'Wrong Words');
   await signupTo(page, 'name');
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('[data-ref=heard-h]')).toBeVisible();
   await page.evaluate(() => { window.SpeechRecognition.prototype.start = function () {}; });
   await page.locator('[data-act=heard-again]').click();

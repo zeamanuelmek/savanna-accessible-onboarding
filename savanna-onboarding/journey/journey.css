@@ -1,9 +1,25 @@
+/* Fonts and base size, declared here (a stylesheet in <head>) and preloaded by every page, so the very first frame is
+   drawn in Poppins / Noto Sans Ethiopic at the learner's text size. Before, they arrived with the module script a moment
+   later and every page flashed in the fallback font. Same files and values as the module's own (savanna-onboarding.js). */
+@font-face { font-family: "Poppins"; font-style: normal; font-weight: 400; font-display: swap; src: url("../assets/fonts/poppins-400-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Poppins"; font-style: normal; font-weight: 400; font-display: swap; src: url("../assets/fonts/poppins-400-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Poppins"; font-style: normal; font-weight: 500; font-display: swap; src: url("../assets/fonts/poppins-500-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Poppins"; font-style: normal; font-weight: 500; font-display: swap; src: url("../assets/fonts/poppins-500-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Poppins"; font-style: normal; font-weight: 600; font-display: swap; src: url("../assets/fonts/poppins-600-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Poppins"; font-style: normal; font-weight: 600; font-display: swap; src: url("../assets/fonts/poppins-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Poppins"; font-style: normal; font-weight: 700; font-display: swap; src: url("../assets/fonts/poppins-700-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Poppins"; font-style: normal; font-weight: 700; font-display: swap; src: url("../assets/fonts/poppins-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Noto Sans Ethiopic"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../assets/fonts/noto-sans-ethiopic-ethiopic.woff2") format("woff2"); unicode-range: U+030E, U+1200-1399, U+2D80-2DDE, U+AB01-AB2E, U+1E7E0-1E7E6, U+1E7E8-1E7EB, U+1E7ED-1E7EE, U+1E7F0-1E7FE; }
+:root { --so-host-fonts: 1; --so-font: "Poppins", "Noto Sans Ethiopic", "Nyala", "Ebrima", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; --so-base-size: max(1rem, 16px); --so-scale: 1; }
+html[data-dm-size=large] { --so-scale: 1.25; }
+html[data-dm-size=xlarge] { --so-scale: 1.5; }
+
 /* Savanna learner journey: our additions on top of Savanna's own stylesheets (vendor/savanna-static-pages, unchanged).
    1. Accessibility fixes to Savanna's header and sidebar (documented in README "Savanna starter: what we changed in our copy").
    2. The demo view classes (buttons, notices, job cards…), scoped to .sj so they never touch Savanna's own components.
    All colours come from the module's --so-* tokens, so high contrast and text size apply here too. */
 
-html { scroll-padding-top: 88px; } /* focused items never hide under the fixed 72px header (WCAG 2.4.11) */
+html { scroll-padding-top: 88px; } /* focused items never hide under the sticky 72px header (WCAG 2.4.11) */
 body.signed_in { background: #f8f9fa; color: var(--so-text); font-family: var(--so-font); font-size: calc(var(--so-base-size) * var(--so-scale)); }
 html[data-dm-contrast=high] body.signed_in { background: #fff; }
 :focus-visible { outline: var(--so-focus-width) solid var(--so-focus); outline-offset: var(--so-focus-offset); }
@@ -13,8 +29,26 @@ main.content:focus, .sj h1:focus { outline: none; }
 .sj-skip { position: absolute; left: -9999px; top: 0; z-index: 2000; background: var(--so-heading); color: #fff; padding: .75rem 1rem; font-weight: 600; border-radius: var(--so-radius-sm); }
 .sj-skip:focus { left: 1rem; top: .75rem; color: #fff; }
 
-/* header: Savanna's .header (fixed, 72px, white, bottom border) */
-.sj-header { z-index: 1000; font-family: var(--so-font); }
+/* "Make this page work for you." bar (from ALX's accessible hackathon site). It scrolls away with the page. */
+#sj-frame { display: contents; } /* so the header can stick to the top of the whole page */
+.sj-a11y { background: #fff; border-bottom: 1px solid var(--so-navy); font-family: var(--so-font); color: var(--so-navy); font-size: calc(var(--so-base-size) * var(--so-scale) * .95); }
+.sj-a11y-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; max-width: 72rem; margin: 0 auto; padding: .5rem 1rem; }
+.sj-a11y-t { margin: 0; font-weight: 500; }
+.sj-a11y-list { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; margin: 0; padding: 0; }
+.sj-tog { min-height: 44px; padding: .35rem .85rem; border: 2px solid var(--so-navy); border-radius: 4px; background: #fff; color: var(--so-navy); font: inherit; font-weight: 600; cursor: pointer; }
+.sj-tog:hover { background: var(--so-surface-alt); }
+.sj-tog .sj-tick { display: none; }
+.sj-tog[aria-pressed=true] { background: var(--so-navy); color: #fff; }
+.sj-tog[aria-pressed=true] .sj-tick { display: inline; }
+.sj-tog:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: var(--so-focus-offset) !important; }
+html[data-dm-contrast=high] .sj-a11y { border-bottom-color: #000; color: #000; }
+html[data-dm-contrast=high] .sj-tog { border-color: #000; color: #000; }
+html[data-dm-contrast=high] .sj-tog[aria-pressed=true] { background: #000; color: #fff; }
+
+/* header: Savanna's .header (72px, white, bottom border). Sticky instead of fixed, under the bar above. */
+.sj-header { position: sticky; top: 0; z-index: 1000; font-family: var(--so-font); }
+body.signed_in > main.content, body.signed_in .content { margin-top: 0 !important; }
+#sidebar { height: auto !important; } /* top is set to the header's bottom edge by journey.js; bottom-0 keeps it to the screen */
 .sj-header .header-left { gap: .25rem; min-width: 0; }
 .header .sj-menu, .sj-menu { display: inline-flex; align-items: center; gap: .5rem; min-height: 44px; min-width: 44px; padding: .25rem .6rem; background: none; border: 0; border-radius: var(--so-radius-sm); color: var(--so-navy); font: inherit; font-weight: 500; cursor: pointer; }
 .sj-menu .fa-bars { font-size: 1.4rem; }
@@ -37,8 +71,7 @@ main.content:focus, .sj h1:focus { outline: none; }
 /* Collapsed to the 70px icon rail (desktop): labels stay available to screen readers */
 body.sidebar-collapsed #sidebar .sj-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (max-width: 767.98px) {
-  body.signed_in .content { padding-top: 72px !important; }
-  #sidebar.expanded { top: 72px; }
+  body.signed_in .content { padding-top: 0 !important; }
 }
 html[data-dm-contrast=high] #sidebar a, html[data-dm-contrast=high] #sidebar .icon, html[data-dm-contrast=high] .sj-menu { color: #000; }
 
@@ -116,3 +149,27 @@ html[data-dm-contrast=high] .sj .card-plain, html[data-dm-contrast=high] .sj .jo
    shadow, and Savanna sets none on sidebar links. Ours wins; inside the scrolling sidebar it is drawn inset so it is not clipped. */
 .sj .btn:focus-visible, .sj a:focus-visible, .sj-header a:focus-visible, .sj-header button:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: var(--so-focus-offset) !important; box-shadow: none !important; }
 #sidebar a:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: -3px !important; box-shadow: none !important; }
+
+/* Home, in the layout of ALX's own sign-up page: welcome panel left, the first steps right. Stacked on phones. */
+body.sj-home .sj { max-width: none; padding: 0 0 2rem; }
+body.sj-home .sj-foot { margin: 2rem 1rem 0; }
+.sj-split { display: grid; grid-template-columns: minmax(0, 1fr); background: #fff; }
+@media (min-width: 62em) { .sj-split { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: calc(100vh - 72px); } }
+.sj-split-art { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: .5rem; padding: 2rem 1.25rem;
+  color: #fff; background: radial-gradient(circle at 85% 15%, rgba(255,255,255,.12) 0 18%, transparent 19%), radial-gradient(circle at 10% 95%, rgba(255,255,255,.08) 0 25%, transparent 26%), linear-gradient(160deg, #2b1462 0%, #43268f 50%, #5648b7 100%); }
+@media (min-width: 62em) { .sj-split-art { padding: 3rem 3rem; } }
+.sj-split-logo { width: 9rem; height: auto; margin: -1.5rem 0 0 -1rem; filter: brightness(0) invert(1); } /* Savanna's ALX logo, drawn white */
+.sj .sj-split-art h1 { color: #fff; font-size: clamp(1.8em, 4.5vw, 3em); font-weight: 700; line-height: 1.15; margin: 0 0 .75rem; max-width: 14em; }
+.sj .sj-split-art p { font-size: 1.15em; font-weight: 500; max-width: 26em; margin: 0; }
+.sj-split-form { padding: 1.5rem 1rem 2rem; width: 100%; }
+@media (min-width: 48em) { .sj-split-form { padding: 2.5rem 2rem; } }
+.sj .sj-split-form .dm-q { margin-top: 0; }
+.sj-choice { list-style: none; padding: 0; margin: 1rem 0; display: grid; gap: 1rem; }
+.sj-choice li { border: var(--so-border-width) solid var(--so-border-subtle); border-radius: var(--so-radius-card); padding: 1rem 1.1rem; }
+.sj-choice p { margin: 0 0 .75rem; }
+.sj-choice .btn { width: 100%; }
+.sj-linkbtn { background: none; border: 0; padding: .25rem 0; min-height: 44px; color: var(--so-heading); font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+html[data-dm-contrast=high] .sj-split-art { background: #000; }
+html[data-dm-contrast=high] .sj-choice li { border: 3px solid #000; }
+html[data-dm-motion=reduce] { scroll-behavior: auto !important; }
+html[data-dm-motion=reduce] *, html[data-dm-motion=reduce] *::before, html[data-dm-motion=reduce] *::after { transition: none !important; animation: none !important; }

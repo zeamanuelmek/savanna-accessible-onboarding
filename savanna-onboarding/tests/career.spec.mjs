@@ -2,7 +2,7 @@
 // the employer accommodations form, the private "support I need" filter, and JobPosting output that matches
 // docs/api-schema.md. Also: the screen-reader tip (welcome and Help) and the learner-controlled offline audio download.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, fakeSpeechEngine, speakAnswer } from './helpers.mjs';
 
 const learner = page => page.evaluate(() => {
   localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: 'kebele', assurance_level: 'self_declared', registered_by: null }));
@@ -12,10 +12,7 @@ const learner = page => page.evaluate(() => {
 test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); });
 
 test('application: prefilled from the profile, and the open questions take voice with the check-before-use step', async ({ page }) => {
-  await page.addInitScript(() => {
-    localStorage.setItem('savanna-onboarding.voiceConsent', 'true');
-    window.SpeechRecognition = class { start() { setTimeout(() => { this.onresult?.({ results: [[{ transcript: 'I enjoy helping customers' }]] }); this.onend?.(); }, 30); } stop() {} abort() {} };
-  });
+  await fakeSpeechEngine(page, { transcript: 'I enjoy helping customers' });
   await go(page, '#/');
   await learner(page);
   await go(page, '#/apply/s3');
@@ -25,7 +22,7 @@ test('application: prefilled from the profile, and the open questions take voice
   await expect(page.locator('[data-ref=input]')).toHaveValue('0911234567');
   await next(page);
   expect(await heading(page)).toBe('Why do you want this job?');
-  await page.locator('[data-act=speak]').click();
+  await speakAnswer(page);
   await expect(page.locator('[data-ref=heard-edit]')).toHaveValue('I enjoy helping customers');
   await expect(page.locator('[data-ref=input]')).toHaveValue(''); // nothing used before the check
   await page.fill('[data-ref=heard-edit]', 'I enjoy helping customers in Amharic and English.');

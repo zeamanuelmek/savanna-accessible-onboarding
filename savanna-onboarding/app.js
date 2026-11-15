@@ -173,7 +173,7 @@
   // Every host form goes through the module's public mount() API.
   function mountForm(formId, instance, onDone) {
     view.innerHTML = '<div class="form-wrap"></div>';
-    return D.mount(view.firstChild, { form: formId, instance: instance || null, welcome: formId === 'signup', onComplete: onDone }).element;
+    return D.mount(view.firstChild, { form: formId, instance: instance || null, welcome: formId === 'signup' && API_HOST.signupWelcome, onComplete: onDone }).element;
   }
 
   function home() {
@@ -423,7 +423,9 @@
   /* ---- shared views for other hosts (the Savanna journey pages) ---- */
   var VIEWS = { signup: signup, profile: profileView, takeover: takeoverView, passport: passportView, jobs: jobsView,
     employer: employer, apply: apply, settings: settingsView };
-  window.SavannaDemoHost = {
+  var API_HOST = window.SavannaDemoHost = {
+    // The Savanna journey asks "how would you like to answer?" on its home page, so its sign-up starts at the first question.
+    signupWelcome: true,
     T: T, lang: lang, esc: esc, jobs: jobs, statusPanel: statusPanel,
     setLinks: function (fn) { linkFor = fn; },
     render: function (name, container, arg) { view = container; window.__editPassport = false; VIEWS[name](arg); }
