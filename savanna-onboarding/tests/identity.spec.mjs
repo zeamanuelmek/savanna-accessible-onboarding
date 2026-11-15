@@ -38,7 +38,7 @@ test('every ID choice shows an honest trust badge, and nothing claims "verified"
     await expect(page.locator(`.dm-opt:has(input[value=${v}]) .dm-badge`)).toHaveText('Self-declared · not verified');
   }
   await expect(page.locator('.dm-opt:has(input[value=none]) .dm-badge')).toHaveText('Partner referral pending');
-  await expect(page.locator('.dm-hint').first()).toContainText('Nobody checks IDs automatically');
+  await expect(page.locator('.dm-hint').first()).toContainText('Any of these is fine. You can start learning without an ID.');
   await noVerifiedClaim(page);
 });
 
@@ -126,7 +126,7 @@ test('Support Passport card: who can see it, and trainer sharing can be given an
   await go(page, '#/passport');
   await expect(page.locator('#who-h')).toHaveText('Who can see this');
   await expect(page.locator('section', { has: page.locator('#who-h') })).toContainText('Only you.');
-  await expect(page.locator('#view')).toContainText('Never shared with anyone');
+  await expect(page.locator('#view')).toContainText('What you wrote in your own words stays on this phone and is not shared.');
   await page.locator('#sharing').click();
   await expect(page.locator('section', { has: page.locator('#who-h') })).toContainText('You and your trainers at ALX');
   await expect(page.locator('#view')).toContainText('nothing is sent to anyone'); // labelled demo
@@ -149,7 +149,7 @@ test('job application: the learner sees exactly what would be shared, and nothin
   await signupTo(page, 'END'); await next(page);
   await page.evaluate(() => localStorage.setItem('savanna-onboarding.passport', JSON.stringify({ needs: ['remote', 'captions'], other_need: 'quiet room', sharing: 'ask' })));
   await applyTo(page);
-  await expect(page.locator('.dm-form .dm-note')).toContainText('the employer sees exactly this list: Work from home; Captions on videos and calls');
+  await expect(page.locator('.dm-form .dm-note')).toContainText('If you share, the employer sees only this list: Work from home; Captions on videos and calls.');
   await expect(page.locator('input[name=v]:checked')).toHaveCount(0); // no default: an explicit choice
   await pick(page, 'keep'); await next(page); await next(page);
   let packet = await page.locator('pre code').innerText();
@@ -187,4 +187,22 @@ test('the module only gives employers support data with consent for that applica
   expect(r.none).toEqual([]);
   expect(r.keep).toEqual([]); // trainer sharing never means employer sharing
   expect(r.share).toEqual(['remote']);
+});
+
+test('no reassuring claims on the screens; facts for consent stay; "No documents needed." only on the Support Passport', async ({ page }) => {
+  const banned = /we never|never ask|medical papers|nobody checks|nobody has checked|never affects|never have to tell|never times out/i;
+  const seen = [];
+  const check = async where => { const text = await page.locator('body').innerText(); seen.push([where, text]); expect(text, where).not.toMatch(banned); };
+  await page.goto('/index.html'); await page.waitForSelector('#sj-mode');
+  await check('home');
+  await expect(page.locator('.sj-expect li').nth(2)).toHaveText('You can change or delete your answers at any time');
+  await signupTo(page, 'consent');
+  await check('sign-up consent');
+  await expect(page.locator('.dm-form')).toContainText('We keep only what you tell us here. Nothing is shared with anyone without asking you first. You can change or delete your answers at any time.');
+  await identityTo(page, 'id_number', { route: 'kebele' });
+  await check('ID number');
+  await go(page, '#/passport');
+  await check('Support Passport');
+  await expect(page.locator('.dm-hint').first()).toHaveText('This is optional. No documents needed.');
+  for (const [where, text] of seen) if (where !== 'Support Passport') expect(text, where).not.toContain('No documents needed');
 });

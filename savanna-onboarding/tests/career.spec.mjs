@@ -89,7 +89,7 @@ test('the private "support I need" filter works on the phone only, and says how 
   page.on('request', r => { if (!/\.(js|css|woff2|png|svg|json)(\?|$)|\.html|\/$/.test(r.url())) sent.push(r.url()); });
   await go(page, '#/jobs');
   await expect(page.locator('.filter label')).toContainText('Only show jobs that offer all the support I need');
-  await expect(page.locator('.filter')).toContainText('The job board never sees it');
+  await expect(page.locator('.filter')).toContainText('Employers see it only if you choose to share it when you apply.');
   await page.locator('#flt').check();
   await expect(page.locator('#flt')).toBeFocused();
   await expect(page.locator('#jobs-status')).toHaveText('1 job shown');

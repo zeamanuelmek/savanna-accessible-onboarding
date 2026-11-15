@@ -29,14 +29,14 @@
 - **Names stay as written:** AAAPD, Tomorrow is Better, RRS / UNHCR, Fayda, ALX, Google.
 - Read numbers as the learner will see them (for example "0911 234 567" digit by digit).
 
-**79 clips, about 12 minutes of audio in total.**
+**79 clips, about 11 minutes of audio in total.**
 
 ## Start
 
 | # | File | Exact Amharic text | About | Note |
 |---|---|---|---|---|
-| 1 | `am/home-question.mp3` | <span lang="am">እንዴት መመዝገብ ይፈልጋሉ? ይህ ቅጹን መሙላት የሚመርጡበትን መንገድ ብቻ ነው። ምክንያቱን በፍጹም አንጠይቅም። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።</span> | 22 s | Home page (the four answers below are shared) |
-| 2 | `am/welcome-question.mp3` | <span lang="am">ምዝገባውን እንዴት መሙላት ይፈልጋሉ? ይህ ቅጹን መጠቀም የሚመርጡበትን መንገድ ብቻ ነው። ምክንያቱን በፍጹም አንጠይቅም። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።</span> | 23 s | Inside the form (test page and other sites) |
+| 1 | `am/home-question.mp3` | <span lang="am">እንዴት መመዝገብ ይፈልጋሉ? ይህ ቅጹን መሙላት የሚመርጡበትን መንገድ ብቻ ነው። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።</span> | 18 s | Home page (the four answers below are shared) |
+| 2 | `am/welcome-question.mp3` | <span lang="am">ምዝገባውን እንዴት መሙላት ይፈልጋሉ? ይህ ቅጹን መጠቀም የሚመርጡበትን መንገድ ብቻ ነው። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።</span> | 19 s | Inside the form (test page and other sites) |
 | 3 | `am/welcome-option-read-type.mp3` | <span lang="am">አንብቤ እጽፋለሁ</span> | 3 s |  |
 | 4 | `am/welcome-option-listen.mp3` | <span lang="am">አዳምጬ እመልሳለሁ</span> | 4 s |  |
 | 5 | `am/welcome-option-speak.mp3` | <span lang="am">በድምፅ እመልሳለሁ</span> | 4 s |  |
@@ -63,7 +63,7 @@
 | 21 | `am/signup-dob-calendar.mp3` | <span lang="am">የትኛውን አቆጣጠር ይጠቀማሉ?</span> | 5 s | Date question: calendar choice |
 | 22 | `am/signup-dob-option-eth.mp3` | <span lang="am">የኢትዮጵያ አቆጣጠር</span> | 4 s |  |
 | 23 | `am/signup-dob-option-greg.mp3` | <span lang="am">የፈረንጆች (የአውሮፓ) አቆጣጠር</span> | 5 s |  |
-| 24 | `am/signup-consent-question.mp3` | <span lang="am">መልሶችዎን በምንይዝበት መንገድ ይስማማሉ? እዚህ የሚነግሩንን ብቻ እንይዛለን። የሕክምና ወረቀት በፍጹም አንጠይቅም። መጀመሪያ እርስዎን ሳንጠይቅ ለማንም አናጋራም። መልሶችዎን በማንኛውም ጊዜ መቀየር ወይም መሰረዝ ይችላሉ።</span> | 30 s |  |
+| 24 | `am/signup-consent-question.mp3` | <span lang="am">መልሶችዎን በምንይዝበት መንገድ ይስማማሉ? እዚህ የሚነግሩንን ብቻ እንይዛለን። መጀመሪያ እርስዎን ሳንጠይቅ ለማንም አናጋራም። መልሶችዎን በማንኛውም ጊዜ መቀየር ወይም መሰረዝ ይችላሉ።</span> | 25 s |  |
 | 25 | `am/signup-consent-option-yes.mp3` | <span lang="am">አዎ፣ እስማማለሁ</span> | 3 s |  |
 | 26 | `am/signup-consent-option-no.mp3` | <span lang="am">አይ፣ አልስማማም</span> | 3 s |  |
 | 27 | `am/signup-check-answers.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ። ከመላክዎ በፊት ሁሉም ትክክል መሆኑን ያረጋግጡ።</span> | 10 s |  |
@@ -73,27 +73,27 @@
 
 | # | File | Exact Amharic text | About | Note |
 |---|---|---|---|---|
-| 29 | `am/identity-id-route-question.mp3` | <span lang="am">የትኛው መታወቂያ አለዎት? ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ። መታወቂያዎች በራስ-ሰር አይረጋገጡም፤ የሚነግሩንን እንመዘግባለን።</span> | 22 s |  |
+| 29 | `am/identity-id-route-question.mp3` | <span lang="am">የትኛው መታወቂያ አለዎት? ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ።</span> | 13 s |  |
 | 30 | `am/identity-id-route-option-fayda.mp3` | <span lang="am">ፋይዳ ብሔራዊ መታወቂያ</span> | 4 s |  |
 | 31 | `am/identity-id-route-option-kebele.mp3` | <span lang="am">የቀበሌ መታወቂያ</span> | 3 s |  |
 | 32 | `am/identity-id-route-option-passport.mp3` | <span lang="am">ፓስፖርት</span> | 2 s |  |
 | 33 | `am/identity-id-route-option-refugee.mp3` | <span lang="am">የስደተኛ መታወቂያ ወይም የምዝገባ ማረጋገጫ</span> | 7 s |  |
 | 34 | `am/identity-id-route-option-other.mp3` | <span lang="am">ሌላ ሰነድ</span> | 2 s |  |
 | 35 | `am/identity-id-route-option-none.mp3` | <span lang="am">ምንም የለኝም። በአጋር ድርጅት በኩል ይመዝግቡኝ።</span> | 8 s |  |
-| 36 | `am/identity-id-number-question.mp3` | <span lang="am">በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው? ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል። ለግላዊነትዎ የመታወቂያ ቁጥሮች በድምፅ ሳይሆን በመጻፍ ይገባሉ። የሚያምኑትን ሰው እንዲጽፍልዎ መጠየቅ ይችላሉ።</span> | 40 s | Only when id_route is one of fayda, kebele, passport, refugee, other |
+| 36 | `am/identity-id-number-question.mp3` | <span lang="am">በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው? ይህን መዝለልና በኋላ መጨመር ይችላሉ። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል። ለግላዊነትዎ የመታወቂያ ቁጥሮች በድምፅ ሳይሆን በመጻፍ ይገባሉ። የሚያምኑትን ሰው እንዲጽፍልዎ መጠየቅ ይችላሉ።</span> | 34 s | Only when id_route is one of fayda, kebele, passport, refugee, other |
 | 37 | `am/identity-referral-partner-question.mp3` | <span lang="am">ማንነትዎን የትኛው ድርጅት ሊያረጋግጥ ይችላል? እነሱ ያገኙዎታል። እየጠበቁ መማር መጀመር ይችላሉ።</span> | 14 s | Only when id_route = none |
 | 38 | `am/identity-referral-partner-option-aaapd.mp3` | <span lang="am">AAAPD</span> | 2 s |  |
 | 39 | `am/identity-referral-partner-option-tib.mp3` | <span lang="am">Tomorrow is Better</span> | 3 s |  |
 | 40 | `am/identity-referral-partner-option-unhcr-partner.mp3` | <span lang="am">የስደተኞች ድጋፍ ድርጅት</span> | 4 s |  |
 | 41 | `am/identity-referral-partner-option-unsure.mp3` | <span lang="am">እርግጠኛ አይደለሁም። እንድመርጥ እርዱኝ።</span> | 7 s |  |
 | 42 | `am/identity-check-answers.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ። ከመላክዎ በፊት ሁሉም ትክክል መሆኑን ያረጋግጡ።</span> | 10 s |  |
-| 43 | `am/identity-done.mp3` | <span lang="am">የመታወቂያ ዝርዝርዎ ተቀምጧል መታወቂያዎች በራስ-ሰር አይረጋገጡም። ይህን በማንኛውም ጊዜ በ«የእኔ መገለጫ» ውስጥ መቀየር ይችላሉ።</span> | 18 s |  |
+| 43 | `am/identity-done.mp3` | <span lang="am">የመታወቂያ ዝርዝርዎ ተቀምጧል መታወቂያዎ እንደሰጡት ተመዝግቧል፤ አልተረጋገጠም። ይህን በማንኛውም ጊዜ በ«የእኔ መገለጫ» ውስጥ መቀየር ይችላሉ።</span> | 20 s |  |
 
 ## Support Passport
 
 | # | File | Exact Amharic text | About | Note |
 |---|---|---|---|---|
-| 44 | `am/passport-want-question.mp3` | <span lang="am">ለመማርና ለመሥራት የሚረዳዎትን ሊነግሩን ይፈልጋሉ? ግዴታ አይደለም። ስለ ጤና ሁኔታ ወይም የሕክምና ወረቀት በፍጹም አንጠይቅም።</span> | 18 s |  |
+| 44 | `am/passport-want-question.mp3` | <span lang="am">ለመማርና ለመሥራት የሚረዳዎትን ሊነግሩን ይፈልጋሉ? ይህ አማራጭ ነው። ምንም ሰነድ አያስፈልግም።</span> | 14 s |  |
 | 45 | `am/passport-want-option-yes.mp3` | <span lang="am">አዎ</span> | 2 s |  |
 | 46 | `am/passport-want-option-later.mp3` | <span lang="am">አሁን አይደለም</span> | 3 s |  |
 | 47 | `am/passport-needs-question.mp3` | <span lang="am">ምን ይረዳዎታል? የሚስማሙትን ሁሉ ይምረጡ።</span> | 7 s | Only when want = yes |
@@ -113,7 +113,7 @@
 | 61 | `am/passport-sharing-option-ask.mp3` | <span lang="am">እኔ ብቻ። ለሥራ ባመለከትኩ ቁጥር ጠይቁኝ።</span> | 7 s |  |
 | 62 | `am/passport-sharing-option-trainers.mp3` | <span lang="am">እኔና በALX ያሉ አሰልጣኞቼ</span> | 5 s |  |
 | 63 | `am/passport-check-answers.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ። ከመላክዎ በፊት ሁሉም ትክክል መሆኑን ያረጋግጡ።</span> | 10 s |  |
-| 64 | `am/passport-check-answers-note.mp3` | <span lang="am">ይህ በስልክዎ ላይ ይቆያል። እርስዎ ካላጋሩት በስተቀር የሥራ ማስታወቂያ ጣቢያዎች አያዩትም።</span> | 13 s |  |
+| 64 | `am/passport-check-answers-note.mp3` | <span lang="am">ይህ በስልክዎ ላይ ይቆያል። ለቀጣሪ የሚጋራው ሲያመለክቱ ለማጋራት ከመረጡ ብቻ ነው።</span> | 12 s |  |
 | 65 | `am/passport-done.mp3` | <span lang="am">የድጋፍ ፓስፖርትዎ ተቀምጧል በማንኛውም ጊዜ መቀየር ይችላሉ። አሁን ይህን ድጋፍ የሚሰጡ ሥራዎችን ማግኘት ይችላሉ።</span> | 16 s |  |
 
 ## On every screen when needed

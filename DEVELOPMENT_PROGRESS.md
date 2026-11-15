@@ -1501,3 +1501,26 @@ official Azure service, in the hardening sprint.**
 - After the automatic-reading refinement (try at once, prompt only when blocked): `tests/summaries.spec.mjs`
   **20 passed**; the affected files (a11y, career, gate, journey, keyboard, readaloud, voice; phone and desktop)
   **287 passed, 1 skipped** (run in batches, one worker, because the computer ran low on memory).
+
+---
+
+## Content clean-up: show trust, do not claim it (15 Nov)
+
+Defensive or reassuring claims removed from every screen in all three languages (the approved list of 22 items):
+"We never ask why", "We never ask about a disability or for medical papers", "We never ask for medical papers / a
+photo of your ID", "Nobody checks IDs automatically", "Saying no never affects your application", "They never have
+to tell you why", "never what is your disability?", "the job board never learns/sees…", "never times out", and the
+same ideas in the page summaries. Factual consent information stays (what is kept, who can see it, that sharing
+needs permission, that answers can be changed or deleted), reworded plainly where it was mixed in. The consent box
+now reads: "We keep only what you tell us here. Nothing is shared with anyone without asking you first. You can
+change or delete your answers at any time." "No documents needed." appears once, on the Support Passport's first
+question. "Not verified" stays in the badges and on the "Add your ID" done screen. The home page's third point is now
+"You can change or delete your answers at any time". The "no medical proof" point stays in the README, the
+conformance report and the demo script.
+
+- Audio: `docs/audio-script.md` regenerated; only the 8 clips whose words changed were made again (Mekdes):
+  home-question, welcome-question, signup-consent-question, identity-id-route-question, identity-id-number-question,
+  identity-done, passport-want-question, passport-check-answers-note. 79 clips, 3.7 MB. Service worker cache v6.
+- Tests: updated wording; new test that no screen shows the removed claims and that "No documents needed." appears
+  only on the Support Passport. Affected files (identity, career, offline, readaloud, summaries, journey; a11y on
+  both sizes), one worker: **142 passed; a11y 175 passed + 1 timing failure that passed when re-run alone.**

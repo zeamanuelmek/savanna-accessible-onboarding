@@ -35,7 +35,7 @@
   var ID_FIELDS = [
       { id: 'id_route', picture: '🪪', type: 'choice', sensitive: true, prefill: { from: 'profile', key: 'id_route' }, reviewLabel: { en: 'ID', am: 'መታወቂያ', om: 'Eenyummaa' },
         label: { en: 'Which ID do you have?', am: 'የትኛው መታወቂያ አለዎት?', om: 'Waraqaa eenyummaa kam qabda?' },
-        hint: { en: 'Any of these is fine. You can start learning even without an ID. Nobody checks IDs automatically: we record what you tell us.', am: 'ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ። መታወቂያዎች በራስ-ሰር አይረጋገጡም፤ የሚነግሩንን እንመዘግባለን።', om: 'Kamiyyuu ni ta\'a. Waraqaa eenyummaa malees barachuu jalqabuu dandeessa. Namni eenyummaa ofumaan mirkaneessu hin jiru: waan ati nutti himtu galmeessina.' },
+        hint: { en: 'Any of these is fine. You can start learning without an ID.', am: 'ከእነዚህ ማንኛውም ይበቃል። ያለ መታወቂያም መማር መጀመር ይችላሉ።', om: 'Kamiyyuu ni ta\'a. Waraqaa eenyummaa malees barachuu jalqabuu dandeessa.' },
         options: [
           { value: 'fayda', icon: '🪪', label: { en: 'Fayda national ID', am: 'ፋይዳ ብሔራዊ መታወቂያ', om: 'Eenyummaa biyyaalessaa Faayda' }, say: ['fayda', 'ፋይዳ'], badge: NOT_CHECKED },
           { value: 'kebele', icon: '🏘️', label: { en: 'Kebele ID', am: 'የቀበሌ መታወቂያ', om: 'Waraqaa eenyummaa ganda' }, say: ['kebele', 'ቀበሌ'], badge: NOT_CHECKED },
@@ -46,7 +46,7 @@
         ] },
       { id: 'id_number', picture: '🔢', type: 'text', optional: true, sensitive: true, clearIfChanged: 'id_route', showIf: { field: 'id_route', in: ['fayda', 'kebele', 'passport', 'refugee', 'other'] },
         label: { en: 'What is the number on your ID?', am: 'በመታወቂያዎ ላይ ያለው ቁጥር ስንት ነው?', om: 'Lakkoofsi waraqaa eenyummaa kee irra jiru meeqa?' },
-        hint: { en: 'You can skip this and add it later. We never ask for a photo of your ID. If you add the number, your status becomes "Number recorded — not verified". For your privacy, ID numbers are typed, not spoken. You can ask someone you trust to type it.', am: 'ይህን መዝለልና በኋላ መጨመር ይችላሉ። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል። ለግላዊነትዎ የመታወቂያ ቁጥሮች በድምፅ ሳይሆን በመጻፍ ይገባሉ። የሚያምኑትን ሰው እንዲጽፍልዎ መጠየቅ ይችላሉ።', om: 'Kana dabarsitee booda dabaluu dandeessa. Suuraa eenyummaa kee gonkumaa hin gaafannu. Yoo lakkoofsa dabalte, haalli kee "Lakkoofsi galmeeffameera — hin mirkanoofne" ta\'a. Dhuunfaa keetiif, lakkoofsi eenyummaa barreeffamee galfama malee hin dubbatamu. Nama amantu akka siif barreessu gaafachuu dandeessa.' } },
+        hint: { en: 'You can skip this and add it later. If you add the number, your status becomes "Number recorded — not verified". For your privacy, ID numbers are typed, not spoken. You can ask someone you trust to type it.', am: 'ይህን መዝለልና በኋላ መጨመር ይችላሉ። ቁጥሩን ካስገቡ ሁኔታዎ «ቁጥር ተመዝግቧል — አልተረጋገጠም» ይሆናል። ለግላዊነትዎ የመታወቂያ ቁጥሮች በድምፅ ሳይሆን በመጻፍ ይገባሉ። የሚያምኑትን ሰው እንዲጽፍልዎ መጠየቅ ይችላሉ።', om: 'Kana dabarsitee booda dabaluu dandeessa. Yoo lakkoofsa dabalte, haalli kee "Lakkoofsi galmeeffameera — hin mirkanoofne" ta\'a. Dhuunfaa keetiif, lakkoofsi eenyummaa barreeffamee galfama malee hin dubbatamu. Nama amantu akka siif barreessu gaafachuu dandeessa.' } },
       { id: 'referral_partner', picture: '🤝', type: 'choice', sensitive: true, prefill: { from: 'profile', key: 'referral_partner' }, showIf: { field: 'id_route', equals: 'none' },
         label: { en: 'Which organisation can confirm who you are?', am: 'ማንነትዎን የትኛው ድርጅት ሊያረጋግጥ ይችላል?', om: 'Dhaabbanni kam eenyummaa kee mirkaneessuu danda\'a?' },
         hint: { en: 'They will contact you. You can start learning while you wait.', am: 'እነሱ ያገኙዎታል። እየጠበቁ መማር መጀመር ይችላሉ።', om: 'Isaan si quunnamu. Osoo eegduu barachuu jalqabuu dandeessa.' },
@@ -97,7 +97,7 @@
         hint: { en: 'First choose the Ethiopian or the Gregorian calendar. You can skip this if you are not sure.', am: 'መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።', om: 'Dura dhaha Itoophiyaa ykn dhaha Gorgooriyaan filadhu. Yoo hin mirkaneeffatin kana dabarsuu dandeessa.' } },
       { id: 'consent', picture: '✅', type: 'consent', requiredValue: 'yes', reviewLabel: { en: 'Agreed to how we use your answers', am: 'መልሶች በሚያዙበት መንገድ ተስማምተዋል', om: 'Akkaataa deebii kee itti fayyadamnuuf walii gale' },
         label: { en: 'Do you agree to how we keep your answers?', am: 'መልሶችዎን በምንይዝበት መንገድ ይስማማሉ?', om: 'Akkaataa deebii kee itti kuufnuuf walii galtaa?' },
-        body: { en: 'We keep only what you tell us here. We never ask for medical papers. Nothing is shared with anyone without asking you first. You can change or delete your answers at any time.', am: 'እዚህ የሚነግሩንን ብቻ እንይዛለን። የሕክምና ወረቀት በፍጹም አንጠይቅም። መጀመሪያ እርስዎን ሳንጠይቅ ለማንም አናጋራም። መልሶችዎን በማንኛውም ጊዜ መቀየር ወይም መሰረዝ ይችላሉ።', om: 'Kan kuufnu waan ati asitti nutti himtu qofa. Waraqaa yaalaa gonkumaa hin gaafannu. Osoo dura si hin gaafatin namaaf homtuu hin qoodamu. Yeroo kamiyyuu deebii kee jijjiiruu ykn haquu dandeessa.' },
+        body: { en: 'We keep only what you tell us here. Nothing is shared with anyone without asking you first. You can change or delete your answers at any time.', am: 'እዚህ የሚነግሩንን ብቻ እንይዛለን። መጀመሪያ እርስዎን ሳንጠይቅ ለማንም አናጋራም። መልሶችዎን በማንኛውም ጊዜ መቀየር ወይም መሰረዝ ይችላሉ።', om: 'Kan kuufnu waan ati asitti nutti himtu qofa. Osoo dura si hin gaafatin namaaf homtuu hin qoodamu. Yeroo kamiyyuu deebii kee jijjiiruu ykn haquu dandeessa.' },
         options: [
           { value: 'yes', icon: '✅', label: { en: 'Yes, I agree', am: 'አዎ፣ እስማማለሁ', om: 'Eeyyee, walii nan gala' }, say: ['yes', 'agree', 'አዎ', 'እስማማለሁ'] },
           { value: 'no', icon: '✋', label: { en: 'No, I do not agree', am: 'አይ፣ አልስማማም', om: 'Lakki, walii hin galu' }, say: ['no', 'አልስማማም'] }
@@ -114,7 +114,7 @@
     fields: ID_FIELDS,
     submitLabel: { en: 'Save my ID details', am: 'የመታወቂያ ዝርዝሬን አስቀምጥ', om: 'Odeeffannoo eenyummaa koo kuusi' },
     doneTitle: { en: 'Your ID details are saved', am: 'የመታወቂያ ዝርዝርዎ ተቀምጧል', om: 'Odeeffannoon eenyummaa kee kuufameera' },
-    doneText: { en: 'Nobody checks IDs automatically. You can change this at any time in My profile.', am: 'መታወቂያዎች በራስ-ሰር አይረጋገጡም። ይህን በማንኛውም ጊዜ በ«የእኔ መገለጫ» ውስጥ መቀየር ይችላሉ።', om: 'Namni eenyummaa ofumaan mirkaneessu hin jiru. Kana yeroo kamiyyuu «Piroofaayilii koo» keessatti jijjiiruu dandeessa.' }
+    doneText: { en: 'Your ID is recorded as you gave it; it is not verified. You can change this at any time in My profile.', am: 'መታወቂያዎ እንደሰጡት ተመዝግቧል፤ አልተረጋገጠም። ይህን በማንኛውም ጊዜ በ«የእኔ መገለጫ» ውስጥ መቀየር ይችላሉ።', om: 'Eenyummaan kee akkuma ati kennitetti galmeeffameera; hin mirkanoofne. Kana yeroo kamiyyuu «Piroofaayilii koo» keessatti jijjiiruu dandeessa.' }
   });
 
   /* 2. SUPPORT PASSPORT (needs, not diagnosis; learner-owned) */
@@ -123,7 +123,7 @@
     fields: [
       { id: 'want', picture: '💬', type: 'choice', sensitive: true, reviewLabel: { en: 'Share what helps you', am: 'የሚረዳዎትን ማጋራት', om: 'Waan si gargaaru qoodi' },
         label: { en: 'Would you like to tell us what helps you learn and work?', am: 'ለመማርና ለመሥራት የሚረዳዎትን ሊነግሩን ይፈልጋሉ?', om: 'Waan barachuu fi hojjechuuf si gargaaru nutti himuu barbaaddaa?' },
-        hint: { en: "You don't have to. We never ask about a condition or for medical papers.", am: 'ግዴታ አይደለም። ስለ ጤና ሁኔታ ወይም የሕክምና ወረቀት በፍጹም አንጠይቅም።', om: 'Dirqama miti. Waa\'ee haala fayyaa ykn waraqaa yaalaa gonkumaa hin gaafannu.' },
+        hint: { en: 'This is optional. No documents needed.', am: 'ይህ አማራጭ ነው። ምንም ሰነድ አያስፈልግም።', om: 'Kun dirqama miti. Sanadni tokkollee hin barbaachisu.' },
         options: [
           { value: 'yes', icon: '✅', label: { en: 'Yes', am: 'አዎ', om: 'Eeyyee' }, say: ['yes', 'አዎ'] },
           { value: 'later', icon: '⏭️', label: { en: 'Not now', am: 'አሁን አይደለም', om: 'Amma miti' }, say: ['not now', 'later', 'no', 'አሁን አይደለም', 'በኋላ'] }
@@ -143,7 +143,7 @@
         ] }
     ],
     submitLabel: { en: 'Save my Support Passport', am: 'የድጋፍ ፓስፖርቴን አስቀምጥ', om: 'Paaspoortii Deeggarsaa koo kuusi' },
-    reviewNote: { en: 'This stays on your phone. Job boards never see it unless you choose to share it.', am: 'ይህ በስልክዎ ላይ ይቆያል። እርስዎ ካላጋሩት በስተቀር የሥራ ማስታወቂያ ጣቢያዎች አያዩትም።', om: 'Kun bilbila kee irra tura. Boordiiwwan hojii yoo ati qooduu filatte malee gonkumaa hin argan.' },
+    reviewNote: { en: 'This stays on your phone. It is shared with an employer only if you choose to share it when you apply.', am: 'ይህ በስልክዎ ላይ ይቆያል። ለቀጣሪ የሚጋራው ሲያመለክቱ ለማጋራት ከመረጡ ብቻ ነው።', om: 'Kun bilbila kee irra tura. Qacaraaf kan qoodamu yoo yeroo iyyattu qooduu filatte qofa.' },
     doneTitle: { en: 'Your Support Passport is saved', am: 'የድጋፍ ፓስፖርትዎ ተቀምጧል', om: 'Paaspoortiin Deeggarsaa kee kuufameera' },
     doneText: { en: 'You can change it at any time. Now you can find jobs that offer this support.', am: 'በማንኛውም ጊዜ መቀየር ይችላሉ። አሁን ይህን ድጋፍ የሚሰጡ ሥራዎችን ማግኘት ይችላሉ።', om: 'Yeroo kamiyyuu jijjiiruu dandeessa. Amma hojiiwwan deeggarsa kana kennan argachuu dandeessa.' }
   });
@@ -164,7 +164,7 @@
       { id: 'offers', type: 'multi', options: 'NEEDS',
         reviewLabel: { en: 'Support offered', am: 'የሚሰጡ ድጋፎች', om: 'Deeggarsa kennamu' },
         label: { en: 'Which support does this job offer?', am: 'ይህ ሥራ የትኞቹን ድጋፎች ይሰጣል?', om: 'Hojiin kun deeggarsa kam kenna?' },
-        hint: { en: 'Job seekers can find your job by the support they need. They never have to tell you why.', am: 'ሥራ ፈላጊዎች በሚፈልጉት ድጋፍ ሥራዎን ማግኘት ይችላሉ። ምክንያታቸውን ሊነግሩዎ አይገደዱም።', om: 'Hojii barbaadonni deeggarsa isaan barbaachisuun hojii kee argachuu danda\'u. Sababa sitti himuu gonkumaa hin qaban.' } },
+        hint: { en: 'Job seekers can find your job by the support they need.', am: 'ሥራ ፈላጊዎች በሚፈልጉት ድጋፍ ሥራዎን ማግኘት ይችላሉ።', om: 'Hojii barbaadonni deeggarsa isaan barbaachisuun hojii kee argachuu danda\'u.' } },
       { id: 'description', type: 'textarea', label: { en: 'Describe the job in a few simple sentences.', am: 'ሥራውን በጥቂት ቀላል ዓረፍተ ነገሮች ይግለጹ።', om: 'Hojicha hima salphaa muraasaan ibsi.' } },
       { id: 'contact', type: 'text', label: { en: 'How should applicants reach you?', am: 'አመልካቾች እንዴት ያግኙዎት?', om: 'Iyyattoonni akkamitti si quunnamu?' }, hint: { en: 'Phone number or email', am: 'ስልክ ቁጥር ወይም ኢሜይል', om: 'Lakkoofsa bilbilaa ykn imeelii' } }
     ],
@@ -194,12 +194,12 @@
         ] },
       { id: 'share_passport', type: 'choice', sensitive: true, showIf: function () { var p = D.store.get('passport', null); return !!(p && p.needs && p.needs.length); },
         label: { en: 'Do you want to share your Support Passport with this employer?', am: 'የድጋፍ ፓስፖርትዎን ለዚህ ቀጣሪ ማጋራት ይፈልጋሉ?', om: 'Paaspoortii Deeggarsaa kee qacaraa kanaaf qooduu barbaaddaa?' },
-        hint: { en: 'You decide for each job. Saying no never affects your application.', am: 'ለእያንዳንዱ ሥራ እርስዎ ይወስናሉ። «አይ» ማለት ማመልከቻዎን አይጎዳም።', om: 'Hojii hundaaf ati murteessita. Lakki jechuun iyyannoo kee gonkumaa hin miidhu.' },
+        hint: { en: 'You decide for each job.', am: 'ለእያንዳንዱ ሥራ እርስዎ ይወስናሉ።', om: 'Hojii hundaaf ati murteessita.' },
         body: function (lang) {
           var list = D.supportForEmployer({ share_passport: 'share' }).map(function (n) { return D.label(n.label, lang); }).join('; ');
-          if (lang === 'am') return 'ካጋሩ ቀጣሪው የሚያየው ይህን ዝርዝር ብቻ ነው፦ ' + list + '። ምክንያት፣ ሁኔታ ወይም በራስዎ ቃላት የጻፉት በፍጹም አይጋራም።';
-          if (lang === 'om') return 'Yoo qoodde, qacaraan tarree kana qofa arga: ' + list + '. Sababa, haala fayyaa, ykn waan jechoota keetiin barreessite gonkumaa hin argu.';
-          return 'If you share, the employer sees exactly this list: ' + list + '. Never a reason, a condition, or what you wrote in your own words.';
+          if (lang === 'am') return 'ካጋሩ ቀጣሪው የሚያየው ይህን ዝርዝር ብቻ ነው፦ ' + list + '።';
+          if (lang === 'om') return 'Yoo qoodde, qacaraan tarree kana qofa arga: ' + list + '.';
+          return 'If you share, the employer sees only this list: ' + list + '.';
         },
         options: [
           { value: 'share', icon: '📤', label: { en: 'Yes, share my support list', am: 'አዎ፣ የድጋፍ ዝርዝሬን አጋራ', om: 'Eeyyee, tarree deeggarsaa koo qoodi' }, say: ['yes', 'share', 'አዎ', 'አጋራ'] },
@@ -260,7 +260,7 @@
     ],
     reviewTitle: { en: 'My profile', am: 'የእኔ መገለጫ', om: 'Piroofaayilii koo' },
     reviewHint: { en: 'These are the details you gave us. Choose "Change" to update one, then save.', am: 'እነዚህ የሰጡን ዝርዝሮች ናቸው። አንዱን ለማዘመን "ቀይር"ን ይምረጡ፣ ከዚያ ያስቀምጡ።', om: 'Kunneen odeeffannoo ati nuuf kennite dha. Tokko haaromsuuf "Jijjiiri" filadhu, achiis kuusi.' },
-    reviewNote: { en: 'Your profile is stored on this phone. We never ask for a photo of your ID, and IDs are never checked automatically.', am: 'መገለጫዎ በዚህ ስልክ ላይ ተቀምጧል። የመታወቂያዎን ፎቶ በፍጹም አንጠይቅም፤ መታወቂያዎችም በራስ-ሰር አይረጋገጡም።', om: 'Piroofaayiliin kee bilbila kana irratti kuufameera. Suuraa eenyummaa kee gonkumaa hin gaafannu, eenyummaanis ofumaan gonkumaa hin mirkanaa\'u.' },
+    reviewNote: { en: 'Your profile is stored on this phone.', am: 'መገለጫዎ በዚህ ስልክ ላይ ተቀምጧል።', om: 'Piroofaayiliin kee bilbila kana irratti kuufameera.' },
     submitLabel: { en: 'Save my changes', am: 'ለውጦቼን አስቀምጥ', om: 'Jijjiirama koo kuusi' },
     doneTitle: { en: 'Your profile is updated', am: 'መገለጫዎ ተዘምኗል', om: 'Piroofaayiliin kee haaromfameera' },
     doneText: { en: 'Forms will now be filled in with your new details.', am: 'ቅጾች ከአሁን ጀምሮ በአዲሱ ዝርዝርዎ ይሞላሉ።', om: 'Amma unkaaleen odeeffannoo kee haaraan guutamu.' }
@@ -273,14 +273,14 @@
     signup: { filler: 'who is filling in this form: you, or a partner organisation with you', partner_org: 'which partner organisation you work for',
       staff_name: 'your own name, as the staff member helping', learner_consent: 'the learner agrees that you help them fill in this form',
       name: 'the name we should call you', phone: 'your phone number', dob: 'your date of birth', consent: 'whether you agree to how we keep your answers' },
-    identity: { id_route: 'which ID you have. Each choice shows an honest status, and having no ID is fine', id_number: 'the number on your ID. For your privacy, it is typed, not spoken',
+    identity: { id_route: 'which ID you have, if any. Each choice shows its status', id_number: 'the number on your ID. For your privacy, it is typed, not spoken',
       referral_partner: 'which organisation can confirm who you are' },
-    passport: { want: 'whether you want to tell us what helps you learn and work', needs: 'what helps you, from a list. Nothing about health or conditions',
+    passport: { want: 'whether you want to tell us what helps you learn and work', needs: 'what helps you, from a list',
       other_need: 'anything else that helps you, in your own words', sharing: 'who can see your Support Passport. Only you is chosen for you' },
     employer: { title: 'the job title', org: 'the name of your organisation', location: 'where the job is', mode: 'where the work is done: office, home or both',
       offers: 'the support this job offers, from the same list learners use', description: 'a short description of the job', contact: 'how applicants can contact you' },
     apply: { name: 'your name for this application', phone: 'your phone number', why: 'why you want this job', experience: 'work or learning you have done before',
-      interview: 'how you would like to be interviewed', share_passport: 'whether to share your Support Passport list with this employer. Saying no never affects your application' },
+      interview: 'how you would like to be interviewed', share_passport: 'whether to share your Support Passport list with this employer' },
     profile: { name: 'the name we call you', full_name: 'your full name', phone: 'your phone number', dob: 'your date of birth' }
   };
   Object.keys(SUMMARIES).forEach(function (form) {
