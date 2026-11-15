@@ -2,7 +2,7 @@
 // pictures as separate settings, recorded clips found by their names in docs/audio-script.md, clear text when a clip
 // is missing or fails, and audio never required.
 import { test, expect } from '@playwright/test';
-import { freshStart, go, pick, next, heading, signupTo } from './helpers.mjs';
+import { freshStart, go, pick, next, heading, signupTo, playBar } from './helpers.mjs';
 
 /** A fake phone voice: records what it was asked to read; each piece "finishes" after `ms`. voice:false = no voice. */
 async function fakeVoice(page, { ms = 400, voice = true } = {}) {
@@ -44,7 +44,8 @@ test.beforeEach(async ({ page }) => { await freshStart(page, { lang: 'en' }); })
 test('every answer has its own Listen button when read aloud is on, named after the answer', async ({ page }) => {
   await signupTo(page, 'filler');
   await expect(page.locator('[data-act=play-opt]')).toHaveCount(0); // "Read and type": off
-  await page.locator('[data-act=easy]').click();
+  await expect(page.locator('[data-act=easy]')).toHaveCount(0); // no reading switch inside the form (one setting, in Accessibility)
+  await page.evaluate(() => window.SavannaOnboarding.setPrefs({ easy: true, autoRead: 'on' }));
   await expect(page.locator('[data-act=play-opt]')).toHaveCount(2);
   await expect(page.getByRole('button', { name: 'Listen: Me, for myself' })).toHaveCount(1);
   await fakeVoice(page);
@@ -55,26 +56,43 @@ test('every answer has its own Listen button when read aloud is on, named after 
   await expect(page.locator('input[value=partner]')).not.toBeChecked(); // listening never chooses for you
 });
 
-test('Listen reads the question and each answer; Pause, Resume, Stop and Play again work', async ({ page }) => {
+test('Listen reads the question and each answer; the bottom bar "Now reading… Pause · Stop" shows only while audio plays', async ({ page }) => {
   await signupTo(page, 'filler');
   await fakeVoice(page, { ms: 600 });
-  const player = page.locator('[data-ref=player]');
-  await expect(player).toBeHidden();
-  await page.locator('[data-act=listen]').click();
-  await expect(player).toBeVisible();
-  await expect(page.locator('[data-act=pause]')).toHaveText(/Pause/);
-  await page.locator('[data-act=pause]').click();
-  await expect(page.locator('[data-act=pause]')).toHaveText(/Resume/);
+  const bar = playBar(page), pause = bar.locator('[data-so-play=pause]'), stop = bar.locator('[data-so-play=stop]');
+  await expect(bar).toBeHidden();
+  const listen = page.locator('[data-act=listen]');
+  await listen.click();
+  await expect(bar).toBeVisible();
+  await expect(bar.locator('[role=status]')).toHaveText('Now reading…'); // announced politely
+  await expect(bar).toHaveAttribute('aria-label', 'Audio playing');
+  await expect(pause).toHaveText('Pause');
+  await pause.click();
+  await expect(pause).toHaveText('Resume');
   expect(await page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('paused');
-  await page.locator('[data-act=pause]').click();
-  await expect(page.locator('[data-act=pause]')).toHaveText(/Pause/);
-  await page.locator('[data-act=stop-audio]').click();
-  await expect(page.locator('[data-act=listen]')).toBeFocused();
-  await expect(page.locator('[data-act=replay]')).toBeVisible();
-  await expect(page.locator('[data-act=pause]')).toBeHidden();
+  await pause.click();
+  await expect(pause).toHaveText('Pause');
+  await stop.click();
+  await expect(bar).toBeHidden();
+  await expect(listen).toBeFocused(); // focus returns to where the learner was
   await page.evaluate(() => { window.__said = []; });
-  await page.locator('[data-act=replay]').click();
+  await listen.click(); // "Listen to the question" again reads it all
   await expect.poll(() => said(page), { timeout: 5000 }).toEqual(['Who is filling in this form?', 'Me, for myself', 'A partner organisation, together with the learner']);
+});
+
+test('the playback bar never covers the focused control (WCAG 2.4.11): the page gets room at the bottom', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 560 });
+  await signupTo(page, 'filler');
+  await fakeVoice(page, { ms: 5000 });
+  await page.locator('[data-act=listen]').click();
+  await expect(playBar(page)).toBeVisible();
+  await page.locator('.dm-form button[type=submit]').focus();
+  const r = await page.evaluate(() => {
+    const b = document.querySelector('#so-playbar').getBoundingClientRect(), f = document.activeElement.getBoundingClientRect();
+    return { barTop: b.top, focusBottom: f.bottom, pad: parseFloat(getComputedStyle(document.body).paddingBottom) };
+  });
+  expect(r.pad).toBeGreaterThan(0);
+  expect(r.focusBottom).toBeLessThanOrEqual(r.barTop);
 });
 
 test('read aloud in easy mode reads each new question with Pause and Stop showing, and Escape stops it (WCAG 1.4.2)', async ({ page }) => {
@@ -82,22 +100,23 @@ test('read aloud in easy mode reads each new question with Pause and Stop showin
   await fakeVoice(page, { ms: 2000 });
   await pick(page, 'listen'); await next(page); // "Listen and respond": read aloud on
   await expect.poll(() => said(page)).toContain('Who is filling in this form?');
-  await expect(page.locator('[data-act=stop-audio]')).toBeVisible();
-  await expect(page.locator('[data-act=pause]')).toBeVisible();
+  await expect(playBar(page).locator('[data-so-play=stop]')).toBeVisible();
+  await expect(playBar(page).locator('[data-so-play=pause]')).toBeVisible();
   await page.keyboard.press('Escape');
   await expect.poll(() => page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('idle');
-  await expect(page.locator('[data-act=stop-audio]')).toBeHidden();
+  await expect(playBar(page)).toBeHidden();
 });
 
-test('read aloud and pictures are separate settings', async ({ page }) => {
+test('automatic reading and pictures are separate settings', async ({ page }) => {
   await go(page, '#/settings');
-  await expect(page.locator('fieldset', { hasText: 'Read aloud' })).toHaveCount(1);
+  await expect(page.locator('fieldset', { hasText: 'Automatic reading' })).toHaveCount(1); // one reading setting
+  await expect(page.locator('fieldset', { hasText: 'Automatic reading of page summaries' })).toHaveCount(0);
   await expect(page.locator('fieldset', { hasText: 'Pictures and bigger buttons' })).toHaveCount(1);
   await page.locator('.dm-opt:has(input[name=pictures][value=on])').click();
   await go(page, '#/passport'); // no welcome screen here (choosing a way to answer there sets both settings)
   await expect(page.locator('.dm')).toHaveClass(/dm-easy/); // pictures on
   await expect(page.locator('[data-act=play-opt]')).toHaveCount(0); // read aloud still off
-  await page.locator('[data-act=easy]').click(); // read aloud on: pictures unchanged
+  await page.evaluate(() => window.SavannaOnboarding.setPrefs({ easy: true, autoRead: 'on' })); // reading on: pictures unchanged
   await expect(page.locator('.dm')).toHaveClass(/dm-easy/);
   await go(page, '#/settings');
   await page.locator('.dm-opt:has(input[name=pictures][value=off])').click();
@@ -142,7 +161,7 @@ test('no recording and no phone voice: a clear message, and everything stays on 
   await fakeVoice(page, { voice: false });
   await page.locator('[data-act=listen]').click();
   await expect(page.locator('.dm-status')).toContainText('There is no recording for this yet');
-  await expect(page.locator('[data-act=stop-audio]')).toBeHidden();
+  await expect(playBar(page)).toBeHidden();
   await pick(page, 'self'); await next(page); // the form carries on as normal
   expect(await heading(page)).toContain('What should we call you');
 });

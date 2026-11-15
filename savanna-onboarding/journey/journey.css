@@ -277,3 +277,43 @@ html[data-dm-contrast=high] .sj-lang-menu button { color: #000; }
 /* Sound controls in the bar (automatic reading, Pause, Stop): always visible */
 .sj-snd { white-space: normal; }
 html[data-dm-contrast=high] .sj-hear { background: #fff; color: #000; border-bottom-color: #000; }
+
+/* ---- One header bar (UX review, 15 Nov): Home | Language ▾  Accessibility ▾  Log in / account.
+   Small screens and 400% zoom: Home | Accessibility ▾  Menu (language and log in inside the menu). Never two rows. */
+.sj-header .header-right { gap: .5rem; flex-wrap: nowrap; }
+.sj-header .header-left { flex-wrap: nowrap; }
+.sj-hbtn { display: inline-flex; align-items: center; gap: .4rem; min-height: 44px; padding: .3rem .7rem; border: 2px solid var(--so-navy); border-radius: var(--so-radius-sm); background: #fff; color: var(--so-navy); font: inherit; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.sj-hbtn:hover { background: var(--so-surface-alt); }
+.sj-hbtn[aria-expanded=true] { background: var(--so-surface-alt); }
+.sj-hbtn:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: 2px !important; }
+.sj-home-link[aria-current] { text-decoration: underline; text-underline-offset: .2em; }
+.sj-a11y-wrap, .sj-more-wrap { position: relative; }
+.sj-a11y-panel, .sj-more-panel { position: absolute; right: 0; top: calc(100% + .4rem); z-index: 1200; width: min(20rem, calc(100vw - 1rem)); max-height: calc(100vh - 6rem); overflow: auto; padding: .6rem; background: #fff; border: 2px solid var(--so-navy); border-radius: var(--so-radius-sm); box-shadow: 0 6px 18px rgba(0, 0, 0, .15); font-family: var(--so-font); }
+.sj-a11y-panel[hidden], .sj-more-panel[hidden] { display: none; }
+.sj-a11y-panel .sj-a11y-list { display: flex; flex-direction: column; gap: .4rem; list-style: none; margin: 0; padding: 0; }
+.sj-a11y-panel .sj-tog { width: 100%; text-align: left; }
+.sj-a11y-all { margin: .6rem 0 0; }
+.sj-a11y-all a { display: inline-flex; align-items: center; min-height: 44px; color: var(--so-navy); font-weight: 600; }
+.sj-a11y-all a:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: 2px !important; }
+.sj-more-panel ul { list-style: none; margin: 0; padding: 0; }
+.sj-more-panel ul + ul, .sj-more-panel .sj-more-acct { margin-top: .4rem; border-top: 1px solid var(--so-border-subtle, #ddd); padding-top: .4rem; }
+.sj-more-panel a, .sj-more-panel button { display: flex; align-items: center; gap: .5rem; width: 100%; min-height: 44px; padding: .35rem .6rem; border: 0; border-radius: var(--so-radius-sm); background: none; color: var(--so-navy); font: inherit; font-weight: 500; text-align: left; text-decoration: none; }
+.sj-more-panel a:hover, .sj-more-panel button:hover, .sj-more-panel [aria-current] { background: var(--so-surface-alt); }
+.sj-more-panel [aria-current] { font-weight: 700; }
+.sj-more-panel a:focus-visible, .sj-more-panel button:focus-visible { outline: var(--so-focus-width) solid var(--so-focus) !important; outline-offset: -2px !important; }
+.sj-more-panel .sj-tick { display: inline-block; width: 1rem; }
+.sj-more-panel .icon { display: inline-flex; width: 1.5rem; justify-content: center; }
+.sj-more-h { margin: .6rem .6rem .2rem; font-size: 1rem; font-weight: 700; color: var(--so-navy); }
+.sj-narrow { display: none; }
+@media (max-width: 767.98px) {
+  .sj-wide { display: none !important; }
+  .sj-narrow { display: block; }
+  #sidebar { display: none !important; }
+  .sj-header .header-left { padding-left: .25rem !important; padding-right: .25rem !important; }
+  .sj-header .header-right { gap: .3rem; padding-right: .5rem !important; }
+  .sj-hbtn { padding: .3rem .45rem; gap: .3rem; }
+  .sj-hbtn > .fa-universal-access, .sj-hbtn > .fa-bars { display: none; } /* room for the words at 320px */
+  .sj-home-link { padding: .25rem .35rem; gap: .3rem; }
+}
+html[data-dm-contrast=high] .sj-hbtn, html[data-dm-contrast=high] .sj-a11y-panel, html[data-dm-contrast=high] .sj-more-panel { border-color: #000; color: #000; }
+html[data-dm-contrast=high] .sj-more-panel a, html[data-dm-contrast=high] .sj-more-panel button, html[data-dm-contrast=high] .sj-a11y-all a { color: #000; }

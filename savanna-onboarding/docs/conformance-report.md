@@ -28,7 +28,7 @@
 
 | Code | Test file | What it checks |
 |---|---|---|
-| A1 | `tests/a11y.spec.mjs` | axe-core (WCAG 2.0/2.1/2.2 A and AA rules + best practice) on **41 screens × 2 languages × 2 sizes = 164 scans: 0 serious or critical**. Also: one `<main>`, one `<h1>`, no skipped heading levels, only real buttons and links, Amharic/English parts marked with `lang`, no sideways scrolling at 320 px (= 400% zoom) |
+| A1 | `tests/a11y.spec.mjs` | axe-core (WCAG 2.0/2.1/2.2 A and AA rules + best practice) on **45 screens × 2 languages × 2 sizes = 180 scans: 0 serious or critical** (including the header's Accessibility panel and Menu open). Also: one `<main>`, one `<h1>`, no skipped heading levels, only real buttons and links, Amharic/English parts marked with `lang`, no sideways scrolling at 320 px (= 400% zoom) |
 | A2 | `tests/gate.spec.mjs` | The gate task (sign up and save a Support Passport) in the Savanna pages, **keyboard only, 200% zoom, sound off**, phone and desktop: visible focus outline, fully on screen and not hidden at every one of 61 Tab stops; axe 0 serious/critical on all 12 screens; no sideways scrolling |
 | A3 | `tests/keyboard.spec.mjs`, `tests/journey.spec.mjs` | Keyboard-only sign-up; skip link; menu with Escape; the gate task by keyboard in English and Amharic |
 | A4 | `tests/design.spec.mjs` | Contrast of every colour pair in normal and high-contrast modes; focus outline ≥ 3:1; base text size |
@@ -49,7 +49,7 @@ Main task (confirmed): **sign up for Savanna and save a Support Passport.**
 | **Keyboard only** | Completes without help | Completes; focus visible and not hidden at all 61 Tab stops (phone and desktop) | _to fill in_ | A2 |
 | **200% zoom** | Completes without help | Completes at 640×400 CSS px (1280×800 at 200%) and with 200% text on a phone | _to fill in_ | A2 |
 | **Sound off** | Completes without help | Completes with no speech and no audio at all | _to fill in_ | A2, A7 |
-| **axe-core**: 0 critical, 0 serious | 0 | **0** on 164 scans and on every gate screen | n/a | A1, A2 |
+| **axe-core**: 0 critical, 0 serious | 0 | **0** on 180 scans and on every gate screen | n/a | A1, A2 |
 | Conformance report submitted | This file, completed | Automated part done | _manual part to fill in_ | |
 
 ## 2a. The 21 October co-design findings
@@ -98,7 +98,7 @@ support, with who and when) · **Notes / limitations**.
 | 1.3.4 | Orientation | AA | A5: landscape phone, no sideways scrolling | Automated: no failures | Rotate a real phone | _to fill in_ | |
 | 1.3.5 | Identify Input Purpose | AA | A5: `autocomplete` nickname / name / tel; `type="tel"` | Automated: no failures | — | _to fill in_ | |
 | 1.4.1 | Use of Color | A | A1 axe; selected options also have a thicker border and bold text; errors have text | Automated: no failures | High contrast and greyscale check | _to fill in_ | |
-| 1.4.2 | Audio Control | A | A7. Nothing plays by itself on a first visit: the first control after the skip link is "Tap anywhere or press any key to hear this page", and browsers' autoplay rules are respected: on a new page the summary is tried at once only when automatic reading is on and the learner has already interacted with the site in this session, and if the browser blocks it (play promise rejected, or speech "not allowed") the prompt is shown instead, with no error. A summary can last longer than 3 seconds, so 1.4.2 is met by these controls: **Pause/Resume and Stop are always visible** in the "Accessibility options" bar on every page; **Escape stops the sound at once**; **"Turn off automatic reading" is the first control in the bar** (and in Settings) and is remembered, so a screen reader user switches our audio off with one key press. Tab never starts the audio. Read aloud in forms: Pause, Stop, Play again and Escape | Automated: no failures | With NVDA and TalkBack running: our audio does not cover the screen reader, and the off switch is easy to find | _to fill in_ | |
+| 1.4.2 | Audio Control | A | A7. Nothing plays by itself on a first visit: the first control after the skip link is "Tap anywhere or press any key to hear this page", and browsers' autoplay rules are respected: on a new page the summary is tried at once only when automatic reading is on and the learner has already interacted with the site in this session, and if the browser blocks it (play promise rejected, or speech "not allowed") the prompt is shown instead, with no error. A summary can last longer than 3 seconds, so 1.4.2 is met by these controls: **while any audio plays, "Now reading… Pause · Stop" is pinned to the bottom of the page** (announced politely; the same bar for page summaries and questions); **Escape stops the sound at once**; **"Automatic reading" is one on/off switch** in the header's Accessibility panel (and in Settings) and is remembered. Tab never starts the audio. The bar never covers the focused control: the page gets bottom padding while it shows (2.4.11) | Automated: no failures | With NVDA and TalkBack running: our audio does not cover the screen reader, and the off switch is easy to find | _to fill in_ | |
 | 1.4.3 | Contrast (Minimum) | AA | A4: all text pairs ≥ 4.5:1 in normal and high contrast; A1 axe color-contrast | Automated: no failures | — | _to fill in_ | |
 | 1.4.4 | Resize Text | AA | A2: 200% zoom and 200% text; A1: extra-large text setting | Automated: no failures | Browser zoom and phone font size by a person | _to fill in_ | |
 | 1.4.5 | Images of Text | AA | No images of text (the ALX logo is a logo) | Automated: no failures (review) | — | _to fill in_ | |
@@ -115,7 +115,7 @@ support, with who and when) · **Notes / limitations**.
 | 2.1.2 | No Keyboard Trap | A | A2: Tab moves through every page and back to the start | Automated: no failures | — | _to fill in_ | |
 | 2.1.4 | Character Key Shortcuts | A | No single-key shortcuts (only Escape to stop audio / close the menu) | Automated: no failures (review) | — | _to fill in_ | |
 | 2.2.1 | Timing Adjustable | A | A5: an answer after 3 hours is accepted; no time limits anywhere | Automated: no failures | — | _to fill in_ | Simulated log-in code has no expiry |
-| 2.2.2 | Pause, Stop, Hide | A | A7: read aloud can be paused and stopped; nothing moves or updates on its own | Automated: no failures | — | _to fill in_ | |
+| 2.2.2 | Pause, Stop, Hide | A | A7: audio can be paused and stopped from the bottom playback bar or with Escape; nothing moves or updates on its own | Automated: no failures | — | _to fill in_ | |
 | 2.3.1 | Three Flashes or Below Threshold | A | No flashing or animation; reduced motion respected | Automated: no failures (review) | — | _to fill in_ | |
 | 2.4.1 | Bypass Blocks | A | A3: "Skip to main content" is the first link and works; landmarks (A1) | Automated: no failures | — | _to fill in_ | |
 | 2.4.2 | Page Titled | A | A5: every Savanna page has its own title "… \| Savanna" | Automated: no failures | — | _to fill in_ | |
@@ -124,7 +124,7 @@ support, with who and when) · **Notes / limitations**.
 | 2.4.5 | Multiple Ways | AA | Sidebar menu, dashboard cards and links between steps | Automated: no failures (review) | — | _to fill in_ | |
 | 2.4.6 | Headings and Labels | AA | A1: one h1 per screen (the question); labels on every field | Automated: no failures | NVDA H list | _to fill in_ | |
 | 2.4.7 | Focus Visible | AA | A2: visible outline at all 61 Tab stops (phone and desktop, 200% zoom); A3 | Automated: no failures | — | _to fill in_ | Found and fixed in Phase 9: Savanna's Bootstrap hid our outline on buttons and sidebar links |
-| 2.4.11 | Focus Not Obscured (Minimum) | AA | A2: every focused item fully on screen and not hidden under the fixed header | Automated: no failures | — | _to fill in_ | |
+| 2.4.11 | Focus Not Obscured (Minimum) | AA | A2: every focused item fully on screen and not hidden under the sticky header; A7: the bottom playback bar never covers the focused control (bottom padding and scroll padding while it shows) | Automated: no failures | — | _to fill in_ | |
 | 2.5.1 | Pointer Gestures | A | No multi-point or path gestures | Automated: no failures (review) | — | _to fill in_ | |
 | 2.5.2 | Pointer Cancellation | A | Native buttons and links (action on release) | Automated: no failures (review) | — | _to fill in_ | |
 | 2.5.3 | Label in Name | A | Accessible names start with the visible label ("Listen: …", "Apply …"), by design and checked in A7 and A8 (axe's label-in-name rule is experimental and not in our rule set) | Automated: no failures | Voice control (if available) | _to fill in_ | |
@@ -165,7 +165,7 @@ support, with who and when) · **Notes / limitations**.
   module: (1) recorded Amharic audio for every question and answer, played by "Listen" (read aloud); (2) a one-tap
   switch to English on every screen; (3) correct language tags, so a screen reader with an Amharic voice switches to
   it; (4) a tip on the welcome screen, before the first question, and in Help, in English and Amharic: "If your screen
-  reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English."
+  reader spells Amharic letters one by one, turn on Automatic reading (under Accessibility) to hear recorded Amharic, or switch to English."
   Still to check: TalkBack on Android (Google's speech service has Amharic on some phones).
 - **Amharic text is an AI draft** until a native speaker reviews it.
 - **Amharic audio is synthetic.** Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint. Afaan Oromo has no Microsoft voice: it is text only, plus the phone's

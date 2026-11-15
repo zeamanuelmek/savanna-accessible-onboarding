@@ -111,11 +111,31 @@ export async function speakAnswer(page) {
   await mic.click();
 }
 
-/** Choose a language from the accessibility bar's Language dropdown. */
+/** Choose a language in the header: the "Language" dropdown, or on small screens inside "Menu". */
 export async function barLanguage(page, l) {
-  await page.locator('.sj-lang-btn').click();
-  await page.locator('#sj-lang-menu button[data-lang="' + l + '"]').click();
+  if (await page.locator('.sj-lang-btn').isVisible()) {
+    await page.locator('.sj-lang-btn').click();
+    await page.locator('#sj-lang-menu button[data-lang="' + l + '"]').click();
+  } else {
+    await page.locator('.sj-more').click();
+    await page.locator('#sj-more-panel button[data-lang="' + l + '"]').click();
+  }
 }
+/** Open the header's "Accessibility" panel; returns it (a region named "Accessibility options"). */
+export async function accessibilityPanel(page) {
+  const b = page.locator('.sj-a11y-btn');
+  if (await b.getAttribute('aria-expanded') !== 'true') await b.click();
+  return page.getByRole('region', { name: 'Accessibility options' });
+}
+/** The account links (logged in) or Log in: the account menu on wide screens, "Menu" on small screens. */
+export async function accountArea(page) {
+  if (await page.locator('.sj-acct').isVisible()) { await page.locator('.sj-acct').click(); return page.locator('#sj-acct-menu'); }
+  if (await page.locator('.sj-head-link').isVisible()) return page.locator('.sj-acct-slot');
+  await page.locator('.sj-more').click();
+  return page.locator('#sj-more-panel');
+}
+/** The playback bar at the bottom of the page ("Now reading… Pause · Stop"). */
+export const playBar = page => page.locator('#so-playbar');
 /** Change the language from the host page (forms have no language choice of their own): the bar on Savanna's pages,
  *  or the showroom's language button, which goes round the three languages. */
 export async function hostLanguage(page, l) {

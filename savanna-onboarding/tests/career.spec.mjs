@@ -105,7 +105,7 @@ test('screen-reader tip: on the welcome screen before the first question, and in
   await go(page, '#/signup');
   await expect(page.locator('.dm')).toHaveAttribute('lang', 'am');
   const tip = page.locator('.dm-sr-tip').first();
-  await expect(tip.locator('p[lang=en]')).toHaveText('If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.');
+  await expect(tip.locator('p[lang=en]')).toHaveText('If your screen reader spells Amharic letters one by one, turn on Automatic reading (under Accessibility) to hear recorded Amharic, or switch to English.');
   await expect(tip.locator('p[lang=am]')).toContainText('የስክሪን አንባቢዎ');
   // reading order: question heading, then the tip, then the first answer
   const order = await page.evaluate(() => {

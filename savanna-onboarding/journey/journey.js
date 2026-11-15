@@ -58,7 +58,7 @@
       modeTitle: 'How do you like to register?',
       modeHint: 'This is only about how you like to fill in the form. You can change it at any time in Settings.',
       m_read_type: 'Read and type', m_listen: 'Listen and respond', m_speak: 'Speak my answers', m_simple: 'Simple steps with pictures and big text',
-      pauseAudio: 'Pause', resumeAudio: 'Resume', autoOff: 'Turn off automatic reading', autoOn: 'Turn on automatic reading',
+      a11y: 'Accessibility', autoRead: 'Automatic reading', allSettings: 'All accessibility settings', menuLabel: 'Menu',
       hearPage: 'Tap anywhere or press any key to hear this page',
       listenQ: 'Listen to the question', stopAudio: 'Stop', cont: 'Continue', errMode: 'Choose one way to continue.',
       acctTitle: 'Sign up or log in', acctChosen: 'You chose: {mode}.', acctChange: 'Change how I register',
@@ -112,7 +112,7 @@
       modeTitle: 'እንዴት መመዝገብ ይፈልጋሉ?',
       modeHint: 'ይህ ቅጹን መሙላት የሚመርጡበትን መንገድ ብቻ ነው። በማንኛውም ጊዜ በቅንብሮች ውስጥ መቀየር ይችላሉ።',
       m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
-      pauseAudio: 'ለአፍታ አቁም', resumeAudio: 'ቀጥል', autoOff: 'በራስ-ሰር ማንበብን አጥፋ', autoOn: 'በራስ-ሰር ማንበብን አብራ',
+      a11y: 'ተደራሽነት', autoRead: 'በራስ-ሰር ማንበብ', allSettings: 'ሁሉም የተደራሽነት ቅንብሮች', menuLabel: 'ምናሌ',
       listenQ: 'ጥያቄውን አዳምጥ', stopAudio: 'አቁም', cont: 'ቀጥል', errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
       acctTitle: 'ይመዝገቡ ወይም ይግቡ', acctChosen: 'የመረጡት፦ {mode}።', acctChange: 'የምመዘገብበትን መንገድ ቀይር',
       acctNew: 'ለሳቫና አዲስ ነዎት? በአንድ ጊዜ አንድ ጥያቄ እየመለሱ ይመዝገቡ። የጊዜ ገደብ የለም።', acctHave: 'መለያ አለዎት? በስልክ ቁጥርዎ ይግቡ።',
@@ -212,7 +212,7 @@
       m_simple: 'Tarkaanfii salphaa fakkii fi barreeffama gurguddaa wajjin',
       listenQ: 'Gaaffii dhaggeeffadhu',
       stopAudio: 'Dhaabi',
-      pauseAudio: 'Dhaabi xiqqoo', resumeAudio: 'Itti fufi', autoOff: 'Dubbisa ofumaan dhaabi', autoOn: 'Dubbisa ofumaan jalqabi',
+      a11y: 'Dhaqqabummaa', autoRead: 'Ofumaan dubbisuu', allSettings: 'Qindaa\'ina dhaqqabummaa hunda', menuLabel: 'Baafata',
       cont: 'Itti fufi',
       errMode: 'Itti fufuuf karaa tokko filadhu.',
       acctTitle: 'Galmaa\'i ykn seeni',
@@ -275,19 +275,62 @@
         }).join('') + '</ul>';
     }).join('');
   }
+  function homeHref() { return signedIn() ? 'dashboard.html' : 'index.html'; }
+  // Log in (or Sign up on the log-in page), or the learner's account menu
   function headerRight() {
     if (signedIn()) {
       var p = profile();
       return '<div class="sj-acct-wrap"><button type="button" class="sj-acct" aria-expanded="false" aria-controls="sj-acct-menu">' +
         '<i class="fa-solid fa-circle-user" aria-hidden="true"></i><span class="sj-acct-name">' + esc((p.name || '').split(' ')[0]) + '</span><span class="vh sj-vh"> — ' + T('account') + '</span><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>' +
-        '<ul id="sj-acct-menu" class="sj-acct-menu" hidden>' +
-        '<li><a href="passport.html"' + (page === 'passport' ? ' aria-current="page"' : '') + '>' + T('passport') + '</a></li>' +
-        '<li><a href="profile.html"' + (page === 'profile' ? ' aria-current="page"' : '') + '>' + T('profile') + '</a></li>' +
-        '<li><a href="settings.html"' + (page === 'settings' ? ' aria-current="page"' : '') + '>' + T('settings') + '</a></li>' +
-        '<li><a href="index.html" data-logout>' + T('logout') + '</a></li></ul></div>';
+        '<ul id="sj-acct-menu" class="sj-acct-menu" hidden>' + accountLinks() + '</ul></div>';
     }
     if (page === 'login') return '<a class="sj-head-link" href="signup.html">' + T('signup') + '</a>';
     return '<a class="sj-head-link" href="login.html">' + T('login') + '</a>';
+  }
+  function accountLinks() {
+    return '<li><a href="passport.html"' + (page === 'passport' ? ' aria-current="page"' : '') + '>' + T('passport') + '</a></li>' +
+      '<li><a href="profile.html"' + (page === 'profile' ? ' aria-current="page"' : '') + '>' + T('profile') + '</a></li>' +
+      '<li><a href="settings.html"' + (page === 'settings' ? ' aria-current="page"' : '') + '>' + T('settings') + '</a></li>' +
+      '<li><a href="index.html" data-logout>' + T('logout') + '</a></li>';
+  }
+  function langButtons() {
+    return D.languages.map(function (l) {
+      return '<li><button type="button" data-lang="' + l + '" lang="' + l + '"' + (l === lang() ? ' aria-current="true"' : '') + '>' +
+        '<span class="sj-tick" aria-hidden="true">' + (l === lang() ? '✓' : '') + '</span>' + D.languageNames[l] + '</button></li>';
+    }).join('');
+  }
+  /* "Language ▾": a disclosure button and a short list; each language named in its own script */
+  function langMenu() {
+    return '<div class="sj-lang-wrap sj-wide"><button type="button" class="sj-hbtn sj-lang-btn" aria-expanded="false" aria-controls="sj-lang-menu">' +
+      '<i class="fa-solid fa-globe" aria-hidden="true"></i><span>' + T('language') + '<span class="sj-vh">: ' + D.languageNames[lang()] + '</span></span>' +
+      '<i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>' +
+      '<ul id="sj-lang-menu" class="sj-lang-menu" hidden>' + langButtons() + '</ul></div>';
+  }
+  /* "Accessibility ▾": a disclosure panel (not a modal) named "Accessibility options". On/off toggles with their state
+     announced (aria-pressed, plus a tick and a dark fill, not colour alone), and a link to all settings. */
+  var a11yOpen = false, moreOpen = false;
+  function a11yMenu() {
+    var p = D.prefs();
+    function tog(key, on, label) {
+      return '<li><button type="button" class="sj-tog" data-tog="' + key + '" aria-pressed="' + on + '"><span class="sj-tick" aria-hidden="true">✓ </span>' + label + '</button></li>';
+    }
+    return '<div class="sj-a11y-wrap"><button type="button" class="sj-hbtn sj-a11y-btn" aria-expanded="' + a11yOpen + '" aria-controls="sj-a11y-panel">' +
+      '<i class="fa-solid fa-universal-access" aria-hidden="true"></i><span>' + T('a11y') + '</span><i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>' +
+      '<div id="sj-a11y-panel" class="sj-a11y-panel" role="region" aria-label="' + esc(T('barText')) + '"' + (a11yOpen ? '' : ' hidden') + '><ul class="sj-a11y-list">' +
+        tog('size', p.size !== 'normal', T('larger')) + tog('contrast', p.contrast === 'high', T('contrast')) +
+        tog('motion', p.motion === 'reduce', T('motion')) + tog('reading', D.readingOn(p), T('autoRead')) +
+      '</ul><p class="sj-a11y-all"><a href="settings.html"' + (page === 'settings' ? ' aria-current="page"' : '') + '>' + T('allSettings') + '</a></p></div></div>';
+  }
+  /* Small screens and 400% zoom: Home, Accessibility and Menu only (never two rows). The Menu holds the Savanna
+     sections (when logged in), the language and log in or the account links. */
+  function moreMenu() {
+    return '<div class="sj-more-wrap sj-narrow"><button type="button" class="sj-hbtn sj-more" aria-expanded="' + moreOpen + '" aria-controls="sj-more-panel">' +
+      '<i class="fa-solid fa-bars" aria-hidden="true"></i><span>' + T('menuLabel') + '</span></button>' +
+      '<nav id="sj-more-panel" class="sj-more-panel" aria-label="' + esc(T('menuLabel')) + '"' + (moreOpen ? '' : ' hidden') + '>' +
+        (signedIn() && page !== 'home' ? navItems() : '') +
+        '<h2 class="sj-more-h">' + T('language') + '</h2><ul class="sj-more-langs">' + langButtons() + '</ul>' +
+        '<ul class="sj-more-acct">' + (signedIn() ? accountLinks() : page === 'login' ? '<li><a href="signup.html">' + T('signup') + '</a></li>' : '<li><a href="login.html">' + T('login') + '</a></li>') + '</ul>' +
+      '</nav></div>';
   }
   function frame() {
     document.documentElement.lang = lang();
@@ -296,14 +339,16 @@
     var html =
       '<a class="sj-skip" href="#content">' + T('skip') + '</a>' +
       (needPrompt && lang() === 'en' ? '<button type="button" class="sj-hear" id="sj-hear" lang="en">' + T('hearPage') + '</button>' : '') +
-      toolbar() +
+      // one header bar: Home on the left; Language, Accessibility and Log in (or the account menu) on the right
       '<header class="header d-flex align-items-center w-100 sj-header">' +
         '<div class="header-left align-items-center d-flex px-2">' +
-          (side ? '<button type="button" class="hamburger sj-menu" aria-expanded="' + open + '" aria-controls="sidebar"><i class="fa-solid fa-bars" aria-hidden="true"></i><span class="sj-menu-label">' + T('menu') + '</span></button>' : '') +
-          // no logo (the module is for any organisation); visitors who are not logged in get a plain "Home" link
-          (!side && page !== 'home' ? '<a class="sj-home-link" href="index.html"><i class="fa-solid fa-house" aria-hidden="true"></i><span>' + T('home') + '</span></a>' : '') +
+          (side ? '<button type="button" class="hamburger sj-menu sj-wide" aria-expanded="' + open + '" aria-controls="sidebar"><i class="fa-solid fa-bars" aria-hidden="true"></i><span class="sj-menu-label">' + T('menu') + '</span></button>' : '') +
+          // no logo (the module is for any organisation)
+          '<a class="sj-home-link" href="' + homeHref() + '"' + (page === 'home' || page === 'dashboard' ? ' aria-current="page"' : '') + '><i class="fa-solid fa-house" aria-hidden="true"></i><span>' + T('home') + '</span></a>' +
         '</div>' +
-        '<div class="header-right d-flex align-items-center flex-grow-1 justify-content-end pe-3">' + headerRight() + '</div>' +
+        '<div class="header-right d-flex align-items-center flex-grow-1 justify-content-end pe-2">' +
+          langMenu() + a11yMenu() + '<div class="sj-wide sj-acct-slot">' + headerRight() + '</div>' + moreMenu() +
+        '</div>' +
       '</header>' +
       (side ? '<nav class="sidebar navigation bg-white border-end position-fixed overflow-scroll bottom-0 start-0' + (open ? ' expanded' : '') + '" id="sidebar" aria-label="' + esc(T('navLabel')) + '">' + navItems() + '</nav>' : '');
     var shell = document.getElementById('sj-frame');
@@ -319,41 +364,13 @@
       '<a href="showroom.html">' + T('showroom') + '</a> · <a href="test-host/">' + T('testHost') + '</a>';
     wireFrame();
   }
-  /* The bar from ALX's own accessible hackathon site, as a landmark named "Accessibility options". Toggle buttons with a pressed
-     state (aria-pressed, plus a tick and dark fill that do not rely on colour alone). They change the module's
-     saved preferences, so the choice follows the learner to every page and every form. */
-  function toolbar() {
-    var p = D.prefs();
-    function tog(key, on, label, extra) {
-      return '<li><button type="button" class="sj-tog" data-tog="' + key + '" aria-pressed="' + on + '"' + (extra || '') + '>' +
-        '<span class="sj-tick" aria-hidden="true">✓ </span>' + label + '</button></li>';
-    }
-    // No visible sentence: the bar is a landmark named "Accessibility options" (screen readers list it with D / regions)
-    return '<section class="sj-a11y sj-a11y-bare" aria-label="' + esc(T('barText')) + '"><div class="sj-a11y-in"><ul class="sj-a11y-list">' +
-      // sound first: the one-key "off" switch, then Pause and Stop (always visible)
-      '<li><button type="button" class="sj-tog sj-snd" data-tog="autoRead">' + T(p.autoRead === 'off' ? 'autoOn' : 'autoOff') + '</button></li>' +
-      '<li><button type="button" class="sj-tog sj-snd" data-audio="pause">' + T(D.player.state === 'paused' ? 'resumeAudio' : 'pauseAudio') + '</button></li>' +
-      '<li><button type="button" class="sj-tog sj-snd" data-audio="stop">' + T('stopAudio') + '</button></li>' +
-      tog('size', p.size !== 'normal', T('larger')) +
-      tog('contrast', p.contrast === 'high', T('contrast')) +
-      tog('motion', p.motion === 'reduce', T('motion')) +
-      // one "Language" dropdown instead of a button per language; each language is named in its own language
-      '<li class="sj-lang-wrap"><button type="button" class="sj-tog sj-lang-btn" aria-expanded="false" aria-controls="sj-lang-menu">' +
-        '<i class="fa-solid fa-globe" aria-hidden="true"></i><span class="sj-vh">' + T('language') + ': </span><span lang="' + lang() + '">' + D.languageNames[lang()] + '</span>' +
-        '<i class="fa-solid fa-angle-down" aria-hidden="true"></i></button>' +
-        '<ul id="sj-lang-menu" class="sj-lang-menu" hidden>' + D.languages.map(function (l) {
-          return '<li><button type="button" data-lang="' + l + '" lang="' + l + '"' + (l === lang() ? ' aria-current="true"' : '') + '>' +
-            '<span class="sj-tick" aria-hidden="true">' + (l === lang() ? '✓' : '') + '</span>' + D.languageNames[l] + '</button></li>';
-        }).join('') + '</ul></li>' +
-      '<li><a class="sj-tog sj-tog-link" href="settings.html"' + (page === 'settings' ? ' aria-current="page"' : '') + '><i class="fa-solid fa-universal-access" aria-hidden="true"></i> ' + T('settings') + '</a></li>' +
-      '</ul></div></section>';
-  }
   function toggle(key) {
     var p = D.prefs();
     if (key === 'size') D.setPrefs({ size: p.size === 'normal' ? 'large' : 'normal' });
     else if (key === 'contrast') D.setPrefs({ contrast: p.contrast === 'high' ? 'normal' : 'high' });
     else if (key === 'motion') D.setPrefs({ motion: p.motion === 'reduce' ? 'normal' : 'reduce' });
-    else if (key === 'autoRead') { if (p.autoRead !== 'off') D.stopSpeaking(); needPrompt = false; D.setPrefs({ autoRead: p.autoRead === 'off' ? 'on' : 'off' }); }
+    // one switch for all reading: page summaries and questions
+    else if (key === 'reading') { var on = !D.readingOn(p); if (!on) D.stopSpeaking(); needPrompt = false; D.setPrefs({ autoRead: on ? 'on' : 'off', easy: on }); }
     else if (D.languages.indexOf(key) !== -1 && key !== lang()) D.setPrefs({ lang: key });
   }
   /* The header scrolls with the page until it reaches the top, then stays (sticky); the toolbar above it scrolls
@@ -380,11 +397,16 @@
     if (menu) menu.onclick = function () { setMenu(this.getAttribute('aria-expanded') !== 'true'); };
     var lb = document.querySelector('.sj-lang-btn');
     if (lb) lb.onclick = function () { setLangMenu(lb.getAttribute('aria-expanded') !== 'true'); };
-    Array.prototype.forEach.call(document.querySelectorAll('#sj-lang-menu button[data-lang]'), function (b) {
+    var ab = document.querySelector('.sj-a11y-btn');
+    if (ab) ab.onclick = function () { setA11y(!a11yOpen); };
+    var mb = document.querySelector('.sj-more');
+    if (mb) mb.onclick = function () { setMore(!moreOpen); };
+    Array.prototype.forEach.call(document.querySelectorAll('.sj-header button[data-lang]'), function (b) {
       b.onclick = function () {
         var to = b.getAttribute('data-lang');
-        langFocus = true; // after the page is redrawn in the new language, focus returns to the Language button
-        if (to === lang()) { setLangMenu(false, true); return; }
+        // after the page is redrawn in the new language, focus returns to the button that opened the list
+        langFocus = b.closest('.sj-more-panel') ? 'more' : 'lang';
+        if (to === lang()) { if (langFocus === 'more') setMore(false, true); else setLangMenu(false, true); langFocus = false; return; }
         D.setPrefs({ lang: to });
       };
     });
@@ -397,16 +419,10 @@
     // only the toggle buttons: the "Accessibility settings" link shares their look but is a plain link (it used to
     // run toggle(null) too, which wiped the learner's language choice)
     Array.prototype.forEach.call(document.querySelectorAll('button.sj-tog[data-tog]'), function (b) { b.onclick = function () { toggle(b.getAttribute('data-tog')); }; });
-    Array.prototype.forEach.call(document.querySelectorAll('button[data-audio]'), function (b) {
-      b.onclick = function () {
-        var pl = D.player;
-        if (b.getAttribute('data-audio') === 'stop') D.stopSpeaking();
-        else if (pl.state === 'playing') pl.pause(); else if (pl.state === 'paused') pl.resume();
-      };
-    });
     placeSidebar();
-    var lo = document.querySelector('[data-logout]');
-    if (lo) lo.onclick = function () { setSession(null); try { sessionStorage.setItem('sj-flash', 'loggedOut'); } catch (e) {} };
+    Array.prototype.forEach.call(document.querySelectorAll('[data-logout]'), function (lo) {
+      lo.onclick = function () { setSession(null); try { sessionStorage.setItem('sj-flash', 'loggedOut'); } catch (e) {} };
+    });
   }
   /* Account menu: a disclosure button with a list of links (not an ARIA menu, so every screen reader reads it as
      links). Escape or a click elsewhere closes it. */
@@ -417,6 +433,20 @@
     b.setAttribute('aria-expanded', String(open)); m.hidden = !open;
     if (open) (m.querySelector('[aria-current]') || m.querySelector('button')).focus(); else if (focusBtn) b.focus();
   }
+  function setA11y(open, focusBtn) {
+    var b = document.querySelector('.sj-a11y-btn'), m = document.getElementById('sj-a11y-panel');
+    a11yOpen = open;
+    if (!b || !m) return;
+    b.setAttribute('aria-expanded', String(open)); m.hidden = !open;
+    if (open) { setMore(false); setLangMenu(false); setAcct(false); var f = m.querySelector('button'); if (f) f.focus(); } else if (focusBtn) b.focus();
+  }
+  function setMore(open, focusBtn) {
+    var b = document.querySelector('.sj-more'), m = document.getElementById('sj-more-panel');
+    moreOpen = open;
+    if (!b || !m) return;
+    b.setAttribute('aria-expanded', String(open)); m.hidden = !open;
+    if (open) { setA11y(false); var f = m.querySelector('a[aria-current]') || m.querySelector('a, button'); if (f) f.focus(); } else if (focusBtn) b.focus();
+  }
   function setAcct(open, focusBtn) {
     var b = document.querySelector('.sj-acct'), m = document.getElementById('sj-acct-menu');
     if (!b || !m) return;
@@ -424,10 +454,16 @@
     if (open) m.querySelector('a').focus(); else if (focusBtn) b.focus();
   }
   document.addEventListener('click', function (e) {
-    if (!e.target.closest || !e.target.closest('.sj-acct-wrap')) setAcct(false);
-    if (!e.target.closest || !e.target.closest('.sj-lang-wrap')) setLangMenu(false);
+    var inside = function (sel) { return e.target.closest && e.target.closest(sel); };
+    if (!inside('.sj-acct-wrap')) setAcct(false);
+    if (!inside('.sj-lang-wrap')) setLangMenu(false);
+    if (!inside('.sj-a11y-wrap') && a11yOpen) setA11y(false);
+    if (!inside('.sj-more-wrap') && moreOpen) setMore(false);
   });
   document.addEventListener('keydown', function (e) {
+    // Escape closes the open panel and returns focus to its button
+    if (e.key === 'Escape' && a11yOpen) { setA11y(false, true); return; }
+    if (e.key === 'Escape' && moreOpen) { setMore(false, true); return; }
     var ab = document.querySelector('.sj-acct');
     if (e.key === 'Escape' && ab && ab.getAttribute('aria-expanded') === 'true') { setAcct(false, true); return; }
     var lbt = document.querySelector('.sj-lang-btn');
@@ -444,9 +480,9 @@
   /* ---------- page summaries and automatic reading (English only for now) ----------
      Every page and every form step has a short, hand-written summary. It is the first text inside <main> (visually
      hidden), so a screen reader reaches it first. After the learner's first tap or key press it is also read aloud
-     when each page or step opens, remembered across pages and visits (preference autoRead). Pause and Stop are always
-     in the bar, Escape stops the sound at once, and "Turn off automatic reading" is the first control in the bar
-     (also in Settings), so screen reader users can switch our audio off with one key (WCAG 1.4.2 Audio Control).
+     when each page or step opens, remembered across pages and visits. "Automatic reading" is one switch (page summaries
+     and questions), in the Accessibility panel and Settings. While audio plays, "Now reading… Pause · Stop" is pinned
+     to the bottom of the page, and Escape stops the sound at once (WCAG 1.4.2 Audio Control).
      On a new page the summary is tried at once when automatic reading is on and the learner has already interacted
      with the site in this session. Only if the browser blocks it (the play promise is rejected, or speech says
      "not-allowed") is "Tap anywhere or press any key to hear this page" shown. Nothing throws when sound is blocked. */
@@ -460,7 +496,7 @@
     dashboard: 'Your Savanna homepage. First come the things waiting for you, such as adding your ID or creating your Support Passport, then your course, your progress and your activities. The Menu button opens the sidebar.',
     jobs: 'Jobs. First a checkbox shows only jobs that offer the support in your Support Passport; this is worked out on this phone only. Then the list of jobs: each job title is a heading, with its own Apply link.',
     passport: 'Your Support Passport: what helps you, and who can see it. Below are buttons to change it and to manage sharing.',
-    settings: 'Accessibility settings: language, text size, contrast, motion, how you answer, reading aloud, automatic reading, pictures and voice. Every change is saved at once. At the bottom is Done.',
+    settings: 'Accessibility settings: language, text size, contrast, motion, how you answer, automatic reading, pictures and voice. Every change is saved at once. At the bottom is Done.',
     takeover: 'Take over your account. There is nothing to take over on this phone.',
     needLogin: 'You need to log in to see this page. Below are Log in and Sign up.'
   };
@@ -471,7 +507,7 @@
   function homeSummary() {
     if (signedIn()) return 'Welcome back. Below is a button to go to your dashboard.';
     if (home.step === 'account') return 'Step 2 of 2: sign up or log in. Choose Sign up if you are new to Savanna, or Log in if you already have an account. Above them is a button to change how you register.';
-    return 'Welcome to Savanna. Step 1 of 2: choose how you like to register: read and type, listen and respond, speak my answers, or simple steps with pictures and big text. Then choose Continue. The accessibility options and the language are at the top of the page.';
+    return 'Welcome to Savanna. Step 1 of 2: choose how you like to register: read and type, listen and respond, speak my answers, or simple steps with pictures and big text. Then choose Continue. Language and Accessibility are in the header at the top of the page.';
   }
   function pageSummary() {
     if (PROTECTED.indexOf(page) !== -1 && !signedIn()) return PAGE_SUMMARY.needLogin;
@@ -499,7 +535,7 @@
     } else if (!on && b) {
       var had = document.activeElement === b;
       b.parentNode.removeChild(b);
-      if (had) { var tg = document.querySelector('[data-tog="autoRead"]'); if (tg) tg.focus(); } // the off switch is next
+      if (had) { var tg = document.querySelector('.sj-home-link'); if (tg) tg.focus(); } // the next item: the header
     }
   }
   function autoRead() {
@@ -519,14 +555,15 @@
   var IGNORE_KEYS = ['Tab', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Insert', 'NumLock', 'Escape'];
   function firstInteraction(e) {
     if (e.type === 'keydown' && IGNORE_KEYS.indexOf(e.key) !== -1) return;
-    if (e.type === 'click' && e.target && e.target.closest && e.target.closest('[data-tog="autoRead"]')) { interacted = true; try { sessionStorage.setItem(INTERACTED, '1'); } catch (x) {} return; } // the off switch itself
+    if (e.type === 'click' && e.target && e.target.closest && e.target.closest('[data-tog="reading"], .sj-a11y-btn')) { interacted = true; try { sessionStorage.setItem(INTERACTED, '1'); } catch (x) {} return; } // the reading switch itself
     interacted = true;
     try { sessionStorage.setItem(INTERACTED, '1'); } catch (x) {}
     if (!needPrompt) return;
     var pr = D.prefs();
     if (pr.autoRead === 'off' || lang() !== 'en') return;
-    if (pr.autoRead === 'ask') { try { var raw = D.store.get('prefs', {}) || {}; raw.autoRead = 'on'; D.store.set('prefs', raw); } catch (x) {} }
-    var tg = document.querySelector('[data-tog="autoRead"]'); if (tg) tg.textContent = T('autoOff');
+    // one switch for all reading: page summaries and questions (written quietly, so the page does not redraw under the finger)
+    if (pr.autoRead === 'ask') { try { var raw = D.store.get('prefs', {}) || {}; raw.autoRead = 'on'; raw.easy = true; D.store.set('prefs', raw); } catch (x) {} }
+    var tg = document.querySelector('[data-tog="reading"]'); if (tg) tg.setAttribute('aria-pressed', 'true');
     setTimeout(function () { showPrompt(false); readSummary(); }, 0);
   }
   document.addEventListener('click', firstInteraction, true);
@@ -537,9 +574,6 @@
     var d = e.detail || {};
     if (!d.summary) { setSummary(''); return; }
     setSummary([FORM_PRE[d.form] || '', d.summary, (d.mode === 'review' && FORM_POST[d.form]) || ''].join(' ').trim(), true);
-  });
-  D.player.on(function (pl) {
-    var b = document.querySelector('button[data-audio="pause"]'); if (b) b.textContent = T(pl.state === 'paused' ? 'resumeAudio' : 'pauseAudio');
   });
 
   /* ---------- pages ---------- */
@@ -644,9 +678,9 @@
       right = (err ? '<div class="dm-errors" role="alert" tabindex="-1" id="sj-mode-errors"><h3>' + T('problem') + '</h3><ul><li><a href="#sj-mode-0">' + esc(err) + '</a></li></ul></div>' : '') +
         '<form class="dm-form" id="sj-mode" novalidate><fieldset aria-describedby="sj-mode-hint' + (err ? ' sj-mode-err' : '') + '"><legend><h2 class="dm-q" id="sj-step-h">' + T('modeTitle') + '</h2></legend>' +
         '<p id="sj-mode-hint" class="dm-hint">' + T('modeHint') + '</p>' +
-        '<details class="dm-note dm-sr-tip sj-tip"><summary>' + T('srTipTitle') + '</summary><p lang="en">If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.</p>' +
-        '<p lang="am">የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «ጮክ ብሎ ማንበብ»ን ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።</p>' +
-        '<p lang="om">Yoo dubbisaan iskiriinii kee qubee Afaan Amaaraa tokko tokkoon dubbise, sagalee Afaan Amaaraa waraabame dhaggeeffachuuf «Sagaleen dubbisi» bani, ykn gara Ingiliffaatti jijjiiri.</p></details>' +
+        '<details class="dm-note dm-sr-tip sj-tip"><summary>' + T('srTipTitle') + '</summary><p lang="en">If your screen reader spells Amharic letters one by one, turn on Automatic reading (under Accessibility) to hear recorded Amharic, or switch to English.</p>' +
+        '<p lang="am">የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «በራስ-ሰር ማንበብ»ን (በ«ተደራሽነት» ውስጥ) ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።</p>' +
+        '<p lang="om">Yoo dubbisaan iskiriinii kee qubee Afaan Amaaraa tokko tokkoon dubbise, sagalee Afaan Amaaraa waraabame dhaggeeffachuuf «Ofumaan dubbisuu» (Dhaqqabummaa keessatti) bani, ykn gara Ingiliffaatti jijjiiri.</p></details>' +
         (err ? '<span id="sj-mode-err" class="dm-err"><span class="dm-vh">Error: </span>' + esc(err) + '</span>' : '') +
         '<div class="dm-opts">' + MODES.map(function (m, i) {
           return '<label class="dm-opt"><input type="radio" name="mode" value="' + m + '"' + (i === 0 ? ' id="sj-mode-0"' : '') + (home.mode === m ? ' checked' : '') + '>' +
@@ -816,7 +850,7 @@
     frame();
     if (!view.querySelector('savanna-onboarding-form, savanna-onboarding-settings')) renderPage(false);
     else if (page === 'settings') { settingsExtras(); title('settings'); }
-    if (langFocus) { langFocus = false; var lbn = document.querySelector('.sj-lang-btn'); if (lbn) lbn.focus(); }
+    if (langFocus) { var lbn = document.querySelector(langFocus === 'more' ? '.sj-more' : '.sj-lang-btn'); moreOpen = false; langFocus = false; if (lbn) lbn.focus(); }
     else if (tog) { var b = document.querySelector('.sj-tog[data-tog="' + tog + '"]'); if (b) b.focus(); }
     else if (keepMode) { var r = view.querySelector('input[name=mode][value="' + keepMode + '"]'); if (r) r.focus(); }
   });

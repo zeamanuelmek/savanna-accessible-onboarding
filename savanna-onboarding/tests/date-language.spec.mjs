@@ -86,7 +86,7 @@ test('Afaan Oromo: from the bar on every Savanna page, in the forms and in Setti
   await page.goto('/index.html'); await page.waitForFunction(() => !!window.SavannaOnboarding);
   await barLanguage(page, 'om');
   await expect(page.locator('html')).toHaveAttribute('lang', 'om');
-  await expect(page.locator('#sj-lang-menu button[data-lang=om]')).toHaveAttribute('aria-current', 'true');
+  await expect(page.locator('.sj-header button[data-lang=om]').first()).toHaveAttribute('aria-current', 'true');
   await expect(page.locator('#sj-step-h')).toHaveText('Akkamitti galmaa\'uu barbaadda?');
   await pick(page, 'read_type'); await page.locator('#sj-mode button[type=submit]').click();
   await page.locator('.sj-split a[href="signup.html"]').click();

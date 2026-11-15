@@ -136,26 +136,39 @@ the page flow. `journey/dashboard.js` replaces ALX's `static-page.js` (module ta
 *My resources* (My courses, Conference rooms, Servers, Sandboxes, Video on demand) · *My Campus* (Peers, **Jobs**) ·
 My Profile at the bottom. Our links are in standard places: **Jobs** in "My Campus" (a campus resource for
 learners); **My profile** is ALX's "My Profile"; **Support Passport, My profile, Accessibility settings, Log out** in
-the account menu at the top right (a disclosure button with plain links); **Accessibility settings** also at the end
-of the "Accessibility options" bar on every page; **For employers: post a job** in the footer (employers are
+the account menu at the top right (a disclosure button with plain links); **All accessibility settings** also in
+the header's Accessibility panel on every page; **For employers: post a job** in the footer (employers are
 not learners). "My dashboard" became ALX's "Home". Savanna sections that are not in the demo (My courses, Servers…)
 say so when chosen. The ID status, Support Passport status and "Delete my data from this phone" cards moved from the
 old dashboard to **My profile**. Pages for visitors who are not logged in (home, sign-up, log-in) have no sidebar,
 as on ALX's own sign-up page; "Log in" or "Sign up" is at the top right.
 
-**"Accessibility options" bar** (from ALX's accessible hackathon site) at the top of every page, with no visible
-sentence: it is a landmark (`<section aria-label="Accessibility options">`) that screen readers list with their
-landmark or region keys. In order: **Turn off automatic reading** (the one-key switch for screen reader users),
-**Pause / Resume** and **Stop** (always visible), Larger text, High contrast, Stop motion (toggle buttons with
-`aria-pressed`; the pressed state also shows a tick and a dark fill, not colour alone), a **Language** dropdown (a
-disclosure button showing the current language; the list names each language in its own language; Escape closes
-it and returns focus), and **Accessibility settings**. **The language is set only here** (and in Settings): the
-forms have no language choice of their own, so there is one place to look. On the developer page the language
-button is in the page header. The choices are the module's own saved preferences, so they follow the
-learner to every page and form. The bar scrolls away; the 72px header below it stays at the top (sticky), so on a
-small screen or at 400% zoom the part that stays on screen is never taller than the header.
+**One header bar** on every page (after the skip link, which comes first): **Home** on the left; on the right
+**Language ▾** (a disclosure button and a short list, each language named in its own script), **Accessibility ▾** and
+**Log in** (or the account menu when logged in). On small screens and at 200% or 400% zoom it is **Home,
+Accessibility ▾ and Menu**, with the Savanna sections (when logged in), the language and Log in or the account links
+inside Menu. It is never two rows. The header stays at the top (sticky, 72px; 56px on phones).
 
-**Accessibility settings** has every choice of the bar and more (motion, read aloud, pictures, voice consent), with a
+![The header on a desktop, with the Accessibility panel open](docs/img/header-desktop-accessibility.png)
+![The header on a phone (320px wide), with Menu open: language and Log in](docs/img/header-phone-menu.png)
+
+**Accessibility ▾** opens a disclosure panel (a button with `aria-expanded`, not a modal), the landmark named
+"Accessibility options": **Larger text, High contrast, Stop motion and Automatic reading**, each an on/off toggle
+with `aria-pressed` (the pressed state also shows a tick and a dark fill, not colour alone), and a link to **All
+accessibility settings**. Escape closes it and returns focus to the button; a click elsewhere closes it. **The
+language is set only in the header** (and in Settings): the forms have no language choice of their own. On the
+developer page the language button is in the page header. The choices are the module's own saved preferences, so
+they follow the learner to every page and form.
+
+**One switch for reading.** "Automatic reading" (the Accessibility panel, or Settings) covers both the page
+summaries and the questions; the forms have no "Read aloud" switch of their own. Inside a form, "Listen to the
+question" and "Get help" stay in the same place on every step. **Playback controls appear only while audio plays:**
+a small bar pinned to the bottom of the page, "Now reading… Pause · Stop", announced politely (`role="status"`) and
+hidden when nothing plays. Escape stops the sound. While the bar shows, the page gets bottom padding and scroll
+padding of the bar's height, so it never covers the focused control (WCAG 2.4.11). The bar is drawn by the module,
+so it also works on other host pages.
+
+**Accessibility settings** has every choice of the panel and more (how I like to answer, pictures, voice consent), with a
 live preview, "← Back to …" at the top and "Done: back to …" at the bottom: both return to the page the learner came
 from in this tab (never to Log in, so the two pages cannot send each other round in a loop). Log in also has
 "← Back to …". The first question of every form has "← Back" to where the learner came from (sign-up: "Sign up or log
@@ -213,8 +226,8 @@ work; nothing of it is built.
 | Log-in | **simulated**: a labelled demo. No server, no SMS; the code is shown on screen. Meets WCAG 3.3.8: nothing to remember, no puzzle, the code can be pasted or filled in by the phone, no time limit |
 | Text size, high contrast, language settings | implemented |
 | Read-aloud | implemented: "Listen" on every question and a Listen button on every answer, with Pause/Resume, Stop and Play again; Escape stops it. Plays the Amharic clips named in [`docs/audio-script.md`](docs/audio-script.md) (79 clips, 3.8 MB), otherwise the phone's voice, otherwise a short message that everything is on screen. **Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint.** To regenerate after a wording change: `node tools/audio-script.cjs`, then `python tools/generate-audio.py` (needs `pip install edge-tts` and ffmpeg). **Afaan Oromo has no Microsoft voice:** it is text only, plus the phone's voice if it has one. Audio is never required |
-| Page summaries and automatic reading | implemented, **English only for now**: every page and form step has a short hand-written summary (for example "Step 3 of 5: your phone number. You can type it or say it. Below are Continue and Back.") as the first text inside `<main>`, visually hidden, so screen readers reach it first. On a first visit the first control after the skip link is "Tap anywhere or press any key to hear this page"; after that, each page and step reads its summary when it opens (remembered across pages and visits). On a new page the summary is tried at once when automatic reading is on and the learner has already interacted with the site in this session; only if the browser blocks it (the play promise is rejected, or speech is "not allowed") does the prompt appear, and the next tap or key press reads it. Tab never starts it. Pause and Stop are always in the bar, Escape stops at once, and "Turn off automatic reading" is the first control in the bar and in Settings (WCAG 1.4.2). Hosts get the summary in the `savanna-onboarding:step` event |
-| Pictures and bigger buttons | implemented: a separate setting from read aloud |
+| Page summaries and automatic reading | implemented, **English only for now**: every page and form step has a short hand-written summary (for example "Step 3 of 5: your phone number. You can type it or say it. Below are Continue and Back.") as the first text inside `<main>`, visually hidden, so screen readers reach it first. On a first visit the first control after the skip link is "Tap anywhere or press any key to hear this page"; after that, each page and step reads its summary when it opens (remembered across pages and visits). On a new page the summary is tried at once when automatic reading is on and the learner has already interacted with the site in this session; only if the browser blocks it (the play promise is rejected, or speech is "not allowed") does the prompt appear, and the next tap or key press reads it. Tab never starts it. "Automatic reading" is one switch, in the Accessibility panel and in Settings; while audio plays, "Now reading… Pause · Stop" is pinned to the bottom, and Escape stops at once (WCAG 1.4.2). Hosts get the summary in the `savanna-onboarding:step` event |
+| Pictures and bigger buttons | implemented: a separate setting from automatic reading |
 | Amharic audio for offline use | implemented: Settings offers "Download Amharic audio for offline use (about X MB)" with progress, and "Remove downloaded audio". Otherwise each recording is kept the first time it plays |
 | Screen readers and Amharic | **known limitation:** NVDA with its default Windows voice spells Amharic letter by letter. Mitigations: recorded Amharic (read aloud), one-tap English, correct `lang` tags, and a tip on the welcome screen and in Help |
 | Voice answers | partial: needs a browser with a speech engine (Chrome on Android, desktop Chrome) and a connection; audio goes to Google, so consent is asked first and can be withdrawn in Settings. **What you said is shown for checking and fixing, and never kept until you choose "Use this answer".** Never offered on ID or support-needs questions. When recording starts, "Recording. Speak now, then press Stop when you have finished" is announced, a short beep plays and focus moves to Stop; afterwards "I heard: … Choose Use this answer, Say it again, or Type it instead" is announced and focus moves to the editable words (in Amharic, English and Afaan Oromo). Clear fallback when unavailable. Not yet tested with a real microphone in Amharic |
@@ -250,9 +263,9 @@ work; nothing of it is built.
   visible text, so every button has a spoken name.
 - Single and multiple choices are native radio buttons and checkboxes inside a `<fieldset>`, with the question as
   the `<legend>`. ID trust badges are part of each option's name.
-- Toggles report their state (`aria-pressed` on "Read aloud" and the microphone, `aria-expanded` on "Get help" and the menu).
+- Toggles report their state (`aria-pressed` on the Accessibility panel's toggles and the microphone, `aria-expanded` on "Language", "Accessibility", "Menu", "Get help" and the account menu).
 - Each answer's Listen button is a separate button beside the answer (never inside it), named "Listen: <the answer>".
-  While audio plays, Pause and Stop appear next to "Listen to the question"; `Escape` also stops it (WCAG 1.4.2).
+  While audio plays, "Now reading… Pause · Stop" is pinned to the bottom of the page; `Escape` also stops it (WCAG 1.4.2).
 - Errors: the field gets `aria-invalid="true"` and is linked to its error message and hint with `aria-describedby`.
 - Progress ("Question 2 of 5") is plain text. The visual bar is hidden from screen readers.
 - Status messages ("Saved", "Welcome back", the number of jobs shown) are announced through a polite `role="status"` live region.
@@ -266,7 +279,7 @@ work; nothing of it is built.
   switch voice.
 
 **Learner settings:** text size (16 / 20 / 24px base, and never smaller inside Savanna's 14px pages), high contrast,
-language, how I like to answer, read aloud, pictures and bigger buttons, voice answers on or off. Settings are saved on the device and apply
+language, how I like to answer, automatic reading, pictures and bigger buttons, voice answers on or off. Settings are saved on the device and apply
 everywhere the module appears.
 
 **What has been tested:**

@@ -3,7 +3,7 @@
 // The GATE task first: "sign up for Savanna and save a Support Passport", end to end, by mouse, in both languages,
 // and with the keyboard only.
 import { test, expect } from '@playwright/test';
-import { freshStart, pick, next, heading, barLanguage } from './helpers.mjs';
+import { freshStart, pick, next, heading, barLanguage, accessibilityPanel, accountArea } from './helpers.mjs';
 
 const at = (page, path) => page.goto(path).then(() => page.waitForFunction(() => !!window.SavannaOnboarding));
 const profile = page => page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.profile') || 'null'));
@@ -93,43 +93,70 @@ test('GATE: the whole task with the keyboard only (Tab, Space, Enter)', async ({
   expect((await passport(page)).sharing).toBe('ask');
 });
 
-test('Savanna frame: menu button, labelled navigation, no logo, language dropdown', async ({ page }, info) => {
+test('one header bar: Home, Language, Accessibility and Log in (Home, Accessibility and Menu on phones); no logo', async ({ page }, info) => {
+  const phone = info.project.name === 'mobile';
   await freshStart(page, { lang: 'en' });
   await at(page, '/index.html');
   await expect(page.locator('#sidebar')).toHaveCount(0); // the home page has no sidebar menu
   await expect(page.locator('.sj-menu')).toHaveCount(0);
   await expect(page.locator('.sj-header img')).toHaveCount(0); // no logo: the module is for any organisation
-  const langBtn = page.getByRole('button', { name: 'Language: English' });
-  await expect(langBtn).toHaveAttribute('aria-expanded', 'false');
-  await langBtn.click();
-  await expect(langBtn).toHaveAttribute('aria-expanded', 'true');
-  await expect(page.locator('#sj-lang-menu button')).toHaveText([/አማርኛ/, /English/, /Afaan Oromoo/]);
-  await expect(page.locator('#sj-lang-menu button[aria-current]')).toBeFocused();
-  await page.keyboard.press('Escape');
-  await expect(langBtn).toBeFocused();
+  await expect(page.locator('.sj-a11y')).toHaveCount(0); // the old separate bar is gone
+  // skip link first, then the header; one row
+  await page.keyboard.press('Tab');
+  await expect(page.locator('.sj-skip')).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('.sj-home-link')).toBeFocused();
+  const header = await page.locator('.sj-header').boundingBox();
+  expect(header.height).toBeLessThanOrEqual(80);
+  const visible = async sel => page.locator(sel).isVisible();
+  expect(await visible('.sj-a11y-btn')).toBe(true);
+  expect(await visible('.sj-lang-btn')).toBe(!phone);
+  expect(await visible('.sj-head-link')).toBe(!phone);
+  expect(await visible('.sj-more')).toBe(phone);
+  if (!phone) {
+    const langBtn = page.getByRole('button', { name: /^Language\s?: English$/ });
+    await expect(langBtn).toHaveAttribute('aria-expanded', 'false');
+    await langBtn.click();
+    await expect(langBtn).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#sj-lang-menu button')).toHaveText([/አማርኛ/, /English/, /Afaan Oromoo/]);
+    await expect(page.locator('#sj-lang-menu button[aria-current]')).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(langBtn).toBeFocused();
+  } else {
+    const more = page.getByRole('button', { name: 'Menu' });
+    await more.click();
+    await expect(more).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.locator('#sj-more-panel button[data-lang]')).toHaveText([/አማርኛ/, /English/, /Afaan Oromoo/]);
+    await expect(page.locator('#sj-more-panel').getByRole('link', { name: 'Log in' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(more).toBeFocused();
+  }
   await barLanguage(page, 'am');
   await expect(page.locator('html')).toHaveAttribute('lang', 'am');
   await expect(page.locator('.sj h1')).toHaveText('ወደ ምዝገባ ገጽዎ እንኳን ደህና መጡ');
-  await expect(page.getByRole('button', { name: 'ቋንቋ: አማርኛ' })).toBeFocused(); // focus stays on the Language button
+  await expect(phone ? page.locator('.sj-more') : page.getByRole('button', { name: /^ቋንቋ\s?: አማርኛ$/ })).toBeFocused(); // focus returns to the button used
   await barLanguage(page, 'en');
   await page.evaluate(() => {
     localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: 'kebele', assurance_level: 'self_declared' }));
     localStorage.setItem('savanna-demo.session', '{"at":"x"}');
   });
   await at(page, '/jobs.html');
-  await expect(page.locator('nav#sidebar')).toHaveAttribute('aria-label', 'Savanna'); // hidden on phones until the menu opens
+  await expect(page.locator('nav#sidebar')).toHaveAttribute('aria-label', 'Savanna');
   const menu = page.getByRole('button', { name: 'Menu' });
-  await expect(menu).toHaveAttribute('aria-controls', 'sidebar');
-  if (info.project.name === 'mobile') {
-    await expect(menu).toHaveAttribute('aria-expanded', 'false');
+  if (phone) {
+    // phones: no sidebar; "Menu" holds the Savanna sections, the language and the account links
     await expect(page.locator('#sidebar')).toBeHidden();
+    await expect(menu).toHaveAttribute('aria-controls', 'sj-more-panel');
     await menu.click();
-    await expect(menu).toHaveAttribute('aria-expanded', 'true');
-    await expect(page.locator('#sidebar a[aria-current=page]')).toBeFocused();
+    await expect(page.locator('#sj-more-panel a[aria-current=page]')).toBeFocused();
+    await expect(page.locator('#sj-more-panel a[aria-current=page]')).toHaveAttribute('href', 'jobs.html');
+    await expect(page.locator('#sj-more-panel').getByRole('link', { name: 'Log out' })).toBeVisible();
     await page.keyboard.press('Escape');
     await expect(menu).toHaveAttribute('aria-expanded', 'false');
     await expect(menu).toBeFocused();
+    expect((await page.locator('.sj-header').boundingBox()).height).toBeLessThanOrEqual(80); // still one row
   } else {
+    await expect(menu).toHaveAttribute('aria-controls', 'sidebar');
     await expect(menu).toHaveAttribute('aria-expanded', 'true');
     await menu.click(); // collapse to the icon rail: link names stay for screen readers
     await expect(menu).toHaveAttribute('aria-expanded', 'false');
@@ -172,8 +199,7 @@ test('simulated log-in: labelled, no password to remember, code can be pasted, n
   await page.locator('#sj-login button[type=submit]').click();
   await page.waitForURL('**/dashboard.html');
   await expect(page.locator('h1.sj-greeting [data-sj-name]')).toHaveText('Abebe');
-  await page.getByRole('button', { name: /Abebe/ }).click(); // account menu, top right
-  await page.locator('#sj-acct-menu').getByRole('link', { name: 'Log out' }).click();
+  await (await accountArea(page)).getByRole('link', { name: 'Log out' }).click(); // account menu (or "Menu" on phones)
   await page.waitForURL('**/index.html');
   await expect(page.locator('#sj-view .notice')).toContainText('You have logged out');
 });
@@ -301,7 +327,8 @@ test('home: first "How do you like to register?", then "Sign up or log in"; Back
   await expect(page.locator('.sj-split h1')).toHaveText('Welcome to your onboarding page');
   await expect(page.locator('.sj-split img')).toHaveCount(0); // generic: no ALX logo in the welcome panel
   await expect(page.getByText('Make this page work for you')).toHaveCount(0); // no visible sentence, on any page
-  await expect(page.getByRole('region', { name: 'Accessibility options' })).toHaveCount(1);
+  await expect(await accessibilityPanel(page)).toHaveCount(1);
+  await page.keyboard.press('Escape');
   await expect(page.locator('.sj-split a[href="signup.html"]')).toHaveCount(0); // sign up comes after the choice
   await page.locator('#sj-mode button[type=submit]').click(); // nothing chosen
   await expect(page.locator('#sj-mode-errors')).toBeFocused();
@@ -322,18 +349,34 @@ test('home: first "How do you like to register?", then "Sign up or log in"; Back
   expect(await heading(page)).toBe('Who is filling in this form?'); // the sign-up does not ask again
 });
 
-test('"Accessibility options" bar: pressed states, saved, and applied before the page is drawn', async ({ page }) => {
+test('"Accessibility" panel: a disclosure with on/off toggles, saved, Escape returns focus, applied before the page is drawn', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/jobs.html');
-  const bar = page.getByRole('region', { name: 'Accessibility options' });
+  const btn = page.locator('.sj-a11y-btn');
+  await expect(btn).toHaveText(/Accessibility/); // a visible word, not only an icon
+  await expect(btn).toHaveAttribute('aria-expanded', 'false');
+  const bar = await accessibilityPanel(page);
+  await expect(btn).toHaveAttribute('aria-expanded', 'true');
+  expect(await bar.locator('.sj-tog').allInnerTexts()).toEqual(['✓ Larger text', '✓ High contrast', '✓ Stop motion', '✓ Automatic reading'].map(t => t.replace('✓ ', '')));
+  await expect(bar.getByRole('link', { name: 'All accessibility settings' })).toHaveAttribute('href', 'settings.html');
   for (const [key, attr, value] of [['size', 'data-dm-size', 'large'], ['contrast', 'data-dm-contrast', 'high'], ['motion', 'data-dm-motion', 'reduce']]) {
     const b = bar.locator(`.sj-tog[data-tog=${key}]`);
     await expect(b).toHaveAttribute('aria-pressed', 'false');
     await b.click();
     await expect(b).toHaveAttribute('aria-pressed', 'true');
-    await expect(b).toBeFocused();
+    await expect(b).toBeFocused(); // the panel stays open after the page redraws
     await expect(page.locator('html')).toHaveAttribute(attr, value);
   }
+  // one switch for all reading: page summaries and questions
+  const reading = bar.locator('.sj-tog[data-tog=reading]');
+  await reading.click();
+  await expect(reading).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.prefs')))).toMatchObject({ easy: true, autoRead: 'on' });
+  await reading.click();
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('savanna-onboarding.prefs')))).toMatchObject({ easy: false, autoRead: 'off' });
+  await page.keyboard.press('Escape');
+  await expect(btn).toHaveAttribute('aria-expanded', 'false');
+  await expect(btn).toBeFocused();
   // on the next page the settings are on <html> before any of the module's scripts run (no jump in size or font)
   await page.route('**/savanna-onboarding.js', r => r.abort());
   await page.goto('/settings.html');
@@ -386,15 +429,25 @@ test('after onboarding the learner lands on ALX\'s self-paced homepage, with Sav
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog', { name: 'ALX program' })).toBeHidden();
   // a Savanna section that is not in the demo says so, instead of doing nothing
-  if (await page.locator('.sj-menu').getAttribute('aria-expanded') === 'false') await page.locator('.sj-menu').click();
-  await page.locator('#sidebar').getByRole('link', { name: 'Servers' }).click();
+  if (await page.locator('.sj-menu').isVisible()) {
+    if (await page.locator('.sj-menu').getAttribute('aria-expanded') === 'false') await page.locator('.sj-menu').click();
+    await page.locator('#sidebar').getByRole('link', { name: 'Servers' }).click();
+  } else { await page.locator('.sj-more').click(); await page.locator('#sj-more-panel').getByRole('link', { name: 'Servers' }).click(); }
   await expect(page.locator('#sj-note')).toContainText('"Servers" is part of Savanna, but not of this demo.');
 });
 
-test('account menu (top right): Support Passport, My profile, Accessibility settings, Log out; keyboard and Escape', async ({ page }) => {
+test('account menu (top right): Support Passport, My profile, Accessibility settings, Log out; keyboard and Escape', async ({ page }, info) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/index.html'); await signedIn(page);
   await at(page, '/dashboard.html');
+  if (info.project.name === 'mobile') { // phones: the same links, inside "Menu"
+    const more = page.getByRole('button', { name: 'Menu' });
+    await more.focus(); await page.keyboard.press('Enter');
+    expect(await page.locator('#sj-more-panel .sj-more-acct a').allInnerTexts()).toEqual(['Support Passport', 'My profile', 'Accessibility settings', 'Log out']);
+    await page.keyboard.press('Escape');
+    await expect(more).toBeFocused();
+    return;
+  }
   const btn = page.getByRole('button', { name: /Abebe/ });
   await expect(btn).toHaveAttribute('aria-expanded', 'false');
   await btn.focus(); await page.keyboard.press('Enter');
@@ -418,7 +471,7 @@ test('nobody logged in: the dashboard asks to log in and shows none of the learn
 test('Accessibility settings: opening them keeps the language; Back and Done return to where the learner was; no loop with Log in', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/index.html');
-  await page.getByRole('link', { name: 'Accessibility settings' }).click();
+  await (await accessibilityPanel(page)).getByRole('link', { name: 'All accessibility settings' }).click();
   await page.waitForURL('**/settings.html'); await page.waitForFunction(() => !!window.SavannaOnboarding);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en'); // it used to fall back to Amharic (bug fixed 15 Nov)
   await expect(page.locator('.dm-settings h1')).toBeFocused();
@@ -431,7 +484,7 @@ test('Accessibility settings: opening them keeps the language; Back and Done ret
   await expect(page.locator('.sj-back a')).toHaveText(/Back to the home page/);
   await expect(page.locator('#sj-set-done a')).toHaveText('Done: back to the home page');
   // log in from here, then back: settings again, and settings still goes back home (never to log in)
-  await page.locator('.sj-head-link').click(); await page.waitForURL('**/login.html');
+  await (await accountArea(page)).getByRole('link', { name: 'Log in' }).click(); await page.waitForURL('**/login.html');
   await expect(page.locator('.sj-back a')).toHaveText(/Back to settings/);
   await page.locator('.sj-back a').click(); await page.waitForURL('**/settings.html');
   await expect(page.locator('.sj-back a')).toHaveText(/Back to the home page/);

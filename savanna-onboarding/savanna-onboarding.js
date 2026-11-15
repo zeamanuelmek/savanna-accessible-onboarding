@@ -60,6 +60,8 @@
       // automatic reading of page summaries: 'ask' until the learner first interacts, then 'on' or 'off'
       autoRead: p.autoRead === 'on' || p.autoRead === 'off' ? p.autoRead : 'ask' };
   }
+  /** Automatic reading is one setting for the learner: page summaries (autoRead) and questions (easy) together. */
+  function readingOn(p) { p = p || getPrefs(); return p.autoRead === 'on' || (p.autoRead !== 'off' && p.easy); }
   function applyPrefs() {
     var p = getPrefs(), root = document.documentElement;
     root.setAttribute('data-dm-size', p.size);
@@ -86,7 +88,7 @@
   }
   // Choosing a way of answering sets sensible defaults; each can still be changed separately in Settings.
   function prefsForMode(mode) {
-    var p = getPrefs(), patch = { mode: mode, easy: mode !== 'read_type', pictures: mode === 'simple' };
+    var p = getPrefs(), patch = { mode: mode, easy: mode !== 'read_type', autoRead: mode !== 'read_type' ? 'on' : 'off', pictures: mode === 'simple' };
     if (mode === 'simple' && p.size === 'normal') patch.size = 'large';
     return patch;
   }
@@ -148,13 +150,13 @@
       m_read_type: 'Read and type', m_listen: 'Listen and respond', m_speak: 'Speak my answers', m_simple: 'Simple steps with pictures and big text',
       errMode: 'Choose one way to continue.',
       settings: 'Settings', settingsHint: 'Your settings are saved on this phone and used everywhere this tool appears.',
-      s_lang: 'Language', s_size: 'Text size', s_contrast: 'Contrast', s_mode: 'How I like to answer', s_read: 'Read aloud',
-      s_readHint: 'Questions are read out, and every answer has its own Listen button. Everything is also written on the screen.',
+      s_lang: 'Language', s_size: 'Text size', s_contrast: 'Contrast', s_mode: 'How I like to answer', s_read: 'Automatic reading',
+      s_readHint: 'Each page and question is read aloud when it opens, and every answer has its own Listen button. Everything is also written on the screen. Escape stops the sound.',
       s_auto: 'Automatic reading of page summaries', auto_on: 'Read a short summary of each page and step when it opens', auto_off: 'Turn off automatic reading',
       s_autoHint: 'English only for now. Pause and Stop are always at the top of the page, and Escape stops the sound at once. Screen reader users may prefer to turn it off.',
       s_pictures: 'Pictures and bigger buttons',
       askHelperDone: 'I have the phone back', voiceAmbiguous: 'I heard more than one answer. Please say just one, or tap your answer.',
-      srTip: 'If your screen reader spells Amharic letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English.',
+      srTip: 'If your screen reader spells Amharic letters one by one, turn on Automatic reading (under Accessibility) to hear recorded Amharic, or switch to English.',
       s_offlineAudio: 'Amharic audio for offline use',
       oa_intro: 'Recordings are kept on this phone the first time they play. You can also download them all now, so they work with no connection.',
       oa_download: 'Download Amharic audio for offline use (about {mb} MB)', oa_remove: 'Remove downloaded audio',
@@ -166,7 +168,7 @@
       oa_none: 'Amharic recordings are not available yet.', oa_unsupported: 'This browser cannot keep audio for offline use.',
       offline: 'You are offline. Your answers are saved on this phone, and you can keep going. Voice answers need a connection.',
       online: 'You are back online.',
-      play: 'Listen', pause: 'Pause', resume: 'Resume', stopAudio: 'Stop', replay: 'Play again',
+      play: 'Listen', pause: 'Pause', resume: 'Resume', stopAudio: 'Stop', replay: 'Play again', nowReading: 'Now reading…', audioControls: 'Audio playing',
       noAudio: 'There is no recording for this yet, and this phone has no voice for this language. Everything is written on the screen.',
       blocked: 'The browser did not allow sound yet. Press Listen to hear it. Everything is written on the screen.',
       clipFailed: 'A recording could not be played, so the phone\'s voice is reading instead.',
@@ -235,13 +237,13 @@
       m_read_type: 'አንብቤ እጽፋለሁ', m_listen: 'አዳምጬ እመልሳለሁ', m_speak: 'በድምፅ እመልሳለሁ', m_simple: 'ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር',
       errMode: 'ለመቀጠል አንድ መንገድ ይምረጡ።',
       settings: 'ቅንብሮች', settingsHint: 'ቅንብሮችዎ በዚህ ስልክ ላይ ይቀመጣሉ፤ ይህ መሣሪያ በሚገኝበት ቦታ ሁሉ ይሠራሉ።',
-      s_lang: 'ቋንቋ', s_size: 'የጽሑፍ መጠን', s_contrast: 'ንፅፅር', s_mode: 'መመለስ የምመርጥበት መንገድ', s_read: 'ጮክ ብሎ ማንበብ',
+      s_lang: 'ቋንቋ', s_size: 'የጽሑፍ መጠን', s_contrast: 'ንፅፅር', s_mode: 'መመለስ የምመርጥበት መንገድ', s_read: 'በራስ-ሰር ማንበብ',
       s_auto: 'የገጽ ማጠቃለያዎችን በራስ-ሰር ማንበብ', auto_on: 'እያንዳንዱ ገጽና ደረጃ ሲከፈት አጭር ማጠቃለያ አንብብ', auto_off: 'በራስ-ሰር ማንበብን አጥፋ',
       s_autoHint: 'ለጊዜው በእንግሊዝኛ ብቻ። «ለአፍታ አቁም» እና «አቁም» ሁልጊዜ በገጹ አናት ላይ ናቸው፤ Escape ድምፁን ወዲያው ያቆማል። የስክሪን አንባቢ ተጠቃሚዎች ማጥፋትን ሊመርጡ ይችላሉ።',
       s_readHint: 'ጥያቄዎች ይነበባሉ፤ እያንዳንዱ መልስም የራሱ «አዳምጥ» አዝራር አለው። ሁሉም ነገር በማያ ገጹ ላይም ተጽፏል።',
       s_pictures: 'ሥዕሎችና ትልልቅ አዝራሮች',
       askHelperDone: 'ስልኩ ተመልሶልኛል', voiceAmbiguous: 'ከአንድ በላይ መልስ ሰማሁ። እባክዎ አንዱን ብቻ ይናገሩ ወይም መልስዎን ይንኩ።',
-      srTip: 'የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «ጮክ ብሎ ማንበብ»ን ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።',
+      srTip: 'የስክሪን አንባቢዎ የአማርኛ ፊደላትን አንድ በአንድ የሚያነብ ከሆነ፣ የተቀዳውን የአማርኛ ድምፅ ለመስማት «በራስ-ሰር ማንበብ»ን (በ«ተደራሽነት» ውስጥ) ያብሩ፣ ወይም ወደ እንግሊዝኛ ይቀይሩ።',
       s_offlineAudio: 'ከኢንተርኔት ውጪ ለመጠቀም የአማርኛ ድምፅ',
       oa_intro: 'ቅጂዎች ለመጀመሪያ ጊዜ ሲጫወቱ በዚህ ስልክ ላይ ይቀመጣሉ። ያለ ግንኙነት እንዲሠሩ ሁሉንም አሁን ማውረድም ይችላሉ።',
       oa_download: 'የአማርኛ ድምፅን ከኢንተርኔት ውጪ ለመጠቀም አውርድ (ወደ {mb} ሜባ ገደማ)', oa_remove: 'የወረደውን ድምፅ አስወግድ',
@@ -253,7 +255,7 @@
       oa_none: 'የአማርኛ ቅጂዎች ገና አልተዘጋጁም።', oa_unsupported: 'ይህ ብራውዘር ድምፅን ከኢንተርኔት ውጪ ለመጠቀም ማስቀመጥ አይችልም።',
       offline: 'ከኢንተርኔት ውጪ ነዎት። መልሶችዎ በዚህ ስልክ ላይ ይቀመጣሉ፤ መቀጠልም ይችላሉ። በድምፅ መመለስ ግንኙነት ያስፈልገዋል።',
       online: 'እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።',
-      play: 'አዳምጥ', pause: 'ለአፍታ አቁም', resume: 'ማጫወት ቀጥል', stopAudio: 'አቁም', replay: 'እንደገና አጫውት',
+      play: 'አዳምጥ', pause: 'ለአፍታ አቁም', resume: 'ማጫወት ቀጥል', stopAudio: 'አቁም', replay: 'እንደገና አጫውት', nowReading: 'እያነበብኩ ነው…', audioControls: 'ድምፅ እየተጫወተ ነው',
       noAudio: 'ለዚህ ገና ቅጂ የለም፤ ይህ ስልክም ለዚህ ቋንቋ ድምፅ የለውም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
       blocked: 'ብራውዘሩ ድምፅ ገና አልፈቀደም። ለመስማት «አዳምጥ»ን ይጫኑ። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
       clipFailed: 'ቅጂው መጫወት አልቻለም፤ ስለዚህ የስልኩ ድምፅ እያነበበ ነው።',
@@ -365,14 +367,14 @@
       s_size: 'Hamma barreeffamaa',
       s_contrast: 'Garaagarummaa halluu',
       s_mode: 'Akkaataa deebisuu barbaadu',
-      s_read: 'Sagaleen dubbisi',
+      s_read: 'Ofumaan dubbisuu',
       s_auto: 'Cuunfaa fuulaa ofumaan dubbisuu', auto_on: 'Yeroo fuulli fi tarkaanfiin banamu cuunfaa gabaabaa dubbisi', auto_off: 'Dubbisa ofumaan dhaabi',
       s_autoHint: 'Ammaaf Ingiliffaa qofa. "Dhaabi xiqqoo" fi "Dhaabi" yeroo hunda fuula gubbaa jiru, Escape immoo sagalee battaluma dhaaba. Fayyadamtoonni dubbisaa iskiriinii dhaabuu filachuu danda\'u.',
       s_readHint: 'Gaaffiiwwan sagaleen dubbifamu, deebii hundi immoo qabduu "Dhaggeeffadhu" mataa isaa qaba. Wanti hundi iskiriinii irrattis ni barreeffama.',
       s_pictures: 'Fakkiiwwan fi qabduuwwan gurguddaa',
       askHelperDone: 'Bilbilli natti deebi\'eera',
       voiceAmbiguous: 'Deebii tokkoo ol dhaga\'e. Maaloo tokko qofa jedhi, ykn deebii kee tuqi.',
-      srTip: 'Yoo dubbisaan iskiriinii kee qubee Afaan Amaaraa tokko tokkoon dubbise, sagalee Afaan Amaaraa waraabame dhaggeeffachuuf «Sagaleen dubbisi» bani, ykn gara Ingiliffaatti jijjiiri.',
+      srTip: 'Yoo dubbisaan iskiriinii kee qubee Afaan Amaaraa tokko tokkoon dubbise, sagalee Afaan Amaaraa waraabame dhaggeeffachuuf «Ofumaan dubbisuu» (Dhaqqabummaa keessatti) bani, ykn gara Ingiliffaatti jijjiiri.',
       s_offlineAudio: 'Sagalee Afaan Amaaraa interneetii malee',
       oa_intro: 'Waraabbiiwwan yeroo jalqabaaf yommuu taphataman bilbila kana irratti kuufamu. Akka walqunnamtii malee hojjetaniif, amma hunda buufachuus dandeessa.',
       oa_download: 'Sagalee Afaan Amaaraa interneetii malee fayyadamuuf buufadhu (gara {mb} MB)',
@@ -392,6 +394,8 @@
       online: 'Interneetiitti deebi\'teetta.',
       play: 'Dhaggeeffadhu',
       pause: 'Yeroof dhaabi',
+      nowReading: 'Dubbisaa jira…',
+      audioControls: 'Sagaleen taphachaa jira',
       resume: 'Itti fufi',
       stopAudio: 'Dhaabi',
       replay: 'Irra deebi\'ii taphachiisi',
@@ -737,10 +741,52 @@
     if (owner && owner.audioIssue) { try { owner.audioIssue('blocked'); } catch (e) {} }
     emit(document, 'audioblocked', null);
   }
+  /* PLAYBACK BAR: "Now reading… Pause · Stop", pinned to the bottom of the page and shown only while audio plays.
+     The words are announced politely. While it is shown, the page gets bottom padding and scroll padding of the
+     bar's height, so it never covers focused content (WCAG 2.4.11). Escape stops the sound. If focus is inside the
+     bar when it hides, focus goes back to where the learner was before. */
+  var PlayBar = {
+    el: null, before: null,
+    build: function () {
+      if (this.el || !document.body) return this.el;
+      var self = this, el = this.el = document.createElement('div');
+      el.className = 'so-playbar'; el.id = 'so-playbar'; el.hidden = true;
+      el.setAttribute('role', 'region');
+      el.innerHTML = '<p class="so-playbar-t" data-so-play="text" role="status" aria-live="polite"></p>' +
+        '<button type="button" class="so-playbar-b" data-so-play="pause"></button><button type="button" class="so-playbar-b" data-so-play="stop"></button>';
+      el.addEventListener('click', function (e) {
+        var b = e.target.closest && e.target.closest('[data-so-play]'), act = b && b.getAttribute('data-so-play');
+        if (act === 'pause') { if (Player.state === 'paused') Player.resume(); else Player.pause(); }
+        else if (act === 'stop') { Player.stop(); stopSpeaking(); }
+      });
+      document.addEventListener('focusin', function (e) { if (!el.contains(e.target)) self.before = e.target; });
+      document.body.appendChild(el);
+      return el;
+    },
+    update: function () {
+      var el = this.build(); if (!el) return;
+      var lang = getPrefs().lang, on = Player.state !== 'idle', root = document.documentElement;
+      el.setAttribute('lang', lang); el.setAttribute('aria-label', t('audioControls', lang));
+      el.querySelector('[data-so-play=pause]').textContent = t(Player.state === 'paused' ? 'resume' : 'pause', lang);
+      el.querySelector('[data-so-play=stop]').textContent = t('stopAudio', lang);
+      var txt = el.querySelector('[data-so-play=text]');
+      if (on && el.hidden) {
+        var ae = document.activeElement; if (ae && ae !== document.body && !el.contains(ae)) this.before = ae; // where to return to
+        el.hidden = false; txt.textContent = ''; setTimeout(function () { if (Player.state !== 'idle') txt.textContent = t('nowReading', lang); }, 50); }
+      if (!on && !el.hidden) {
+        var had = el.contains(document.activeElement);
+        el.hidden = true; txt.textContent = '';
+        if (had && this.before && document.contains(this.before)) { try { this.before.focus(); } catch (e) {} }
+      }
+      root.classList.toggle('so-playing', on);
+      if (on) root.style.setProperty('--so-playbar-h', el.offsetHeight + 'px');
+    }
+  };
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && Player.state !== 'idle') { Player.stop(); stopSpeaking(); } });
   var Player = {
     items: [], i: 0, state: 'idle', lang: 'en', last: null, owner: null, audio: null, subs: [],
     on: function (fn) { this.subs.push(fn); }, off: function (fn) { var k = this.subs.indexOf(fn); if (k !== -1) this.subs.splice(k, 1); },
-    emit: function () { var s = this; this.subs.slice().forEach(function (fn) { fn(s); }); },
+    emit: function () { var s = this; this.subs.slice().forEach(function (fn) { fn(s); }); try { PlayBar.update(); } catch (e) {} },
     play: function (items, lang, owner) {
       this.stop(true);
       var self = this;
@@ -1161,8 +1207,16 @@
     '.dm-offline-audio{margin:0 0 1.5em}', '.dm-offline-audio h2{font-size:1.2em;margin:0 0 .4em;color:var(--so-heading)}',
     '.dm-offline-audio progress{width:100%;height:1.2em;accent-color:var(--so-heading)}',
     '.dm-offline{margin:0 0 1em;padding:.6em .9em;border:var(--so-border-width) solid var(--so-border-strong);border-radius:var(--so-radius);background:var(--so-surface-alt);color:var(--so-heading);font-weight:500}',
-    '.dm-player{display:contents}',
-    '.dm-player[hidden]{display:none}',
+    // the playback bar (outside any form: on the page itself)
+    '.so-playbar{position:fixed;left:0;right:0;bottom:0;z-index:2000;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.5em 1em;padding:.5em 1em;background:var(--so-heading);color:#fff;font-family:var(--so-font);font-size:calc(var(--so-base-size) * var(--so-scale));box-shadow:0 -2px 8px rgba(0,0,0,.25)}',
+    '.so-playbar[hidden]{display:none}',
+    '.so-playbar-t{margin:0;font-weight:600}',
+    '.so-playbar-b{min-height:44px;min-width:44px;padding:.3em 1em;border:2px solid #fff;border-radius:var(--so-radius-sm);background:#fff;color:var(--so-heading);font:inherit;font-weight:600;cursor:pointer}',
+    '.so-playbar-b:focus-visible{outline:3px solid #fff;outline-offset:3px}',
+    'html.so-playing{scroll-padding-bottom:calc(var(--so-playbar-h, 4.5em) + 1em)}',
+    'html.so-playing body{padding-bottom:calc(var(--so-playbar-h, 4.5em) + 1em)}',
+    'html[data-dm-contrast=high] .so-playbar{background:#000}',
+    'html[data-dm-contrast=high] .so-playbar-b{color:#000}',
     '.dm-opt-row{display:flex;flex-wrap:wrap;gap:.4em;align-items:stretch}',
     '.dm-opt-row .dm-opt{flex:1 1 12em;min-width:0}',
     '.dm-play{flex:0 0 auto;min-height:56px}',
@@ -1256,14 +1310,11 @@
       return '<div class="dm-note dm-sr-tip"><p lang="en">' + UI.en.srTip + '</p><p lang="am">' + UI.am.srTip + '</p><p lang="om">' + UI.om.srTip + '</p></div>';
     },
 
-    /* "Listen" and the player controls (Pause/Resume, Stop, Play again). Shown and labelled by the controller. */
+    /* "Listen to the question". */
     listenTools: function (vm) {
       var lang = vm.lang;
-      return '<button type="button" class="dm-btn" data-act="listen">' + pic(vm.pictures, '🔊') + t('listen', lang) + '</button>' +
-        '<span class="dm-player" data-ref="player" hidden>' +
-        '<button type="button" class="dm-btn" data-act="pause">' + pic(vm.pictures, '⏸️') + '<span data-ref="pause-label">' + t('pause', lang) + '</span></button>' +
-        '<button type="button" class="dm-btn" data-act="stop-audio">' + pic(vm.pictures, '⏹️') + t('stopAudio', lang) + '</button>' +
-        '<button type="button" class="dm-btn" data-act="replay"><span aria-hidden="true">↻ </span>' + t('replay', lang) + '</button></span>';
+      // Pause and Stop are in the playback bar at the bottom of the page, shown only while audio plays
+      return '<button type="button" class="dm-btn" data-act="listen">' + pic(vm.pictures, '🔊') + t('listen', lang) + '</button>';
     },
     /* One answer option, with its own Listen button when read aloud is on. The button sits beside the label (never
        inside it), and its name starts with the visible word "Listen" (WCAG 2.5.3). */
@@ -1281,7 +1332,7 @@
           : vm.backUrl ? '<a class="dm-link" href="' + esc(vm.backUrl) + '">← ' + t('back', lang) + '</a>' : '') + '</div>' +
         '<div class="dm-bar-r">' +
         // No language choice here: the host page sets the language (on Savanna's pages, from the bar at the top)
-        '<button type="button" class="dm-btn dm-small" data-act="easy" aria-pressed="' + vm.easy + '">' + pic(vm.pictures, '🔊') + t(vm.easy ? 'easyOn' : 'easyOff', lang) + '</button>' +
+        // no reading switch here: "Automatic reading" is one setting, in the page's Accessibility panel and Settings
         '<button type="button" class="dm-btn dm-small" data-act="help" aria-expanded="' + !!vm.helpOpen + '" aria-controls="' + helpId + '">' + t('help', lang) + '</button>' +
         '</div></div>' +
         '<div id="' + helpId + '" data-ref="help" class="dm-panel"' + (vm.helpOpen ? '' : ' hidden') + '><h2>' + t('helpTitle', lang) + '</h2><p>' + esc(L(vm.cfg.help, lang) || t('helpText', lang)) + '</p>' + View.srTip() +
@@ -1816,15 +1867,7 @@
     Player.play([item], lang, this);
   };
   /* Player controls: Pause/Resume and Stop while something plays, Play again afterwards. */
-  SavannaOnboardingForm.prototype.updatePlayer = function () {
-    var box = this.ref('player');
-    if (!box) return;
-    var mine = Player.owner === this, active = mine && Player.state !== 'idle';
-    box.hidden = !(active || (mine && this._played));
-    var pause = box.querySelector('[data-act=pause]'), stop = box.querySelector('[data-act=stop-audio]'), again = box.querySelector('[data-act=replay]');
-    pause.hidden = !active; stop.hidden = !active; again.hidden = active;
-    var lbl = this.ref('pause-label'); if (lbl) lbl.textContent = t(Player.state === 'paused' ? 'resume' : 'pause', this.lang);
-  };
+  SavannaOnboardingForm.prototype.updatePlayer = function () {}; // the playback bar (PlayBar) follows the player itself
   SavannaOnboardingForm.prototype.audioIssue = function (code) { this.status(t(code, this.lang)); };
 
   /* --- voice input: a small state machine ---
@@ -1961,7 +2004,7 @@
           return;
         }
         if (n === 'mode') patch = prefsForMode(v);
-        else if (n === 'easy') patch.easy = v === 'on';
+        else if (n === 'easy') { patch.easy = v === 'on'; patch.autoRead = v === 'on' ? 'on' : 'off'; } // one switch for all reading
         else if (n === 'pictures') patch.pictures = v === 'on';
         else patch[n] = v;
         self._selfPrefs = true; setPrefs(patch); self._selfPrefs = false;
@@ -2036,8 +2079,7 @@
         '<div class="dm-preview" aria-labelledby="so-preview-h" role="group"><p id="so-preview-h" class="dm-preview-h">' + t('s_preview', lang) + '</p>' +
         '<p>' + t('previewText', lang) + '</p><span class="dm-btn dm-primary dm-preview-btn" aria-hidden="true">' + t('previewBtn', lang) + '</span></div>' +
         group('mode', t('s_mode', lang), MODES.map(function (m) { return [m, t('m_' + m, lang), null, p.pictures || m === 'simple' ? MODE_ICONS[m] : null]; }), p.mode) +
-        group('easy', t('s_read', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.easy ? 'on' : 'off', t('s_readHint', lang)) +
-        group('autoRead', t('s_auto', lang), [['on', t('auto_on', lang)], ['off', t('auto_off', lang)]], p.autoRead, t('s_autoHint', lang)) +
+        group('easy', t('s_read', lang), [['on', t('on', lang)], ['off', t('off', lang)]], readingOn(p) ? 'on' : 'off', t('s_readHint', lang)) +
         group('pictures', t('s_pictures', lang), [['on', t('on', lang)], ['off', t('off', lang)]], p.pictures ? 'on' : 'off') +
         group('voice', t('s_voice', lang), [['on', t('voice_on', lang)], ['off', t('voice_off', lang)]], store.get('voiceConsent', null) === true ? 'on' : 'off', t('s_voiceHint', lang)) +
         '<p class="dm-status" role="status" aria-live="polite"></p></form>' +
@@ -2121,7 +2163,7 @@
     eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth, fromGregorian: gregToEth, gregorianMonths: GREG_MONTHS, parseSpoken: parseSpokenDate },
     describe: describe, speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
     player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
-    prefs: getPrefs, setPrefs: setPrefs, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
+    prefs: getPrefs, setPrefs: setPrefs, readingOn: readingOn, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
     /** Adds the module's styles and fonts to the page (done automatically when a form or settings element appears). */
     styles: function () { injectCss(); applyPrefs(); }
   };

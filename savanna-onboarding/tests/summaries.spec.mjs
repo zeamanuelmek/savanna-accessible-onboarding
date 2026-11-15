@@ -1,10 +1,10 @@
 // Page summaries and automatic reading (team request, 15 Nov). English only for now. Every page and form step has a
 // short hand-written summary as the first text inside <main>. On a first visit the first control after the skip link
 // is "Tap anywhere or press any key to hear this page"; after that, pages and steps read their summary when they
-// open. Pause and Stop are always in the bar, Escape stops at once, "Turn off automatic reading" is remembered
-// (WCAG 1.4.2 Audio Control), and blocked sound never throws.
+// open. "Automatic reading" is one switch (Accessibility panel and Settings), remembered; "Now reading… Pause · Stop"
+// is pinned to the bottom only while audio plays, Escape stops at once (WCAG 1.4.2), and blocked sound never throws.
 import { test, expect } from '@playwright/test';
-import { freshStart, pick, next, fakeSpeechEngine } from './helpers.mjs';
+import { freshStart, pick, next, fakeSpeechEngine, accessibilityPanel, playBar } from './helpers.mjs';
 
 const at = (page, path) => page.goto(path).then(() => page.waitForFunction(() => !!window.SavannaOnboarding));
 const summary = page => page.locator('#sj-summary');
@@ -60,10 +60,10 @@ test('first visit: "Tap anywhere or press any key to hear this page" comes right
   await page.keyboard.press('Enter');
   await expect.poll(() => said(page)).toEqual([await summary(page).innerText()]);
   await expect(prompt).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Turn off automatic reading' })).toBeFocused(); // the off switch is next
-  expect((await prefs(page)).autoRead).toBe('on');
+  await expect(page.locator('.sj-home-link')).toBeFocused(); // the header comes next
+  expect(await prefs(page)).toMatchObject({ autoRead: 'on', easy: true }); // one switch for all reading
   // in the same page, each new step reads its summary as it opens
-  await pick(page, 'read_type'); await page.locator('#sj-mode button[type=submit]').click();
+  await pick(page, 'listen'); await page.locator('#sj-mode button[type=submit]').click();
   await expect.poll(() => said(page)).toContainEqual(expect.stringContaining('Step 2 of 2: sign up or log in'));
 });
 
@@ -120,41 +120,47 @@ test('the first interaction is remembered for the session, so the next page trie
   await expect(page.locator('#sj-hear')).toHaveCount(0);
 });
 
-test('Pause and Stop are always in the bar; Escape stops the sound at once', async ({ page }) => {
-  await freshStart(page, { lang: 'en', prefs: { autoRead: 'on' } });
-  for (const p of ['/index.html', '/signup.html', '/jobs.html', '/settings.html']) {
-    await at(page, p);
-    const bar = page.getByRole('region', { name: 'Accessibility options' });
-    await expect(bar.getByRole('button', { name: 'Pause' })).toBeVisible();
-    await expect(bar.getByRole('button', { name: 'Stop', exact: true })).toBeVisible();
-    await expect(bar.getByRole('button', { name: 'Turn off automatic reading' })).toBeVisible();
-  }
+test('"Now reading… Pause · Stop" is pinned to the bottom only while audio plays; Escape stops the sound at once', async ({ page }) => {
+  await freshStart(page, { lang: 'en', prefs: { autoRead: 'on', easy: true } });
   await at(page, '/jobs.html');
   await fakeVoice(page, 5000);
+  await expect(playBar(page)).toBeHidden(); // nothing playing: no controls
   await page.locator('h1').first().click();
   await expect.poll(() => page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('playing');
-  await page.getByRole('button', { name: 'Pause' }).click();
-  await expect(page.getByRole('button', { name: 'Resume' })).toBeVisible();
-  await page.getByRole('button', { name: 'Resume' }).click();
+  const bar = playBar(page);
+  await expect(bar).toBeVisible();
+  await expect(bar.locator('[role=status]')).toHaveText('Now reading…');
+  await bar.getByRole('button', { name: 'Pause' }).click();
+  await expect(bar.getByRole('button', { name: 'Resume' })).toBeVisible();
+  await bar.getByRole('button', { name: 'Resume' }).click();
   await page.keyboard.press('Escape');
   await expect.poll(() => page.evaluate(() => window.SavannaOnboarding.player.state)).toBe('idle');
+  await expect(bar).toBeHidden();
 });
 
-test('"Turn off automatic reading" is remembered, in the bar and in Settings', async ({ page }) => {
-  await freshStart(page, { lang: 'en', prefs: { autoRead: 'ask' } });
+test('"Automatic reading" is one switch, in the Accessibility panel and in Settings, and is remembered', async ({ page }) => {
+  await freshStart(page, { lang: 'en', prefs: { autoRead: 'on', easy: true } });
   await at(page, '/index.html');
   await fakeVoice(page);
-  await page.getByRole('button', { name: 'Turn off automatic reading' }).click();
-  expect((await prefs(page)).autoRead).toBe('off');
+  const panel = await accessibilityPanel(page);
+  const reading = panel.locator('.sj-tog[data-tog=reading]');
+  await expect(reading).toHaveText(/Automatic reading/);
+  await expect(reading).toHaveAttribute('aria-pressed', 'true');
+  await reading.click();
+  await expect(reading).toHaveAttribute('aria-pressed', 'false');
+  await expect(reading).toBeFocused();
+  expect(await prefs(page)).toMatchObject({ autoRead: 'off', easy: false });
   await expect(page.locator('#sj-hear')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Turn on automatic reading' })).toBeFocused();
+  await page.keyboard.press('Escape');
   await pick(page, 'read_type'); await page.locator('#sj-mode button[type=submit]').click();
   expect(await said(page)).toEqual([]); // nothing read
   await at(page, '/settings.html');
   await expect(page.locator('#sj-hear')).toHaveCount(0);
-  await expect(page.getByRole('radio', { name: 'Turn off automatic reading' })).toBeChecked();
-  await page.getByRole('radio', { name: 'Read a short summary of each page and step when it opens' }).check();
-  expect((await prefs(page)).autoRead).toBe('on');
+  const group = page.getByRole('group', { name: 'Automatic reading' });
+  await expect(group.getByRole('radio', { name: 'Off' })).toBeChecked();
+  await group.getByRole('radio', { name: 'On' }).check();
+  expect(await prefs(page)).toMatchObject({ autoRead: 'on', easy: true });
+  await expect((await accessibilityPanel(page)).locator('.sj-tog[data-tog=reading]')).toHaveAttribute('aria-pressed', 'true'); // panel and Settings agree
 });
 
 test('sound blocked or missing: no errors, and everything stays written', async ({ page }) => {

@@ -169,7 +169,7 @@ SavannaOnboarding.setSpeech({
   it (and clips kept on first play). The size comes from `manifest.json` (`bytes`, written by `check-audio.cjs`).
   The player uses a downloaded copy even on sites without a service worker.
 - **Screen-reader tip:** the welcome screen and Help show, in English then Amharic: "If your screen reader spells Amharic
-  letters one by one, turn on Read aloud to hear recorded Amharic, or switch to English." (NVDA's default voice has no Amharic.)
+  letters one by one, turn on Automatic reading (under Accessibility) to hear recorded Amharic, or switch to English." (NVDA's default voice has no Amharic.)
 - **Speech output adapter:** `output.speak(text, lang, audioUrl, done)` must call `done()` when a piece finishes,
   so the player can continue; `pause()` and `resume()` are optional.
 

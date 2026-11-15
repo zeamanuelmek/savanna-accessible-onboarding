@@ -1524,3 +1524,31 @@ conformance report and the demo script.
 - Tests: updated wording; new test that no screen shows the removed claims and that "No documents needed." appears
   only on the Support Passport. Affected files (identity, career, offline, readaloud, summaries, journey; a11y on
   both sizes), one worker: **142 passed; a11y 175 passed + 1 timing failure that passed when re-run alone.**
+
+---
+
+## Header and controls redesign, from the UX review (15 Nov)
+
+- **One header bar** on every Savanna page (`journey/journey.js`, `journey/journey.css`), after the skip link: Home on
+  the left; Language ▾, Accessibility ▾ and Log in (or the account menu) on the right. Small screens and 200%/400% zoom
+  (under 768 CSS px): Home, Accessibility ▾ and Menu; Menu holds the Savanna sections (logged in), the language and
+  Log in or the account links. One row at 320 px (56 px high; 72 px on desktop). The old separate bar is removed.
+- **Accessibility ▾**: a disclosure panel (button with `aria-expanded`, not a modal), the region "Accessibility
+  options": Larger text, High contrast, Stop motion, Automatic reading (on/off toggles, `aria-pressed`), and "All
+  accessibility settings". Escape closes it and returns focus; it stays open while a toggle redraws the page.
+- **One source of truth for reading**: "Automatic reading" sets both page summaries (`autoRead`) and question
+  reading (`easy`); new `SavannaOnboarding.readingOn()`. The forms' "Read aloud" switch is removed; "Listen to the
+  question" and "Get help" stay in place. Settings has one "Automatic reading" group. Choosing a way to register
+  sets it (Read and type: off; the others: on).
+- **Playback bar** (module, so it works on any host page): "Now reading… Pause · Stop", pinned to the bottom only
+  while audio plays, announced politely; Escape stops; focus returns to where the learner was; bottom padding and
+  scroll padding while it shows, so it never covers focused content (2.4.11). The forms' own Pause/Stop/Play again
+  buttons are removed.
+- Screen-reader tip updated ("turn on Automatic reading (under Accessibility)"), three languages.
+- README: header, panel, reading and playback text, plus two screenshots (`docs/img/`). Conformance report: 1.4.2,
+  2.2.2, 2.4.11 and the scan count.
+- Tests (one worker, phone and desktop, run in batches): journey, date-language, wcag, gate, keyboard, design
+  (94 passed, 4 skipped, after two fixes: the Menu focuses the current page's link; the Language button's name);
+  readaloud and summaries (48 passed, after one fix: focus returns to Listen after Stop); smoke, voice, engine,
+  names, known-issues (128 passed); identity, career, offline, security (60 passed); **a11y 180 scans, 0 serious
+  or critical** (new screen: the Accessibility panel open).
