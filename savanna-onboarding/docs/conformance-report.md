@@ -28,13 +28,13 @@
 
 | Code | Test file | What it checks |
 |---|---|---|
-| A1 | `tests/a11y.spec.mjs` | axe-core (WCAG 2.0/2.1/2.2 A and AA rules + best practice) on **45 screens × 2 languages × 2 sizes = 180 scans: 0 serious or critical** (including the header's Accessibility panel and Menu open). Also: one `<main>`, one `<h1>`, no skipped heading levels, only real buttons and links, Amharic/English parts marked with `lang`, no sideways scrolling at 320 px (= 400% zoom) |
+| A1 | `tests/a11y.spec.mjs` | axe-core (WCAG 2.0/2.1/2.2 A and AA rules + best practice) on **48 screens × 2 languages × 2 sizes = 192 scans: 0 serious or critical** (including the header's Accessibility panel and Menu open). Also: one `<main>`, one `<h1>`, no skipped heading levels, only real buttons and links, Amharic/English parts marked with `lang`, no sideways scrolling at 320 px (= 400% zoom) |
 | A2 | `tests/gate.spec.mjs` | The gate task (sign up and save a Support Passport) in the Savanna pages, **keyboard only, 200% zoom, sound off**, phone and desktop: visible focus outline, fully on screen and not hidden at every one of 61 Tab stops; axe 0 serious/critical on all 12 screens; no sideways scrolling |
 | A3 | `tests/keyboard.spec.mjs`, `tests/journey.spec.mjs` | Keyboard-only sign-up; skip link; menu with Escape; the gate task by keyboard in English and Amharic |
 | A4 | `tests/design.spec.mjs` | Contrast of every colour pair in normal and high-contrast modes; focus outline ≥ 3:1; base text size |
 | A5 | `tests/wcag.spec.mjs` | 1.4.12 text spacing, 1.3.4 landscape, 2.5.8 target size, 2.4.2 titles, 3.2.3 navigation order, 3.2.6 help position, 1.3.5 input purpose, 2.2.1 no time-out |
 | A6 | `tests/smoke.spec.mjs`, `tests/engine.spec.mjs` | Error summary and field errors, check your answers and change, autosave and resume, progress |
-| A7 | `tests/voice.spec.mjs`, `tests/readaloud.spec.mjs`, `tests/names.spec.mjs`, `tests/summaries.spec.mjs` | Voice consent and review, nothing used before checking; recording start and "I heard" announced, focus on Stop and then on the editable transcript; read aloud with pause/stop/Escape; page summaries first in `<main>`; automatic reading only after the learner interacts, "Turn off automatic reading" remembered, Escape stops, no errors when sound is blocked; audio never required |
+| A7 | `tests/voice.spec.mjs`, `tests/readaloud.spec.mjs`, `tests/names.spec.mjs`, `tests/summaries.spec.mjs`, `tests/readback.spec.mjs` | Voice consent and review, nothing used before checking; recording start and "I heard" announced, focus on Stop and then on the editable transcript; read aloud with pause/stop/Escape; page summaries first in `<main>`; automatic reading only after the learner interacts, "Turn off automatic reading" remembered, Escape stops, no errors when sound is blocked; audio never required |
 | A8 | `tests/identity.spec.mjs`, `tests/career.spec.mjs` | ID badges in option names; private card; job board headings, links and announced count |
 | A9 | `tests/offline.spec.mjs`, `tests/security.spec.mjs` | Offline message as a status; security headers; no third-party requests |
 
@@ -49,7 +49,7 @@ Main task (confirmed): **sign up for Savanna and save a Support Passport.**
 | **Keyboard only** | Completes without help | Completes; focus visible and not hidden at all 61 Tab stops (phone and desktop) | _to fill in_ | A2 |
 | **200% zoom** | Completes without help | Completes at 640×400 CSS px (1280×800 at 200%) and with 200% text on a phone | _to fill in_ | A2 |
 | **Sound off** | Completes without help | Completes with no speech and no audio at all | _to fill in_ | A2, A7 |
-| **axe-core**: 0 critical, 0 serious | 0 | **0** on 180 scans and on every gate screen | n/a | A1, A2 |
+| **axe-core**: 0 critical, 0 serious | 0 | **0** on 192 scans and on every gate screen | n/a | A1, A2 |
 | Conformance report submitted | This file, completed | Automated part done | _manual part to fill in_ | |
 
 ## 2a. The 21 October co-design findings
@@ -173,10 +173,13 @@ support, with who and when) · **Notes / limitations**.
   with learners. Without a key, credit or connection it falls back to the browser's speech with a plain message.
 - **Amharic audio is synthetic.** Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint. Afaan Oromo has no Microsoft voice: it is text only, plus the phone's
   voice if it has one.
-- **Page summaries and automatic reading are in English only** for now. On a new page the summary is tried at once
-  (after an interaction earlier in the session); some browsers still block sound until the learner interacts with
-  that page, and then the prompt "Tap anywhere or press any key to hear this page" is shown. Within a page, each
-  new form step is read as it opens.
+- **Page summaries and automatic reading** cover every Savanna page and form step, in English with Amharic and Afaan
+  Oromo drafts (inventory in `DEVELOPMENT_PROGRESS.md`). Gaps: the log-in fields and Settings have no per-field
+  Listen, the result of sharing or withdrawing on the Support Passport card is a status message only, and the offline
+  message inside a form is not read aloud. Browsers allow sound only after an interaction with each new page; then the
+  prompt "Tap anywhere or press any key to hear this page" is shown.
+- **Phone and ID numbers are read on the phone only** (recorded Amharic numbers, otherwise a voice on the phone);
+  Oromo number clips are not generated yet.
 - **Voice input** depends on the browser's speech service (cloud, with consent); it is optional and never required.
 - **Simulated parts** (log-in, SMS, trainer and employer systems) are out of scope for conformance but are built to
   the same standard.

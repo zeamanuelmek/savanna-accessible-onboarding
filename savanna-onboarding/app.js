@@ -36,7 +36,7 @@
       filterNote: 'This uses your Support Passport on this phone only. Employers see it only if you choose to share it when you apply.',
       noPassport: 'Create your Support Passport to see which jobs offer the support you need.',
       makePassport: 'Create my Support Passport', offers: 'Support this job offers', match: 'Offers {k} of the {n} kinds of support you chose',
-      listen: 'Listen to this job', stopListening: 'Stop listening', apply: 'Apply', sample: 'Sample job (demo data)', none: 'No jobs match all of your support needs yet. Turn the filter off to see all jobs.',
+      listen: 'Listen to this job', stopListening: 'Stop listening', readAll: 'Read all my answers', apply: 'Apply', sample: 'Sample job (demo data)', none: 'No jobs match all of your support needs yet. Turn the filter off to see all jobs.',
       myPassport: 'My Support Passport', edit: 'Change my Support Passport', del: 'Delete my Support Passport', deleted: 'Your Support Passport was deleted.',
       onlyYou: 'Only you can see this. It is stored on this phone.', nothing: 'You chose not to share anything for now.',
       nextPassport: 'Next: tell us what helps you (optional)', nextJobs: 'Find jobs', level: 'Your ID status:',
@@ -86,6 +86,7 @@
       filterNote: 'ይህ በዚህ ስልክ ላይ ብቻ ያለውን የድጋፍ ፓስፖርትዎን ይጠቀማል። ቀጣሪዎች የሚያዩት ሲያመለክቱ ለማጋራት ከመረጡ ብቻ ነው።',
       noPassport: 'የትኞቹ ሥራዎች የሚፈልጉትን ድጋፍ እንደሚሰጡ ለማየት የድጋፍ ፓስፖርትዎን ይፍጠሩ።',
       makePassport: 'የድጋፍ ፓስፖርቴን ፍጠር', offers: 'ይህ ሥራ የሚሰጣቸው ድጋፎች', match: 'ከመረጧቸው {n} ድጋፎች {k}ቱን ይሰጣል',
+      readAll: 'መልሶቼን ሁሉ አንብብልኝ',
       stopListening: 'ማዳመጥ አቁም',
       listen: 'ይህን ሥራ አዳምጥ', apply: 'አመልክት', sample: 'የናሙና ሥራ (የሙከራ መረጃ)', none: 'እስካሁን ሁሉንም የድጋፍ ፍላጎቶችዎን የሚያሟላ ሥራ የለም። ሁሉንም ለማየት ማጣሪያውን ያጥፉ።',
       myPassport: 'የድጋፍ ፓስፖርቴ', edit: 'የድጋፍ ፓስፖርቴን ቀይር', del: 'የድጋፍ ፓስፖርቴን ሰርዝ', deleted: 'የድጋፍ ፓስፖርትዎ ተሰርዟል።',
@@ -156,6 +157,7 @@
       makePassport: 'Paaspoortii Deeggarsaa koo uumi',
       offers: 'Deeggarsa hojiin kun kennu',
       match: 'Gosa deeggarsaa ati filatte {n} keessaa {k} kenna',
+      readAll: 'Deebii koo hunda naaf dubbisi',
       stopListening: 'Dhaggeeffachuu dhaabi',
       listen: 'Hojii kana dhaggeeffadhu',
       apply: 'Iyyadhu',
@@ -396,9 +398,10 @@
     if (p && !window.__editPassport) {
       var list = (p.needs || []), sharing = p.sharing === 'trainers' ? 'trainers' : 'ask';
       var shared = store.get('applications', []).filter(function (x) { return x.packet && (x.packet.supportThatHelps || x.withdrawn); });
-      view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1>' +
+      view.innerHTML = '<h1 tabindex="-1">' + T('myPassport') + '</h1><div id="pp-answers">' +
         (list.length ? '<ul class="needs">' + list.map(function (n) { return '<li><span aria-hidden="true">' + needIcon(n) + '</span> ' + esc(needLabel(n)) + '</li>'; }).join('') + '</ul>' : '<p>' + T('nothing') + '</p>') +
-        (p.other_need ? '<p><strong>' + T('ownWords') + '</strong> ' + esc(p.other_need) + '</p>' : '') +
+        (p.other_need ? '<p><strong>' + T('ownWords') + '</strong> ' + esc(p.other_need) + '</p>' : '') + '</div>' +
+        (list.length || p.other_need ? readAllButton('#pp-answers') : '') +
         '<section class="card-plain" aria-labelledby="who-h"><h2 id="who-h">' + T('whoSees') + '</h2><p>' + pic('🔒') + T('who_' + sharing) + '</p>' +
         '<p class="muted">' + T('neverShared') + '</p>' +
         '<p><button type="button" class="btn" id="sharing">' + T(sharing === 'trainers' ? 'stopTrainers' : 'allowTrainers') + '</button></p>' +
@@ -494,6 +497,17 @@
     if (!flt) focusH1(); else if (document.activeElement === document.body) focusH1();
   }
 
+  /* "Read all my answers" where answers are listed (confirmations, the Support Passport card): the shared player
+     reads the list, each part in its own language (recording, Addis AI, the phone's voice). */
+  function readAllButton(target) {
+    return '<p class="actions"><button type="button" class="btn" data-read-all="' + target + '">' + pic('🔁') + T('readAll') + '</button></p>';
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-read-all]');
+    if (!b) return;
+    var el = document.querySelector(b.getAttribute('data-read-all'));
+    if (el) D.player.play(D.itemsFromElement(el, lang()), lang(), { audioIssue: function () {} });
+  });
   // the job being read shows "Stop listening" (pressed); the others "Listen to this job"
   function syncJobButtons() {
     var pl = D.player, playing = pl.state !== 'idle' && pl.owner && pl.owner.job;
@@ -515,7 +529,7 @@
       if (SHOWROOM) slot.innerHTML = '<p class="actions"><a class="btn primary" href="' + R('#/jobs') + '">' + T('seeJobs') + '</a></p>' +
         '<details><summary>' + T('jsonTitle') + '</summary><pre tabindex="0"><code>' + esc(JSON.stringify(jobPostingLd(job), null, 2)) + '</code></pre></details>';
       // Learner and employer pages: a plain confirmation, never raw data (the JSON stays on the developer pages)
-      else slot.innerHTML = '<h2>' + T('postedTitle', { title: esc(job.title) }) + '</h2>' + sentList(D.describe('employer', a, lang())) +
+      else slot.innerHTML = '<h2>' + T('postedTitle', { title: esc(job.title) }) + '</h2>' + sentList(D.describe('employer', a, lang())) + readAllButton('.dm-done-slot .sj-sent') +
         '<p class="dm-note">' + T('postedDemo') + '</p><p class="actions"><a class="btn primary" href="' + R('#/jobs') + '">' + T('seeJobs') + '</a></p>';
     });
   }
@@ -544,6 +558,7 @@
       // Learner pages: a plain confirmation of what was sent, never raw data
       else slot.innerHTML = '<h2>' + T('sentTo', { org: '<span' + en + '>' + esc(j.org) + '</span>' }) + '</h2>' +
         sentList([{ label: T('sentJob'), value: j.title, lang: en }].concat(D.describe('apply', a, lang()).filter(function (r) { return r.id !== 'share_passport'; }))) +
+        readAllButton('.dm-done-slot .sj-sent') +
         '<p class="sj-shared"><strong>' + T(support.length ? 'sharedYes' : 'notShared') + '</strong>' +
         (support.length ? ' ' + T('sharedList', { list: esc(support.map(function (n) { return D.label(n.label, lang()); }).join('; ')) }) : '') + '</p>' +
         '<p class="dm-note">' + T('sentDemo') + '</p><p class="actions"><a class="btn" href="' + R('#/jobs') + '">' + T('back') + '</a></p>';

@@ -40,10 +40,10 @@
       takeText: 'A partner organisation signed you up. Check the details and take over your account.',
       loginTitle: 'Log in', simLabel: 'Simulated log-in',
       simText: 'This demo has no server. No SMS is sent. The only check is that the phone number matches the account saved on this phone.',
-      phone: 'Phone number', phoneHint: 'The number you signed up with, for example 0911 234 567.', sendCode: 'Send me a code',
+      phone: 'Phone number', phoneHint: 'The number you signed up with, for example 0911 23 45 67.', sendCode: 'Send me a code',
       smsTitle: 'Simulated SMS', smsText: 'Your Savanna log-in code is {code}', code: 'Code from the SMS',
       codeHint: 'You can copy and paste it, or let your phone fill it in. There is no time limit.', doLogin: 'Log in',
-      problem: 'There is a problem', errPhone: 'Enter a phone number with 10 digits, like 0911 234 567.',
+      problem: 'There is a problem', errPhone: 'Enter a phone number with 10 digits, like 0911 23 45 67.',
       errNoAccount: 'There is no Savanna account with this phone number on this phone. Check the number, or sign up.',
       errCode: 'That code does not match the SMS. Check it and try again. You can paste it.',
       codeSent: 'Code sent (simulated). It is shown below.', loggedOut: 'You have logged out. Your answers stay on this phone.',
@@ -94,10 +94,10 @@
       takeText: 'አጋር ድርጅት አስመዝግቦዎታል። ዝርዝሩን ያረጋግጡና መለያዎን ይረከቡ።',
       loginTitle: 'ግባ', simLabel: 'የተመሰለ መግቢያ',
       simText: 'ይህ ማሳያ አገልጋይ የለውም። አጭር መልእክት አይላክም። የሚረጋገጠው ስልክ ቁጥሩ በዚህ ስልክ ከተቀመጠው መለያ ጋር መመሳሰሉ ብቻ ነው።',
-      phone: 'ስልክ ቁጥር', phoneHint: 'የተመዘገቡበት ቁጥር፣ ለምሳሌ 0911 234 567።', sendCode: 'ኮድ ላክልኝ',
+      phone: 'ስልክ ቁጥር', phoneHint: 'የተመዘገቡበት ቁጥር፣ ለምሳሌ 0911 23 45 67።', sendCode: 'ኮድ ላክልኝ',
       smsTitle: 'የተመሰለ አጭር መልእክት', smsText: 'የሳቫና መግቢያ ኮድዎ {code} ነው', code: 'ከአጭር መልእክቱ የተገኘ ኮድ',
       codeHint: 'ገልብጠው መለጠፍ ወይም ስልክዎ እንዲሞላው መፍቀድ ይችላሉ። የጊዜ ገደብ የለም።', doLogin: 'ግባ',
-      problem: 'ችግር አለ', errPhone: 'ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 234 567።',
+      problem: 'ችግር አለ', errPhone: 'ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 23 45 67።',
       errNoAccount: 'በዚህ ስልክ ላይ በዚህ ስልክ ቁጥር የሳቫና መለያ የለም። ቁጥሩን ያረጋግጡ ወይም ይመዝገቡ።',
       errCode: 'ኮዱ ከአጭር መልእክቱ ጋር አይመሳሰልም። ያረጋግጡና እንደገና ይሞክሩ። መለጠፍ ይችላሉ።',
       codeSent: 'ኮድ ተልኳል (የተመሰለ)። ከታች ይታያል።', loggedOut: 'ወጥተዋል። መልሶችዎ በዚህ ስልክ ላይ ይቆያሉ።',
@@ -175,7 +175,7 @@
       simLabel: 'Seensa fakkeessaa',
       simText: 'Agarsiisni kun sarvarii hin qabu. Ergaan gabaabaan (SMS) hin ergamu. Kan mirkanaa\'u lakkoofsi bilbilaa herrega bilbila kana irratti kuufame wajjin wal simuu isaa qofa.',
       phone: 'Lakkoofsa bilbilaa',
-      phoneHint: 'Lakkoofsa ittiin galmoofte, fakkeenyaaf 0911 234 567.',
+      phoneHint: 'Lakkoofsa ittiin galmoofte, fakkeenyaaf 0911 23 45 67.',
       sendCode: 'Koodii naaf ergi',
       smsTitle: 'Ergaa gabaabaa fakkeessaa',
       smsText: 'Koodiin seensa Savanna kee {code} dha',
@@ -183,7 +183,7 @@
       codeHint: 'Garagalchitee maxxansuu, ykn bilbilli kee akka guutu hayyamuu dandeessa. Daangaan yeroo hin jiru.',
       doLogin: 'Seeni',
       problem: 'Rakkoon jira',
-      errPhone: 'Lakkoofsa bilbilaa dijiitii 10 qabu galchi, fakkeenyaaf 0911 234 567.',
+      errPhone: 'Lakkoofsa bilbilaa dijiitii 10 qabu galchi, fakkeenyaaf 0911 23 45 67.',
       errNoAccount: 'Bilbila kana irratti herregni Savanna lakkoofsa bilbilaa kanaan hin jiru. Lakkoofsa ilaali, ykn galmaa\'i.',
       errCode: 'Koodiin sun ergaa gabaabaa wajjin wal hin simu. Ilaaliitii irra deebi\'ii yaali. Maxxansuu dandeessa.',
       codeSent: 'Koodiin ergameera (fakkeessa). Armaan gaditti mul\'ata.',
@@ -499,36 +499,65 @@
   function sessionInteracted() { try { return sessionStorage.getItem(INTERACTED) === '1'; } catch (e) { return false; } }
   var needPrompt = false, summaryText = '', lastRead = '', interacted = !!(navigator.userActivation && navigator.userActivation.hasBeenActive) || sessionInteracted();
   var summaryOwner = { audioIssue: function () {} }; // no voice: the summary stays written in the page
+  /* Page summaries, written by hand: English, with Amharic and Afaan Oromo drafts for native-speaker review. */
   var PAGE_SUMMARY = {
-    login: 'Log in. This log-in is simulated: no SMS is sent. Type the phone number you signed up with, then choose Send me a code. The code appears on the screen, and you can paste it. There is no time limit.',
-    dashboard: 'Your Savanna homepage. First come the things waiting for you, such as adding your ID or creating your Support Passport, then your course, your progress and your activities. The Menu button opens the sidebar.',
-    jobs: 'Jobs. First a checkbox shows only jobs that offer the support in your Support Passport; this is worked out on this phone only. Then the list of jobs: each job title is a heading, with its own Apply link.',
-    passport: 'Your Support Passport: what helps you, and who can see it. Below are buttons to change it and to manage sharing.',
-    settings: 'Accessibility settings: language, text size, contrast, motion, how you answer, automatic reading, pictures and voice. Every change is saved at once. At the bottom is Done.',
-    takeover: 'Take over your account. There is nothing to take over on this phone.',
-    needLogin: 'You need to log in to see this page. Below are Log in and Sign up.'
+    login: { en: 'Log in. This log-in is simulated: no SMS is sent. Type the phone number you signed up with, then choose Send me a code. The code appears on the screen, and you can paste it. There is no time limit.',
+      am: 'ይግቡ። ይህ መግቢያ ማሳያ ነው፤ ኤስኤምኤስ አይላክም። የተመዘገቡበትን ስልክ ቁጥር ይጻፉ፣ ከዚያ «ኮድ ላክልኝ»ን ይምረጡ። ኮዱ በማያ ገጹ ላይ ይታያል፤ መለጠፍ ይችላሉ። የጊዜ ገደብ የለም።',
+      om: 'Seeni. Seensi kun agarsiisa qofa: SMS hin ergamu. Lakkoofsa bilbilaa ittiin galmoofte barreessi, sana booda "Koodii naaf ergi" filadhu. Koodiin iskiriinii irratti mul\'ata, maxxansuu dandeessa. Daangaan yeroo hin jiru.' },
+    dashboard: { en: 'Your Savanna homepage. First come the things waiting for you, such as adding your ID or creating your Support Passport, then your course, your progress and your activities. The Menu button opens the sidebar.',
+      am: 'የሳቫና መነሻ ገጽዎ። መጀመሪያ እርስዎን የሚጠብቁ ነገሮች አሉ፤ ለምሳሌ መታወቂያ መጨመር ወይም የድጋፍ ፓስፖርት መፍጠር። ከዚያ ኮርስዎ፣ እድገትዎና ተግባራትዎ። «ምናሌ» የጎን ዝርዝሩን ይከፍታል።',
+      om: 'Fuula jalqabaa Savanna kee. Dura wantoota si eegan, kan akka eenyummaa dabaluu ykn Paaspoortii Deeggarsaa uumuu, sana booda koorsii kee, guddina kee fi hojiiwwan kee. "Baafata" cinaa banaa.' },
+    jobs: { en: 'Jobs. First a checkbox shows only jobs that offer the support in your Support Passport; this is worked out on this phone only. Then the list of jobs: each job title is a heading, with Listen and Apply buttons.',
+      am: 'ሥራዎች። መጀመሪያ በድጋፍ ፓስፖርትዎ ያለውን ድጋፍ የሚሰጡ ሥራዎችን ብቻ የሚያሳይ ምልክት ሳጥን አለ፤ ይህ በዚህ ስልክ ላይ ብቻ ይሰላል። ከዚያ የሥራዎች ዝርዝር፦ እያንዳንዱ የሥራ ርዕስ ከ«አዳምጥ» እና «ያመልክቱ» አዝራሮች ጋር ነው።',
+      om: 'Hojiiwwan. Dura saanduqni mallattoo hojiiwwan deeggarsa Paaspoortii Deeggarsaa kee keessa jiru kennan qofa agarsiisu jira; kun bilbila kana irratti qofa herregama. Sana booda tarree hojiiwwanii: mata-dureen hojii hundi qabduu "Dhaggeeffadhu" fi "Iyyadhu" qaba.' },
+    passport: { en: 'Your Support Passport: what helps you, and who can see it. Below are buttons to read it, change it and manage sharing.',
+      am: 'የድጋፍ ፓስፖርትዎ፦ የሚረዳዎት ነገርና ማን ማየት እንደሚችል። ከታች ለማንበብ፣ ለመቀየርና ማጋራትን ለማስተዳደር አዝራሮች አሉ።',
+      om: 'Paaspoortii Deeggarsaa kee: waan si gargaaru fi eenyu arguu akka danda\'u. Gadi qabduuwwan dubbisuuf, jijjiiruuf fi qooduu bulchuuf jiru.' },
+    settings: { en: 'Accessibility settings: language, text size, contrast, motion, how you answer, automatic reading, pictures and voice. Every change is saved at once. At the bottom is Done.',
+      am: 'የተደራሽነት ቅንብሮች፦ ቋንቋ፣ የጽሑፍ መጠን፣ ንፅፅር፣ እንቅስቃሴ፣ የመመለሻ መንገድ፣ በራስ-ሰር ማንበብ፣ ሥዕሎችና ድምፅ። እያንዳንዱ ለውጥ ወዲያው ይቀመጣል። ከታች «ጨርሻለሁ» አለ።',
+      om: 'Qindaa\'ina dhaqqabummaa: afaan, guddina barreeffamaa, garaagarummaa halluu, sochii, akkaataa deebii, ofumaan dubbisuu, fakkiiwwan fi sagalee. Jijjiiramni hundi battaluma kuufama. Gadi "Xumureera" jira.' },
+    takeover: { en: 'Take over your account. There is nothing to take over on this phone.',
+      am: 'መለያዎን ይረከቡ። በዚህ ስልክ ላይ የሚረከቡት ነገር የለም።', om: 'Herrega kee fudhadhu. Bilbila kana irratti wanti fudhatamu hin jiru.' },
+    needLogin: { en: 'You need to log in to see this page. Below are Log in and Sign up.',
+      am: 'ይህን ገጽ ለማየት መግባት ያስፈልግዎታል። ከታች «ይግቡ» እና «ይመዝገቡ» አሉ።', om: 'Fuula kana arguuf seenuu qabda. Gadi "Seeni" fi "Galmaa\'i" jiru.' }
   };
   // Said before and after a form step's own summary, so the learner knows which page they are on
-  var FORM_PRE = { signup: 'Sign up for Savanna.', identity: 'Add your ID. This is optional.', takeover: 'Take over your account.', passport: 'Support Passport. It is private.',
-    apply: 'Job application.', employer: 'For employers: post a job.', profile: 'My profile.' };
-  var FORM_POST = { profile: 'Below the form are your ID status with Add your ID, your Support Passport, and Delete my data from this phone.' };
-  function homeSummary() {
-    if (signedIn()) return 'Welcome back. Below is a button to go to your dashboard.';
-    if (home.step === 'account') return 'Step 2 of 2: sign up or log in. Choose Sign up if you are new to Savanna, or Log in if you already have an account. Above them is a button to change how you register.';
-    return 'Welcome to Savanna. Step 1 of 2: choose how you like to register: read and type, listen and respond, speak my answers, or simple steps with pictures and big text. Then choose Continue. Language and Accessibility are in the header at the top of the page.';
-  }
+  var FORM_PRE = {
+    signup: { en: 'Sign up for Savanna.', am: 'ለሳቫና ይመዝገቡ።', om: 'Savanna\'tti galmaa\'i.' },
+    identity: { en: 'Add your ID. This is optional.', am: 'መታወቂያዎን ይጨምሩ። ይህ አማራጭ ነው።', om: 'Eenyummaa kee dabali. Kun dirqama miti.' },
+    takeover: { en: 'Take over your account.', am: 'መለያዎን ይረከቡ።', om: 'Herrega kee fudhadhu.' },
+    passport: { en: 'Support Passport. It is private.', am: 'የድጋፍ ፓስፖርት። የግል ነው።', om: 'Paaspoortii Deeggarsaa. Dhuunfaa dha.' },
+    apply: { en: 'Job application.', am: 'የሥራ ማመልከቻ።', om: 'Iyyannoo hojii.' },
+    employer: { en: 'For employers: post a job.', am: 'ለቀጣሪዎች፦ ሥራ ያስተዋውቁ።', om: 'Qacartootaaf: hojii maxxansi.' },
+    profile: { en: 'My profile.', am: 'የእኔ መገለጫ።', om: 'Piroofaayilii koo.' }
+  };
+  var FORM_POST = { profile: { en: 'Below the form are your ID status with Add your ID, your Support Passport, and Delete my data from this phone.',
+    am: 'ከቅጹ በታች የመታወቂያ ሁኔታዎ ከ«መታወቂያዎን ይጨምሩ» ጋር፣ የድጋፍ ፓስፖርትዎ እና «ውሂቤን ከዚህ ስልክ ሰርዝ» አሉ።',
+    om: 'Unkaa jalatti haalli eenyummaa kee "Eenyummaa kee dabali" wajjin, Paaspoortiin Deeggarsaa kee fi "Daataa koo bilbila kana irraa haqi" jiru.' } };
+  var HOME_SUMMARY = {
+    back: { en: 'Welcome back. Below is a button to go to your dashboard.', am: 'እንኳን ደህና መጡ። ከታች ወደ ዳሽቦርድዎ የሚወስድ አዝራር አለ።', om: 'Baga nagaan deebite. Gadi qabduun gara daashboordii keetii si geessu jira.' },
+    account: { en: 'Step 2 of 2: sign up or log in. Choose Sign up if you are new to Savanna, or Log in if you already have an account. Above them is a button to change how you register.',
+      am: 'ደረጃ 2 ከ2፦ ይመዝገቡ ወይም ይግቡ። ለሳቫና አዲስ ከሆኑ «ይመዝገቡ»ን፣ መለያ ካለዎት «ይግቡ»ን ይምረጡ። ከላያቸው የመመዝገቢያ መንገድዎን የሚቀይር አዝራር አለ።',
+      om: 'Tarkaanfii 2 keessaa 2: galmaa\'i ykn seeni. Yoo Savanna\'f haaraa taate "Galmaa\'i", yoo herrega qabaatte "Seeni" filadhu. Isaan gubbaa qabduun akkaataa galmee jijjiiru jira.' },
+    mode: { en: 'Welcome to Savanna. Step 1 of 2: choose how you like to register: read and type, listen and respond, speak my answers, or simple steps with pictures and big text. Then choose Continue. Language and Accessibility are in the header at the top of the page.',
+      am: 'ወደ ሳቫና እንኳን ደህና መጡ። ደረጃ 1 ከ2፦ እንዴት መመዝገብ እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕልና ከትልቅ ጽሑፍ ጋር። ከዚያ «ቀጥል»ን ይምረጡ። ቋንቋና ተደራሽነት በገጹ አናት ላይ ናቸው።',
+      om: 'Baga gara Savanna dhufte. Tarkaanfii 1 keessaa 2: akkaataa galmaa\'uu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu fi deebisuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii fi barreeffama gurguddaa wajjin. Sana booda "Itti fufi" filadhu. Afaan fi Dhaqqabummaan fuula gubbaa jiru.' }
+  };
+  function inLang(o) { return o ? (o[lang()] || o.en) : ''; }
+  function homeSummary() { return inLang(HOME_SUMMARY[signedIn() ? 'back' : home.step === 'account' ? 'account' : 'mode']); }
   function pageSummary() {
-    if (PROTECTED.indexOf(page) !== -1 && !signedIn()) return PAGE_SUMMARY.needLogin;
-    return page === 'home' ? homeSummary() : PAGE_SUMMARY[page] || '';
+    if (PROTECTED.indexOf(page) !== -1 && !signedIn()) return inLang(PAGE_SUMMARY.needLogin);
+    return page === 'home' ? homeSummary() : inLang(PAGE_SUMMARY[page]);
   }
   // force: a new page or step (read even if the words are the same); otherwise only read when the words changed
   function setSummary(text, force) {
     var main = document.getElementById('content');
     if (!main) return;
     var el = document.getElementById('sj-summary');
-    if (!el) { el = document.createElement('p'); el.id = 'sj-summary'; el.className = 'sj-vh'; el.setAttribute('lang', 'en'); }
+    if (!el) { el = document.createElement('p'); el.id = 'sj-summary'; el.className = 'sj-vh'; }
+    el.setAttribute('lang', lang());
     if (main.firstChild !== el) main.insertBefore(el, main.firstChild); // the first text inside main
-    summaryText = lang() === 'en' ? text || '' : '';
+    summaryText = text || '';
     el.textContent = summaryText;
     el.hidden = !summaryText;
     if (force || summaryText !== lastRead) autoRead();
@@ -539,15 +568,22 @@
      or step opens (also on revisits and Back), so it is never read twice or only once. */
   function readCurrent() {
     var items = [], form = currentForm();
-    if (summaryText) items.push({ key: null, text: summaryText, lang: 'en' });
-    if (form && form.readItems && form.state && (form.state.mode === 'question' || form.state.mode === 'welcome')) {
-      try { items = items.concat(form.readItems()); } catch (e) {}
-    }
+    if (summaryText) items.push({ key: null, text: summaryText, lang: lang() });
+    if (form && form.readItems && form.state && (form.state.mode === 'question' || form.state.mode === 'welcome' || form.state.mode === 'done')) {
+      try { items = items.concat(form.state.mode === 'done' ? form.readItems().slice(0) : form.readItems()); } catch (e) {}
+    } else if (!form) items = items.concat(pageContent()); // notices and cards on pages without a form
     lastRead = summaryText;
     if (!items.length) return;
     try { D.player.play(items, lang(), form || summaryOwner); } catch (e) {}
   }
   function readSummary() { readCurrent(); }
+  /* The content read after the summary on pages without a form: the notices waiting for the learner (dashboard), the
+     Support Passport card, a "you have logged out" message… Never the whole of ALX's course page. */
+  function pageContent() {
+    var el = page === 'passport' ? document.getElementById('sj-view') : document.querySelector('#sj-view .notice, #sj-view .sj-add-id') ? document.getElementById('sj-view') : null;
+    if (!el || page === 'jobs' || page === 'home') return [];
+    return D.itemsFromElement(el, lang());
+  }
   function showPrompt(on) {
     needPrompt = on;
     var b = document.getElementById('sj-hear');
@@ -597,8 +633,9 @@
   // each new form step brings its own summary (and is read when reading is on)
   D.hostReads = true; // these pages decide what is read when a step opens; the forms do not read on their own
   document.addEventListener('savanna-onboarding:step', function (e) {
-    var d = e.detail || {};
-    setSummary(d.summary ? [FORM_PRE[d.form] || '', d.summary, (d.mode === 'review' && FORM_POST[d.form]) || ''].join(' ').trim() : '', true);
+    var d = e.detail || {}, text = d.summary ? [inLang(FORM_PRE[d.form]), d.summary, d.mode === 'review' ? inLang(FORM_POST[d.form]) : ''].join(' ').trim() : '';
+    // a done screen is read once the host has filled in its confirmation (just after this event)
+    if (d.mode === 'done') setTimeout(function () { setSummary(text, true); }, 0); else setSummary(text, true);
   });
 
   /* ---------- pages ---------- */
@@ -886,7 +923,7 @@
     var n = document.getElementById('sj-offline');
     if (!n) return;
     var hasForm = !!view.querySelector('savanna-onboarding-form');
-    if (navigator.onLine === false && !hasForm) { n.hidden = false; n.textContent = T('offline'); }
+    if (navigator.onLine === false && !hasForm) { n.hidden = false; n.textContent = T('offline'); if (D.readingOn() && interacted) D.player.play([{ key: null, text: T('offline'), lang: lang() }], lang(), summaryOwner); }
     else if (!n.hidden) { n.textContent = T('online'); setTimeout(function () { if (navigator.onLine !== false) n.hidden = true; }, 6000); }
   }
   window.addEventListener('online', netNotice);

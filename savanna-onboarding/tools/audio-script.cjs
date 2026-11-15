@@ -65,8 +65,12 @@ const ROOT = require('path').join(__dirname, '..').split('\\').join('/') + '/';
     ['voice-consent', S('voiceConsentTitle') + '። ' + S('voiceConsent')], ['voice-check', S('heardCheck')], ['voice-used', S('voiceUsed')],
     ['saved-for-later', S('savedTitle') + '። ' + S('savedText')]];
   common.forEach(([f, txt]) => add('On every screen when needed', f, txt));
-  // Digits, for reading an ID number back on the phone only (never through an online voice)
-  ['ዜሮ', 'አንድ', 'ሁለት', 'ሶስት', 'አራት', 'አምስት', 'ስድስት', 'ሰባት', 'ስምንት', 'ዘጠኝ'].forEach((w, d) => add('Digits (ID number read back, on the phone only)', 'digit-' + d, w));
+  // Numbers 0-99, for reading phone numbers ("zero nine, eleven, twenty-three…") and ID numbers (digit by digit) on
+  // the phone only: these are never sent to an online voice. The same words as amNumber() in savanna-onboarding.js.
+  const ONES = ['ዜሮ', 'አንድ', 'ሁለት', 'ሶስት', 'አራት', 'አምስት', 'ስድስት', 'ሰባት', 'ስምንት', 'ዘጠኝ'];
+  const TENS = ['', 'አስር', 'ሃያ', 'ሰላሳ', 'አርባ', 'ሃምሳ', 'ስልሳ', 'ሰባ', 'ሰማንያ', 'ዘጠና'];
+  const amNumber = n => n < 10 ? ONES[n] : n < 20 ? (n === 10 ? 'አስር' : 'አስራ ' + ONES[n - 10]) : TENS[Math.floor(n / 10)] + (n % 10 ? ' ' + ONES[n % 10] : '');
+  for (let n = 0; n < 100; n++) add('Numbers 0-99 (phone and ID numbers, read on the phone only)', 'num-' + n, amNumber(n));
 
   const total = rows.reduce((a, r) => a + r.s, 0);
   let md = `# Amharic audio script: sign-up, Add your ID and Support Passport

@@ -29,7 +29,7 @@
 - **Names stay as written:** AAAPD, Tomorrow is Better, RRS / UNHCR, Fayda, ALX, Google.
 - Read numbers as the learner will see them (for example "0911 234 567" digit by digit).
 
-**89 clips, about 12 minutes of audio in total.**
+**179 clips, about 16 minutes of audio in total.**
 
 ## Start
 
@@ -58,7 +58,7 @@
 | 16 | `am/signup-learner-consent-option-yes.mp3` | <span lang="am">አዎ፣ እስማማለሁ</span> | 3 s |  |
 | 17 | `am/signup-learner-consent-option-no.mp3` | <span lang="am">አልስማማም</span> | 3 s |  |
 | 18 | `am/signup-name-question.mp3` | <span lang="am">ምን ብለን እንጥራዎ? የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።</span> | 18 s |  |
-| 19 | `am/signup-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ ስንት ነው? ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።</span> | 14 s |  |
+| 19 | `am/signup-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ ስንት ነው? ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 23 45 67።</span> | 14 s |  |
 | 20 | `am/signup-dob-question.mp3` | <span lang="am">መቼ ተወለዱ? መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።</span> | 15 s |  |
 | 21 | `am/signup-dob-calendar.mp3` | <span lang="am">የትኛውን አቆጣጠር ይጠቀማሉ?</span> | 5 s | Date question: calendar choice |
 | 22 | `am/signup-dob-option-eth.mp3` | <span lang="am">የኢትዮጵያ አቆጣጠር</span> | 4 s |  |
@@ -126,7 +126,7 @@
 | 69 | `am/error-choose-one.mp3` | <span lang="am">ለመቀጠል አንድ መልስ ይምረጡ።</span> | 5 s |  |
 | 70 | `am/error-choose-some.mp3` | <span lang="am">ቢያንስ አንድ መልስ ይምረጡ።</span> | 5 s |  |
 | 71 | `am/error-required.mp3` | <span lang="am">ለመቀጠል እባክዎ ይህን ጥያቄ ይመልሱ።</span> | 6 s |  |
-| 72 | `am/error-phone.mp3` | <span lang="am">ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 234 567።</span> | 9 s |  |
+| 72 | `am/error-phone.mp3` | <span lang="am">ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 23 45 67።</span> | 9 s |  |
 | 73 | `am/error-date.mp3` | <span lang="am">በኢትዮጵያ አቆጣጠር ትክክለኛ ቀን ያስገቡ። ቀን ከ1 እስከ 30፣ ጳጉሜን ከ1 እስከ 5 ወይም 6።</span> | 13 s |  |
 | 74 | `am/error-consent.mp3` | <span lang="am">ለመቀጠል መስማማት ያስፈልጋል። እርግጠኛ ካልሆኑ "እርዳታ"ን ይምረጡ።</span> | 10 s |  |
 | 75 | `am/error-mode.mp3` | <span lang="am">ለመቀጠል አንድ መንገድ ይምረጡ።</span> | 5 s |  |
@@ -135,20 +135,110 @@
 | 78 | `am/voice-used.mp3` | <span lang="am">ከድምፅዎ መልስ ተጨምሯል። ያረጋግጡት፤ ከዚያ «ቀጥል»ን ይምረጡ።</span> | 9 s |  |
 | 79 | `am/saved-for-later.mp3` | <span lang="am">መልሶችዎ ተቀምጠዋል። ምንም አልጠፋም። ለመቀጠል ይህን ሊንክ በዚህ ስልክ ይክፈቱ፦</span> | 12 s |  |
 
-## Digits (ID number read back, on the phone only)
+## Numbers 0-99 (phone and ID numbers, read on the phone only)
 
 | # | File | Exact Amharic text | About | Note |
 |---|---|---|---|---|
-| 80 | `am/digit-0.mp3` | <span lang="am">ዜሮ</span> | 2 s |  |
-| 81 | `am/digit-1.mp3` | <span lang="am">አንድ</span> | 2 s |  |
-| 82 | `am/digit-2.mp3` | <span lang="am">ሁለት</span> | 2 s |  |
-| 83 | `am/digit-3.mp3` | <span lang="am">ሶስት</span> | 2 s |  |
-| 84 | `am/digit-4.mp3` | <span lang="am">አራት</span> | 2 s |  |
-| 85 | `am/digit-5.mp3` | <span lang="am">አምስት</span> | 2 s |  |
-| 86 | `am/digit-6.mp3` | <span lang="am">ስድስት</span> | 2 s |  |
-| 87 | `am/digit-7.mp3` | <span lang="am">ሰባት</span> | 2 s |  |
-| 88 | `am/digit-8.mp3` | <span lang="am">ስምንት</span> | 2 s |  |
-| 89 | `am/digit-9.mp3` | <span lang="am">ዘጠኝ</span> | 2 s |  |
+| 80 | `am/num-0.mp3` | <span lang="am">ዜሮ</span> | 2 s |  |
+| 81 | `am/num-1.mp3` | <span lang="am">አንድ</span> | 2 s |  |
+| 82 | `am/num-2.mp3` | <span lang="am">ሁለት</span> | 2 s |  |
+| 83 | `am/num-3.mp3` | <span lang="am">ሶስት</span> | 2 s |  |
+| 84 | `am/num-4.mp3` | <span lang="am">አራት</span> | 2 s |  |
+| 85 | `am/num-5.mp3` | <span lang="am">አምስት</span> | 2 s |  |
+| 86 | `am/num-6.mp3` | <span lang="am">ስድስት</span> | 2 s |  |
+| 87 | `am/num-7.mp3` | <span lang="am">ሰባት</span> | 2 s |  |
+| 88 | `am/num-8.mp3` | <span lang="am">ስምንት</span> | 2 s |  |
+| 89 | `am/num-9.mp3` | <span lang="am">ዘጠኝ</span> | 2 s |  |
+| 90 | `am/num-10.mp3` | <span lang="am">አስር</span> | 2 s |  |
+| 91 | `am/num-11.mp3` | <span lang="am">አስራ አንድ</span> | 3 s |  |
+| 92 | `am/num-12.mp3` | <span lang="am">አስራ ሁለት</span> | 3 s |  |
+| 93 | `am/num-13.mp3` | <span lang="am">አስራ ሶስት</span> | 3 s |  |
+| 94 | `am/num-14.mp3` | <span lang="am">አስራ አራት</span> | 3 s |  |
+| 95 | `am/num-15.mp3` | <span lang="am">አስራ አምስት</span> | 3 s |  |
+| 96 | `am/num-16.mp3` | <span lang="am">አስራ ስድስት</span> | 3 s |  |
+| 97 | `am/num-17.mp3` | <span lang="am">አስራ ሰባት</span> | 3 s |  |
+| 98 | `am/num-18.mp3` | <span lang="am">አስራ ስምንት</span> | 3 s |  |
+| 99 | `am/num-19.mp3` | <span lang="am">አስራ ዘጠኝ</span> | 3 s |  |
+| 100 | `am/num-20.mp3` | <span lang="am">ሃያ</span> | 2 s |  |
+| 101 | `am/num-21.mp3` | <span lang="am">ሃያ አንድ</span> | 2 s |  |
+| 102 | `am/num-22.mp3` | <span lang="am">ሃያ ሁለት</span> | 2 s |  |
+| 103 | `am/num-23.mp3` | <span lang="am">ሃያ ሶስት</span> | 2 s |  |
+| 104 | `am/num-24.mp3` | <span lang="am">ሃያ አራት</span> | 2 s |  |
+| 105 | `am/num-25.mp3` | <span lang="am">ሃያ አምስት</span> | 3 s |  |
+| 106 | `am/num-26.mp3` | <span lang="am">ሃያ ስድስት</span> | 3 s |  |
+| 107 | `am/num-27.mp3` | <span lang="am">ሃያ ሰባት</span> | 2 s |  |
+| 108 | `am/num-28.mp3` | <span lang="am">ሃያ ስምንት</span> | 3 s |  |
+| 109 | `am/num-29.mp3` | <span lang="am">ሃያ ዘጠኝ</span> | 2 s |  |
+| 110 | `am/num-30.mp3` | <span lang="am">ሰላሳ</span> | 2 s |  |
+| 111 | `am/num-31.mp3` | <span lang="am">ሰላሳ አንድ</span> | 3 s |  |
+| 112 | `am/num-32.mp3` | <span lang="am">ሰላሳ ሁለት</span> | 3 s |  |
+| 113 | `am/num-33.mp3` | <span lang="am">ሰላሳ ሶስት</span> | 3 s |  |
+| 114 | `am/num-34.mp3` | <span lang="am">ሰላሳ አራት</span> | 3 s |  |
+| 115 | `am/num-35.mp3` | <span lang="am">ሰላሳ አምስት</span> | 3 s |  |
+| 116 | `am/num-36.mp3` | <span lang="am">ሰላሳ ስድስት</span> | 3 s |  |
+| 117 | `am/num-37.mp3` | <span lang="am">ሰላሳ ሰባት</span> | 3 s |  |
+| 118 | `am/num-38.mp3` | <span lang="am">ሰላሳ ስምንት</span> | 3 s |  |
+| 119 | `am/num-39.mp3` | <span lang="am">ሰላሳ ዘጠኝ</span> | 3 s |  |
+| 120 | `am/num-40.mp3` | <span lang="am">አርባ</span> | 2 s |  |
+| 121 | `am/num-41.mp3` | <span lang="am">አርባ አንድ</span> | 3 s |  |
+| 122 | `am/num-42.mp3` | <span lang="am">አርባ ሁለት</span> | 3 s |  |
+| 123 | `am/num-43.mp3` | <span lang="am">አርባ ሶስት</span> | 3 s |  |
+| 124 | `am/num-44.mp3` | <span lang="am">አርባ አራት</span> | 3 s |  |
+| 125 | `am/num-45.mp3` | <span lang="am">አርባ አምስት</span> | 3 s |  |
+| 126 | `am/num-46.mp3` | <span lang="am">አርባ ስድስት</span> | 3 s |  |
+| 127 | `am/num-47.mp3` | <span lang="am">አርባ ሰባት</span> | 3 s |  |
+| 128 | `am/num-48.mp3` | <span lang="am">አርባ ስምንት</span> | 3 s |  |
+| 129 | `am/num-49.mp3` | <span lang="am">አርባ ዘጠኝ</span> | 3 s |  |
+| 130 | `am/num-50.mp3` | <span lang="am">ሃምሳ</span> | 2 s |  |
+| 131 | `am/num-51.mp3` | <span lang="am">ሃምሳ አንድ</span> | 3 s |  |
+| 132 | `am/num-52.mp3` | <span lang="am">ሃምሳ ሁለት</span> | 3 s |  |
+| 133 | `am/num-53.mp3` | <span lang="am">ሃምሳ ሶስት</span> | 3 s |  |
+| 134 | `am/num-54.mp3` | <span lang="am">ሃምሳ አራት</span> | 3 s |  |
+| 135 | `am/num-55.mp3` | <span lang="am">ሃምሳ አምስት</span> | 3 s |  |
+| 136 | `am/num-56.mp3` | <span lang="am">ሃምሳ ስድስት</span> | 3 s |  |
+| 137 | `am/num-57.mp3` | <span lang="am">ሃምሳ ሰባት</span> | 3 s |  |
+| 138 | `am/num-58.mp3` | <span lang="am">ሃምሳ ስምንት</span> | 3 s |  |
+| 139 | `am/num-59.mp3` | <span lang="am">ሃምሳ ዘጠኝ</span> | 3 s |  |
+| 140 | `am/num-60.mp3` | <span lang="am">ስልሳ</span> | 2 s |  |
+| 141 | `am/num-61.mp3` | <span lang="am">ስልሳ አንድ</span> | 3 s |  |
+| 142 | `am/num-62.mp3` | <span lang="am">ስልሳ ሁለት</span> | 3 s |  |
+| 143 | `am/num-63.mp3` | <span lang="am">ስልሳ ሶስት</span> | 3 s |  |
+| 144 | `am/num-64.mp3` | <span lang="am">ስልሳ አራት</span> | 3 s |  |
+| 145 | `am/num-65.mp3` | <span lang="am">ስልሳ አምስት</span> | 3 s |  |
+| 146 | `am/num-66.mp3` | <span lang="am">ስልሳ ስድስት</span> | 3 s |  |
+| 147 | `am/num-67.mp3` | <span lang="am">ስልሳ ሰባት</span> | 3 s |  |
+| 148 | `am/num-68.mp3` | <span lang="am">ስልሳ ስምንት</span> | 3 s |  |
+| 149 | `am/num-69.mp3` | <span lang="am">ስልሳ ዘጠኝ</span> | 3 s |  |
+| 150 | `am/num-70.mp3` | <span lang="am">ሰባ</span> | 2 s |  |
+| 151 | `am/num-71.mp3` | <span lang="am">ሰባ አንድ</span> | 2 s |  |
+| 152 | `am/num-72.mp3` | <span lang="am">ሰባ ሁለት</span> | 2 s |  |
+| 153 | `am/num-73.mp3` | <span lang="am">ሰባ ሶስት</span> | 2 s |  |
+| 154 | `am/num-74.mp3` | <span lang="am">ሰባ አራት</span> | 2 s |  |
+| 155 | `am/num-75.mp3` | <span lang="am">ሰባ አምስት</span> | 3 s |  |
+| 156 | `am/num-76.mp3` | <span lang="am">ሰባ ስድስት</span> | 3 s |  |
+| 157 | `am/num-77.mp3` | <span lang="am">ሰባ ሰባት</span> | 2 s |  |
+| 158 | `am/num-78.mp3` | <span lang="am">ሰባ ስምንት</span> | 3 s |  |
+| 159 | `am/num-79.mp3` | <span lang="am">ሰባ ዘጠኝ</span> | 2 s |  |
+| 160 | `am/num-80.mp3` | <span lang="am">ሰማንያ</span> | 2 s |  |
+| 161 | `am/num-81.mp3` | <span lang="am">ሰማንያ አንድ</span> | 3 s |  |
+| 162 | `am/num-82.mp3` | <span lang="am">ሰማንያ ሁለት</span> | 3 s |  |
+| 163 | `am/num-83.mp3` | <span lang="am">ሰማንያ ሶስት</span> | 3 s |  |
+| 164 | `am/num-84.mp3` | <span lang="am">ሰማንያ አራት</span> | 3 s |  |
+| 165 | `am/num-85.mp3` | <span lang="am">ሰማንያ አምስት</span> | 3 s |  |
+| 166 | `am/num-86.mp3` | <span lang="am">ሰማንያ ስድስት</span> | 3 s |  |
+| 167 | `am/num-87.mp3` | <span lang="am">ሰማንያ ሰባት</span> | 3 s |  |
+| 168 | `am/num-88.mp3` | <span lang="am">ሰማንያ ስምንት</span> | 3 s |  |
+| 169 | `am/num-89.mp3` | <span lang="am">ሰማንያ ዘጠኝ</span> | 3 s |  |
+| 170 | `am/num-90.mp3` | <span lang="am">ዘጠና</span> | 2 s |  |
+| 171 | `am/num-91.mp3` | <span lang="am">ዘጠና አንድ</span> | 3 s |  |
+| 172 | `am/num-92.mp3` | <span lang="am">ዘጠና ሁለት</span> | 3 s |  |
+| 173 | `am/num-93.mp3` | <span lang="am">ዘጠና ሶስት</span> | 3 s |  |
+| 174 | `am/num-94.mp3` | <span lang="am">ዘጠና አራት</span> | 3 s |  |
+| 175 | `am/num-95.mp3` | <span lang="am">ዘጠና አምስት</span> | 3 s |  |
+| 176 | `am/num-96.mp3` | <span lang="am">ዘጠና ስድስት</span> | 3 s |  |
+| 177 | `am/num-97.mp3` | <span lang="am">ዘጠና ሰባት</span> | 3 s |  |
+| 178 | `am/num-98.mp3` | <span lang="am">ዘጠና ስምንት</span> | 3 s |  |
+| 179 | `am/num-99.mp3` | <span lang="am">ዘጠና ዘጠኝ</span> | 3 s |  |
 
 ## Not in this list (later, if time allows)
 

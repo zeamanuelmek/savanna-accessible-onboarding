@@ -1622,3 +1622,65 @@ errors 401 (key), 402 (balance), 429 (busy). **Afaan Oromo is supported in both 
   design/security/known-issues 84 passed, 4 skipped; **a11y 180 + 28 scans, 0 serious or critical**.
 - Note: a command for the next fix (phone number format) was stopped by the team but had partly run; its changes
   were undone before testing this batch.
+
+---
+
+## Ethiopian phone numbers, and one reading layer for every page (15 Nov evening, on `addis-ai`, not pushed)
+
+### Phone numbers the Ethiopian way
+- Shown **0911 23 45 67** (examples, hints, errors, Check your answers, confirmations; three languages).
+- Read in natural numbers: "zero nine eleven, twenty-three, forty-five, sixty-seven" / «ዜሮ ዘጠኝ አስራ አንድ, ሃያ ሶስት,
+  አርባ አምስት, ስልሳ ሰባት» / "zeeroo sagal kudha tokko, digdamii sadii, afurtamii shan, jaatamii torba" (Amharic and
+  Oromo number words are drafts for native review). This replaces the digit-by-digit phone rule; ID numbers stay digit
+  by digit.
+- **On the phone only:** Amharic uses 100 recorded number clips `num-0 … num-99` (edge-tts, Mekdes; the ten digit
+  clips were renamed); English and Oromo use a voice that runs on the phone. A phone or ID number is never sent to an
+  online voice. **Oromo number clips: not generated yet** (needs the Addis AI key): run once
+  `ADDIS_API_KEY=… node tools/generate-oromo-numbers.cjs` (new). Clips: 179, 5.7 MB (offline download size grows).
+- Regenerated: `signup-phone-question`, `error-phone` (new example) and the 90 numbers 10-99, all Mekdes.
+
+### Reading layer: inventory (Savanna pages)
+
+| Page or screen | Page summary (en, am, om) | Read on open (automatic reading) | Listen to the question + option Listen | Pause/Stop player | Read all my answers |
+|---|---|---|---|---|---|
+| Home, step 1 and step 2 | yes | yes | Listen to the question (the 4 ways); no per-option buttons | yes | — |
+| Sign-up, every step (also partner route) | yes | yes (summary, then question and answers) | yes (option Listen when reading is on) | yes | — |
+| Check your answers (all forms) | yes | yes (summary) | — | yes | **yes** |
+| Account ready / every form's done screen | yes | yes (done text, then the host's confirmation) | — | yes | — |
+| Dashboard | yes | yes (summary, then the notices waiting) | — | yes | — |
+| Add your ID, every step and done | yes | yes | yes; ID number read back only on request, on the phone | yes | yes (ID only if confirmed) |
+| My profile (review and edits) | yes (+ what is below the form) | yes | yes | yes | yes |
+| Support Passport, every step | yes | yes | yes | yes | yes |
+| Support Passport card | yes | yes (summary, then the card) | — | yes | **yes** (new) |
+| Sharing and withdraw (card buttons) | part of the card's summary | the result message is a status message (screen readers); not read aloud — **gap** | — | yes | — |
+| Jobs | yes | yes | Listen to this job (per job) | yes | — |
+| Job application, every step | yes | yes | yes | yes | yes |
+| Application confirmation | yes | yes (what was sent) | — | yes | **yes** (new) |
+| Employer form, every step | yes | yes | yes | yes | yes |
+| Job-posted confirmation | yes | yes | — | yes | **yes** (new) |
+| Takeover (form) / nothing to take over | yes | yes | yes | yes | yes |
+| Log in (simulated) | yes | yes | not a module form: no Listen on its two fields — **gap** | yes | — |
+| Settings | yes | yes | no Listen per setting — **gap** | yes | — |
+| Help panel (in every form) | — | — | **Listen** button (new) | yes | — |
+| Offline message | — | Savanna pages: read aloud when reading is on (new); inside a form: status message only — **gap** | — | yes | — |
+| Please log in | yes | yes | — | yes | — |
+
+Everything uses the same player (Pause, Stop, Escape) and the same order of sources: recorded clip, then Addis AI
+(through the proxy), then the phone's voice; personal numbers only on the phone. The showroom and test host pages
+use the module's own reading (Listen, option Listen, Read all, read back), not the page summaries.
+
+### Changes
+- Module: step summaries in English, Amharic and Oromo (`SUMMARY_T`; in Amharic and Oromo the question itself is the
+  topic); a form's done screen also reads the host's confirmation; `SavannaOnboarding.itemsFromElement(el, lang)`
+  (reads headings, paragraphs and lists, each in its own language); Listen in the Help panel; the clip list loads as
+  soon as a form appears. Fixed: after a voice answer, when nothing can read it back, the "I heard … Choose …"
+  announcement is no longer replaced by the "not available" message.
+- Savanna pages: page summaries in three languages (`PAGE_SUMMARY`, `FORM_PRE`, `FORM_POST`, `HOME_SUMMARY`); pages
+  without a form read their notices or card after the summary; done screens are read after the confirmation is in
+  place; offline message read when reading is on.
+- Demo host: "Read all my answers" on the application and job-posted confirmations and the Support Passport card.
+- Tests (one worker, both sizes): summaries + readback 70 passed (new: Check your answers, dashboard, jobs, an
+  application step, the application confirmation, Help Listen, summaries in Amharic and Oromo, phone format and
+  numbers in three languages); readaloud/addis/voice/names/career/offline 130 + 2 after a fix; journey/date-language/
+  smoke/engine/identity 148 (one check updated for the new phone format); gate/keyboard/wcag/design/security/
+  known-issues 60 passed, 4 skipped; **a11y 192 scans (new: the application confirmation), 0 serious or critical.**

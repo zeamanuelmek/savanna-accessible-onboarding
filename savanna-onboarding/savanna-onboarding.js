@@ -143,7 +143,7 @@
       errRequired: 'Please answer this question to continue.',
       errChoice: 'Choose one answer to continue.',
       errMulti: 'Choose at least one answer.',
-      errPhone: 'Enter a phone number with 10 digits, like 0911 234 567.',
+      errPhone: 'Enter a phone number with 10 digits, like 0911 23 45 67.',
       errDate: 'Enter a real date in the Ethiopian calendar. Day 1 to 30, Pagume 1 to 5 or 6.',
       errConsent: 'You need to agree to continue. If you are not sure, choose "Get help".',
       day: 'Day', month: 'Month', year: 'Year', chooseMonth: 'Choose a month', chooseDay: 'Choose a day', chooseYear: 'Choose a year',
@@ -237,7 +237,7 @@
       errRequired: 'ለመቀጠል እባክዎ ይህን ጥያቄ ይመልሱ።',
       errChoice: 'ለመቀጠል አንድ መልስ ይምረጡ።',
       errMulti: 'ቢያንስ አንድ መልስ ይምረጡ።',
-      errPhone: 'ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 234 567።',
+      errPhone: 'ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 23 45 67።',
       errDate: 'በኢትዮጵያ አቆጣጠር ትክክለኛ ቀን ያስገቡ። ቀን ከ1 እስከ 30፣ ጳጉሜን ከ1 እስከ 5 ወይም 6።',
       errConsent: 'ለመቀጠል መስማማት ያስፈልጋል። እርግጠኛ ካልሆኑ "እርዳታ"ን ይምረጡ።',
       day: 'ቀን', month: 'ወር', year: 'ዓመት', chooseMonth: 'ወር ይምረጡ', chooseDay: 'ቀን ይምረጡ', chooseYear: 'ዓመት ይምረጡ',
@@ -368,7 +368,7 @@
       errRequired: 'Itti fufuuf maaloo gaaffii kana deebisi.',
       errChoice: 'Itti fufuuf deebii tokko filadhu.',
       errMulti: 'Yoo xiqqaate deebii tokko filadhu.',
-      errPhone: 'Lakkoofsa bilbilaa dijiitii 10 qabu galchi, fakkeenyaaf 0911 234 567.',
+      errPhone: 'Lakkoofsa bilbilaa dijiitii 10 qabu galchi, fakkeenyaaf 0911 23 45 67.',
       errDate: 'Guyyaa dhugaa dhaha Itoophiyaatiin galchi. Guyyaan 1 hanga 30, Qaammee 1 hanga 5 ykn 6.',
       errConsent: 'Itti fufuuf walii galuu qabda. Yoo hin mirkaneeffatin, "Gargaarsa argadhu" filadhu.',
       day: 'Guyyaa',
@@ -1023,6 +1023,21 @@
     },
     replay: function () { if (this.last) this.play(this.last.items, this.last.lang, this.last.owner); }
   };
+  /** Pieces to read the content of an element (a confirmation, a card): each visible heading, paragraph, list item,
+   *  term and description in order, in the language of its nearest lang attribute. Buttons and hidden text are left out. */
+  function itemsFromElement(root, lang) {
+    if (!root) return [];
+    var blocks = root.querySelectorAll('h1,h2,h3,h4,p,li,dt,dd'), items = [];
+    Array.prototype.forEach.call(blocks, function (el) {
+      if (el.closest('[hidden],[aria-hidden="true"],.dm-vh,.sj-vh,.vh,.dm-actions,.actions,button') || el.querySelector('h1,h2,h3,h4,p,li,dt,dd')) return;
+      if (el.offsetParent === null && getComputedStyle(el).position !== 'fixed') return;
+      var text = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!text) return;
+      var near = el.closest('[lang]'), l = near ? near.getAttribute('lang') : lang;
+      items.push({ key: null, text: text, lang: LANGS.indexOf(l) !== -1 ? l : lang });
+    });
+    return items;
+  }
   /* ---------- reading back what the learner gave, so it can be checked by ear ----------
      Phone numbers digit by digit in groups ("zero nine one one, two three four, five six seven"); names as they are,
      and spelled letter by letter (Ethiopic: syllable by syllable) on request; each part in its own script's
@@ -1032,15 +1047,51 @@
     am: ['ዜሮ', 'አንድ', 'ሁለት', 'ሶስት', 'አራት', 'አምስት', 'ስድስት', 'ሰባት', 'ስምንት', 'ዘጠኝ'],
     om: ['zeeroo', 'tokko', 'lama', 'sadii', 'afur', 'shan', 'jaha', 'torba', 'saddeet', 'sagal']
   };
-  function phoneGroups(v) {
+  /* Numbers 0-99 in words (Amharic and Afaan Oromo are drafts for native-speaker review). Used to read phone numbers
+     the Ethiopian way, and the same words as the recorded number clips num-0 … num-99 (tools/audio-script.cjs). */
+  var TENS_WORDS = {
+    en: ['', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'],
+    am: ['', 'አስር', 'ሃያ', 'ሰላሳ', 'አርባ', 'ሃምሳ', 'ስልሳ', 'ሰባ', 'ሰማንያ', 'ዘጠና'],
+    om: ['', 'kudhan', 'digdama', 'soddoma', 'afurtama', 'shantama', 'jaatama', 'torbaatama', 'saddeettama', 'sagaltama']
+  };
+  var EN_TEENS = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+  function numberWords(n, lang) {
+    var W = DIGIT_WORDS[lang] || DIGIT_WORDS.en, T = TENS_WORDS[lang] || TENS_WORDS.en, o = n % 10, t = Math.floor(n / 10);
+    if (n < 10) return W[n];
+    if (lang === 'am') return n < 20 ? (n === 10 ? T[1] : 'አስራ ' + W[o]) : T[t] + (o ? ' ' + W[o] : '');
+    if (lang === 'om') return n < 20 ? (n === 10 ? T[1] : 'kudha ' + W[o]) : (o ? T[t].replace(/a$/, 'ii') + ' ' + W[o] : T[t]);
+    return n < 20 ? EN_TEENS[o] : T[t] + (o ? '-' + W[o] : '');
+  }
+  /** Ethiopian phone numbers: 0911 23 45 67 (shown), read "zero nine, eleven, twenty-three, forty-five, sixty-seven".
+   *  Returns the parts: single digits (the 0 and the 9) and two-digit numbers (a pair starting with 0 is read as
+   *  two digits). Anything else: pairs of digits. */
+  function phoneParts(v) {
+    var d = String(v || '').replace(/\D/g, ''), head = [], rest = d;
+    if (d.length === 12 && d.indexOf('251') === 0) { head = ['2', '5', '1', d.charAt(3)]; rest = d.slice(4); }
+    else if (d.length === 10 && d.charAt(0) === '0') { head = [d.charAt(0), d.charAt(1)]; rest = d.slice(2); }
+    var pairs = rest.match(/.{1,2}/g) || [], parts = head.slice();
+    pairs.forEach(function (pr) { if (pr.length === 2 && pr.charAt(0) === '0') parts.push('0', pr.charAt(1)); else parts.push(pr); });
+    return parts;
+  }
+  function formatPhone(v) {
     var d = String(v || '').replace(/\D/g, '');
-    if (d.length === 10) return [d.slice(0, 4), d.slice(4, 7), d.slice(7)];
-    if (d.length === 12 && d.indexOf('251') === 0) return ['251', d.slice(3, 6), d.slice(6, 9), d.slice(9)];
-    return d.match(/.{1,3}/g) || [];
+    if (d.length === 10 && d.charAt(0) === '0') return d.slice(0, 4) + ' ' + d.slice(4, 6) + ' ' + d.slice(6, 8) + ' ' + d.slice(8);
+    if (d.length === 12 && d.indexOf('251') === 0) return '+251 ' + d.slice(3, 6) + ' ' + d.slice(6, 8) + ' ' + d.slice(8, 10) + ' ' + d.slice(10);
+    return String(v || '');
   }
   function spokenPhone(v, lang) {
-    var W = DIGIT_WORDS[lang] || DIGIT_WORDS.en;
-    return phoneGroups(v).map(function (g) { return g.split('').map(function (c) { return W[+c]; }).join(' '); }).join(', ');
+    var parts = phoneParts(v), out = [];
+    // the leading single digits are said together ("zero nine"), then each number after a pause
+    var lead = []; while (parts.length && parts[0].length === 1 && out.length === 0 && lead.length < (String(v).replace(/\D/g, '').length === 12 ? 4 : 2)) lead.push(numberWords(+parts.shift(), lang));
+    if (lead.length) out.push(lead.join(' ') + (parts.length ? ' ' + numberWords(+parts.shift(), lang) : '')); // "zero nine eleven"
+    return out.concat(parts.map(function (x) { return numberWords(+x, lang); })).join(', ');
+  }
+  /** A phone number, on the phone only: recorded number clips where they exist (num-0 … num-99), otherwise a voice
+   *  that runs on the phone. Never sent to an online voice. */
+  function phoneItems(v, lang) {
+    var clips = AUDIO.manifest && AUDIO.manifest[lang] && AUDIO.manifest[lang]['num-11'];
+    if (!clips) return [{ key: null, text: spokenPhone(v, lang), lang: lang, local: true }];
+    return phoneParts(v).map(function (x) { return { key: 'num-' + (+x), text: numberWords(+x, lang), lang: lang, local: true }; });
   }
   /** The language to read a piece of text in: Ethiopic letters are read as Amharic, other letters in the page's
    *  language when it is Afaan Oromo (Latin script), otherwise English. */
@@ -1052,7 +1103,7 @@
   /** Pieces to read back an answer. prefix: 'heard' or 'yourAnswer'. */
   function readBackItems(f, value, lang, prefix) {
     var items = [{ key: null, text: t(prefix, lang), lang: lang }];
-    if (f.type === 'tel') items.push({ key: null, text: spokenPhone(value, lang), lang: lang });
+    if (f.type === 'tel') items = items.concat(phoneItems(value, lang)); // on the phone only
     else items.push({ key: null, text: String(value), lang: scriptLang(String(value), lang) });
     return items;
   }
@@ -1060,7 +1111,7 @@
   function localDigitItems(value, lang) {
     var W = DIGIT_WORDS[lang] || DIGIT_WORDS.en;
     return Array.from(String(value || '')).filter(function (c) { return /[0-9a-z]/i.test(c); }).map(function (c) {
-      return /\d/.test(c) ? { key: 'digit-' + c, text: W[+c], lang: lang, local: true } : { key: null, text: c.toUpperCase(), lang: 'en', local: true };
+      return /\d/.test(c) ? { key: 'num-' + c, text: W[+c], lang: lang, local: true } : { key: null, text: c.toUpperCase(), lang: 'en', local: true };
     });
   }
   var AM_DIGITS = { 'ዜሮ': '0', 'አንድ': '1', 'ሁለት': '2', 'ሶስት': '3', 'ሦስት': '3', 'አራት': '4', 'አምስት': '5', 'ስድስት': '6', 'ሰባት': '7', 'ስምንት': '8', 'ዘጠኝ': '9' };
@@ -1545,7 +1596,8 @@
         '<button type="button" class="dm-btn dm-small" data-act="help" aria-expanded="' + !!vm.helpOpen + '" aria-controls="' + helpId + '">' + t('help', lang) + '</button>' +
         '</div></div>' +
         '<div id="' + helpId + '" data-ref="help" class="dm-panel"' + (vm.helpOpen ? '' : ' hidden') + '><h2>' + t('helpTitle', lang) + '</h2><p>' + esc(L(vm.cfg.help, lang) || t('helpText', lang)) + '</p>' + View.srTip() +
-        '<button type="button" class="dm-btn dm-small" data-act="help">' + t('helpClose', lang) + '</button></div>';
+        '<div class="dm-actions"><button type="button" class="dm-btn dm-small" data-act="listen-help">' + pic(vm.pictures, '🔊') + t('listen', lang) + '</button>' +
+        '<button type="button" class="dm-btn dm-small" data-act="help">' + t('helpClose', lang) + '</button></div></div>';
     },
 
     page: function (vm) {
@@ -1678,6 +1730,7 @@
       if (isEmpty(v)) return t('notGiven', lang);
       if (f.type === 'choice' || f.type === 'consent') { var o = opts.filter(function (x) { return x.value === v; })[0]; return o ? L(o.label, lang) + (o.badge ? ' (' + L(o.badge, lang) + ')' : '') : v; }
       if (f.type === 'multi') return v.map(function (x) { var o = opts.filter(function (y) { return y.value === x; })[0]; return o ? L(o.label, lang) : x; }).join(', ');
+      if (f.type === 'tel') return formatPhone(v);
       if (f.type === 'ethdate') return v.d + ' ' + monthsFor(v.cal, lang)[v.m - 1] + ' ' + v.y + ' (' + (v.cal === 'greg' ? fmtEthiopian(v.gregorian, lang) : fmtGregorian(new Date(v.gregorian), lang)) + ')';
       return String(v);
     },
@@ -1761,6 +1814,7 @@
   class SavannaOnboardingForm extends HTMLElement {}
 
   SavannaOnboardingForm.prototype.connectedCallback = function () {
+    loadAudioManifest(); // early, so the recorded clips (numbers too) are known before the learner presses Listen
     if (this._ready) return;
     injectCss();
     var id = this.getAttribute('form');
@@ -1878,25 +1932,45 @@
 
   /* --- page summaries (English only for now; hand-written, never generated): what this screen asks, how to answer,
      and what is below it. Field topics are in forms.js (summary); the sentences around them are here. --- */
+  /* Hand-written sentence patterns for the step summaries (Amharic and Afaan Oromo: drafts for native review). The
+     topic of each question is in forms.js (English); in Amharic and Oromo the question itself is the topic. */
+  var SUMMARY_T = {
+    en: { welcome: '{title}. First, choose how you like to fill in the form: read and type, listen, speak my answers, or simple steps with pictures. Below is {next}.',
+      step: 'Step {n} of {m}: {topic}.', one: 'Choose one answer.', many: 'Choose all that apply.', date: 'First choose your calendar, then the day, month and year.',
+      say: 'You can type it or say it.', type: 'Type it.', skip: 'You can skip it.', both: 'Below are {next} and {back}.', only: 'Below is {next}.',
+      review: '{title}: {n} answers, each with a {change} button. At the bottom is {submit}.', done: '{title}. {text} Below are the next steps.',
+      saved: 'Your answers are saved on this phone. Below is the link to continue later.' },
+    am: { welcome: '{title}። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «{next}» አለ።',
+      step: 'ደረጃ {n} ከ{m}፦ {topic}', one: 'አንድ መልስ ይምረጡ።', many: 'የሚስማሙትን ሁሉ ይምረጡ።', date: 'መጀመሪያ አቆጣጠሩን፣ ከዚያ ቀን፣ ወርና ዓመት ይምረጡ።',
+      say: 'መጻፍ ወይም መናገር ይችላሉ።', type: 'ይጻፉት።', skip: 'መዝለል ይችላሉ።', both: 'ከታች «{next}» እና «{back}» አሉ።', only: 'ከታች «{next}» አለ።',
+      review: '{title}፦ {n} መልሶች፣ እያንዳንዱ «{change}» አዝራር አለው። ከታች «{submit}» አለ።', done: '{title}። {text} ከታች ቀጣዮቹ እርምጃዎች አሉ።',
+      saved: 'መልሶችዎ በዚህ ስልክ ላይ ተቀምጠዋል። በኋላ ለመቀጠል ሊንኩ ከታች አለ።' },
+    om: { welcome: '{title}. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "{next}" jira.',
+      step: 'Tarkaanfii {n} keessaa {m}: {topic}', one: 'Deebii tokko filadhu.', many: 'Kan siif ta\'an hunda filadhu.', date: 'Dura dhaha, sana booda guyyaa, ji\'aa fi waggaa filadhu.',
+      say: 'Barreessuu ykn dubbachuu dandeessa.', type: 'Barreessi.', skip: 'Dabarsuu dandeessa.', both: 'Gadi "{next}" fi "{back}" jiru.', only: 'Gadi "{next}" jira.',
+      review: '{title}: deebii {n}, tokkoon tokkoon isaa qabduu "{change}" qaba. Gadi "{submit}" jira.', done: '{title}. {text} Gadi tarkaanfiiwwan itti aanan jiru.',
+      saved: 'Deebiin kee bilbila kana irratti kuufameera. Booda itti fufuuf geessituun gadi jira.' }
+  };
+  function fill(str, vars) { Object.keys(vars).forEach(function (k) { str = str.split('{' + k + '}').join(vars[k]); }); return str; }
+  /* --- page summaries (hand-written, never generated): what this screen asks, how to answer, and what is below it.
+     English, with Amharic and Afaan Oromo drafts. --- */
   SavannaOnboardingForm.prototype.summary = function () {
-    if (this.lang !== 'en') return '';
-    var s = this.state, vm = this.vm(), cfg = this.cfg, m = s.mode;
-    if (m === 'welcome') return L(cfg.title, 'en') + '. First, choose how you like to fill in the form: read and type, listen, speak my answers, or simple steps with pictures. Below is Continue.';
+    var lang = SUMMARY_T[this.lang] ? this.lang : 'en', T = SUMMARY_T[lang], s = this.state, vm = this.vm(), cfg = this.cfg, m = s.mode;
+    var names = { next: t('next', lang), back: t('back', lang), change: t('change', lang) };
+    if (m === 'welcome') return fill(T.welcome, { title: L(cfg.title, lang), next: names.next });
     if (m === 'question') {
       var f = s.field(), p = s.progress(), back = s.step > 0 || !!vm.backUrl || this.welcomeOn;
-      var topic = L(f.summary, 'en') || L(f.label, 'en');
-      var how = f.type === 'choice' || f.type === 'consent' ? 'Choose one answer.' : f.type === 'multi' ? 'Choose all that apply.'
-        : f.type === 'ethdate' ? 'First choose your calendar, then the day, month and year.'
-        : voiceAllowed(f, vm) && speech.input.supported() ? 'You can type it or say it.' : 'Type it.';
-      if (f.optional) how += ' You can skip it.';
-      return 'Step ' + p.n + ' of ' + p.total + ': ' + topic + '. ' + how + (back ? ' Below are Continue and Back.' : ' Below is Continue.');
+      var topic = lang === 'en' ? (L(f.summary, 'en') || L(f.label, 'en')) : L(f.label, lang);
+      var how = f.type === 'choice' || f.type === 'consent' ? T.one : f.type === 'multi' ? T.many : f.type === 'ethdate' ? T.date
+        : voiceAllowed(f, vm) && speech.input.supported(lang) ? T.say : T.type;
+      return [fill(T.step, { n: p.n, m: p.total, topic: topic }), how, f.optional ? T.skip : '', fill(back ? T.both : T.only, names)].filter(Boolean).join(' ');
     }
     if (m === 'review') {
       var n = s.visible().filter(function (x) { return !x.reviewHide; }).length;
-      return (L(cfg.reviewTitle, 'en') || 'Check your answers') + ': ' + n + (n === 1 ? ' answer' : ' answers') + ', each with a Change button. At the bottom is ' + (L(cfg.submitLabel, 'en') || 'Continue') + '.';
+      return fill(T.review, { title: L(cfg.reviewTitle, lang) || t('review', lang), n: n, change: names.change, submit: L(cfg.submitLabel, lang) || t('submit', lang) });
     }
-    if (m === 'done') return L(cfg.doneTitle, 'en') + '. ' + L(cfg.doneText, 'en') + ' Below are the next steps.';
-    if (m === 'saved') return 'Your answers are saved on this phone. Below is the link to continue later.';
+    if (m === 'done') return fill(T.done, { title: L(cfg.doneTitle, lang), text: L(cfg.doneText, lang) });
+    if (m === 'saved') return T.saved;
     return '';
   };
 
@@ -2023,6 +2097,7 @@
       return;
     }
     if (act === 'listen') { this.readQuestion(); return; }
+    if (act === 'listen-help') { Player.play([{ key: 'help', text: t('helpTitle', this.lang) + ' ' + (L(this.cfg.help, this.lang) || t('helpText', this.lang)), lang: this.lang }], this.lang, this); return; }
     if (act === 'readback') { this.readBack(); return; }
     if (act === 'spell') { var hv = this.voice, he = this.ref('heard-edit'); var sv = he ? he.value : (hv && hv.value) || ''; Player.play([{ key: null, text: spelled(sv), lang: scriptLang(sv, this.lang) }], this.lang, this); return; }
     if (act === 'readback-id' || act === 'readback-id-cancel') {
@@ -2090,6 +2165,7 @@
       if (cfg.reviewNote) items.push({ key: clipKey(form, 'check-answers-note'), text: L(cfg.reviewNote, lang) });
     } else if (s.mode === 'done') {
       items.push({ key: clipKey(form, 'done'), text: L(cfg.doneTitle, lang) + ' ' + L(cfg.doneText, lang) });
+      var slot = this.querySelector('.dm-done-slot'); if (slot) items = items.concat(itemsFromElement(slot, lang)); // the host's confirmation
     } else if (s.mode === 'saved') {
       items.push({ key: 'saved-for-later', text: t('savedTitle', lang) + '. ' + t('savedText', lang) });
     }
@@ -2114,7 +2190,7 @@
       }
       items.push({ key: null, text: label, lang: lang });
       if (isEmpty(v)) items.push({ key: null, text: t('notGiven', lang), lang: lang });
-      else if (f.type === 'tel') items.push({ key: null, text: spokenPhone(v, lang), lang: lang });
+      else if (f.type === 'tel') items = items.concat(phoneItems(v, lang));
       else if (f.type === 'text' || f.type === 'textarea') items.push({ key: null, text: String(v), lang: scriptLang(String(v), lang) });
       else items.push({ key: null, text: View.display(vm, f, v), lang: lang });
     });
@@ -2218,7 +2294,8 @@
     // read back what was heard, so it can be checked by ear, then the three choices
     var back = v.hits || v.date ? [{ key: null, text: t('heard', lang) + ' ' + v.shown, lang: lang }] : readBackItems(f, v.value, lang, 'heard');
     back.push({ key: null, text: t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }), lang: lang });
-    Player.play(back, lang, this);
+    // if nothing can read it, stay quiet: "I heard: … Choose …" is already announced and on the screen
+    Player.play(back, lang, { audioIssue: function () {} });
   };
 
   /* The learner checked the transcript: only now does it become the answer (still saved only on Continue). */
@@ -2431,6 +2508,8 @@
     describe: describe, speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
     player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
     prefs: getPrefs, setPrefs: setPrefs, readingOn: readingOn,
+    /** Pieces to read an element's content (headings, paragraphs, lists), each in its own language: for Player.play. */
+    itemsFromElement: itemsFromElement,
     /** The host's speech proxy (for example '/api'): Amharic and Afaan Oromo speech through it; null turns it off. */
     setSpeechProxy: setSpeechProxy, speechProxy: function () { return { url: REMOTE.url, down: REMOTE.down, languages: REMOTE.langs.slice() }; }, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
     /** Adds the module's styles and fonts to the page (done automatically when a form or settings element appears). */

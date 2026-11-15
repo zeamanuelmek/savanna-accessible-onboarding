@@ -136,7 +136,7 @@ test.describe('reading back what was heard or typed', () => {
     await fakeVoice(page);
     await say(page, { alts: ['0911234567'] });
     await speakAnswer(page);
-    await expect.poll(() => said(page)).toEqual(['I heard:', 'zero nine one one, two three four, five six seven', 'Choose Use this answer, Say it again, or Type it instead.']);
+    await expect.poll(() => said(page)).toEqual(['I heard:', 'zero nine eleven, twenty-three, forty-five, sixty-seven', 'Choose Use this answer, Say it again, or Type it instead.']);
   });
 
   test('"Read back my answer" on typed names and phone numbers', async ({ page }) => {
@@ -144,9 +144,9 @@ test.describe('reading back what was heard or typed', () => {
     await fakeVoice(page);
     await page.getByRole('button', { name: 'Read back my answer' }).click();
     await expect.poll(() => said(page)).toEqual(['Nothing is typed yet.']);
-    await page.fill('[data-ref=input]', '0911 234 567');
+    await page.fill('[data-ref=input]', '0911 23 45 67');
     await page.getByRole('button', { name: 'Read back my answer' }).click();
-    await expect.poll(() => said(page)).toEqual(['Nothing is typed yet.', 'Your answer:', 'zero nine one one, two three four, five six seven']);
+    await expect.poll(() => said(page)).toEqual(['Nothing is typed yet.', 'Your answer:', 'zero nine eleven, twenty-three, forty-five, sixty-seven']);
     await expect(playBar(page)).toHaveCount(1); // the same player (Pause, Stop, Escape)
   });
 
@@ -173,7 +173,7 @@ test.describe('reading back what was heard or typed', () => {
     await signupTo(page, 'END');
     await fakeVoice(page);
     await page.getByRole('button', { name: 'Read all my answers' }).click();
-    await expect.poll(async () => (await said(page)).join(' | ')).toContain('What is your phone number? | zero nine one one, two three four, five six seven');
+    await expect.poll(async () => (await said(page)).join(' | ')).toContain('What is your phone number? | zero nine eleven, twenty-three, forty-five, sixty-seven');
     expect((await said(page)).join(' | ')).toContain('Abebe Kebede');
     // the ID form, with a number typed
     await identityTo(page, 'id_number');
@@ -202,6 +202,33 @@ test('the ID number in Amharic uses the recorded digits (Mekdes), never the onli
   await page.fill('[data-ref=input]', '205');
   await page.locator('[data-act=readback-id]').click();
   await page.locator('[data-act=readback-id-go]').click();
-  await expect.poll(() => page.evaluate(() => window.__clips), { timeout: 10000 }).toEqual(['digit-2.mp3', 'digit-0.mp3', 'digit-5.mp3']);
+  await expect.poll(() => page.evaluate(() => window.__clips), { timeout: 10000 }).toEqual(['num-2.mp3', 'num-0.mp3', 'num-5.mp3']);
   expect(cloud).toEqual([]);
 });
+
+test('phone numbers the Ethiopian way: shown 0911 23 45 67, read in natural numbers, on the phone only (never the online voice)', async ({ page }) => {
+  await freshStart(page, { lang: 'am', remote: true });
+  await audioLog(page);
+  const cloud = [];
+  await page.route('**/api/tts', r => { cloud.push(r.request().postData()); return r.fulfill({ status: 503, contentType: 'application/json', body: '{"error":"not_configured"}' }); });
+  await signupTo(page, 'phone');
+  await expect(page.locator('.dm-hint').first()).toContainText('0911 23 45 67'); // the example
+  await fakeVoice(page);
+  await page.fill('[data-ref=input]', '0911234567');
+  await page.locator('[data-act=readback]').click();
+  await expect.poll(() => page.evaluate(() => window.__clips), { timeout: 15000 }).toEqual(['num-0.mp3', 'num-9.mp3', 'num-11.mp3', 'num-23.mp3', 'num-45.mp3', 'num-67.mp3']);
+  expect(cloud.filter(x => /0911|23|45|67/.test(x))).toEqual([]); // the number never went to the online voice
+  await next(page); await next(page); await pick(page, 'yes'); await next(page);
+  await expect(page.locator('.dm-review')).toContainText('0911 23 45 67'); // shown the Ethiopian way
+});
+
+for (const [lang, words] of [['en', 'zero nine eleven, twenty-three, forty-five, sixty-seven'], ['om', 'zeeroo sagal kudha tokko, digdamii sadii, afurtamii shan, jaatamii torba']]) {
+  test(`a typed phone number is read in natural numbers in ${lang}, by a voice on the phone`, async ({ page }) => {
+    await freshStart(page, { lang });
+    await signupTo(page, 'phone');
+    await fakeVoice(page);
+    await page.fill('[data-ref=input]', '0911234567');
+    await page.locator('[data-act=readback]').click();
+    await expect.poll(() => page.evaluate(() => window.__said.slice(-1)[0])).toEqual({ text: words, lang, local: true });
+  });
+}

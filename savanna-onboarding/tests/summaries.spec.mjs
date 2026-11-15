@@ -76,7 +76,7 @@ function browserSpeech(page, { allow = true } = {}) {
     document.addEventListener('click', unlock, true); document.addEventListener('keydown', unlock, true);
     Object.defineProperty(window, 'SpeechSynthesisUtterance', { configurable: true, value: function (text) { this.text = text; } });
     Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: {
-      speaking: false, getVoices: () => [], cancel() {}, pause() {}, resume() {},
+      speaking: false, getVoices: () => [{ lang: 'en-US', localService: true }, { lang: 'am-ET', localService: true }, { lang: 'om-ET', localService: true }], cancel() {}, pause() {}, resume() {},
       speak(u) { setTimeout(() => { if (!ok) { if (u.onerror) u.onerror({ error: 'not-allowed' }); return; } window.__said.push(u.text); if (u.onend) u.onend(); }, 20); }
     } });
   }, allow);
@@ -178,11 +178,15 @@ test('sound blocked or missing: no errors, and everything stays written', async 
   expect(errors).toEqual([]);
 });
 
-test('English only for now: no summary and no prompt in Amharic', async ({ page }) => {
+test('summaries in Amharic and Afaan Oromo too (drafts), with the prompt in that language', async ({ page }) => {
   await freshStart(page, { lang: 'am', prefs: { autoRead: 'ask' } });
   await at(page, '/index.html');
-  await expect(page.locator('#sj-hear')).toHaveCount(0);
-  await expect(summary(page)).toBeHidden();
+  await expect(summary(page)).toHaveText(/^ወደ ሳቫና እንኳን ደህና መጡ። ደረጃ 1 ከ2/);
+  await expect(summary(page)).toHaveAttribute('lang', 'am');
+  await expect(page.locator('#sj-hear')).toHaveText('ይህን ገጽ ለመስማት የትም ቦታ ይንኩ ወይም ማንኛውንም ቁልፍ ይጫኑ');
+  await page.evaluate(() => window.SavannaOnboarding.setPrefs({ lang: 'om' }));
+  await at(page, '/jobs.html');
+  await expect(summary(page)).toHaveText(/^Hojiiwwan\. /);
 });
 
 // ---- Fix 3 (15 Nov evening): automatic reading every time a page or step opens, not only once per page
@@ -237,4 +241,73 @@ test('turning automatic reading off stops the sound at once; turning it on again
   await reading.click(); // on again
   await expect.poll(() => said(page)).toEqual([expect.stringContaining('Jobs. First a checkbox')]);
   await expect(reading).toHaveAttribute('aria-pressed', 'true');
+});
+
+// ---- One reading layer for every page (15 Nov evening): each page reads its summary and its content when it opens
+const signedInLearner = page => page.addInitScript(() => {
+  if (sessionStorage.getItem('__learner')) return; sessionStorage.setItem('__learner', '1');
+  localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: null, assurance_level: 'no_id_yet' }));
+  localStorage.setItem('savanna-demo.session', '{"at":"x"}');
+});
+async function readingOn(page, lang = 'en') {
+  await freshStart(page, { lang, prefs: { autoRead: 'on', easy: true, mode: 'listen' } });
+  await interactedThisSession(page);
+  await browserSpeech(page);
+}
+
+test('Check your answers reads its summary when it opens, and offers "Read all my answers"', async ({ page }) => {
+  await readingOn(page);
+  await at(page, '/signup.html'); await page.waitForSelector('.dm-q');
+  await pick(page, 'self'); await next(page);
+  await page.fill('[data-ref=input]', 'Abebe'); await next(page);
+  await page.fill('[data-ref=input]', '0911234567'); await next(page);
+  await next(page); await pick(page, 'yes'); await next(page);
+  await expect.poll(() => said(page)).toContainEqual('Sign up for Savanna. Check your answers: 5 answers, each with a Change button. At the bottom is Create my account.');
+  await expect(page.getByRole('button', { name: 'Read all my answers' })).toBeVisible();
+});
+
+test('the dashboard reads its summary, then what is waiting for the learner', async ({ page }) => {
+  await readingOn(page); await signedInLearner(page);
+  await at(page, '/dashboard.html');
+  await expect.poll(() => said(page)).toEqual(expect.arrayContaining([expect.stringContaining('Your Savanna homepage.'), expect.stringContaining('You can start learning without an ID')]));
+  expect((await said(page))[0]).toContain('Your Savanna homepage.'); // the summary first
+});
+
+test('the jobs page reads its summary when it opens', async ({ page }) => {
+  await readingOn(page);
+  await at(page, '/jobs.html');
+  await expect.poll(() => said(page)).toEqual([expect.stringContaining('each job title is a heading, with Listen and Apply buttons')]);
+});
+
+test('a job application step reads its summary, then the question', async ({ page }) => {
+  await readingOn(page); await signedInLearner(page);
+  await at(page, '/apply.html?job=s1'); await page.waitForSelector('.dm-q');
+  await expect.poll(() => said(page)).toEqual(expect.arrayContaining([expect.stringMatching(/^Job application\. Step 1 of \d: your name for this application\./), 'Your name for this application']));
+  await next(page); // the phone number (prefilled)
+  await expect.poll(() => said(page)).toContainEqual(expect.stringMatching(/Step 2 of \d: your phone number\./));
+});
+
+test('the application confirmation reads what was sent, and "Read all my answers" reads the list again', async ({ page }) => {
+  await readingOn(page); await signedInLearner(page);
+  await at(page, '/apply.html?job=s1'); await page.waitForSelector('.dm-q');
+  await next(page); await next(page);
+  await page.fill('[data-ref=input]', 'I like people.'); await next(page);
+  await page.fill('[data-ref=input]', 'Volunteering.'); await next(page);
+  await next(page); // interview: optional
+  await next(page); // Send my application
+  await expect(page.locator('.dm-done-slot h2')).toHaveText(/^Your application was sent to /);
+  await expect.poll(async () => (await said(page)).join(' | ')).toMatch(/Your application is sent.*Your application was sent to .*I like people\..*This is a demo: nothing was actually sent\./);
+  await page.evaluate(() => { window.__said = []; });
+  await page.getByRole('button', { name: 'Read all my answers' }).click();
+  await expect.poll(() => said(page)).toEqual(expect.arrayContaining(['Why do you want this job?', 'I like people.']));
+  await expect(page.locator('#so-playbar')).toHaveCount(1); // the same player
+});
+
+test('the Help panel has its own Listen button (same player)', async ({ page }) => {
+  await readingOn(page);
+  await at(page, '/signup.html'); await page.waitForSelector('.dm-q');
+  await page.locator('.dm-bar [data-act=help]').click();
+  await page.evaluate(() => { window.__said = []; });
+  await page.locator('[data-act=listen-help]').click();
+  await expect.poll(() => said(page)).toEqual([expect.stringContaining('There is no time limit.')]);
 });

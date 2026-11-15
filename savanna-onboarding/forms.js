@@ -91,7 +91,7 @@
         hint: { en: 'Amharic or English letters are both fine. You can add your full name later in My profile, if you want to.', am: 'የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።', om: 'Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta\'u. Yoo barbaadde, maqaa kee guutuu booda Piroofaayilii koo keessatti dabaluu dandeessa.' } }),
       { id: 'phone', picture: '📱', type: 'tel', autocomplete: 'tel',
         label: { en: 'What is your phone number?', am: 'ስልክ ቁጥርዎ ስንት ነው?', om: 'Lakkoofsi bilbila keetii meeqa?' },
-        hint: { en: 'We use it only to send you a link to continue. For example 0911 234 567.', am: 'ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 234 567።', om: 'Kan itti fayyadamnu geessituu itti fufuu siif erguuf qofa. Fakkeenyaaf 0911 234 567.' } },
+        hint: { en: 'We use it only to send you a link to continue. For example 0911 23 45 67.', am: 'ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 23 45 67።', om: 'Kan itti fayyadamnu geessituu itti fufuu siif erguuf qofa. Fakkeenyaaf 0911 23 45 67.' } },
       { id: 'dob', picture: '🎂', type: 'ethdate', optional: true,
         label: { en: 'When were you born?', am: 'መቼ ተወለዱ?', om: 'Yoom dhalatte?' },
         hint: { en: 'First choose the Ethiopian or the Gregorian calendar. You can skip this if you are not sure.', am: 'መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።', om: 'Dura dhaha Itoophiyaa ykn dhaha Gorgooriyaan filadhu. Yoo hin mirkaneeffatin kana dabarsuu dandeessa.' } },

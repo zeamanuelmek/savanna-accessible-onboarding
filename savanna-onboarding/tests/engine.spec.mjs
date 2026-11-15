@@ -166,7 +166,7 @@ test('profile update: starts on the summary, changes one detail, and later forms
   await go(page, '#/profile');
   expect(await heading(page)).toBe('My profile');
   await expect(page.locator('.dm-review')).toContainText('Abebe Kebede');
-  await expect(page.locator('.dm-review')).toContainText('0911234567');
+  await expect(page.locator('.dm-review')).toContainText('0911 23 45 67') // shown the Ethiopian way;
   await expect(page.locator('[data-act=back]')).toHaveCount(0);
   await page.locator('.dm-review > div', { hasText: 'Name' }).first().locator('[data-act=change]').click();
   await expect(page.locator('[data-ref=input]')).toHaveValue('Abebe Kebede');
