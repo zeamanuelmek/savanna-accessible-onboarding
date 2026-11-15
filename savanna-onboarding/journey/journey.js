@@ -625,7 +625,8 @@
     // one switch for all reading: page summaries and questions (written quietly, so the page does not redraw under the finger)
     if (pr.autoRead === 'ask') { try { var raw = D.store.get('prefs', {}) || {}; raw.autoRead = 'on'; raw.easy = true; D.store.set('prefs', raw); } catch (x) {} }
     var tg = document.querySelector('[data-tog="reading"]'); if (tg) tg.setAttribute('aria-pressed', 'true');
-    setTimeout(function () { showPrompt(false); readCurrent(); }, 0);
+    // read the page, unless the tap itself just started something (a Listen button, a message being read)
+    setTimeout(function () { showPrompt(false); if (D.player.state === 'idle') readCurrent(); }, 0);
   }
   document.addEventListener('click', firstInteraction, true);
   document.addEventListener('keydown', firstInteraction, true);
@@ -811,16 +812,32 @@
       h += '<p><label class="sj-label-big" for="sj-phone">' + T('phone') + '</label></p><p id="sj-phone-hint" class="muted">' + T('phoneHint') + '</p>' +
         (err ? '<p id="sj-err" class="sj-err">' + esc(err) + '</p>' : '') +
         '<p><input id="sj-phone" class="sj-input" type="tel" inputmode="tel" autocomplete="tel" value="' + esc(login.phone) + '" aria-describedby="sj-phone-hint' + (err ? ' sj-err' : '') + '"' + (err ? ' aria-invalid="true"' : '') + '></p>' +
+        '<p><button type="button" class="btn" id="sj-login-listen">' + T('listenQ') + '</button></p>' +
         '<p class="actions"><button type="submit" class="btn primary">' + T('sendCode') + '</button></p>';
     } else {
       h += '<div class="notice sj-sms"><h2>' + T('smsTitle') + '</h2><p><samp>' + T('smsText', { code: login.code }) + '</samp></p></div>' +
         '<p><label class="sj-label-big" for="sj-code">' + T('code') + '</label></p><p id="sj-code-hint" class="muted">' + T('codeHint') + '</p>' +
         (err ? '<p id="sj-err" class="sj-err">' + esc(err) + '</p>' : '') +
         '<p><input id="sj-code" class="sj-input" type="text" inputmode="numeric" autocomplete="one-time-code" aria-describedby="sj-code-hint' + (err ? ' sj-err' : '') + '"' + (err ? ' aria-invalid="true"' : '') + '></p>' +
+        '<p><button type="button" class="btn" id="sj-login-listen">' + T('listenQ') + '</button></p>' +
         '<p class="actions"><button type="submit" class="btn primary">' + T('doLogin') + '</button></p>';
     }
     h += '</form><p role="status" id="sj-status" class="muted"></p><p>' + T('noAccount') + ' <a href="signup.html">' + T('signup') + '</a></p></div>';
     view.innerHTML = h;
+    /* "Listen to the question" on the log-in fields (the shared player): the label and hint; on the code step also the
+       simulated SMS, with the code digit by digit and on the phone only (it is never sent to an online voice). */
+    document.getElementById('sj-login-listen').onclick = function () {
+      var L2 = lang(), items;
+      if (login.step === 'phone') items = [{ key: null, text: T('phone'), lang: L2 }, { key: null, text: T('phoneHint'), lang: L2 }];
+      else {
+        var sms = T('smsText', { code: '{CODE}' }).split('{CODE}'); // the words before and after the code
+        items = [{ key: null, text: T('smsTitle'), lang: L2 }, { key: null, text: sms[0], lang: L2 }]
+          .concat(String(login.code).split('').map(function (c) { return { key: 'num-' + c, text: c, lang: L2, local: true }; }))
+          .concat(sms[1] && sms[1].trim() ? [{ key: null, text: sms[1], lang: L2 }] : [])
+          .concat([{ key: null, text: T('code'), lang: L2 }, { key: null, text: T('codeHint'), lang: L2 }]);
+      }
+      D.player.play(items, L2, { audioIssue: function (code) { var st = document.getElementById('sj-status'); if (st && code === 'readFail') st.textContent = D.label({ en: "Reading aloud isn't available right now. Everything is written on the screen.", am: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።', om: 'Sagaleen dubbisuun amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.' }, L2); } });
+    };
     document.getElementById('sj-login').onsubmit = function (e) {
       e.preventDefault();
       if (login.step === 'phone') {

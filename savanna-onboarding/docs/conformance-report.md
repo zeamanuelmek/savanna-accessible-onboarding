@@ -174,9 +174,8 @@ support, with who and when) · **Notes / limitations**.
 - **Amharic audio is synthetic.** Demo Amharic audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text. It will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint. Afaan Oromo has no Microsoft voice: it is text only, plus the phone's
   voice if it has one.
 - **Page summaries and automatic reading** cover every Savanna page and form step, in English with Amharic and Afaan
-  Oromo drafts (inventory in `DEVELOPMENT_PROGRESS.md`). Gaps: the log-in fields and Settings have no per-field
-  Listen, the result of sharing or withdrawing on the Support Passport card is a status message only, and the offline
-  message inside a form is not read aloud. Browsers allow sound only after an interaction with each new page; then the
+  Oromo drafts (inventory in `DEVELOPMENT_PROGRESS.md`). Gap: Settings has no per-setting Listen
+  (the page summary is read). Browsers allow sound only after an interaction with each new page; then the
   prompt "Tap anywhere or press any key to hear this page" is shown.
 - **Phone and ID numbers are read on the phone only** (recorded Amharic numbers, otherwise a voice on the phone);
   Oromo number clips are not generated yet.

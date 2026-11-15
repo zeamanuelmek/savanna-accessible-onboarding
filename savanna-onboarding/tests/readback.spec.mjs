@@ -232,3 +232,44 @@ for (const [lang, words] of [['en', 'zero nine eleven, twenty-three, forty-five,
     await expect.poll(() => page.evaluate(() => window.__said.slice(-1)[0])).toEqual({ text: words, lang, local: true });
   });
 }
+
+// ---- the three small gaps (15 Nov night)
+test('Support Passport card: saving who can see it, and withdrawing, are read aloud when automatic reading is on', async ({ page }) => {
+  await freshStart(page, { lang: 'en', prefs: { autoRead: 'on', easy: true }, extra: {
+    'savanna-onboarding.profile': { name: 'Abebe', phone: '0911234567', id_route: null, assurance_level: 'no_id_yet' },
+    'savanna-onboarding.passport': { needs: ['remote'], sharing: 'ask' } } });
+  await page.addInitScript(() => localStorage.setItem('savanna-demo.session', '{"at":"x"}'));
+  await at(page, '/passport.html');
+  await fakeVoice(page);
+  await page.getByRole('button', { name: 'Let my ALX trainers see it' }).click();
+  await expect.poll(() => said(page)).toContainEqual(expect.stringMatching(/^Saved\. Who can see this: You and your trainers at ALX/));
+  await expect(page.locator('#pp-status')).toContainText('Saved. Who can see this'); // and still a status message
+});
+
+test('the offline message inside a form is read aloud when automatic reading is on', async ({ page, context }) => {
+  await freshStart(page, { lang: 'en', prefs: { autoRead: 'on', easy: true } });
+  await signupTo(page, 'name', 'listen'); // "Listen and respond": automatic reading stays on
+  await fakeVoice(page);
+  await context.setOffline(true);
+  await expect(page.locator('[data-ref=offline]')).toBeVisible();
+  await expect.poll(async () => (await said(page)).join(' ')).toMatch(/offline/i);
+  await context.setOffline(false);
+});
+
+test('log-in: "Listen to the question" on each field; the code is read digit by digit, on the phone only', async ({ page }) => {
+  await freshStart(page, { lang: 'en', extra: { 'savanna-onboarding.profile': { name: 'Abebe', phone: '0911234567', id_route: null, assurance_level: 'no_id_yet' } } });
+  await at(page, '/login.html');
+  await fakeVoice(page);
+  await page.getByRole('button', { name: 'Listen to the question' }).click();
+  await expect.poll(() => said(page)).toEqual(['Phone number', 'The number you signed up with, for example 0911 23 45 67.']);
+  await page.fill('#sj-phone', '0911234567');
+  await page.locator('#sj-login button[type=submit]').click();
+  await page.waitForSelector('#sj-code');
+  await fakeVoice(page);
+  await page.getByRole('button', { name: 'Listen to the question' }).click();
+  await expect.poll(async () => (await said(page)).slice(-1)[0] || '').toContain('paste');
+  const pieces = await page.evaluate(() => window.__said);
+  expect(pieces[0].text).toBe('Simulated SMS');
+  expect(pieces.filter(x => /^\d$/.test(x.text)).every(x => x.local)).toBe(true); // the code never goes to an online voice
+  expect(pieces.slice(-2).map(x => x.text)).toEqual(['Code from the SMS', expect.stringContaining('paste')]);
+});

@@ -1652,17 +1652,17 @@ errors 401 (key), 402 (balance), 429 (busy). **Afaan Oromo is supported in both 
 | My profile (review and edits) | yes (+ what is below the form) | yes | yes | yes | yes |
 | Support Passport, every step | yes | yes | yes | yes | yes |
 | Support Passport card | yes | yes (summary, then the card) | — | yes | **yes** (new) |
-| Sharing and withdraw (card buttons) | part of the card's summary | the result message is a status message (screen readers); not read aloud — **gap** | — | yes | — |
+| Sharing and withdraw (card buttons) | part of the card's summary | yes: the result message is read aloud too (closed 15 Nov night) | — | yes | — |
 | Jobs | yes | yes | Listen to this job (per job) | yes | — |
 | Job application, every step | yes | yes | yes | yes | yes |
 | Application confirmation | yes | yes (what was sent) | — | yes | **yes** (new) |
 | Employer form, every step | yes | yes | yes | yes | yes |
 | Job-posted confirmation | yes | yes | — | yes | **yes** (new) |
 | Takeover (form) / nothing to take over | yes | yes | yes | yes | yes |
-| Log in (simulated) | yes | yes | not a module form: no Listen on its two fields — **gap** | yes | — |
+| Log in (simulated) | yes | yes | Listen to the question on each field (closed 15 Nov night); the SMS code digit by digit, on the phone only | yes | — |
 | Settings | yes | yes | no Listen per setting — **gap** | yes | — |
 | Help panel (in every form) | — | — | **Listen** button (new) | yes | — |
-| Offline message | — | Savanna pages: read aloud when reading is on (new); inside a form: status message only — **gap** | — | yes | — |
+| Offline message | — | read aloud when reading is on, on Savanna pages and inside forms (closed 15 Nov night) | — | yes | — |
 | Please log in | yes | yes | — | yes | — |
 
 Everything uses the same player (Pause, Stop, Escape) and the same order of sources: recorded clip, then Addis AI
@@ -1684,3 +1684,12 @@ use the module's own reading (Listen, option Listen, Read all, read back), not t
   numbers in three languages); readaloud/addis/voice/names/career/offline 130 + 2 after a fix; journey/date-language/
   smoke/engine/identity 148 (one check updated for the new phone format); gate/keyboard/wcag/design/security/
   known-issues 60 passed, 4 skipped; **a11y 192 scans (new: the application confirmation), 0 serious or critical.**
+
+### Three small gaps closed (15 Nov night, pushed separately)
+- Support Passport card: the saved-sharing, withdraw and delete messages are read aloud when automatic reading is on.
+- Forms: the offline and back-online messages are read aloud when automatic reading is on.
+- Log in: "Listen to the question" on both fields; the simulated SMS code is read digit by digit, on the phone only.
+- Also: the first tap on a page no longer replaces audio that the tap itself started; the page reader leaves out
+  button text and decorative icons. Settings: skipped (agreed).
+- Tests (one worker, both sizes): readback/summaries/journey/identity/career/offline 172 passed; a11y for log-in and
+  Support Passport screens 20 passed, 0 serious or critical. The full suite runs overnight.

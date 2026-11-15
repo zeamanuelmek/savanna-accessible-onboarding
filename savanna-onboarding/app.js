@@ -387,7 +387,11 @@
   }
 
   function fmtDate(iso) { try { return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return iso.slice(0, 10); } }
-  function sayStatus(id, msg) { setTimeout(function () { var s = document.getElementById(id); if (s) { s.textContent = ''; s.textContent = msg; } }, 80); }
+  // a status message for screen readers; read aloud too when automatic reading is on (the shared player)
+  function sayStatus(id, msg) {
+    setTimeout(function () { var s = document.getElementById(id); if (s) { s.textContent = ''; s.textContent = msg; } }, 80);
+    if (D.readingOn()) D.player.play([{ key: null, text: msg, lang: lang() }], lang(), { audioIssue: function () {} });
+  }
 
   function passportView() {
     var p = store.get('passport', null), prof = store.get('profile', null);

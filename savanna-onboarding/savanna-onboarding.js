@@ -1031,7 +1031,10 @@
     Array.prototype.forEach.call(blocks, function (el) {
       if (el.closest('[hidden],[aria-hidden="true"],.dm-vh,.sj-vh,.vh,.dm-actions,.actions,button') || el.querySelector('h1,h2,h3,h4,p,li,dt,dd')) return;
       if (el.offsetParent === null && getComputedStyle(el).position !== 'fixed') return;
-      var text = (el.innerText || el.textContent || '').replace(/\s+/g, ' ').trim();
+      // the words only: no buttons, no decorative icons
+      var copy = el.cloneNode(true);
+      Array.prototype.forEach.call(copy.querySelectorAll('button,.btn,[aria-hidden="true"],.dm-vh,.sj-vh,.vh'), function (x) { x.parentNode.removeChild(x); });
+      var text = (copy.textContent || '').replace(/\s+/g, ' ').trim();
       if (!text) return;
       var near = el.closest('[lang]'), l = near ? near.getAttribute('lang') : lang;
       items.push({ key: null, text: text, lang: LANGS.indexOf(l) !== -1 ? l : lang });
@@ -1869,8 +1872,11 @@
     this._onNet = function () {
       var b = self.ref('offline');
       if (!b) return;
-      if (navigator.onLine === false) { b.hidden = false; b.textContent = t('offline', self.lang); }
-      else { b.textContent = t('online', self.lang); setTimeout(function () { if (navigator.onLine !== false && b.textContent === t('online', self.lang)) b.hidden = true; }, 6000); }
+      var msg = t(navigator.onLine === false ? 'offline' : 'online', self.lang);
+      if (navigator.onLine === false) { b.hidden = false; b.textContent = msg; }
+      else { b.textContent = msg; setTimeout(function () { if (navigator.onLine !== false && b.textContent === t('online', self.lang)) b.hidden = true; }, 6000); }
+      // read aloud too when automatic reading is on (offline: a recording or the phone's voice; the online voice is skipped)
+      if (readingOn()) Player.play([{ key: null, text: msg, lang: self.lang }], self.lang, { audioIssue: function () {} });
     };
     window.addEventListener('online', this._onNet);
     window.addEventListener('offline', this._onNet);
