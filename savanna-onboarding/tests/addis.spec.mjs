@@ -224,6 +224,27 @@ test.describe('the reference proxy (Node, fake fetch, no network)', () => {
     expect([r.status, JSON.parse(r.body).error]).toEqual([400, 'language']);
   });
 
+  test('allowed origins: production, every preview deployment and the branch alias of this project; no other site', async () => {
+    process.env.ADDIS_API_KEY = KEY;
+    const { _test: { originAllowed } } = addis();
+    // on Vercel every request arrives over https (x-forwarded-proto); docker compose locally is plain http
+    const req = (origin, host, extra = {}) => ({ headers: { origin, host, ...(host.endsWith('.vercel.app') ? { 'x-forwarded-proto': 'https' } : {}), ...extra } });
+    const PROD = 'savanna-accessible-onboarding.vercel.app';
+    const PREVIEW = 'savanna-accessible-onboarding-phucjq0dj.vercel.app';
+    const ALIAS = 'savanna-accessible-onboarding-git-addis-ai-zeamekonnen-gmailcoms-projects.vercel.app';
+    const SHORT_ALIAS = 'savanna-accessible-onboa-git-0f3a9c-zeamekonnen-gmailcoms-projects.vercel.app'; // Vercel shortens long aliases
+    expect(originAllowed(req('https://' + PROD, PROD))).toBe(true);
+    for (const h of [PREVIEW, ALIAS, SHORT_ALIAS]) expect(originAllowed(req('https://' + h, h)), h).toBe(true); // the page and the proxy share the host
+    expect(originAllowed(req('http://localhost:8080', 'localhost:8080'))).toBe(true); // docker compose
+    // other sites, even look-alikes on vercel.app, are refused when they call our proxy
+    for (const evil of ['https://savanna-accessible-onboarding-evil.vercel.app', 'https://evil.vercel.app', 'https://savanna-accessible-onboarding.vercel.app.evil.com', 'http://' + PROD])
+      for (const h of [PROD, PREVIEW, ALIAS]) expect(originAllowed(req(evil, h)), evil + ' -> ' + h).toBe(false);
+    expect(originAllowed(req('null', PREVIEW))).toBe(false);
+    expect(originAllowed(req(undefined, PREVIEW))).toBe(false);
+    expect(originAllowed(req('null', PREVIEW, { 'sec-fetch-site': 'same-origin' }))).toBe(true); // set by the browser, not by pages
+    expect(originAllowed(req('https://evil.example', PREVIEW, { 'sec-fetch-site': 'cross-site' }))).toBe(false);
+  });
+
   test('TTS: documented request to Addis AI, MP3 returned, cached by text + language + voice', async () => {
     process.env.ADDIS_API_KEY = KEY;
     const { handleTts } = addis();

@@ -59,7 +59,12 @@ function originAllowed(req) {
   if (!origin || origin === 'null') return false;
   const list = (process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',') : DEFAULT_ORIGINS).map(s => s.trim()).filter(Boolean);
   if (list.includes(origin)) return true;
-  try { return new URL(origin).host === String(req.headers['x-forwarded-host'] || req.headers.host || ''); } catch (e) { return false; }
+  // The same host and scheme the proxy itself is served on: every Vercel preview deployment and branch alias of this
+  // project (the page and the proxy share the address), and docker compose. Look-alike names on vercel.app are other
+  // hosts, so they are refused; no wildcard is needed.
+  const host = String(req.headers['x-forwarded-host'] || req.headers.host || '');
+  const proto = String(req.headers['x-forwarded-proto'] || (req.socket && req.socket.encrypted ? 'https' : 'http')).split(',')[0].trim();
+  try { const o = new URL(origin); return !!host && o.host === host && o.protocol === proto + ':'; } catch (e) { return false; }
 }
 
 const hits = new Map();
