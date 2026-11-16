@@ -30,7 +30,7 @@ Log-in is a labelled simulation: there is no server and no SMS. Accounts live on
 
 | Deliverable | Where |
 |---|---|
-| D1 Code under the open licence | This repository. **Open item:** [`LICENSE`](LICENSE) is still a placeholder: the licence name announced at kickoff must be filled in |
+| D1 Code under the open licence | This repository, [`LICENSE`](LICENSE) (MIT). Released under MIT, chosen pending confirmation of the open licence ALX named at kickoff; we will relicense if required. |
 | D2 README / install in about an hour | [`savanna-onboarding/README.md`](savanna-onboarding/README.md) (install steps, keyboard and ARIA support, real vs simulated, audio tools, Addis AI key) |
 | D3 Docker Compose | [`docker-compose.yml`](docker-compose.yml) + [`docker/nginx.conf`](docker/nginx.conf) (`docker compose up`; optional `--profile addis`) |
 | D4 WCAG 2.2 AA conformance report | [`savanna-onboarding/docs/conformance-report.md`](savanna-onboarding/docs/conformance-report.md) — automated part complete; "Manual result" column for the team |
@@ -72,6 +72,6 @@ Android phone on 3G): the team's results go in the conformance report.
 
 ## Open items before submitting
 
-1. Fill in [`LICENSE`](LICENSE) with the licence announced at kickoff.
+1. Confirm the licence ALX named at kickoff (MIT is in [`LICENSE`](LICENSE) until then).
 2. The team's manual results in the conformance report (NVDA, TalkBack, co-designer gate, cheap phone on 3G).
 3. A clean-machine `docker compose up` check.

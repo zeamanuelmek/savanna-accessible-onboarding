@@ -1,16 +1,30 @@
-LICENCE — PLACEHOLDER (OPEN ITEM for the submission, 15 November 2026)
+MIT License
 
-The licence name announced at kickoff has not been recorded in this repository yet. Before submitting, replace this
-note with the full text of that licence (for example from https://choosealicense.com) and list it in SUBMISSION.md.
+Copyright (c) 2026 The Savanna Accessible Onboarding Module team
 
-The Digital Bridge Accessibility Hackathon 2026 requires code to be released under the open licence
-announced at kickoff on 14 November 2026. Replace this note with the full text of that licence.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Until then, no licence is granted.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-Third-party files included in this repository keep their own licences:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+Third-party files included in this repository keep their own licences and are not covered by the MIT licence above:
 - savanna-onboarding/vendor/savanna-static-pages/: Savanna stylesheets, fonts and images copied unchanged from the
-  official hackathon starter (github.com/alx-africa/Savanna-static-pages). They belong to ALX and are NOT covered by
-  this project's licence. See vendor/savanna-static-pages/VENDOR.md.
+  official hackathon starter (github.com/alx-africa/Savanna-static-pages). They belong to ALX.
+  See vendor/savanna-static-pages/VENDOR.md.
 - savanna-onboarding/assets/fonts/poppins-*.woff2: SIL Open Font License 1.1 (see OFL-Poppins.txt)
 - savanna-onboarding/assets/fonts/noto-sans-ethiopic-*.woff2: SIL Open Font License 1.1 (see OFL-NotoSansEthiopic.txt)
