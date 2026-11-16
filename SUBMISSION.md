@@ -59,7 +59,7 @@ Android phone on 3G): the team's results go in the conformance report.
 - **Amharic and Afaan Oromo text are drafts** for native-speaker review. **Amharic audio is synthetic:** demo Amharic
   audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text; it
   will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint.
-- **Every fixed text is pre-recorded** (754 clips: Amharic and Afaan Oromo, 28.8 MB); the online voice (Addis AI) is
+- **Every fixed text is pre-recorded** (857 clips: Amharic and Afaan Oromo, 31.6 MB); the online voice (Addis AI) is
   used only for dynamic text (names, typed answers, employer-written job text). The Oromo clips were made with
   Addis AI from draft text.
 - **NVDA's default Windows voice spells Amharic** letter by letter (mitigations: recorded Amharic, one-tap English,

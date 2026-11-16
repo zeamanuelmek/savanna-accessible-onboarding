@@ -1742,3 +1742,37 @@ use the module's own reading (Listen, option Listen, Read all, read back), not t
 - Docker: not available on this machine; the compose file's paths were checked, a clean-machine run stays open.
 - **Open items:** the licence text; the team's manual results; a clean-machine `docker compose up`; one full-suite
   run on the final commit.
+
+---
+
+## Date of birth by voice (16 Nov)
+
+Owner request: "Date of birth by voice is too hard. Make it smart, without breaking the gate path."
+
+- **Step by step:** in "listen" and "speak" modes the date question has **Answer by voice**, which opens a panel
+  below the fields: Part 1 of 3 "Which year were you born?", then the month, then the day. Each part has its own
+  question, a Listen button (recorded clip) and an "I heard... / Use this answer / Say it again / Type it instead"
+  check; each part used goes into the fields at once (typing and the lists stay as they were). The gate path ("read
+  and type", lists, no microphone) is unchanged.
+- **Smart parsing** (`parseSpokenNumber`, `parseDateParts`, `matchMonth`, `inferYear` in `savanna-onboarding.js`):
+  digits or number words in English ("nineteen ninety", "twenty-five"), Amharic ("አንድ ሺህ ዘጠኝ መቶ ዘጠና ሁለት",
+  spellings that sound the same treated as one) and Afaan Oromo ("kuma tokko fi dhibba sagal fi sagaltamii lama";
+  draft); two-digit years get the century giving an age of 14 to 80; month names in both calendars and three
+  languages with small mistakes allowed ("Meskeram", "ታህሳስ"), or "month 3" / "ወር 3" / "ji'a 3"; in Oromo (same names
+  in both calendars) the chosen calendar wins.
+- **One sentence:** a whole date fills all three parts and goes straight to the read-back; two parts ("Meskerem
+  1990") fill both and ask the third.
+- **Read-back:** "You said 12 Meskerem 1990. That is 22 September 1997. Is that right?" with Use this answer / Say it
+  again / Type it instead and "Change the year / month / day". Nothing heard is used before the learner checks it.
+- **Checks:** day ranges (30-day Ethiopian months, Pagume 5 or 6, Gregorian month lengths and leap years) and a
+  plausible age (10 to 100); only the wrong part is asked again ("Meskerem has 30 days. Say the day again.").
+- **"I don't know my exact date of birth"** (first part): the year only, or the age ("How old are you?"); stored as
+  `{ cal, precision: 'year', y }` or `{ cal, precision: 'age', age, asOf }`, shown as "About 1990 (in the Gregorian
+  calendar 1997 or 1998)" / "About 25 years old"; "Enter an exact date instead" goes back. `api-schema.md` updated.
+- **Privacy:** everything read back for a date is made of recorded clips played on the phone (numbers 0-99, month
+  names, "thousand", "hundred", the fixed sentences): a date of birth is never sent to an online voice.
+- **Audio:** 103 new clips (51 Amharic, edge-tts Mekdes; 52 Afaan Oromo, Addis AI, about 10 ETB estimated): **857
+  clips, 31.6 MB**; page summary `sum-date-voice`; service worker cache v11.
+- **Tests:** new `tests/dob-voice.spec.mjs` (parser in three languages, two-digit years, month matching, one-sentence
+  dates, the three-part flow, invalid dates, year only and age, Amharic read-back made only of on-phone clips);
+  `date-language.spec.mjs` updated for the new flow.

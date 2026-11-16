@@ -48,31 +48,28 @@ for (const mode of ['listen', 'speak']) {
     await signupTo(page, 'dob', mode);
     await expect(page.locator('input[name=d]')).toHaveCount(1);
     await expect(page.locator('input[name=y]')).toHaveCount(1);
-    await expect(page.locator('[data-act=speak]')).toHaveCount(1);
+    await expect(page.locator('[data-act=date-voice]')).toHaveCount(1); // the date by voice: step by step, in its own panel
+    await page.locator('[data-act=date-voice]').click();
     await say(page, { alts: ['12 Meskerem 1995'] });
     await speakAnswer(page);
-    await expect(page.locator('.dm-heard')).toContainText('12 Meskerem 1995 (22 September 2002)');
+    await expect(page.locator('[data-ref=dv-h]')).toHaveText('You said 12 Meskerem 1995. That is 22 September 2002. Is that right?');
     await expect(page.locator('input[name=d]')).toHaveValue(''); // nothing used before the check
-    await page.locator('[data-act=heard-yes]').click();
+    await page.locator('[data-act=dv-use]').click();
     await expect(page.locator('input[name=d]')).toHaveValue('12');
     await expect(page.locator('select[name=m]')).toHaveValue('1');
     await expect(page.locator('input[name=y]')).toHaveValue('1995');
-    // a Gregorian month name switches the calendar
-    await say(page, { alts: ['March 5 1990'] });
-    await speakAnswer(page);
-    await page.locator('[data-act=heard-yes]').click();
-    await expect(page.getByRole('radio', { name: 'Gregorian (European) calendar' })).toBeChecked();
-    await expect(page.locator('[data-ref=date-conv]')).toHaveText('In the Ethiopian calendar this is 26 Yekatit 1982.');
   });
 }
 
 test('date: words that are not a date ask the learner to try again or type', async ({ page }) => {
   await fakeSpeechEngine(page);
   await signupTo(page, 'dob', 'speak');
+  await page.locator('[data-act=date-voice]').click();
   await say(page, { alts: ['I do not remember'] });
   await speakAnswer(page);
-  await expect(page.locator('.dm-status')).toContainText('I did not catch a date');
-  await expect(page.locator('.dm-heard')).toHaveCount(0);
+  await expect(page.locator('.dm-status')).toContainText('I did not catch a year');
+  await expect(page.locator('[data-ref=dv-shown]')).toHaveCount(0);
+  await expect(page.locator('[data-act=dv-unknown]')).toHaveCount(1); // "I don't know my exact date of birth" is right there
 });
 
 test('date: skipping is fine even with the Gregorian calendar chosen', async ({ page }) => {

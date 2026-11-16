@@ -194,7 +194,7 @@ support, with who and when) · **Notes / limitations**.
   (the page summary is read). Browsers allow sound only after an interaction with each new page; then the
   prompt "Tap anywhere or press any key to hear this page" is shown.
 - **Phone and ID numbers are read on the phone only** (recorded Amharic numbers, otherwise a voice on the phone);
-  every fixed text is pre-recorded in Amharic and Afaan Oromo (754 clips), so reading never depends on a live service.
+  every fixed text is pre-recorded in Amharic and Afaan Oromo (857 clips), so reading never depends on a live service.
 - **Voice input** depends on the browser's speech service (cloud, with consent); it is optional and never required.
 - **Simulated parts** (log-in, SMS, trainer and employer systems) are out of scope for conformance but are built to
   the same standard.

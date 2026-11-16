@@ -84,16 +84,23 @@ checks it and chooses "Use this answer".
 {
   "$defs": {
     "ethDate": {
-      "description": "A date in the calendar the learner chose (Ethiopian or Gregorian). `gregorian` is always the same day in the Gregorian calendar, worked out on the device: use it for storage and comparison. Answers saved before 15 Nov have no `cal` and are Ethiopian.",
+      "description": "A date in the calendar the learner chose (Ethiopian or Gregorian). `gregorian` is always the same day in the Gregorian calendar, worked out on the device: use it for storage and comparison. Answers saved before 15 Nov have no `cal` and are Ethiopian. Since 16 Nov a learner answering by voice can choose \"I don't know my exact date of birth\" and give only the year ({ cal, precision: 'year', y }) or only the age ({ cal, precision: 'age', age, asOf }): these have no `d`, `m` or `gregorian`, and are shown as \"About ...\". An Ethiopian year covers parts of two Gregorian years (y + 7 and y + 8).",
       "type": "object",
       "properties": {
+        "precision": { "enum": ["year", "age"], "description": "Present only when the exact date is not known. Absent = an exact date" },
+        "age": { "type": "integer", "minimum": 1, "maximum": 129, "description": "precision 'age': the age the learner said" },
+        "asOf": { "type": "string", "format": "date", "description": "precision 'age': the day the age was given (Gregorian)" },
         "cal": { "enum": ["eth", "greg"], "default": "eth", "description": "eth = Ethiopian calendar, greg = Gregorian" },
         "d": { "type": "integer", "minimum": 1, "maximum": 31 },
         "m": { "type": "integer", "minimum": 1, "maximum": 13, "description": "Ethiopian: 1 = Meskerem ... 13 = Pagume. Gregorian: 1 = January ... 12 = December" },
         "y": { "type": "integer", "minimum": 1900, "maximum": 2030 },
         "gregorian": { "type": "string", "format": "date" }
       },
-      "required": ["d", "m", "y", "gregorian"]
+      "oneOf": [
+        { "required": ["d", "m", "y", "gregorian"], "not": { "required": ["precision"] } },
+        { "required": ["precision", "y"], "properties": { "precision": { "const": "year" } } },
+        { "required": ["precision", "age", "asOf"], "properties": { "precision": { "const": "age" } } }
+      ]
     },
     "need": {
       "description": "Shared support vocabulary, used by learners AND employers. A need, never a diagnosis.",

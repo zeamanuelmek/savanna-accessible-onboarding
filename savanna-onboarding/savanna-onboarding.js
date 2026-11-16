@@ -151,6 +151,22 @@
       gregorian: 'In the Gregorian calendar this is {date}.', ethiopian: 'In the Ethiopian calendar this is {date}.',
       calendar: 'Which calendar do you use?', calEth: 'Ethiopian calendar', calGreg: 'Gregorian (European) calendar',
       errDateGreg: 'Enter a real date in the Gregorian calendar, for example 5 March 1995.',
+      dvOpen: 'Answer by voice', dvPart: 'Part {n} of {m}',
+      dvYearQ: 'Which year were you born?', dvYearHint: 'Say the year, for example 1990. You can also say the whole date at once.', dvYearOnlyHint: 'Say the year, for example 1990.',
+      dvMonthQ: 'Which month were you born?', dvMonthHint: 'Say the name of the month, or "month" and a number, for example "month 3".',
+      dvDayQ: 'Which day of the month were you born?', dvDayHint: 'Say a number from 1 to {n}.',
+      dvAgeQ: 'How old are you?', dvAgeHint: 'Say a number, for example 25.',
+      dvDontKnow: 'I don\'t know my exact date of birth', dvUnknown: 'That is fine. You can say just the year you were born, or your age.',
+      dvKnowYear: 'Say the year', dvKnowAge: 'Say my age',
+      dvYear: 'Year: {v}', dvMonth: 'Month: {v}', dvDay: 'Day: {v}', dvAge: 'Age: {v}',
+      dvNoYear: 'I did not catch a year. Say it again, for example 1990, or type it.', dvNoMonth: 'I did not catch a month. Say its name, or "month" and a number.',
+      dvNoDay: 'I did not catch a day. Say a number, for example 12.', dvNoAge: 'I did not catch an age. Say a number, for example 25.',
+      dvBadYear: 'That would make you {age} years old. Say the year again.', dvBadYearSay: 'That year does not look right. Say the year again.',
+      dvDayRange: '{month} has {n} days. Say the day again.', dvBadDaySay: 'That day is not in this month.',
+      dvReadBack: 'You said {said}. That is {other}. Is that right?', dvReadBackYear: 'You said about {year}. Is that right?', dvReadBackAge: 'You said you are {age} years old. Is that right?',
+      dvChange_year: 'Change the year', dvChange_month: 'Change the month', dvChange_day: 'Change the day',
+      dvAboutYearEth: 'About {y} (in the Gregorian calendar {a} or {b})', dvAboutYearGreg: 'About {y} (in the Ethiopian calendar {a} or {b})', dvAboutAge: 'About {age} years old',
+      dvExact: 'Enter an exact date instead',
       voiceNoDate: 'I did not catch a date. Say the day, the month and the year, for example "12 Meskerem 1995", or type it below.',
       prefilled: 'We filled this in from your profile. You can change it.',
       welcomeTitle: 'How would you like to complete registration?',
@@ -246,6 +262,22 @@
       gregorian: 'በፈረንጆች አቆጣጠር {date} ነው።', ethiopian: 'በኢትዮጵያ አቆጣጠር {date} ነው።',
       calendar: 'የትኛውን አቆጣጠር ይጠቀማሉ?', calEth: 'የኢትዮጵያ አቆጣጠር', calGreg: 'የፈረንጆች (የአውሮፓ) አቆጣጠር',
       errDateGreg: 'በፈረንጆች አቆጣጠር ትክክለኛ ቀን ያስገቡ፤ ለምሳሌ 5 March 1995።',
+      dvOpen: 'በድምፅ ይመልሱ', dvPart: 'ክፍል {n} ከ{m}',
+      dvYearQ: 'በየትኛው ዓመት ተወለዱ?', dvYearHint: 'ዓመቱን ይናገሩ፤ ለምሳሌ 1990። ሙሉውን ቀን በአንድ ጊዜም መናገር ይችላሉ።', dvYearOnlyHint: 'ዓመቱን ይናገሩ፤ ለምሳሌ 1990።',
+      dvMonthQ: 'በየትኛው ወር ተወለዱ?', dvMonthHint: 'የወሩን ስም ይናገሩ፤ ወይም «ወር» እና ቁጥር፤ ለምሳሌ «ወር 3»።',
+      dvDayQ: 'በወሩ ስንተኛው ቀን ተወለዱ?', dvDayHint: 'ከ1 እስከ {n} ያለ ቁጥር ይናገሩ።',
+      dvAgeQ: 'ዕድሜዎ ስንት ነው?', dvAgeHint: 'ቁጥር ይናገሩ፤ ለምሳሌ 25።',
+      dvDontKnow: 'ትክክለኛ የትውልድ ቀኔን አላውቅም', dvUnknown: 'ችግር የለም። የተወለዱበትን ዓመት ብቻ ወይም ዕድሜዎን መናገር ይችላሉ።',
+      dvKnowYear: 'ዓመቱን እናገራለሁ', dvKnowAge: 'ዕድሜዬን እናገራለሁ',
+      dvYear: 'ዓመት፦ {v}', dvMonth: 'ወር፦ {v}', dvDay: 'ቀን፦ {v}', dvAge: 'ዕድሜ፦ {v}',
+      dvNoYear: 'ዓመት አልሰማሁም። እንደገና ይናገሩ፤ ለምሳሌ 1990፤ ወይም ይጻፉት።', dvNoMonth: 'ወር አልሰማሁም። የወሩን ስም ወይም «ወር» እና ቁጥር ይናገሩ።',
+      dvNoDay: 'ቀን አልሰማሁም። ቁጥር ይናገሩ፤ ለምሳሌ 12።', dvNoAge: 'ዕድሜ አልሰማሁም። ቁጥር ይናገሩ፤ ለምሳሌ 25።',
+      dvBadYear: 'ይህ ዕድሜዎን {age} ዓመት ያደርገዋል። ዓመቱን እንደገና ይናገሩ።', dvBadYearSay: 'ይህ ዓመት ትክክል አይመስልም። ዓመቱን እንደገና ይናገሩ።',
+      dvDayRange: '{month} {n} ቀናት አሉት። ቀኑን እንደገና ይናገሩ።', dvBadDaySay: 'ይህ ቀን በዚህ ወር ውስጥ የለም።',
+      dvReadBack: '{said} ብለዋል። ይህም {other} ነው። ትክክል ነው?', dvReadBackYear: 'በግምት {year} ብለዋል። ትክክል ነው?', dvReadBackAge: 'ዕድሜዎ {age} ዓመት ነው ብለዋል። ትክክል ነው?',
+      dvChange_year: 'ዓመቱን ይቀይሩ', dvChange_month: 'ወሩን ይቀይሩ', dvChange_day: 'ቀኑን ይቀይሩ',
+      dvAboutYearEth: 'በግምት {y} (በፈረንጆች አቆጣጠር {a} ወይም {b})', dvAboutYearGreg: 'በግምት {y} (በኢትዮጵያ አቆጣጠር {a} ወይም {b})', dvAboutAge: 'በግምት {age} ዓመት',
+      dvExact: 'በምትኩ ትክክለኛ ቀን ያስገቡ',
       voiceNoDate: 'ቀን አልሰማሁም። ቀኑን፣ ወሩንና ዓመቱን ይናገሩ፤ ለምሳሌ «12 መስከረም 1995»፤ ወይም ከታች ይጻፉት።',
       prefilled: 'ይህን ከመገለጫዎ ሞልተነዋል። መቀየር ይችላሉ።',
       welcomeTitle: 'ምዝገባውን እንዴት መሙላት ይፈልጋሉ?',
@@ -387,6 +419,22 @@
       calEth: 'Dhaha Itoophiyaa',
       calGreg: 'Dhaha Gorgooriyaan (Awurooppaa)',
       errDateGreg: 'Guyyaa dhugaa dhaha Gorgooriyaaniitiin galchi, fakkeenyaaf 5 Bitootessa 1995.',
+      dvOpen: 'Sagaleen deebisi', dvPart: 'Kutaa {n} keessaa {m}',
+      dvYearQ: 'Bara kam dhalatte?', dvYearHint: 'Waggaa jedhi, fakkeenyaaf 1990. Guyyaa guutuu yeroo tokkotti jechuus dandeessa.', dvYearOnlyHint: 'Waggaa jedhi, fakkeenyaaf 1990.',
+      dvMonthQ: 'Ji\'a kam keessa dhalatte?', dvMonthHint: 'Maqaa ji\'aa jedhi, ykn "ji\'a" fi lakkoofsa, fakkeenyaaf "ji\'a 3".',
+      dvDayQ: 'Guyyaa ji\'aa meeqaffaa dhalatte?', dvDayHint: 'Lakkoofsa 1 hanga {n} jedhi.',
+      dvAgeQ: 'Umuriin kee meeqa?', dvAgeHint: 'Lakkoofsa jedhi, fakkeenyaaf 25.',
+      dvDontKnow: 'Guyyaa dhaloota koo sirrii hin beeku', dvUnknown: 'Rakkoo hin qabu. Waggaa itti dhalatte qofa ykn umurii kee jechuu dandeessa.',
+      dvKnowYear: 'Waggaa nan jedha', dvKnowAge: 'Umurii koo nan jedha',
+      dvYear: 'Waggaa: {v}', dvMonth: 'Ji\'a: {v}', dvDay: 'Guyyaa: {v}', dvAge: 'Umurii: {v}',
+      dvNoYear: 'Waggaa hin qabanne. Irra deebi\'ii jedhi, fakkeenyaaf 1990, ykn barreessi.', dvNoMonth: 'Ji\'a hin qabanne. Maqaa isaa ykn "ji\'a" fi lakkoofsa jedhi.',
+      dvNoDay: 'Guyyaa hin qabanne. Lakkoofsa jedhi, fakkeenyaaf 12.', dvNoAge: 'Umurii hin qabanne. Lakkoofsa jedhi, fakkeenyaaf 25.',
+      dvBadYear: 'Kun umurii kee waggaa {age} taasisa. Waggaa irra deebi\'ii jedhi.', dvBadYearSay: 'Waggaan kun sirrii hin fakkaatu. Waggaa irra deebi\'ii jedhi.',
+      dvDayRange: '{month} guyyoota {n} qaba. Guyyaa irra deebi\'ii jedhi.', dvBadDaySay: 'Guyyaan kun ji\'a kana keessa hin jiru.',
+      dvReadBack: '{said} jette. Kun {other} dha. Sirrii dha?', dvReadBackYear: 'Gara {year} jette. Sirrii dha?', dvReadBackAge: 'Umuriin kee waggaa {age} jette. Sirrii dha?',
+      dvChange_year: 'Waggaa jijjiiri', dvChange_month: 'Ji\'a jijjiiri', dvChange_day: 'Guyyaa jijjiiri',
+      dvAboutYearEth: 'Gara {y} (dhaha Gorgooriyaaniitiin {a} ykn {b})', dvAboutYearGreg: 'Gara {y} (dhaha Itoophiyaatiin {a} ykn {b})', dvAboutAge: 'Gara waggaa {age}',
+      dvExact: 'Kanaa mannaa guyyaa sirrii galchi',
       voiceNoDate: 'Guyyaa hin qabanne. Guyyaa, ji\'aa fi waggaa jedhi, fakkeenyaaf "12 Fulbaana 1995", ykn armaan gaditti barreessi.',
       prefilled: 'Kana piroofaayilii kee irraa guutneerra. Jijjiiruu dandeessa.',
       welcomeTitle: 'Galmee akkamitti xumuruu barbaadda?',
@@ -538,29 +586,199 @@
     return ethValid(y, m, d) ? { cal: 'eth', d: d, m: m, y: y, gregorian: ethToGregorian(y, m, d).toISOString().slice(0, 10) } : null;
   }
   function fmtEthiopian(iso, lang) { var e = gregToEth(new Date(iso)); return e.d + ' ' + monthsFor('eth', lang)[e.m - 1] + ' ' + e.y; }
-  /* A spoken date: "12 Meskerem 1995", "March 5 1990", "5 3 1990". A month name also tells which calendar is meant. */
-  function parseSpokenDate(said, cal) {
-    var words = norm(said).split(' ').filter(Boolean), nums = [], month = 0, mcal = '';
-    words.forEach(function (w) {
-      var digit = AM_DIGITS[w] || EN_DIGITS[w];
-      if (/^\d+$/.test(w) || digit) { nums.push(parseInt(digit || w, 10)); return; }
-      if (month) return;
-      // the chosen calendar first: in Afaan Oromo both calendars use the same month names
-      (cal === 'greg' ? [['greg', GREG_MONTHS], ['eth', ETH_MONTHS]] : [['eth', ETH_MONTHS], ['greg', GREG_MONTHS]]).forEach(function (pair) {
-        Object.keys(pair[1]).forEach(function (lg) {
-          pair[1][lg].forEach(function (name, i) {
-            var n = norm(name);
-            if (!month && n && (w === n || (n.length > 3 && w.length > 3 && (w.indexOf(n.slice(0, 4)) === 0)))) { month = i + 1; mcal = pair[0]; }
-          });
-        });
+  /* ---------- numbers and dates said aloud (date of birth by voice) ----------
+     Number words in English, Amharic and Afaan Oromo (Amharic and Oromo: drafts for native-speaker review).
+     Amharic spellings that sound the same (ሀ/ሐ/ኀ, ሰ/ሠ, አ/ዐ, ጸ/ፀ, and ሀ/ሃ, አ/ኣ) count as one. */
+  function ethFold(s) {
+    return String(s).replace(/[ሀ-ፚ]/g, function (c) {
+      var cp = c.charCodeAt(0), base = cp - (cp % 8), ord = cp % 8;
+      if (base === 0x1210 || base === 0x1280) base = 0x1200;
+      else if (base === 0x1220) base = 0x1230;
+      else if (base === 0x12D0) base = 0x12A0;
+      else if (base === 0x1340) base = 0x1338;
+      if ((base === 0x1200 || base === 0x12A0) && ord === 3) ord = 0;
+      return String.fromCharCode(base + ord);
+    });
+  }
+  /** Lower case, no punctuation, apostrophes joined (Oromo ji'a -> jia), hyphens split (twenty-five), Amharic folded. */
+  function sayNorm(s) { return ethFold(String(s || '').toLowerCase().replace(/[’'`]/g, '').replace(/[.,!?።፣፤፡;:"()\/\-–—]/g, ' ').replace(/\s+/g, ' ').trim()); }
+  var NUMW = null;
+  function numWords() {
+    if (NUMW) return NUMW;
+    var w = {};
+    function put(words, n, extra) { words.split(' ').forEach(function (x) { var e = { n: n }; if (extra) Object.keys(extra).forEach(function (k) { e[k] = extra[k]; }); w[ethFold(x)] = e; }); }
+    // English
+    ['zero oh nought', 'one first', 'two second', 'three third', 'four fourth', 'five fifth', 'six sixth', 'seven seventh', 'eight eighth', 'nine ninth']
+      .forEach(function (x, i) { put(x, i); });
+    ['ten tenth', 'eleven eleventh', 'twelve twelfth', 'thirteen thirteenth', 'fourteen fourteenth', 'fifteen fifteenth', 'sixteen sixteenth',
+      'seventeen seventeenth', 'eighteen eighteenth', 'nineteen nineteenth'].forEach(function (x, i) { put(x, 10 + i); });
+    ['twenty twentieth', 'thirty thirtieth', 'forty fourty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'].forEach(function (x, i) { put(x, 20 + 10 * i); });
+    put('hundred', 100, { scale: true }); put('thousand', 1000, { scale: true }); put('and', 0, { and: true });
+    // Amharic
+    ['ዜሮ', 'አንድ አንደኛ', 'ሁለት ሁለተኛ', 'ሶስት ሦስት ሶስተኛ ሦስተኛ', 'አራት አራተኛ', 'አምስት አምስተኛ', 'ስድስት ስድስተኛ', 'ሰባት ሰባተኛ', 'ስምንት ስምንተኛ', 'ዘጠኝ ዘጠነኛ']
+      .forEach(function (x, i) { put(x, i); });
+    put('አስር አሥር አስራ አሥራ አስረኛ አሥረኛ', 10); // አስራ ሁለት = 12
+    ['ሃያ', 'ሰላሳ ሠላሳ', 'አርባ', 'ሃምሳ', 'ስልሳ ስድሳ ሥልሳ', 'ሰባ', 'ሰማንያ ሰማኒያ', 'ዘጠና'].forEach(function (x, i) { put(x, 20 + 10 * i); });
+    put('መቶ', 100, { scale: true }); put('ሺህ ሺ', 1000, { scale: true }); put('እና', 0, { and: true });
+    // Afaan Oromo: the number after dhibba / kuma says how many ("kuma tokko fi dhibba sagal" = 1900)
+    ['duwwaa', 'tokko tokkoo tokkoffaa', 'lama lamaan lammaffaa', 'sadii sadi sadaffaa', 'afur afrii afraffaa', 'shan shanan shanaffaa', 'jaha jaa jahaffaa',
+      'torba torbaffaa', 'saddeet saddeeti saddeettaffaa', 'sagal sagali sagalaffaa'].forEach(function (x, i) { put(x, i); });
+    put('kudhan kurna kudha kurnaffaa', 10); // kudha lama = 12
+    ['digdama digdamii', 'soddoma soddomii', 'afurtama afurtamii', 'shantama shantamii', 'jaatama jaatamii jahatama', 'torbaatama torbaatamii',
+      'saddeettama saddeettamii saddeetama', 'sagaltama sagaltamii'].forEach(function (x, i) { put(x, 20 + 10 * i); });
+    put('dhibba', 100, { scale: true, post: true }); put('kuma', 1000, { scale: true, post: true }); put('fi', 0, { and: true });
+    return (NUMW = w);
+  }
+  /** Words as number tokens: { n, digit }, { n, scale, post }, { and }, or { word } (anything else). "12th", "12ኛ", "በ1990" are digits. */
+  function numTokens(text) {
+    var W = numWords();
+    return sayNorm(text).split(' ').filter(Boolean).map(function (tok) {
+      var dg = tok.match(/\d+/g);
+      if (dg && dg.length === 1) return { n: parseInt(dg[0], 10), digit: true };
+      var bare = tok.replace(/ው$/, ''), unprefixed = /^[በከ]./.test(tok) ? tok.slice(1) : '';
+      return W[tok] || W[bare] || (unprefixed && (W[unprefixed] || W[unprefixed.replace(/ው$/, '')])) || { word: tok };
+    });
+  }
+  /** The numbers in a sentence, in order. Words make one number ("nineteen ninety" = 1990, "አንድ ሺህ ዘጠኝ መቶ ዘጠና ሁለት"
+   *  = 1992, "kuma tokko fi dhibba sagal fi sagaltamii lama" = 1992); digits are numbers of their own. */
+  function numberGroups(toks) {
+    var groups = [], total = 0, chunk = 0, any = false, post = 0;
+    function settle() { if (post) { if (post === 1000) total += 1000; else chunk += 100; post = 0; } }
+    function flush() { settle(); if (any) groups.push(total + chunk); total = 0; chunk = 0; any = false; }
+    toks.forEach(function (tk) {
+      if (tk.and) return;
+      if (tk.word != null) { flush(); return; }
+      if (tk.digit) { flush(); groups.push(tk.n); return; }
+      if (tk.scale) {
+        settle(); any = true;
+        if (tk.post) { post = tk.n; return; }
+        if (tk.n === 1000) { total += (chunk || 1) * 1000; chunk = 0; } else chunk = (chunk || 1) * 100;
+        return;
+      }
+      var v = tk.n;
+      if (post) { if (post === 1000) total += v * 1000; else chunk += v * 100; post = 0; return; }
+      if (!any) { chunk = v; any = true; return; }
+      var low = chunk % 100;
+      if (chunk === 0 || (low === 0 && v < 100)) { chunk += v; return; }          // "two thousand five", "nine hundred ninety"
+      if (low >= 10 && low % 10 === 0 && v < 10) { chunk += v; return; }          // "twenty five", "አስራ ሁለት", "digdamii shan"
+      if (!total && chunk >= 10 && chunk < 100 && v < 100) { chunk = chunk * 100 + v; return; } // "nineteen ninety", "twenty twenty"
+      flush(); chunk = v; any = true;
+    });
+    flush();
+    return groups;
+  }
+  /** One number said aloud, in English, Amharic or Afaan Oromo, as digits or words. null when there is none (or several). */
+  function parseSpokenNumber(text, lang) {
+    var g = numberGroups(numTokens(text));
+    if (!g.length) return null;
+    if (g.length === 1) return g[0];
+    if (g.length === 2 && g[0] >= 10 && g[0] < 100 && g[1] < 100) return g[0] * 100 + g[1]; // "19 90"
+    return g.every(function (x) { return x === g[0]; }) ? g[0] : null;
+  }
+  function nowYear(cal) { var now = new Date(); return cal === 'greg' ? now.getFullYear() : gregToEth(now).y; }
+  /** A year: two digits get the century that gives an age from 14 to 80 in the chosen calendar ("90" = 1990, "05" = 2005). */
+  function inferYear(n, cal) {
+    if (n == null) return null;
+    if (n >= 1000) return n;
+    if (n >= 100) return null;
+    var top = nowYear(cal), c = [1900 + n, 2000 + n];
+    return c.filter(function (y) { var a = top - y; return a >= 14 && a <= 80; })[0] || c.filter(function (y) { return y <= top; }).pop() || null;
+  }
+  // Other ways the months are said or written (besides the names on screen in three languages)
+  var MONTH_SAY = {
+    eth: ['meskerem meskeram maskaram mesekerem', 'tikimt tikemt tekemt tikmt tiqimt teqemt', 'hidar hedar ህዳር', 'tahsas tahisas tahesas tehsas ታህሳስ',
+      'tir', 'yekatit yakatit', 'megabit magabit', 'miyazia miyazya miyaziya ሚያዚያ', 'ginbot genbot gimbot', 'sene senie', 'hamle hamlie', 'nehase nehasie nahase',
+      'pagume pagumen pagumie ጳጉሜ'],
+    greg: ['jan', 'feb ፌብሯሪ', 'mar', 'apr', '', 'jun', 'jul', 'aug ኦጋስት', 'sep sept', 'oct', 'nov ኖቨምበር', 'dec']
+  };
+  var MONTH_CANDS = null;
+  function monthCandidates() {
+    if (MONTH_CANDS) return MONTH_CANDS;
+    var out = [];
+    [['eth', ETH_MONTHS], ['greg', GREG_MONTHS]].forEach(function (pair) {
+      Object.keys(pair[1]).forEach(function (lg) { pair[1][lg].forEach(function (name, i) { out.push({ w: sayNorm(name), m: i + 1, cal: pair[0] }); }); });
+      MONTH_SAY[pair[0]].forEach(function (list, i) { list.split(' ').filter(Boolean).forEach(function (x) { out.push({ w: sayNorm(x), m: i + 1, cal: pair[0] }); }); });
+    });
+    return (MONTH_CANDS = out);
+  }
+  function lev(a, b) {
+    var A = Array.from(a), B = Array.from(b), prev = [], cur, i, j;
+    for (j = 0; j <= B.length; j++) prev[j] = j;
+    for (i = 1; i <= A.length; i++) {
+      cur = [i];
+      for (j = 1; j <= B.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (A[i - 1] === B[j - 1] ? 0 : 1));
+      prev = cur;
+    }
+    return prev[B.length];
+  }
+  /** A month name heard in a sentence, in either calendar and any of the three languages, allowing small mistakes
+   *  ("Meskeram", "ታህሳስ", "Onkoloolessa"). In Afaan Oromo both calendars use the same names: the chosen one wins.
+   *  Returns { m, cal, at } (at: the word's position) or null. */
+  function matchMonth(text, cal) {
+    var best = null;
+    sayNorm(text).split(' ').forEach(function (tk, at) {
+      if (!tk || /\d/.test(tk)) return;
+      var ethiopic = /[ሀ-፿]/.test(tk);
+      monthCandidates().forEach(function (c) {
+        var d = tk === c.w ? 0 : -1, len = Array.from(c.w).length;
+        if (d < 0) {
+          var allow = ethiopic ? (len >= 3 ? 1 : 0) : (len >= 7 ? 2 : len >= 4 ? 1 : 0);
+          if (!ethiopic && tk.charAt(0) !== c.w.charAt(0)) allow = 0; // a misheard name keeps its first sound ("remember" is not December)
+          if (allow && Math.abs(Array.from(tk).length - len) <= allow) { var x = lev(tk, c.w); if (x <= allow) d = x; }
+          // a month name with a little added (በመስከረም, Fulbaanaa)
+          if (d < 0 && len >= 4 && tk.indexOf(c.w) !== -1 && Array.from(tk).length - len <= 2) d = 1;
+        }
+        if (d < 0) return;
+        var score = d * 2 + (c.cal === cal ? 0 : 1);
+        if (!best || score < best.score) best = { m: c.m, cal: c.cal, at: at, score: score };
       });
     });
-    if (mcal) cal = mcal;
-    var y = 0, rest = [];
-    nums.forEach(function (n) { if (!y && n >= 1000) y = n; else rest.push(n); });
-    var d = rest[0];
-    if (!month && rest.length >= 2) month = rest[1];
-    return dateValue(cal, d, month, y);
+    return best && { m: best.m, cal: best.cal, at: best.at };
+  }
+  /** "month 3", "the third month", "ወር 3", "3ኛው ወር", "ji'a 3": the month by its number. */
+  function monthByNumber(text, cal) {
+    var s = sayNorm(text), kw = /(^| )(month|ወር|ወሩ|jia|jiaa)( |$)/;
+    var n = parseSpokenNumber(kw.test(s) ? s.replace(kw, ' ') : s);
+    return n != null && n >= 1 && n <= (cal === 'greg' ? 12 : 13) ? { m: n, cal: cal } : null;
+  }
+  /** Parts of a date said in one sentence: { cal, y?, m?, d? }. "12 Meskerem 1990", "March 5 1990", "5 3 1990",
+   *  "Meskerem 90", "መስከረም 12 አንድ ሺህ ዘጠኝ መቶ ዘጠና". A month name also tells which calendar is meant. */
+  function parseDateParts(text, cal) {
+    var out = { cal: cal === 'greg' ? 'greg' : 'eth' }, mm = matchMonth(text, out.cal);
+    if (mm) { out.m = mm.m; out.cal = mm.cal; }
+    var g = numberGroups(numTokens(text)), i, y = null;
+    for (i = 0; i < g.length; i++) if (g[i] >= 1000) { y = g.splice(i, 1)[0]; break; }
+    if (y == null && g.length >= 3 && g[g.length - 2] >= 10 && g[g.length - 2] <= 20 && g[g.length - 1] < 100) { var lo = g.pop(); y = g.pop() * 100 + lo; } // "5 3 19 90"
+    if (y == null && (g.length >= (out.m ? 2 : 3) || (out.m && g.length === 1 && g[0] > 31))) y = inferYear(g.pop(), out.cal); // "12 Meskerem 90"
+    if (y != null) out.y = y;
+    if (g.length) out.d = g.shift();
+    if (!out.m && g.length) out.m = g.shift();
+    return out;
+  }
+  function partCount(p) { return ['y', 'm', 'd'].filter(function (k) { return p[k] != null; }).length; }
+  function daysIn(cal, y, m) {
+    if (!m) return cal === 'greg' ? 31 : 30;
+    if (cal === 'greg') return new Date(Date.UTC(y || 2000, m, 0)).getUTCDate(); // without a year, 29 February is allowed
+    return m < 13 ? 30 : (y ? ethDaysInMonth(y, m) : 6);
+  }
+  var AGE_MIN = 10, AGE_MAX = 100; // outside this, a year was almost certainly misheard
+  /** The first part of a (partial) date that cannot be right: { part: 'year'|'month'|'day', msg (on screen), say (read aloud) }. */
+  function dateProblem(p, lang) {
+    if (p.y != null) {
+      var age = nowYear(p.cal) - p.y;
+      if (age < AGE_MIN || age > AGE_MAX) return { part: 'year', msg: age < 0 ? t('dvBadYearSay', lang) : t('dvBadYear', lang, { age: age }), say: { key: 'dv-bad-year', text: t('dvBadYearSay', lang), lang: lang } };
+    }
+    if (p.m != null && (p.m < 1 || p.m > (p.cal === 'greg' ? 12 : 13))) return { part: 'month', msg: t('dvNoMonth', lang), say: { key: 'dv-no-month', text: t('dvNoMonth', lang), lang: lang } };
+    if (p.d != null) {
+      var n = daysIn(p.cal, p.y, p.m);
+      if (p.d < 1 || p.d > n) return { part: 'day', msg: p.m ? t('dvDayRange', lang, { month: monthsFor(p.cal, lang)[p.m - 1], n: n }) : t('dvNoDay', lang), say: { key: 'dv-bad-day', text: t('dvBadDaySay', lang), lang: lang } };
+    }
+    return null;
+  }
+  /* A spoken date: "12 Meskerem 1995", "March 5 1990", "5 3 1990". A month name also tells which calendar is meant. */
+  function parseSpokenDate(said, cal) {
+    var p = parseDateParts(said, cal);
+    return dateValue(p.cal, p.d, p.m, p.y);
   }
   function fmtGregorian(date, lang) {
     if (lang === 'om') return date.getUTCDate() + ' ' + GREG_MONTHS.om[date.getUTCMonth()] + ' ' + date.getUTCFullYear();
@@ -1124,6 +1342,92 @@
       return /\d/.test(c) ? { key: 'num-' + c, text: W[+c], lang: lang, local: true } : { key: null, text: c.toUpperCase(), lang: 'en', local: true };
     });
   }
+  /* --- date of birth by voice: what is read aloud. Every piece is a recorded clip (numbers 0-99, month names,
+     "thousand", "hundred", the fixed sentences), all on the phone: a date of birth is never sent to an online voice. --- */
+  var SCALE_WORDS = { en: { k: 'thousand', h: 'hundred', and: 'and' }, am: { k: 'ሺህ', h: 'መቶ', and: 'እና' }, om: { k: 'kuma', h: 'dhibba', and: 'fi' } };
+  function numPiece(n, lang) { return n >= 0 && n < 100 ? { key: 'num-' + n, text: numberWords(n, lang), lang: lang, local: true } : { key: null, text: String(n), lang: lang, local: true }; }
+  /** A year in words: Amharic "አንድ ሺህ ዘጠኝ መቶ ዘጠና", Oromo "kuma tokko fi dhibba sagal fi sagaltama". */
+  function yearPieces(y, lang) {
+    var S = SCALE_WORDS[lang] || SCALE_WORDS.en, th = Math.floor(y / 1000), hu = Math.floor(y % 1000 / 100), r = y % 100, out = [];
+    var K = { key: 'num-1000', text: S.k, lang: lang, local: true }, H = { key: 'num-100', text: S.h, lang: lang, local: true }, AND = { key: 'num-and', text: S.and, lang: lang, local: true };
+    if (lang === 'en') return [{ key: null, text: String(y), lang: 'en', local: true }];
+    if (lang === 'om') {
+      if (th) out.push(K, numPiece(th, lang));
+      if (hu) { if (out.length) out.push(AND); out.push(H, numPiece(hu, lang)); }
+      if (r) { if (out.length) out.push(AND); out.push(numPiece(r, lang)); }
+      return out;
+    }
+    if (th) out.push(numPiece(th, lang), K);
+    if (hu) out.push(numPiece(hu, lang), H);
+    if (r) out.push(numPiece(r, lang));
+    return out;
+  }
+  function monthPiece(cal, m, lang) { return { key: 'month-' + cal + '-' + m, text: monthsFor(cal, lang)[m - 1], lang: lang, local: true }; }
+  function fmtDateParts(cal, d, m, y, lang) { return d + ' ' + monthsFor(cal, lang)[m - 1] + ' ' + y; }
+  function datePieces(cal, d, m, y, lang) {
+    if (lang === 'en') return [{ key: null, text: fmtDateParts(cal, d, m, y, lang), lang: 'en', local: true }];
+    return [numPiece(d, lang), monthPiece(cal, m, lang)].concat(yearPieces(y, lang));
+  }
+  /** A sentence with slots ({said}, {other}…) as pieces: the fixed words between the slots are clips named key-a, key-b…
+   *  (the same names in every language, whatever the word order). */
+  function templatePieces(key, tpl, slots, lang) {
+    var out = [], letter = 0;
+    tpl.split(/\{(\w+)\}/).forEach(function (p, i) {
+      if (i % 2) { out = out.concat(slots[p] || []); return; }
+      var k = key + '-' + 'abcdef'.charAt(letter++), clean = p.replace(/^[\s.,።፣]+/, '').trim();
+      if (clean) out.push({ key: k, text: clean, lang: lang, local: true });
+    });
+    return out;
+  }
+  var DV_PARTS = { full: ['year', 'month', 'day'], year: ['year'], age: ['age'] };
+  var DV_KEY = { year: 'y', month: 'm', day: 'd', age: 'age' };
+  var DV_Q = { year: 'dvYearQ', month: 'dvMonthQ', day: 'dvDayQ', age: 'dvAgeQ' };
+  var DV_NO = { year: 'dvNoYear', month: 'dvNoMonth', day: 'dvNoDay', age: 'dvNoAge' };
+  var DV_DAY_COUNTS = [5, 6, 28, 29, 30, 31];
+  function dvHint(dv, lang) {
+    if (dv.part === 'year') return t(dv.mode === 'full' ? 'dvYearHint' : 'dvYearOnlyHint', lang);
+    if (dv.part === 'month') return t('dvMonthHint', lang);
+    if (dv.part === 'day') return t('dvDayHint', lang, { n: daysIn(dv.cal, dv.y, dv.m) });
+    return t('dvAgeHint', lang);
+  }
+  function dvPromptKey(dv) {
+    return dv.part === 'year' ? (dv.mode === 'full' ? 'dv-year' : 'dv-year-only') : dv.part === 'day' ? 'dv-day-' + daysIn(dv.cal, dv.y, dv.m) : 'dv-' + dv.part;
+  }
+  function dvOther(dv, lang) {
+    var v = dateValue(dv.cal, dv.d, dv.m, dv.y);
+    return v ? (dv.cal === 'greg' ? fmtEthiopian(v.gregorian, lang) : fmtGregorian(new Date(v.gregorian), lang)) : '';
+  }
+  function dvReadBackText(dv, lang) {
+    if (dv.mode === 'year') return t('dvReadBackYear', lang, { year: dv.y });
+    if (dv.mode === 'age') return t('dvReadBackAge', lang, { age: dv.age });
+    return t('dvReadBack', lang, { said: fmtDateParts(dv.cal, dv.d, dv.m, dv.y, lang), other: dvOther(dv, lang) });
+  }
+  function dvReadBackItems(dv, lang) {
+    if (lang === 'en') return [{ key: null, text: dvReadBackText(dv, lang), lang: 'en', local: true }];
+    if (dv.mode === 'year') return templatePieces('dv-about', t('dvReadBackYear', lang), { year: yearPieces(dv.y, lang) }, lang);
+    if (dv.mode === 'age') return templatePieces('dv-age-said', t('dvReadBackAge', lang), { age: [numPiece(dv.age, lang)] }, lang);
+    var v = dateValue(dv.cal, dv.d, dv.m, dv.y), o = dv.cal === 'greg' ? gregToEth(new Date(v.gregorian)) : null, g = new Date(v.gregorian);
+    var other = dv.cal === 'greg' ? datePieces('eth', o.d, o.m, o.y, lang) : datePieces('greg', g.getUTCDate(), g.getUTCMonth() + 1, g.getUTCFullYear(), lang);
+    return templatePieces('dv-readback', t('dvReadBack', lang), { said: datePieces(dv.cal, dv.d, dv.m, dv.y, lang), other: other }, lang);
+  }
+  /** What was heard for one part (or several), on screen: "Year: 1990, Month: Meskerem". */
+  function dvShown(vals, cal, lang) {
+    var out = [];
+    if (vals.y != null) out.push(t('dvYear', lang, { v: vals.y }));
+    if (vals.m != null) out.push(t('dvMonth', lang, { v: monthsFor(cal, lang)[vals.m - 1] }));
+    if (vals.d != null) out.push(t('dvDay', lang, { v: vals.d }));
+    if (vals.age != null) out.push(t('dvAge', lang, { v: vals.age }));
+    return out.join(', ');
+  }
+  function dvValuePieces(vals, cal, lang) {
+    if (lang === 'en') return [{ key: null, text: dvShown(vals, cal, lang), lang: 'en', local: true }];
+    var out = [];
+    if (vals.d != null) out.push(numPiece(vals.d, lang));
+    if (vals.m != null) out.push(monthPiece(cal, vals.m, lang));
+    if (vals.y != null) out = out.concat(yearPieces(vals.y, lang));
+    if (vals.age != null) out.push(numPiece(vals.age, lang));
+    return out;
+  }
   var AM_DIGITS = { 'ዜሮ': '0', 'አንድ': '1', 'ሁለት': '2', 'ሶስት': '3', 'ሦስት': '3', 'አራት': '4', 'አምስት': '5', 'ስድስት': '6', 'ሰባት': '7', 'ስምንት': '8', 'ዘጠኝ': '9' };
   var EN_DIGITS = { zero: '0', oh: '0', one: '1', two: '2', three: '3', four: '4', five: '5', six: '6', seven: '7', eight: '8', nine: '9' };
   function spokenDigits(s) {
@@ -1193,7 +1497,7 @@
   }
   function optionsOf(f) { return f.options === 'NEEDS' ? NEEDS : (f.options || []); }
   function isGroupField(f) { return f.type === 'choice' || f.type === 'multi' || f.type === 'consent' || f.type === 'ethdate'; }
-  function isEmpty(v) { return v == null || v === '' || (Array.isArray(v) && !v.length) || (typeof v === 'object' && !Array.isArray(v) && 'cal' in v && !v.d && !v.m && !v.y); }
+  function isEmpty(v) { return v == null || v === '' || (Array.isArray(v) && !v.length) || (typeof v === 'object' && !Array.isArray(v) && 'cal' in v && !v.d && !v.m && !v.y && !v.age); }
   // Voice input is never offered on sensitive questions (support needs, ID), so that data never reaches a cloud speech service.
   function voiceAllowed(f, vm) { return f.voice !== false && !f.sensitive && !(f.type === 'ethdate' && vm && dateLists(vm)); }
   /** Day and year as lists (like the month) for "read and type" and "simple steps"; typed, with voice, for "listen" and "speak". */
@@ -1206,7 +1510,8 @@
       return f.type === 'choice' ? t('errChoice', lang) : f.type === 'multi' ? t('errMulti', lang) : f.type === 'consent' ? t('errConsent', lang) : t('errRequired', lang);
     }
     if (f.type === 'tel') { var digits = String(v).replace(/\D/g, ''); if (digits.indexOf('251') === 0) digits = '0' + digits.slice(3); if (digits.length !== 10) return t('errPhone', lang); }
-    if (f.type === 'ethdate' && !v.gregorian) return t(v.cal === 'greg' ? 'errDateGreg' : 'errDate', lang);
+    if (f.type === 'ethdate' && !v.gregorian && !(v.precision === 'year' && v.y >= 1900) && !(v.precision === 'age' && v.age > 0 && v.age < 130))
+      return t(v.cal === 'greg' ? 'errDateGreg' : 'errDate', lang);
     if (f.type === 'consent' && f.requiredValue && v !== f.requiredValue) return t('errConsent', lang);
     if (f.validate) { var msg = f.validate(v, answers); if (msg) return L(msg, lang); }
     return '';
@@ -1664,7 +1969,9 @@
       if (isNameField(f) || f.type === 'tel') h += '<button type="button" class="dm-btn" data-act="readback">' + pic(vm.pictures, '🔁') + t('readBack', lang) + '</button>';
       if (f.sensitive && f.type === 'text') h += '<button type="button" class="dm-btn" data-act="readback-id" aria-expanded="false" aria-controls="' + View.id(vm, 'idnote') + '">' + t('readBackId', lang) + '</button>';
       var canSpeak = voiceAllowed(f, vm) && speech.input.supported(lang);
-      if (canSpeak) h += '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">' + pic(vm.pictures, '🎤') + t('speak', lang) + '</button>';
+      if (canSpeak) h += f.type === 'ethdate' // the date by voice: one part at a time, in its own panel below
+        ? '<button type="button" class="dm-btn" data-act="date-voice">' + pic(vm.pictures, '🎤') + t('dvOpen', lang) + '</button>'
+        : '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">' + pic(vm.pictures, '🎤') + t('speak', lang) + '</button>';
       h += '</div>';
       // A learner who chose "speak my answers" is told plainly when this browser (e.g. an app's WebView) cannot listen.
       if (voiceAllowed(f, vm) && !canSpeak && vm.prefsMode === 'speak') h += '<p class="dm-note">' + t('voiceUnsupported', lang) + '</p>';
@@ -1707,6 +2014,8 @@
         /* First the calendar (Ethiopian or Gregorian), then day, month and year. Learners who read and type, or chose
            simple steps, pick the day and year from lists like the month; learners who listen or speak type them, and
            can answer by voice. */
+        if (v && v.precision) // only the year, or the age (said by voice): shown as it is, with a way back to an exact date
+          return '<p class="dm-note" data-ref="date-about">' + esc(View.display(vm, f, v)) + '</p><p><button type="button" class="dm-link" data-act="dv-exact">' + t('dvExact', lang) + '</button></p>';
         var d = v || {}, cal = d.cal === 'greg' ? 'greg' : 'eth', months = monthsFor(cal, lang), mId = View.id(vm, 'm'), yId = View.id(vm, 'y');
         var lists = dateLists(vm), now = new Date(), topYear = cal === 'greg' ? now.getFullYear() : gregToEth(now).y;
         var calName = View.id(vm, 'cal');
@@ -1741,6 +2050,8 @@
       if (f.type === 'choice' || f.type === 'consent') { var o = opts.filter(function (x) { return x.value === v; })[0]; return o ? L(o.label, lang) + (o.badge ? ' (' + L(o.badge, lang) + ')' : '') : v; }
       if (f.type === 'multi') return v.map(function (x) { var o = opts.filter(function (y) { return y.value === x; })[0]; return o ? L(o.label, lang) : x; }).join(', ');
       if (f.type === 'tel') return formatPhone(v);
+      if (f.type === 'ethdate' && v.precision === 'age') return t('dvAboutAge', lang, { age: v.age });
+      if (f.type === 'ethdate' && v.precision === 'year') return v.cal === 'greg' ? t('dvAboutYearGreg', lang, { y: v.y, a: v.y - 8, b: v.y - 7 }) : t('dvAboutYearEth', lang, { y: v.y, a: v.y + 7, b: v.y + 8 });
       if (f.type === 'ethdate') return v.d + ' ' + monthsFor(v.cal, lang)[v.m - 1] + ' ' + v.y + ' (' + (v.cal === 'greg' ? fmtEthiopian(v.gregorian, lang) : fmtGregorian(new Date(v.gregorian), lang)) + ')';
       return String(v);
     },
@@ -1799,6 +2110,36 @@
       return h + '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="heard-yes">' + t('yes', lang) + '</button>' +
         '<button type="button" class="dm-btn" data-act="heard-again">' + t('again', lang) + '</button>' +
         '<button type="button" class="dm-btn" data-act="heard-type">' + t(choice && f.type !== 'ethdate' ? 'tapInstead' : 'type', lang) + '</button></div></div>';
+    },
+
+    /* Date of birth by voice, one part at a time: the year, then the month, then the day (or only the year, or the
+       age). Each part has its own question, Listen button and "I heard…" check; then the whole date is read back. */
+    datePanel: function (vm, dv) {
+      var lang = vm.lang, hid = View.id(vm, 'dv-h'), parts = DV_PARTS[dv.mode], h = '<div class="dm-panel dm-dv" role="group" aria-labelledby="' + hid + '">';
+      function btn(act, text, cls, extra) { return '<button type="button" class="dm-btn' + (cls ? ' ' + cls : '') + '" data-act="' + act + '"' + (extra || '') + '>' + text + '</button>'; }
+      var head = function (text) { return '<h2 id="' + hid + '" data-ref="dv-h" tabindex="-1">' + esc(text) + '</h2>'; };
+      if (dv.part === 'unknown') {
+        return h + head(t('dvDontKnow', lang)) + '<p>' + t('dvUnknown', lang) + '</p><div class="dm-actions">' +
+          btn('dv-mode', t('dvKnowYear', lang), 'dm-primary', ' data-mode="year"') + btn('dv-mode', t('dvKnowAge', lang), '', ' data-mode="age"') +
+          btn('dv-mode', t('back', lang), '', ' data-mode="full"') + '</div></div>';
+      }
+      if (dv.part === 'check') {
+        h += head(dvReadBackText(dv, lang)) + '<div class="dm-actions">' + btn('dv-use', t('yes', lang), 'dm-primary') + btn('dv-again', t('again', lang)) + btn('heard-type', t('type', lang)) + '</div>';
+        if (dv.mode === 'full') h += '<div class="dm-tools">' + parts.map(function (p) { return btn('dv-change', t('dvChange_' + p, lang), 'dm-small', ' data-part="' + p + '"'); }).join('') + '</div>';
+        return h + '</div>';
+      }
+      if (parts.length > 1) h += '<p class="dm-progress">' + t('dvPart', lang, { n: parts.indexOf(dv.part) + 1, m: parts.length }) + '</p>';
+      h += head(t(DV_Q[dv.part], lang)) + '<p class="dm-hint">' + esc(dvHint(dv, lang)) + '</p>';
+      if (dv.msg) h += '<p class="dm-heard-warn" data-ref="dv-msg"><strong>' + esc(dv.msg) + '</strong></p>';
+      if (dv.heard) {
+        return h + '<p data-ref="heard-h" tabindex="-1">' + t('heard', lang) + ' <q>' + esc(dv.heard.transcript) + '</q></p><p><strong data-ref="dv-shown">' + esc(dv.heard.shown) + '</strong></p>' +
+          (dv.heard.warn ? '<p class="dm-heard-warn"><strong>' + esc(dv.heard.warn) + '</strong></p>' : '') +
+          '<div class="dm-actions">' + btn('heard-yes', t('yes', lang), 'dm-primary') + btn('heard-again', t('again', lang)) + btn('heard-type', t('type', lang)) + '</div></div>';
+      }
+      h += '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="speak" aria-pressed="false">' + pic(vm.pictures, '🎤') + t('speak', lang) + '</button>' +
+        btn('dv-listen', pic(vm.pictures, '🔊') + t('listen', lang)) + btn('heard-type', t('type', lang)) + '</div>';
+      if (dv.part === 'year' && dv.mode === 'full') h += '<p><button type="button" class="dm-link" data-act="dv-unknown">' + t('dvDontKnow', lang) + '</button></p>';
+      return h + '</div>';
     },
 
     voiceConsent: function (vm) {
@@ -1926,6 +2267,10 @@
     if (this.voice) { if (this.voice.session) this.voice.session.abort(); this.voice = null; } // unconfirmed speech is thrown away
     this.className = '';
     this.innerHTML = shiftHeadings(View.page(this.vm()), this.headingLevel());
+    if (this.dv) { // the date-by-voice panel survives a redraw of the same question (language, calendar), not a new one
+      var cf = this.state.mode === 'question' && this.state.field();
+      if (cf && cf.id === this.dv.field && this.state.step === this.dv.step) this.dvDraw(false); else this.dv = null;
+    }
     if (moveFocus !== false) {
       var target = this.querySelector('.dm-errors') || this.querySelector('.dm-q');
       if (target) target.focus();
@@ -1950,16 +2295,17 @@
   var SUMMARY_T = {
     en: { welcome: '{title}. First, choose how you like to fill in the form: read and type, listen, speak my answers, or simple steps with pictures. Below is {next}.',
       step: 'Step {n} of {m}: {topic}.', one: 'Choose one answer.', many: 'Choose all that apply.', date: 'First choose your calendar, then the day, month and year.',
+      'date-voice': 'First choose your calendar. Then type the day, month and year, or choose "{voice}" to say them one at a time.',
       say: 'You can type it or say it.', type: 'Type it.', skip: 'You can skip it.', both: 'Below are {next} and {back}.', only: 'Below is {next}.',
       review: '{title}: {n} answers, each with a {change} button. At the bottom is {submit}.', done: '{title}. {text} Below are the next steps.',
       saved: 'Your answers are saved on this phone. Below is the link to continue later.' },
     am: { welcome: '{title}። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «{next}» አለ።',
-      step: 'ደረጃ {n} ከ{m}፦ {topic}', one: 'አንድ መልስ ይምረጡ።', many: 'የሚስማሙትን ሁሉ ይምረጡ።', date: 'መጀመሪያ አቆጣጠሩን፣ ከዚያ ቀን፣ ወርና ዓመት ይምረጡ።',
+      step: 'ደረጃ {n} ከ{m}፦ {topic}', one: 'አንድ መልስ ይምረጡ።', many: 'የሚስማሙትን ሁሉ ይምረጡ።', 'date-voice': 'መጀመሪያ አቆጣጠርዎን ይምረጡ። ከዚያ ቀኑን፣ ወሩንና ዓመቱን ይጻፉ፤ ወይም አንድ በአንድ ለመናገር «{voice}» ይምረጡ።', date: 'መጀመሪያ አቆጣጠሩን፣ ከዚያ ቀን፣ ወርና ዓመት ይምረጡ።',
       say: 'መጻፍ ወይም መናገር ይችላሉ።', type: 'ይጻፉት።', skip: 'መዝለል ይችላሉ።', both: 'ከታች «{next}» እና «{back}» አሉ።', only: 'ከታች «{next}» አለ።',
       review: '{title}፦ {n} መልሶች፣ እያንዳንዱ «{change}» አዝራር አለው። ከታች «{submit}» አለ።', done: '{title}። {text} ከታች ቀጣዮቹ እርምጃዎች አሉ።',
       saved: 'መልሶችዎ በዚህ ስልክ ላይ ተቀምጠዋል። በኋላ ለመቀጠል ሊንኩ ከታች አለ።' },
     om: { welcome: '{title}. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "{next}" jira.',
-      step: 'Tarkaanfii {n} keessaa {m}: {topic}', one: 'Deebii tokko filadhu.', many: 'Kan siif ta\'an hunda filadhu.', date: 'Dura dhaha, sana booda guyyaa, ji\'aa fi waggaa filadhu.',
+      step: 'Tarkaanfii {n} keessaa {m}: {topic}', one: 'Deebii tokko filadhu.', many: 'Kan siif ta\'an hunda filadhu.', 'date-voice': 'Dura dhaha kee filadhu. Sana booda guyyaa, ji\'aa fi waggaa barreessi, ykn tokko tokkoon jechuuf "{voice}" filadhu.', date: 'Dura dhaha, sana booda guyyaa, ji\'aa fi waggaa filadhu.',
       say: 'Barreessuu ykn dubbachuu dandeessa.', type: 'Barreessi.', skip: 'Dabarsuu dandeessa.', both: 'Gadi "{next}" fi "{back}" jiru.', only: 'Gadi "{next}" jira.',
       review: '{title}: deebii {n}, tokkoon tokkoon isaa qabduu "{change}" qaba. Gadi "{submit}" jira.', done: '{title}. {text} Gadi tarkaanfiiwwan itti aanan jiru.',
       saved: 'Deebiin kee bilbila kana irratti kuufameera. Booda itti fufuuf geessituun gadi jira.' }
@@ -1975,9 +2321,10 @@
     if (m === 'welcome') return [it('sum-welcome-' + form, fill(T.welcome, { title: L(cfg.title, lang), next: names.next }))];
     if (m === 'question') {
       var f = s.field(), p = s.progress(), back = s.step > 0 || !!vm.backUrl || this.welcomeOn;
-      var how = f.type === 'choice' || f.type === 'consent' ? 'one' : f.type === 'multi' ? 'many' : f.type === 'ethdate' ? 'date' : voiceAllowed(f, vm) && speech.input.supported(lang) ? 'say' : 'type';
+      var canSay = voiceAllowed(f, vm) && speech.input.supported(lang);
+      var how = f.type === 'choice' || f.type === 'consent' ? 'one' : f.type === 'multi' ? 'many' : f.type === 'ethdate' ? (canSay ? 'date-voice' : 'date') : canSay ? 'say' : 'type';
       var step = lang === 'en' ? fill(T.step, { n: p.n, m: p.total, topic: L(f.summary, 'en') || L(f.label, 'en') }) : fill(T.step, { n: p.n, m: p.total, topic: '' }).trim();
-      var items = [it('sum-step-' + p.n + '-' + p.total, step), it('sum-' + how, T[how])];
+      var items = [it('sum-step-' + p.n + '-' + p.total, step), it('sum-' + how, fill(T[how], { voice: t('dvOpen', lang) }))];
       if (f.optional) items.push(it('sum-skip', T.skip));
       items.push(it(back ? 'sum-both' : 'sum-only', fill(back ? T.both : T.only, names)));
       return items;
@@ -1997,8 +2344,9 @@
     if (m === 'question') {
       var f = s.field(), p = s.progress(), back = s.step > 0 || !!vm.backUrl || this.welcomeOn;
       var topic = lang === 'en' ? (L(f.summary, 'en') || L(f.label, 'en')) : L(f.label, lang);
-      var how = f.type === 'choice' || f.type === 'consent' ? T.one : f.type === 'multi' ? T.many : f.type === 'ethdate' ? T.date
-        : voiceAllowed(f, vm) && speech.input.supported(lang) ? T.say : T.type;
+      var canSay = voiceAllowed(f, vm) && speech.input.supported(lang);
+      var how = f.type === 'choice' || f.type === 'consent' ? T.one : f.type === 'multi' ? T.many : f.type === 'ethdate' ? (canSay ? fill(T['date-voice'], { voice: t('dvOpen', lang) }) : T.date)
+        : canSay ? T.say : T.type;
       return [fill(T.step, { n: p.n, m: p.total, topic: topic }), how, f.optional ? T.skip : '', fill(back ? T.both : T.only, names)].filter(Boolean).join(' ');
     }
     if (m === 'review') {
@@ -2017,6 +2365,7 @@
     if (f.type === 'multi') return Array.prototype.map.call(form.querySelectorAll('input[name=v]:checked'), function (i) { return i.value; });
     if (f.type === 'choice' || f.type === 'consent') { var c = form.querySelector('input[name=v]:checked'); return c ? c.value : ''; }
     if (f.type === 'ethdate') {
+      if (!form.d) return this.state.answers[f.id]; // an approximate answer: no fields on screen
       var c = form.querySelector('input[name=cal]:checked'), cal = c && c.value === 'greg' ? 'greg' : 'eth';
       var d = parseInt(form.d.value, 10), m = parseInt(form.m.value, 10), y = parseInt(form.y.value, 10);
       var raw = { cal: cal, d: String(form.d.value).trim(), m: form.m.value, y: String(form.y.value).trim() };
@@ -2047,6 +2396,7 @@
       s.mode = 'question'; this.render(true); return;
     }
     if (s.mode !== 'question') return;
+    if (this.dv && this.dv.part === 'check') { this.status(t('voiceCheckFirst', this.lang)); var dh = this.ref('dv-h'); if (dh) dh.focus(); return; }
     if (this.voice && this.voice.state === 'review') {
       this.status(t('voiceCheckFirst', this.lang));
       var hh = this.ref('heard-h'); if (hh) hh.focus();
@@ -2103,6 +2453,9 @@
     if (!b || !this.contains(b)) return;
     this._interacted = true;
     var act = b.getAttribute('data-act'), s = this.state;
+    if (this.dv && /^(heard-yes|heard-again|heard-type|dv-)/.test(act)) { this.dvAct(act, b); return; }
+    if (act === 'date-voice') { this.startVoice(); return; }
+    if (act === 'dv-exact') { this.state.setAnswer(s.field().id, ''); this.render(false); var di = this.ref('input'); if (di) di.focus(); return; }
     if (act === 'focus-input') { e.preventDefault(); var i = this.ref('input'); if (i) i.focus(); return; }
     if (act === 'back') {
       Player.stop(); this.error = '';
@@ -2264,7 +2617,9 @@
   };
   SavannaOnboardingForm.prototype.voiceReset = function () {
     if (this.voice && this.voice.session) this.voice.session.abort();
-    this.voice = null; this.setHeard(''); this.setVoiceButton(false);
+    this.voice = null;
+    if (this.dv) this.dvDraw(false); else this.setHeard('');
+    this.setVoiceButton(false);
   };
   SavannaOnboardingForm.prototype.startVoice = function () {
     var lang = this.lang, self = this, f = this.state.field();
@@ -2272,11 +2627,12 @@
     if (!speech.input.supported(lang)) { this.status(t('voiceUnsupported', lang)); return; }
     if (navigator.onLine === false && (speech.input === browserInput || speech.input === autoInput)) { this.status(t('voiceNetwork', lang)); return; }
     if (store.get('voiceConsent', null) !== true) {
-      this.voice = { state: 'consent', field: f };
+      this.voice = { state: 'consent', field: f }; this.dv = null;
       this.setHeard(View.voiceConsent(this.vm()));
       var h = this.ref('vc'); if (h) h.focus();
       return;
     }
+    if (f.type === 'ethdate' && (!this.dv || this.dv.step !== this.state.step)) { this.voice = null; this.dvOpen(); return; }
     if (this.voice && this.voice.state === 'listening') { // second press: stop listening and use what was heard
       this.voice.state = 'processing'; this.voice.session.stop(); this.setVoiceButton(false); this.status(t('processing', lang)); return;
     }
@@ -2308,6 +2664,7 @@
   SavannaOnboardingForm.prototype.handleTranscript = function (f, alts) {
     var lang = this.lang, said = (alts[0] || '').trim(), v = this.voice;
     v.transcript = said; v.others = [];
+    if (f.type === 'ethdate' && this.dv) return this.dvHeard(alts);
     if (f.type === 'ethdate') {
       var cur = this.readField(f), dv = null;
       for (var j = 0; j < alts.length && !dv; j++) dv = parseSpokenDate(alts[j], cur && cur.cal === 'greg' ? 'greg' : 'eth');
@@ -2359,6 +2716,137 @@
     v.state = 'confirmed'; this.voice = null; this.setHeard('');
     this.status(t('voiceUsed', this.lang));
     var nb = form.querySelector('button[type=submit]'); if (nb) nb.focus();
+  };
+
+  /* --- date of birth by voice: the year, then the month, then the day, each asked, heard and checked on its own.
+     A whole date said in one sentence fills all three and goes straight to the read-back. Typing and the lists stay.
+     Like every voice answer, nothing heard reaches the answer before the learner chooses "Use this answer". --- */
+  SavannaOnboardingForm.prototype.dvOpen = function (mode) {
+    var f = this.state.field(), cur = this.readField(f) || {}, num = function (x) { var n = parseInt(x, 10); return isNaN(n) ? null : n; };
+    var dv = this.dv = { field: f.id, step: this.state.step, mode: mode || 'full', cal: cur.cal === 'greg' ? 'greg' : 'eth', y: null, m: null, d: null, age: null, heard: null, msg: '', say: null };
+    if (dv.mode === 'full' && !cur.precision) { // what is already typed counts, as long as it can be right
+      dv.y = num(cur.y); dv.m = num(cur.m); dv.d = num(cur.d);
+      var bad; while ((bad = dateProblem(dv, this.lang))) dv[DV_KEY[bad.part]] = null;
+    }
+    this.dvNext();
+  };
+  /** Go to the first part still missing (or the read-back), with a message about a part that was wrong. */
+  SavannaOnboardingForm.prototype.dvNext = function (problem) {
+    var dv = this.dv, next = DV_PARTS[dv.mode].filter(function (p) { return dv[DV_KEY[p]] == null; })[0];
+    dv.part = next || 'check'; dv.heard = null;
+    dv.msg = problem ? problem.msg : ''; dv.say = problem ? problem.say : null;
+    this.dvDraw(true);
+    this.dvSpeak();
+  };
+  SavannaOnboardingForm.prototype.dvDraw = function (focus) {
+    this.setHeard(View.datePanel(this.vm(), this.dv));
+    if (focus) { var h = this.ref('dv-h'); if (h) h.focus(); }
+  };
+  /** Read the part's question (after the message, if there is one), or the read-back. onlyMsg: just the message. */
+  SavannaOnboardingForm.prototype.dvSpeak = function (onlyMsg) {
+    var dv = this.dv, lang = this.lang, items = [];
+    if (dv.say) items.push(dv.say);
+    if (!onlyMsg) {
+      if (dv.part === 'check') items = items.concat(dvReadBackItems(dv, lang));
+      else if (dv.part === 'unknown') items.push({ key: 'dv-unknown', text: t('dvUnknown', lang), lang: lang });
+      else items.push({ key: dvPromptKey(dv), text: t(DV_Q[dv.part], lang) + ' ' + dvHint(dv, lang), lang: lang });
+    }
+    Player.play(items, lang, { audioIssue: function () {} });
+  };
+  /** The confirmed parts go into the day, month and year fields (and the calendar choice), as if typed. */
+  SavannaOnboardingForm.prototype.dvSync = function () {
+    var dv = this.dv, form = this.querySelector('.dm-form'), f = this.state.field(), lang = this.lang;
+    if (!form || dv.mode !== 'full' || !form.d) return;
+    var r = form.querySelector('input[name=cal][value="' + dv.cal + '"]');
+    if (r && !r.checked) {
+      r.checked = true;
+      form.m.innerHTML = '<option value="">' + esc(t('chooseMonth', lang)) + '</option>' + monthsFor(dv.cal, lang).map(function (n, i) { return '<option value="' + (i + 1) + '">' + esc(n) + '</option>'; }).join('');
+    }
+    form.y.value = dv.y == null ? '' : dv.y; form.m.value = dv.m == null ? '' : dv.m; form.d.value = dv.d == null ? '' : dv.d;
+    var nv = this.readField(f); this.state.setAnswer(f.id, nv);
+    var conv = this.ref('date-conv');
+    if (conv) conv.textContent = nv && nv.gregorian ? (nv.cal === 'greg' ? t('ethiopian', lang, { date: fmtEthiopian(nv.gregorian, lang) }) : t('gregorian', lang, { date: fmtGregorian(new Date(nv.gregorian), lang) })) : '';
+  };
+  /** What the microphone heard, for the part being asked (or the whole date in one sentence). */
+  SavannaOnboardingForm.prototype.dvHeard = function (alts) {
+    var dv = this.dv, lang = this.lang, v = this.voice, said = (alts[0] || '').trim(), found = null, i, vals = {}, cal = dv.cal, warn = '';
+    this.setVoiceButton(false);
+    if (dv.mode === 'full' && dv.part !== 'unknown') for (i = 0; i < alts.length && !found; i++) { var p = parseDateParts(alts[i], dv.cal); if (partCount(p) >= 2) found = p; }
+    if (found) {
+      var merged = { cal: found.cal, y: found.y != null ? found.y : dv.y, m: found.m != null ? found.m : dv.m, d: found.d != null ? found.d : dv.d };
+      var bad = dateProblem(merged, lang);
+      if (!bad && partCount(found) === 3) { // the whole date: straight to the read-back, which is the check
+        this.voice = null; dv.cal = found.cal; dv.y = found.y; dv.m = found.m; dv.d = found.d; dv.fromSentence = true;
+        this.dvNext(); return;
+      }
+      ['y', 'm', 'd'].forEach(function (k) { if (found[k] != null && !(bad && DV_KEY[bad.part] === k)) vals[k] = found[k]; });
+      cal = found.cal; warn = bad ? bad.msg : '';
+    } else {
+      var val = null;
+      for (i = 0; i < alts.length && val == null; i++) {
+        if (dv.part === 'month') { var mm = matchMonth(alts[i], dv.cal) || monthByNumber(alts[i], dv.cal); if (mm) { val = mm.m; cal = mm.cal; } }
+        else { var n = parseSpokenNumber(alts[i], lang); if (n != null) val = dv.part === 'year' ? inferYear(n, dv.cal) : n; }
+      }
+      var problem = null;
+      if (val == null || (dv.part === 'age' && (val < AGE_MIN || val > AGE_MAX))) problem = { msg: t(DV_NO[dv.part], lang), say: { key: 'dv-no-' + dv.part, text: t(DV_NO[dv.part], lang), lang: lang }, only: true };
+      else if (dv.part !== 'age') {
+        var test = { cal: cal, y: dv.y, m: dv.m, d: dv.d }; test[DV_KEY[dv.part]] = val;
+        var b2 = dateProblem(test, lang);
+        if (b2 && b2.part === dv.part) problem = b2; // re-ask this part only
+      }
+      if (problem) {
+        v.state = 'error'; this.voice = null; dv.heard = null; dv.msg = problem.msg; dv.say = problem.say;
+        this.dvDraw(false); this.status(problem.msg); this.dvSpeak(problem.only);
+        return;
+      }
+      vals[DV_KEY[dv.part]] = val;
+    }
+    if (!Object.keys(vals).length) { // two parts heard, but neither can be right
+      v.state = 'error'; this.voice = null; dv.msg = warn; dv.say = null; this.dvDraw(false); this.status(warn); return;
+    }
+    v.state = 'review'; dv.msg = ''; dv.say = null;
+    dv.heard = { transcript: said, vals: vals, cal: cal, shown: dvShown(vals, cal, lang), warn: warn, problem: warn ? bad : null };
+    this.dvDraw(false);
+    var hh = this.ref('heard-h'); if (hh) hh.focus();
+    this.status(t('heard', lang) + ' ' + dv.heard.shown + '. ' + t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t('type', lang) }));
+    Player.play([{ key: 'msg-heard', text: t('heard', lang), lang: lang, local: true }].concat(dvValuePieces(vals, cal, lang))
+      .concat([{ key: 'msg-heard-choose-type', text: t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t('type', lang) }), lang: lang }]), lang, { audioIssue: function () {} });
+  };
+  SavannaOnboardingForm.prototype.dvAct = function (act, b) {
+    var dv = this.dv, lang = this.lang, self = this;
+    if (act === 'heard-yes') { // "Use this answer" for a part: into the fields, then the next part
+      var h = dv.heard; if (!h) return;
+      this.voice = null; dv.cal = h.cal;
+      Object.keys(h.vals).forEach(function (k) { dv[k] = h.vals[k]; });
+      var bad = dateProblem(dv, lang); if (bad) dv[DV_KEY[bad.part]] = null; // e.g. a new month without the old day
+      bad = bad || h.problem; // a part heard in the same sentence that could not be right: asked next, with the reason
+      this.dvSync(); this.dvNext(bad);
+      return;
+    }
+    if (act === 'heard-again') { dv.heard = null; dv.msg = ''; dv.say = null; this.voice = null; this.startVoice(); return; }
+    if (act === 'heard-type') { // close the voice steps; the parts already used stay in the fields
+      this.dv = null; this.voiceReset(); Player.stop(); this.status(t('voiceDiscarded', lang));
+      var form = this.querySelector('.dm-form'), first = form && ['d', 'm', 'y'].map(function (n) { return form[n]; }).filter(function (x) { return x && !x.value; })[0];
+      var target = first || this.ref('input'); if (target) target.focus();
+      return;
+    }
+    if (act === 'dv-use') { // the read-back was right: this is the answer (saved on Continue, like typing)
+      var f = this.state.field(), val;
+      if (dv.mode === 'full') { val = dateValue(dv.cal, dv.d, dv.m, dv.y); if (!val) return; this.dvSync(); }
+      else if (dv.mode === 'year') val = { cal: dv.cal, precision: 'year', y: dv.y };
+      else val = { cal: dv.cal, precision: 'age', age: dv.age, asOf: new Date().toISOString().slice(0, 10) };
+      this.dv = null; this.voice = null; Player.stop();
+      this.state.setAnswer(f.id, val);
+      if (dv.mode === 'full') this.setHeard(''); else this.render(false); // an approximate answer replaces the fields
+      this.status(t('voiceUsed', lang));
+      var sb = this.querySelector('.dm-form button[type=submit]'); if (sb) sb.focus();
+      return;
+    }
+    if (act === 'dv-again') { dv.y = dv.m = dv.d = dv.age = null; this.dvNext(); return; }
+    if (act === 'dv-change') { var part = b.getAttribute('data-part'); dv[DV_KEY[part]] = null; if (part !== 'day') { var bd = dateProblem(dv, lang); if (bd) dv[DV_KEY[bd.part]] = null; } this.dvNext(); return; }
+    if (act === 'dv-listen') { this.dvSpeak(); return; }
+    if (act === 'dv-unknown') { dv.part = 'unknown'; dv.heard = null; dv.msg = ''; dv.say = null; this.dvDraw(true); this.dvSpeak(); return; }
+    if (act === 'dv-mode') { dv.mode = b.getAttribute('data-mode'); dv.y = dv.m = dv.d = dv.age = null; self.dvNext(); return; }
   };
 
   SavannaOnboardingForm.prototype.finish = function () {
@@ -2570,6 +3058,7 @@
     var longest = Math.max.apply(null, Object.keys(FORMS).map(function (id) { return FORMS[id].fields.length; }));
     if (lang !== 'en') for (var mm = 1; mm <= longest; mm++) for (var nn = 1; nn <= mm; nn++) add('Summaries', 'sum-step-' + nn + '-' + mm, fill(T.step, { n: nn, m: mm, topic: '' }).trim());
     ['one', 'many', 'date', 'say', 'type', 'skip', 'saved'].forEach(function (k) { add('Summaries', 'sum-' + k, T[k]); });
+    add('Summaries', 'sum-date-voice', fill(T['date-voice'], { voice: t('dvOpen', lang) }));
     add('Summaries', 'sum-both', fill(T.both, names)); add('Summaries', 'sum-only', fill(T.only, names));
     // messages read aloud
     add('Messages', 'help', t('helpTitle', lang) + ' ' + t('helpText', lang));
@@ -2584,6 +3073,20 @@
     add('Messages', 'voice-consent', t('voiceConsentTitle', lang) + '. ' + t('voiceConsent', lang));
     add('Messages', 'voice-check', t('heardCheck', lang)); add('Messages', 'voice-used', t('voiceUsed', lang));
     for (var x = 0; x < 100; x++) add('Numbers 0-99 (read on the phone only)', 'num-' + x, numberWords(x, lang));
+    // date of birth by voice: each part's question, the messages, the read-back sentences, month names and year words
+    var D = 'Date of birth by voice (read on the phone only)', S = SCALE_WORDS[lang] || SCALE_WORDS.en;
+    add(D, 'dv-year', t('dvYearQ', lang) + ' ' + t('dvYearHint', lang)); add(D, 'dv-year-only', t('dvYearQ', lang) + ' ' + t('dvYearOnlyHint', lang));
+    add(D, 'dv-month', t('dvMonthQ', lang) + ' ' + t('dvMonthHint', lang));
+    DV_DAY_COUNTS.forEach(function (n) { add(D, 'dv-day-' + n, t('dvDayQ', lang) + ' ' + t('dvDayHint', lang, { n: n })); });
+    add(D, 'dv-age', t('dvAgeQ', lang) + ' ' + t('dvAgeHint', lang)); add(D, 'dv-unknown', t('dvUnknown', lang));
+    ['year', 'month', 'day', 'age'].forEach(function (p) { add(D, 'dv-no-' + p, t(DV_NO[p], lang)); });
+    add(D, 'dv-bad-year', t('dvBadYearSay', lang)); add(D, 'dv-bad-day', t('dvBadDaySay', lang));
+    [['dv-readback', 'dvReadBack'], ['dv-about', 'dvReadBackYear'], ['dv-age-said', 'dvReadBackAge']].forEach(function (r) {
+      templatePieces(r[0], t(r[1], lang), {}, lang).forEach(function (p) { add(D, p.key, p.text); });
+    });
+    ETH_MONTHS.en.forEach(function (x, i) { add(D, 'month-eth-' + (i + 1), monthsFor('eth', lang)[i]); });
+    GREG_MONTHS.en.forEach(function (x, i) { add(D, 'month-greg-' + (i + 1), monthsFor('greg', lang)[i]); });
+    add(D, 'num-100', S.h); add(D, 'num-1000', S.k); if (lang === 'om') add(D, 'num-and', S.and);
     return out;
   }
 
@@ -2591,7 +3094,8 @@
     mount: mount, unmount: unmount,
     version: '0.12.0', register: register, forms: FORMS, NEEDS: NEEDS, store: store, setStorage: setStorage, setSpeech: setSpeech,
     FormState: FormState, validate: validateAnswer, TRUST: TRUST, trustLevel: trustLevel, supportForEmployer: supportForEmployer,
-    eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth, fromGregorian: gregToEth, gregorianMonths: GREG_MONTHS, parseSpoken: parseSpokenDate },
+    eth: { toGregorian: ethToGregorian, valid: ethValid, months: ETH_MONTHS, daysInMonth: ethDaysInMonth, fromGregorian: gregToEth, gregorianMonths: GREG_MONTHS, parseSpoken: parseSpokenDate, parseParts: parseDateParts, matchMonth: matchMonth, inferYear: inferYear },
+    parseSpokenNumber: parseSpokenNumber,
     describe: describe, speak: speak, stopSpeaking: function () { Player.stop(); stopSpeaking(); }, label: L,
     player: Player, offlineAudio: OfflineAudio, _matchOptions: matchOptions, audioManifest: function () { return loadAudioManifest().then(function () { return AUDIO.manifest; }); },
     prefs: getPrefs, setPrefs: setPrefs, readingOn: readingOn, speechCatalog: speechCatalog,

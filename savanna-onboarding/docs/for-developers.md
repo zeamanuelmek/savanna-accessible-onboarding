@@ -121,8 +121,19 @@ One file, `savanna-onboarding.js`, in clear layers:
 - **Never on sensitive questions** (`sensitive: true`: ID and support needs).
 - **The date question** starts with a choice of calendar (Ethiopian or Gregorian). For learners who chose "read and
   type" or "simple steps", day, month and year are lists and there is no microphone. For "listen" and "speak", day and
-  year are typed and the microphone is offered: "12 Meskerem 1995" or "March 5 1990" is shown for checking first; a
-  month name also tells which calendar is meant. Answers are `{ cal, d, m, y, gregorian }` (see `api-schema.md`).
+  year are typed, and **"Answer by voice"** opens a small panel that asks one part at a time: the year, then the month,
+  then the day, each with its own question, Listen button (recorded clip) and "I heard... Use this answer / Say it
+  again / Type it instead". A whole date in one sentence ("12 Meskerem 1990", "March 5 1990", "መስከረም 12 1990") goes
+  straight to the read-back: "You said 12 Meskerem 1990. That is 22 September 1997. Is that right?", with "Change the
+  year / month / day" to fix one part. Numbers are understood as digits or words in English, Amharic and Afaan Oromo
+  (`SavannaOnboarding.parseSpokenNumber`); two-digit years get the century that gives an age of 14 to 80; month names
+  are matched in both calendars and three languages, with small mistakes allowed, or as "month 3". A day that is not
+  in the month (31 Meskerem, 6 Pagume in a short year, 29 February in a common year) or a year that would make the
+  learner younger than 10 or older than 100 is asked again, that part only. **"I don't know my exact date of birth"**
+  gives the year only or the age. Everything read back is made of recorded clips played on the phone (numbers, month
+  names, "thousand", "hundred"): a date of birth is never sent to an online voice. Answers are
+  `{ cal, d, m, y, gregorian }`, or `{ cal, precision: 'year', y }` / `{ cal, precision: 'age', age, asOf }` (see
+  `api-schema.md`).
 - **Languages:** Amharic (`am`, default), English (`en`) and Afaan Oromo (`om`, a draft for native-speaker review).
   Each text in a form config can carry `om`; a missing one falls back to English. Few browsers have Oromo speech:
   read-aloud and voice answers then say so, and everything stays on the screen.
