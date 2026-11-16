@@ -553,7 +553,7 @@
     if (!j) { view.innerHTML = '<h1 tabindex="-1">' + T('notFound') + '</h1><p><a href="' + R('#/jobs') + '">' + T('back') + '</a></p>'; focusH1(); return; }
     var el = mountForm('apply', id, function (d, slot) {
       var a = d.answers;
-      var packet = { job: j.title, employer: j.org, sample: !!j.sample, name: a.name, phone: a.phone, why: a.why, experience: a.experience, interview: a.interview || [] };
+      var packet = { job: j.title, employer: j.org, sample: !!j.sample, name: a.name, phone: a.phone, experience: a.experience, interview: a.interview || [] };
       var support = D.supportForEmployer(a); // empty unless the learner said "share" for this job
       if (support.length) packet.supportThatHelps = support.map(function (n) { return n.label.en; });
       var apps = store.get('applications', []); apps.unshift({ at: new Date().toISOString(), packet: packet }); store.set('applications', apps);

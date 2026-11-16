@@ -7,8 +7,8 @@ Digital Bridge Accessibility Hackathon 2026 (ALX Ethiopia), Track 1: Accessible 
 | Page | What it is |
 |---|---|
 | `/` | The learner journey inside Savanna's own pages: home → sign up → dashboard → Add your ID → Support Passport → jobs and apply → employer form |
-| `/test-host/` | An ordinary page (not Savanna) that installs the module with two script tags and shows what the host receives |
-| `/showroom.html` | Developer and test page (all journeys, raw data views) |
+| `/test-host/` | (not linked from learner pages) An ordinary page (not Savanna) that installs the module with two script tags and shows what the host receives |
+| `/showroom.html` | Developer and test page (all journeys, raw data views). Not linked from learner pages: open it by this address |
 
 ## How to log in (simulated)
 
@@ -59,7 +59,7 @@ Android phone on 3G): the team's results go in the conformance report.
 - **Amharic and Afaan Oromo text are drafts** for native-speaker review. **Amharic audio is synthetic:** demo Amharic
   audio was generated with Microsoft's Amharic neural voice (edge-tts, an unofficial tool) from our reviewed text; it
   will be replaced with human recordings, or Microsoft's official Azure service, in the hardening sprint.
-- **Every fixed text is pre-recorded** (857 clips: Amharic and Afaan Oromo, 31.6 MB); the online voice (Addis AI) is
+- **Every fixed text is pre-recorded** (861 clips: Amharic and Afaan Oromo, 31.7 MB); the online voice (Addis AI) is
   used only for dynamic text (names, typed answers, employer-written job text). The Oromo clips were made with
   Addis AI from draft text.
 - **NVDA's default Windows voice spells Amharic** letter by letter (mitigations: recorded Amharic, one-tap English,

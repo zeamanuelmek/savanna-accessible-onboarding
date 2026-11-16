@@ -2630,6 +2630,10 @@
       this.voice = { state: 'consent', field: f }; this.dv = null;
       this.setHeard(View.voiceConsent(this.vm()));
       var h = this.ref('vc'); if (h) h.focus();
+      var vt = t('voiceConsentTitle', lang) + '. ' + t('voiceConsent', lang);
+      this.status(vt + ' ' + t('voiceAllow', lang) + ' / ' + t('voiceDeny', lang)); // announced in the live region too
+      if (readingOn()) Player.play([{ key: 'voice-consent', text: vt, lang: lang }, { key: 'voice-allow', text: t('voiceAllow', lang), lang: lang },
+        { key: 'voice-deny', text: t('voiceDeny', lang), lang: lang }], lang, this);
       return;
     }
     if (f.type === 'ethdate' && (!this.dv || this.dv.step !== this.state.step)) { this.voice = null; this.dvOpen(); return; }
@@ -3071,6 +3075,7 @@
     add('Messages', 'saved-for-later', t('savedTitle', lang) + '. ' + t('savedText', lang));
     add('Messages', 'resumed', t('resumed', lang)); add('Messages', 'prefilled', t('prefilled', lang));
     add('Messages', 'voice-consent', t('voiceConsentTitle', lang) + '. ' + t('voiceConsent', lang));
+    add('Messages', 'voice-allow', t('voiceAllow', lang)); add('Messages', 'voice-deny', t('voiceDeny', lang));
     add('Messages', 'voice-check', t('heardCheck', lang)); add('Messages', 'voice-used', t('voiceUsed', lang));
     for (var x = 0; x < 100; x++) add('Numbers 0-99 (read on the phone only)', 'num-' + x, numberWords(x, lang));
     // date of birth by voice: each part's question, the messages, the read-back sentences, month names and year words

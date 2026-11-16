@@ -365,8 +365,8 @@
       main.innerHTML = '<div class="sj"><p id="sj-offline" class="notice" role="status" hidden></p><div id="sj-view"></div><footer class="sj-foot"><p class="sj-foot-links"></p></footer></div>';
       document.body.appendChild(main);
     }
-    main.querySelector('.sj-foot-links').innerHTML = (signedIn() ? '' : '<a href="jobs.html">' + T('jobs') + '</a> · ') + '<a href="employer.html">' + T('employer') + '</a> · ' +
-      '<a href="showroom.html">' + T('showroom') + '</a> · <a href="test-host/">' + T('testHost') + '</a>';
+    main.querySelector('.sj-foot-links').innerHTML = (signedIn() ? '' : '<a href="jobs.html">' + T('jobs') + '</a> · ') + '<a href="employer.html">' + T('employer') + '</a>';
+    // the developer and test page (showroom.html) and the test host page (test-host/) are not linked from learner pages
     wireFrame();
   }
   // "Larger text on", "Automatic reading off"… (recorded clips a11y-…), when reading is on or was just switched

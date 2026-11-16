@@ -21,21 +21,21 @@ test('application: prefilled from the profile, and the open questions take voice
   await next(page);
   await expect(page.locator('[data-ref=input]')).toHaveValue('0911234567');
   await next(page);
-  expect(await heading(page)).toBe('Why do you want this job?');
+  expect(await heading(page)).toBe('What work or learning have you done before?'); // "Why do you want this job?" was removed (16 Nov)
   await speakAnswer(page);
   await expect(page.locator('[data-ref=heard-edit]')).toHaveValue('I enjoy helping customers');
   await expect(page.locator('[data-ref=input]')).toHaveValue(''); // nothing used before the check
-  await page.fill('[data-ref=heard-edit]', 'I enjoy helping customers in Amharic and English.');
+  await page.fill('[data-ref=heard-edit]', 'Volunteer at a youth centre.');
   await page.locator('[data-act=heard-yes]').click();
   await next(page);
-  await page.fill('[data-ref=input]', 'Volunteer at a youth centre.'); await next(page);
   await next(page); // interview: optional
   await expect(page.locator('[data-act=speak]')).toHaveCount(0); // sharing support: never by voice
   await pick(page, 'keep'); await next(page);
   expect(await heading(page)).toBe('Check your answers');
   await next(page);
   const packet = JSON.parse(await page.locator('.dm-done-slot pre code').innerText());
-  expect(packet).toMatchObject({ name: 'Abebe Kebede', phone: '0911234567', why: 'I enjoy helping customers in Amharic and English.' });
+  expect(packet).toMatchObject({ name: 'Abebe Kebede', phone: '0911234567', experience: 'Volunteer at a youth centre.' });
+  expect(packet.why).toBeUndefined();
   expect(packet.supportThatHelps).toBeUndefined();
   expect(JSON.stringify(packet)).not.toContain('quiet corner');
 });

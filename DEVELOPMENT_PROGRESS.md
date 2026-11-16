@@ -1776,3 +1776,14 @@ Owner request: "Date of birth by voice is too hard. Make it smart, without break
 - **Tests:** new `tests/dob-voice.spec.mjs` (parser in three languages, two-digit years, month matching, one-sentence
   dates, the three-part flow, invalid dates, year only and age, Amharic read-back made only of on-phone clips);
   `date-language.spec.mjs` updated for the new flow.
+
+## Final fixes before submission (16 Nov, morning)
+
+- Voice consent notice: focus on its heading (as before), now also announced in the live region and, with reading on,
+  read aloud with its choices (Allow / Not now) on the shared player. New clips voice-allow, voice-deny (am, om).
+- Job application: "Why do you want this job?" removed (now 6 questions); app.js packet, api-schema.md, audio script
+  and tests updated.
+- Learner footer: the developer and test page and the test host page are no longer linked; both still work and are
+  listed in README.md and SUBMISSION.md. Service worker cache v12; 861 clips.
+- Skipped (not enough time to do safely): reading every visible line in order on every page (log-in, home, sign-up).
+- Tests (one worker): career, journey (incl. gate journey), gate, voice, summaries, engine, readaloud: all passed.

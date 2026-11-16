@@ -196,12 +196,11 @@ host should then remove the staff member's name and keep only the organisation (
   "properties": {
     "name":           { "type": "string", "description": "Prefilled from the profile: the full name if the learner added one, otherwise the name we call them" },
     "phone":          { "$ref": "#/$defs/phone", "description": "Prefilled from the profile" },
-    "why":            { "type": "string" },
     "experience":     { "type": "string" },
     "interview":      { "type": "array", "items": { "enum": ["phone", "in_person", "written", "interpreter"] } },
     "share_passport": { "enum": ["share", "keep"], "description": "Only asked when a Support Passport with needs exists. Per application" }
   },
-  "required": ["name", "phone", "why", "experience"]
+  "required": ["name", "phone", "experience"]
 }
 ```
 
@@ -265,7 +264,7 @@ Application packet (what the employer receives in the demo; shown as JSON on the
 ```json
 {
   "job": "Customer support agent", "employer": "Selam Contact Centre",
-  "name": "…", "phone": "…", "why": "…", "experience": "…", "interview": ["phone"],
+  "name": "…", "phone": "…", "experience": "…", "interview": ["phone"],
   "supportThatHelps": ["Works with a screen reader"]
 }
 ```

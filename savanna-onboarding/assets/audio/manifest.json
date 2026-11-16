@@ -154,7 +154,6 @@
     "sum-done-employer": "sum-done-employer.mp3",
     "apply-name-question": "apply-name-question.mp3",
     "apply-phone-question": "apply-phone-question.mp3",
-    "apply-why-question": "apply-why-question.mp3",
     "apply-experience-question": "apply-experience-question.mp3",
     "apply-interview-question": "apply-interview-question.mp3",
     "apply-interview-option-phone": "apply-interview-option-phone.mp3",
@@ -171,7 +170,6 @@
     "sum-review-apply-3": "sum-review-apply-3.mp3",
     "sum-review-apply-4": "sum-review-apply-4.mp3",
     "sum-review-apply-5": "sum-review-apply-5.mp3",
-    "sum-review-apply-6": "sum-review-apply-6.mp3",
     "sum-done-apply": "sum-done-apply.mp3",
     "takeover-name-question": "takeover-name-question.mp3",
     "takeover-phone-question": "takeover-phone-question.mp3",
@@ -270,6 +268,8 @@
     "resumed": "resumed.mp3",
     "prefilled": "prefilled.mp3",
     "voice-consent": "voice-consent.mp3",
+    "voice-allow": "voice-allow.mp3",
+    "voice-deny": "voice-deny.mp3",
     "voice-check": "voice-check.mp3",
     "voice-used": "voice-used.mp3",
     "num-0": "num-0.mp3",
@@ -427,7 +427,9 @@
     "card-withdrawn": "card-withdrawn.mp3",
     "card-deleted": "card-deleted.mp3",
     "jobs-offers": "jobs-offers.mp3",
-    "jobs-filter": "jobs-filter.mp3"
+    "jobs-filter": "jobs-filter.mp3",
+    "apply-why-question": "apply-why-question.mp3",
+    "sum-review-apply-6": "sum-review-apply-6.mp3"
   },
   "om": {
     "home-question": "home-question.mp3",
@@ -584,7 +586,6 @@
     "sum-done-employer": "sum-done-employer.mp3",
     "apply-name-question": "apply-name-question.mp3",
     "apply-phone-question": "apply-phone-question.mp3",
-    "apply-why-question": "apply-why-question.mp3",
     "apply-experience-question": "apply-experience-question.mp3",
     "apply-interview-question": "apply-interview-question.mp3",
     "apply-interview-option-phone": "apply-interview-option-phone.mp3",
@@ -601,7 +602,6 @@
     "sum-review-apply-3": "sum-review-apply-3.mp3",
     "sum-review-apply-4": "sum-review-apply-4.mp3",
     "sum-review-apply-5": "sum-review-apply-5.mp3",
-    "sum-review-apply-6": "sum-review-apply-6.mp3",
     "sum-done-apply": "sum-done-apply.mp3",
     "takeover-name-question": "takeover-name-question.mp3",
     "takeover-phone-question": "takeover-phone-question.mp3",
@@ -700,6 +700,8 @@
     "resumed": "resumed.mp3",
     "prefilled": "prefilled.mp3",
     "voice-consent": "voice-consent.mp3",
+    "voice-allow": "voice-allow.mp3",
+    "voice-deny": "voice-deny.mp3",
     "voice-check": "voice-check.mp3",
     "voice-used": "voice-used.mp3",
     "num-0": "num-0.mp3",
@@ -858,7 +860,9 @@
     "card-withdrawn": "card-withdrawn.mp3",
     "card-deleted": "card-deleted.mp3",
     "jobs-offers": "jobs-offers.mp3",
-    "jobs-filter": "jobs-filter.mp3"
+    "jobs-filter": "jobs-filter.mp3",
+    "apply-why-question": "apply-why-question.mp3",
+    "sum-review-apply-6": "sum-review-apply-6.mp3"
   },
   "bytes": {
     "am": {
@@ -1016,7 +1020,6 @@
       "sum-done-employer.mp3": 74754,
       "apply-name-question.mp3": 26428,
       "apply-phone-question.mp3": 21464,
-      "apply-why-question.mp3": 98787,
       "apply-experience-question.mp3": 98526,
       "apply-interview-question.mp3": 35048,
       "apply-interview-option-phone.mp3": 17807,
@@ -1033,7 +1036,6 @@
       "sum-review-apply-3.mp3": 68224,
       "sum-review-apply-4.mp3": 67962,
       "sum-review-apply-5.mp3": 68746,
-      "sum-review-apply-6.mp3": 68746,
       "sum-done-apply.mp3": 63522,
       "takeover-name-question.mp3": 95913,
       "takeover-phone-question.mp3": 103750,
@@ -1132,6 +1134,8 @@
       "resumed.mp3": 37922,
       "prefilled.mp3": 40011,
       "voice-consent.mp3": 216077,
+      "voice-allow.mp3": 25383,
+      "voice-deny.mp3": 29040,
       "voice-check.mp3": 64566,
       "voice-used.mp3": 48371,
       "num-0.mp3": 16501,
@@ -1289,7 +1293,9 @@
       "card-withdrawn.mp3": 98264,
       "card-deleted.mp3": 29040,
       "jobs-offers.mp3": 31391,
-      "jobs-filter.mp3": 46020
+      "jobs-filter.mp3": 46020,
+      "apply-why-question.mp3": 98787,
+      "sum-review-apply-6.mp3": 68746
     },
     "om": {
       "home-question.mp3": 88338,
@@ -1446,7 +1452,6 @@
       "sum-done-employer.mp3": 67440,
       "apply-name-question.mp3": 20158,
       "apply-phone-question.mp3": 17285,
-      "apply-why-question.mp3": 94869,
       "apply-experience-question.mp3": 87293,
       "apply-interview-question.mp3": 18330,
       "apply-interview-option-phone.mp3": 17024,
@@ -1463,7 +1468,6 @@
       "sum-review-apply-3.mp3": 63260,
       "sum-review-apply-4.mp3": 64305,
       "sum-review-apply-5.mp3": 68485,
-      "sum-review-apply-6.mp3": 64566,
       "sum-done-apply.mp3": 65873,
       "takeover-name-question.mp3": 110803,
       "takeover-phone-question.mp3": 96175,
@@ -1562,6 +1566,8 @@
       "resumed.mp3": 26950,
       "prefilled.mp3": 29824,
       "voice-consent.mp3": 230966,
+      "voice-allow.mp3": 21464,
+      "voice-deny.mp3": 27473,
       "voice-check.mp3": 60387,
       "voice-used.mp3": 47848,
       "num-0.mp3": 11538,
@@ -1720,7 +1726,9 @@
       "card-withdrawn.mp3": 110803,
       "card-deleted.mp3": 21203,
       "jobs-offers.mp3": 17024,
-      "jobs-filter.mp3": 38705
+      "jobs-filter.mp3": 38705,
+      "apply-why-question.mp3": 94869,
+      "sum-review-apply-6.mp3": 64566
     }
   }
 }

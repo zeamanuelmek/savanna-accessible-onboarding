@@ -181,8 +181,6 @@
       withName({ id: 'name', type: 'text', autocomplete: 'name', prefill: { from: 'profile', key: ['full_name', 'name'] },
         label: { en: 'Your name for this application', am: 'ለዚህ ማመልከቻ ስምዎ', om: 'Maqaa kee iyyannoo kanaaf' } }),
       { id: 'phone', type: 'tel', prefill: { from: 'profile', key: 'phone' }, label: { en: 'Your phone number', am: 'ስልክ ቁጥርዎ', om: 'Lakkoofsa bilbila keetii' } },
-      { id: 'why', type: 'textarea', label: { en: 'Why do you want this job?', am: 'ይህን ሥራ ለምን ይፈልጋሉ?', om: 'Hojii kana maaliif barbaadda?' },
-        hint: { en: 'A few sentences are enough. You can type, or answer by voice and check the words before they are used.', am: 'ጥቂት ዓረፍተ ነገሮች ይበቃሉ። መጻፍ፣ ወይም በድምፅ መልሰው ቃላቱን ከመጠቀምዎ በፊት ማረጋገጥ ይችላሉ።', om: 'Himoonni muraasni ni ga\'u. Barreessuu, ykn sagaleen deebiftee jechoota osoo hin fayyadamin dura ilaaluu dandeessa.' } },
       { id: 'experience', type: 'textarea', label: { en: 'What work or learning have you done before?', am: 'ከዚህ በፊት ምን ዓይነት ሥራ ወይም ትምህርት አከናውነዋል?', om: 'Kanaan dura hojii ykn barnoota akkamii hojjette?' },
         hint: { en: 'Paid work, volunteering, courses and family business all count.', am: 'የሚከፈልበት ሥራ፣ በጎ ፈቃድ፣ ኮርሶችና የቤተሰብ ንግድ ሁሉም ይቆጠራሉ።', om: 'Hojiin kaffaltii qabu, tola ooltummaan, koorsiiwwan fi daldalli maatii hundi ni lakkaa\'amu.' } },
       { id: 'interview', type: 'multi', optional: true, label: { en: 'How would you like to be interviewed?', am: 'ቃለ መጠይቁ እንዴት እንዲሆን ይፈልጋሉ?', om: 'Akkamitti gaafatamuu barbaadda?' },
@@ -279,7 +277,7 @@
       other_need: 'anything else that helps you, in your own words', sharing: 'who can see your Support Passport. Only you is chosen for you' },
     employer: { title: 'the job title', org: 'the name of your organisation', location: 'where the job is', mode: 'where the work is done: office, home or both',
       offers: 'the support this job offers, from the same list learners use', description: 'a short description of the job', contact: 'how applicants can contact you' },
-    apply: { name: 'your name for this application', phone: 'your phone number', why: 'why you want this job', experience: 'work or learning you have done before',
+    apply: { name: 'your name for this application', phone: 'your phone number', experience: 'work or learning you have done before',
       interview: 'how you would like to be interviewed', share_passport: 'whether to share your Support Passport list with this employer' },
     profile: { name: 'the name we call you', full_name: 'your full name', phone: 'your phone number', dob: 'your date of birth' }
   };

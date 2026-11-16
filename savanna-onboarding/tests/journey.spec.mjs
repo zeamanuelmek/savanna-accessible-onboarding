@@ -250,14 +250,14 @@ test('job application and job post end with a plain confirmation on the Savanna 
   await at(page, '/apply.html?job=s1');
   await page.waitForSelector('.dm-q');
   await next(page); await next(page); // name and phone: prefilled from the profile
-  await page.fill('[data-ref=input]', 'I like working with people.'); await next(page);
-  await page.fill('[data-ref=input]', 'Volunteering at my kebele.'); await next(page);
+  await page.fill('[data-ref=input]', 'Volunteering at my kebele.'); await next(page); // "Why do you want this job?" was removed (16 Nov)
   await next(page); // interview: optional
   await pick(page, 'share'); await next(page);
   await next(page); // Send my application
   const slot = page.locator('.dm-done-slot');
   await expect(slot.locator('h2')).toHaveText(/^Your application was sent to /);
-  await expect(slot.locator('.dm-review')).toContainText('I like working with people.');
+  await expect(slot.locator('.dm-review')).toContainText('Volunteering at my kebele.');
+  await expect(slot.locator('.dm-review')).not.toContainText('Why do you want this job');
   await expect(slot).toContainText('Support Passport: shared');
   await expect(slot).toContainText('This is a demo: nothing was actually sent.');
   await expect(slot.locator('pre, code')).toHaveCount(0);
@@ -313,10 +313,11 @@ test('mount() API: options, handle.unmount(), and errors for a wrong target', as
   expect(r.error).toContain('no element matches');
 });
 
-test('the showroom stays reachable as the developer and test page', async ({ page }) => {
+test('the showroom stays reachable as the developer and test page, but is not linked from learner pages', async ({ page }) => {
   await freshStart(page, { lang: 'en' });
   await at(page, '/index.html');
-  await page.locator('.sj-foot a[href="showroom.html"]').click();
+  await expect(page.locator('.sj-foot a[href="showroom.html"], .sj-foot a[href^="test-host"]')).toHaveCount(0);
+  await at(page, '/showroom.html');
   await page.waitForSelector('#nav a', { state: 'attached' });
   await expect(page).toHaveTitle(/Savanna Accessible Onboarding Module/);
 });

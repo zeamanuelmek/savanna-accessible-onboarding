@@ -246,152 +246,152 @@
 |---|---|---|---|
 | 153 | `am/apply-name-question.mp3` | <span lang="am">ለዚህ ማመልከቻ ስምዎ</span> | 3 s |
 | 154 | `am/apply-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ</span> | 2 s |
-| 155 | `am/apply-why-question.mp3` | <span lang="am">ይህን ሥራ ለምን ይፈልጋሉ? ጥቂት ዓረፍተ ነገሮች ይበቃሉ። መጻፍ፣ ወይም በድምፅ መልሰው ቃላቱን ከመጠቀምዎ በፊት ማረጋገጥ ይችላሉ።</span> | 17 s |
-| 156 | `am/apply-experience-question.mp3` | <span lang="am">ከዚህ በፊት ምን ዓይነት ሥራ ወይም ትምህርት አከናውነዋል? የሚከፈልበት ሥራ፣ በጎ ፈቃድ፣ ኮርሶችና የቤተሰብ ንግድ ሁሉም ይቆጠራሉ።</span> | 17 s |
-| 157 | `am/apply-interview-question.mp3` | <span lang="am">ቃለ መጠይቁ እንዴት እንዲሆን ይፈልጋሉ?</span> | 6 s |
-| 158 | `am/apply-interview-option-phone.mp3` | <span lang="am">በስልክ</span> | 2 s |
-| 159 | `am/apply-interview-option-in-person.mp3` | <span lang="am">በአካል</span> | 2 s |
-| 160 | `am/apply-interview-option-written.mp3` | <span lang="am">በጽሑፍ ጥያቄዎች</span> | 3 s |
-| 161 | `am/apply-interview-option-interpreter.mp3` | <span lang="am">ከምልክት ቋንቋ አስተርጓሚ ጋር</span> | 5 s |
-| 162 | `am/apply-share-passport-option-share.mp3` | <span lang="am">አዎ፣ የድጋፍ ዝርዝሬን አጋራ</span> | 4 s |
-| 163 | `am/apply-share-passport-option-keep.mp3` | <span lang="am">አይ፣ በምስጢር ይቆይ</span> | 3 s |
-| 164 | `am/apply-check-answers.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ. ከመላክዎ በፊት ሁሉም ትክክል መሆኑን ያረጋግጡ።</span> | 10 s |
-| 165 | `am/apply-done.mp3` | <span lang="am">ማመልከቻዎ ተልኳል ከዚህ በታች የላኩት ማጠቃለያ አለ።</span> | 8 s |
+| 155 | `am/apply-experience-question.mp3` | <span lang="am">ከዚህ በፊት ምን ዓይነት ሥራ ወይም ትምህርት አከናውነዋል? የሚከፈልበት ሥራ፣ በጎ ፈቃድ፣ ኮርሶችና የቤተሰብ ንግድ ሁሉም ይቆጠራሉ።</span> | 17 s |
+| 156 | `am/apply-interview-question.mp3` | <span lang="am">ቃለ መጠይቁ እንዴት እንዲሆን ይፈልጋሉ?</span> | 6 s |
+| 157 | `am/apply-interview-option-phone.mp3` | <span lang="am">በስልክ</span> | 2 s |
+| 158 | `am/apply-interview-option-in-person.mp3` | <span lang="am">በአካል</span> | 2 s |
+| 159 | `am/apply-interview-option-written.mp3` | <span lang="am">በጽሑፍ ጥያቄዎች</span> | 3 s |
+| 160 | `am/apply-interview-option-interpreter.mp3` | <span lang="am">ከምልክት ቋንቋ አስተርጓሚ ጋር</span> | 5 s |
+| 161 | `am/apply-share-passport-option-share.mp3` | <span lang="am">አዎ፣ የድጋፍ ዝርዝሬን አጋራ</span> | 4 s |
+| 162 | `am/apply-share-passport-option-keep.mp3` | <span lang="am">አይ፣ በምስጢር ይቆይ</span> | 3 s |
+| 163 | `am/apply-check-answers.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ. ከመላክዎ በፊት ሁሉም ትክክል መሆኑን ያረጋግጡ።</span> | 10 s |
+| 164 | `am/apply-done.mp3` | <span lang="am">ማመልከቻዎ ተልኳል ከዚህ በታች የላኩት ማጠቃለያ አለ።</span> | 8 s |
 
 ## Amharic — Summaries
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 166 | `am/sum-welcome-apply.mp3` | <span lang="am">ለዚህ ሥራ ያመልክቱ። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «ቀጥል» አለ።</span> | 25 s |
-| 167 | `am/sum-review-apply-1.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 1 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
-| 168 | `am/sum-review-apply-2.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 2 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
-| 169 | `am/sum-review-apply-3.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 3 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
-| 170 | `am/sum-review-apply-4.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 4 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
-| 171 | `am/sum-review-apply-5.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 5 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
-| 172 | `am/sum-review-apply-6.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 6 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
-| 173 | `am/sum-done-apply.mp3` | <span lang="am">ማመልከቻዎ ተልኳል። ከዚህ በታች የላኩት ማጠቃለያ አለ። ከታች ቀጣዮቹ እርምጃዎች አሉ።</span> | 12 s |
+| 165 | `am/sum-welcome-apply.mp3` | <span lang="am">ለዚህ ሥራ ያመልክቱ። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «ቀጥል» አለ።</span> | 25 s |
+| 166 | `am/sum-review-apply-1.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 1 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
+| 167 | `am/sum-review-apply-2.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 2 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
+| 168 | `am/sum-review-apply-3.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 3 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
+| 169 | `am/sum-review-apply-4.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 4 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
+| 170 | `am/sum-review-apply-5.mp3` | <span lang="am">መልሶችዎን ያረጋግጡ፦ 5 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ማመልከቻዬን ላክ» አለ።</span> | 13 s |
+| 171 | `am/sum-done-apply.mp3` | <span lang="am">ማመልከቻዎ ተልኳል። ከዚህ በታች የላኩት ማጠቃለያ አለ። ከታች ቀጣዮቹ እርምጃዎች አሉ።</span> | 12 s |
 
 ## Amharic — Form: takeover
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 174 | `am/takeover-name-question.mp3` | <span lang="am">ምን ብለን እንጥራዎ? የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።</span> | 17 s |
-| 175 | `am/takeover-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ ስንት ነው? ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 23 45 67።</span> | 13 s |
-| 176 | `am/takeover-dob-question.mp3` | <span lang="am">መቼ ተወለዱ? መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።</span> | 14 s |
-| 177 | `am/takeover-dob-calendar.mp3` | <span lang="am">የትኛውን አቆጣጠር ይጠቀማሉ?</span> | 4 s |
-| 178 | `am/takeover-dob-option-eth.mp3` | <span lang="am">የኢትዮጵያ አቆጣጠር</span> | 3 s |
-| 179 | `am/takeover-dob-option-greg.mp3` | <span lang="am">የፈረንጆች (የአውሮፓ) አቆጣጠር</span> | 5 s |
-| 180 | `am/takeover-check-answers.mp3` | <span lang="am">መለያዎን ይረከቡ. አጋር ድርጅት ለመመዝገብ ረድቶዎታል። ያስገቡትን ያረጋግጡ፤ የተሳሳተውን ይቀይሩ። ከዚህ በኋላ መለያውን የሚጠቀሙት እርስዎ ብቻ ነዎት።</span> | 21 s |
-| 181 | `am/takeover-check-answers-note.mp3` | <span lang="am">ሲጨርሱ የረዳዎት ሰው ስም ከመገለጫዎ ይሰረዛል፤ የድርጅቱ ስም ብቻ ይቀመጣል። የረዳዎት ሰው የድጋፍ ፓስፖርትዎን ማየት አይችልም፤ ሲዘጋጁ ራስዎ ይሙሉት።</span> | 20 s |
-| 182 | `am/takeover-done.mp3` | <span lang="am">መለያው አሁን የእርስዎ ነው ከአሁን ጀምሮ የሚጠቀሙት እርስዎ ብቻ ነዎት። የረዳዎት ሰው ስም ተሰርዟል።</span> | 14 s |
+| 172 | `am/takeover-name-question.mp3` | <span lang="am">ምን ብለን እንጥራዎ? የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።</span> | 17 s |
+| 173 | `am/takeover-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ ስንት ነው? ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 23 45 67።</span> | 13 s |
+| 174 | `am/takeover-dob-question.mp3` | <span lang="am">መቼ ተወለዱ? መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።</span> | 14 s |
+| 175 | `am/takeover-dob-calendar.mp3` | <span lang="am">የትኛውን አቆጣጠር ይጠቀማሉ?</span> | 4 s |
+| 176 | `am/takeover-dob-option-eth.mp3` | <span lang="am">የኢትዮጵያ አቆጣጠር</span> | 3 s |
+| 177 | `am/takeover-dob-option-greg.mp3` | <span lang="am">የፈረንጆች (የአውሮፓ) አቆጣጠር</span> | 5 s |
+| 178 | `am/takeover-check-answers.mp3` | <span lang="am">መለያዎን ይረከቡ. አጋር ድርጅት ለመመዝገብ ረድቶዎታል። ያስገቡትን ያረጋግጡ፤ የተሳሳተውን ይቀይሩ። ከዚህ በኋላ መለያውን የሚጠቀሙት እርስዎ ብቻ ነዎት።</span> | 21 s |
+| 179 | `am/takeover-check-answers-note.mp3` | <span lang="am">ሲጨርሱ የረዳዎት ሰው ስም ከመገለጫዎ ይሰረዛል፤ የድርጅቱ ስም ብቻ ይቀመጣል። የረዳዎት ሰው የድጋፍ ፓስፖርትዎን ማየት አይችልም፤ ሲዘጋጁ ራስዎ ይሙሉት።</span> | 20 s |
+| 180 | `am/takeover-done.mp3` | <span lang="am">መለያው አሁን የእርስዎ ነው ከአሁን ጀምሮ የሚጠቀሙት እርስዎ ብቻ ነዎት። የረዳዎት ሰው ስም ተሰርዟል።</span> | 14 s |
 
 ## Amharic — Summaries
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 183 | `am/sum-welcome-takeover.mp3` | <span lang="am">መለያዎን ይረከቡ። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «ቀጥል» አለ።</span> | 25 s |
-| 184 | `am/sum-review-takeover-1.mp3` | <span lang="am">መለያዎን ይረከቡ፦ 1 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ይህ አሁን የእኔ መለያ ነው» አለ።</span> | 14 s |
-| 185 | `am/sum-review-takeover-2.mp3` | <span lang="am">መለያዎን ይረከቡ፦ 2 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ይህ አሁን የእኔ መለያ ነው» አለ።</span> | 14 s |
-| 186 | `am/sum-review-takeover-3.mp3` | <span lang="am">መለያዎን ይረከቡ፦ 3 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ይህ አሁን የእኔ መለያ ነው» አለ።</span> | 14 s |
-| 187 | `am/sum-done-takeover.mp3` | <span lang="am">መለያው አሁን የእርስዎ ነው። ከአሁን ጀምሮ የሚጠቀሙት እርስዎ ብቻ ነዎት። የረዳዎት ሰው ስም ተሰርዟል። ከታች ቀጣዮቹ እርምጃዎች አሉ።</span> | 18 s |
+| 181 | `am/sum-welcome-takeover.mp3` | <span lang="am">መለያዎን ይረከቡ። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «ቀጥል» አለ።</span> | 25 s |
+| 182 | `am/sum-review-takeover-1.mp3` | <span lang="am">መለያዎን ይረከቡ፦ 1 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ይህ አሁን የእኔ መለያ ነው» አለ።</span> | 14 s |
+| 183 | `am/sum-review-takeover-2.mp3` | <span lang="am">መለያዎን ይረከቡ፦ 2 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ይህ አሁን የእኔ መለያ ነው» አለ።</span> | 14 s |
+| 184 | `am/sum-review-takeover-3.mp3` | <span lang="am">መለያዎን ይረከቡ፦ 3 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ይህ አሁን የእኔ መለያ ነው» አለ።</span> | 14 s |
+| 185 | `am/sum-done-takeover.mp3` | <span lang="am">መለያው አሁን የእርስዎ ነው። ከአሁን ጀምሮ የሚጠቀሙት እርስዎ ብቻ ነዎት። የረዳዎት ሰው ስም ተሰርዟል። ከታች ቀጣዮቹ እርምጃዎች አሉ።</span> | 18 s |
 
 ## Amharic — Form: profile
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 188 | `am/profile-name-question.mp3` | <span lang="am">ምን ብለን እንጥራዎ? የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።</span> | 17 s |
-| 189 | `am/profile-full-name-question.mp3` | <span lang="am">ሙሉ ስምዎ ማን ነው? አማራጭ። በሥራ ማመልከቻዎች ላይ እንዲታይ ከፈለጉ ብቻ ይጨምሩት። የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ።</span> | 17 s |
-| 190 | `am/profile-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ ስንት ነው? ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 23 45 67።</span> | 13 s |
-| 191 | `am/profile-dob-question.mp3` | <span lang="am">መቼ ተወለዱ? መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።</span> | 14 s |
-| 192 | `am/profile-dob-calendar.mp3` | <span lang="am">የትኛውን አቆጣጠር ይጠቀማሉ?</span> | 4 s |
-| 193 | `am/profile-dob-option-eth.mp3` | <span lang="am">የኢትዮጵያ አቆጣጠር</span> | 3 s |
-| 194 | `am/profile-dob-option-greg.mp3` | <span lang="am">የፈረንጆች (የአውሮፓ) አቆጣጠር</span> | 5 s |
-| 195 | `am/profile-check-answers.mp3` | <span lang="am">የእኔ መገለጫ. እነዚህ የሰጡን ዝርዝሮች ናቸው። አንዱን ለማዘመን "ቀይር"ን ይምረጡ፣ ከዚያ ያስቀምጡ።</span> | 13 s |
-| 196 | `am/profile-check-answers-note.mp3` | <span lang="am">መገለጫዎ በዚህ ስልክ ላይ ተቀምጧል።</span> | 5 s |
-| 197 | `am/profile-done.mp3` | <span lang="am">መገለጫዎ ተዘምኗል ቅጾች ከአሁን ጀምሮ በአዲሱ ዝርዝርዎ ይሞላሉ።</span> | 9 s |
+| 186 | `am/profile-name-question.mp3` | <span lang="am">ምን ብለን እንጥራዎ? የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ። ከፈለጉ ሙሉ ስምዎን በኋላ በ«የእኔ መገለጫ» ውስጥ መጨመር ይችላሉ።</span> | 17 s |
+| 187 | `am/profile-full-name-question.mp3` | <span lang="am">ሙሉ ስምዎ ማን ነው? አማራጭ። በሥራ ማመልከቻዎች ላይ እንዲታይ ከፈለጉ ብቻ ይጨምሩት። የአማርኛም የእንግሊዝኛም ፊደላት ይቻላሉ።</span> | 17 s |
+| 188 | `am/profile-phone-question.mp3` | <span lang="am">ስልክ ቁጥርዎ ስንት ነው? ለመቀጠል ሊንክ ለመላክ ብቻ እንጠቀምበታለን። ለምሳሌ 0911 23 45 67።</span> | 13 s |
+| 189 | `am/profile-dob-question.mp3` | <span lang="am">መቼ ተወለዱ? መጀመሪያ የኢትዮጵያ ወይም የፈረንጆች አቆጣጠር ይምረጡ። እርግጠኛ ካልሆኑ መዝለል ይችላሉ።</span> | 14 s |
+| 190 | `am/profile-dob-calendar.mp3` | <span lang="am">የትኛውን አቆጣጠር ይጠቀማሉ?</span> | 4 s |
+| 191 | `am/profile-dob-option-eth.mp3` | <span lang="am">የኢትዮጵያ አቆጣጠር</span> | 3 s |
+| 192 | `am/profile-dob-option-greg.mp3` | <span lang="am">የፈረንጆች (የአውሮፓ) አቆጣጠር</span> | 5 s |
+| 193 | `am/profile-check-answers.mp3` | <span lang="am">የእኔ መገለጫ. እነዚህ የሰጡን ዝርዝሮች ናቸው። አንዱን ለማዘመን "ቀይር"ን ይምረጡ፣ ከዚያ ያስቀምጡ።</span> | 13 s |
+| 194 | `am/profile-check-answers-note.mp3` | <span lang="am">መገለጫዎ በዚህ ስልክ ላይ ተቀምጧል።</span> | 5 s |
+| 195 | `am/profile-done.mp3` | <span lang="am">መገለጫዎ ተዘምኗል ቅጾች ከአሁን ጀምሮ በአዲሱ ዝርዝርዎ ይሞላሉ።</span> | 9 s |
 
 ## Amharic — Summaries
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 198 | `am/sum-welcome-profile.mp3` | <span lang="am">የእኔ መገለጫ። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «ቀጥል» አለ።</span> | 24 s |
-| 199 | `am/sum-review-profile-1.mp3` | <span lang="am">የእኔ መገለጫ፦ 1 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ለውጦቼን አስቀምጥ» አለ።</span> | 12 s |
-| 200 | `am/sum-review-profile-2.mp3` | <span lang="am">የእኔ መገለጫ፦ 2 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ለውጦቼን አስቀምጥ» አለ።</span> | 12 s |
-| 201 | `am/sum-review-profile-3.mp3` | <span lang="am">የእኔ መገለጫ፦ 3 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ለውጦቼን አስቀምጥ» አለ።</span> | 12 s |
-| 202 | `am/sum-review-profile-4.mp3` | <span lang="am">የእኔ መገለጫ፦ 4 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ለውጦቼን አስቀምጥ» አለ።</span> | 12 s |
-| 203 | `am/sum-done-profile.mp3` | <span lang="am">መገለጫዎ ተዘምኗል። ቅጾች ከአሁን ጀምሮ በአዲሱ ዝርዝርዎ ይሞላሉ። ከታች ቀጣዮቹ እርምጃዎች አሉ።</span> | 13 s |
-| 204 | `am/sum-step-1-1.mp3` | <span lang="am">ደረጃ 1 ከ1፦</span> | 2 s |
-| 205 | `am/sum-step-1-2.mp3` | <span lang="am">ደረጃ 1 ከ2፦</span> | 2 s |
-| 206 | `am/sum-step-2-2.mp3` | <span lang="am">ደረጃ 2 ከ2፦</span> | 2 s |
-| 207 | `am/sum-step-1-3.mp3` | <span lang="am">ደረጃ 1 ከ3፦</span> | 2 s |
-| 208 | `am/sum-step-2-3.mp3` | <span lang="am">ደረጃ 2 ከ3፦</span> | 2 s |
-| 209 | `am/sum-step-3-3.mp3` | <span lang="am">ደረጃ 3 ከ3፦</span> | 2 s |
-| 210 | `am/sum-step-1-4.mp3` | <span lang="am">ደረጃ 1 ከ4፦</span> | 2 s |
-| 211 | `am/sum-step-2-4.mp3` | <span lang="am">ደረጃ 2 ከ4፦</span> | 2 s |
-| 212 | `am/sum-step-3-4.mp3` | <span lang="am">ደረጃ 3 ከ4፦</span> | 2 s |
-| 213 | `am/sum-step-4-4.mp3` | <span lang="am">ደረጃ 4 ከ4፦</span> | 2 s |
-| 214 | `am/sum-step-1-5.mp3` | <span lang="am">ደረጃ 1 ከ5፦</span> | 2 s |
-| 215 | `am/sum-step-2-5.mp3` | <span lang="am">ደረጃ 2 ከ5፦</span> | 2 s |
-| 216 | `am/sum-step-3-5.mp3` | <span lang="am">ደረጃ 3 ከ5፦</span> | 2 s |
-| 217 | `am/sum-step-4-5.mp3` | <span lang="am">ደረጃ 4 ከ5፦</span> | 2 s |
-| 218 | `am/sum-step-5-5.mp3` | <span lang="am">ደረጃ 5 ከ5፦</span> | 2 s |
-| 219 | `am/sum-step-1-6.mp3` | <span lang="am">ደረጃ 1 ከ6፦</span> | 2 s |
-| 220 | `am/sum-step-2-6.mp3` | <span lang="am">ደረጃ 2 ከ6፦</span> | 2 s |
-| 221 | `am/sum-step-3-6.mp3` | <span lang="am">ደረጃ 3 ከ6፦</span> | 2 s |
-| 222 | `am/sum-step-4-6.mp3` | <span lang="am">ደረጃ 4 ከ6፦</span> | 2 s |
-| 223 | `am/sum-step-5-6.mp3` | <span lang="am">ደረጃ 5 ከ6፦</span> | 2 s |
-| 224 | `am/sum-step-6-6.mp3` | <span lang="am">ደረጃ 6 ከ6፦</span> | 2 s |
-| 225 | `am/sum-step-1-7.mp3` | <span lang="am">ደረጃ 1 ከ7፦</span> | 2 s |
-| 226 | `am/sum-step-2-7.mp3` | <span lang="am">ደረጃ 2 ከ7፦</span> | 2 s |
-| 227 | `am/sum-step-3-7.mp3` | <span lang="am">ደረጃ 3 ከ7፦</span> | 2 s |
-| 228 | `am/sum-step-4-7.mp3` | <span lang="am">ደረጃ 4 ከ7፦</span> | 2 s |
-| 229 | `am/sum-step-5-7.mp3` | <span lang="am">ደረጃ 5 ከ7፦</span> | 2 s |
-| 230 | `am/sum-step-6-7.mp3` | <span lang="am">ደረጃ 6 ከ7፦</span> | 2 s |
-| 231 | `am/sum-step-7-7.mp3` | <span lang="am">ደረጃ 7 ከ7፦</span> | 2 s |
-| 232 | `am/sum-step-1-8.mp3` | <span lang="am">ደረጃ 1 ከ8፦</span> | 2 s |
-| 233 | `am/sum-step-2-8.mp3` | <span lang="am">ደረጃ 2 ከ8፦</span> | 2 s |
-| 234 | `am/sum-step-3-8.mp3` | <span lang="am">ደረጃ 3 ከ8፦</span> | 2 s |
-| 235 | `am/sum-step-4-8.mp3` | <span lang="am">ደረጃ 4 ከ8፦</span> | 2 s |
-| 236 | `am/sum-step-5-8.mp3` | <span lang="am">ደረጃ 5 ከ8፦</span> | 2 s |
-| 237 | `am/sum-step-6-8.mp3` | <span lang="am">ደረጃ 6 ከ8፦</span> | 2 s |
-| 238 | `am/sum-step-7-8.mp3` | <span lang="am">ደረጃ 7 ከ8፦</span> | 2 s |
-| 239 | `am/sum-step-8-8.mp3` | <span lang="am">ደረጃ 8 ከ8፦</span> | 2 s |
-| 240 | `am/sum-one.mp3` | <span lang="am">አንድ መልስ ይምረጡ።</span> | 3 s |
-| 241 | `am/sum-many.mp3` | <span lang="am">የሚስማሙትን ሁሉ ይምረጡ።</span> | 4 s |
-| 242 | `am/sum-date.mp3` | <span lang="am">መጀመሪያ አቆጣጠሩን፣ ከዚያ ቀን፣ ወርና ዓመት ይምረጡ።</span> | 8 s |
-| 243 | `am/sum-say.mp3` | <span lang="am">መጻፍ ወይም መናገር ይችላሉ።</span> | 4 s |
-| 244 | `am/sum-type.mp3` | <span lang="am">ይጻፉት።</span> | 2 s |
-| 245 | `am/sum-skip.mp3` | <span lang="am">መዝለል ይችላሉ።</span> | 3 s |
-| 246 | `am/sum-saved.mp3` | <span lang="am">መልሶችዎ በዚህ ስልክ ላይ ተቀምጠዋል። በኋላ ለመቀጠል ሊንኩ ከታች አለ።</span> | 10 s |
-| 247 | `am/sum-date-voice.mp3` | <span lang="am">መጀመሪያ አቆጣጠርዎን ይምረጡ። ከዚያ ቀኑን፣ ወሩንና ዓመቱን ይጻፉ፤ ወይም አንድ በአንድ ለመናገር «በድምፅ ይመልሱ» ይምረጡ።</span> | 17 s |
-| 248 | `am/sum-both.mp3` | <span lang="am">ከታች «ቀጥል» እና «ተመለስ» አሉ።</span> | 4 s |
-| 249 | `am/sum-only.mp3` | <span lang="am">ከታች «ቀጥል» አለ።</span> | 3 s |
+| 196 | `am/sum-welcome-profile.mp3` | <span lang="am">የእኔ መገለጫ። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «ቀጥል» አለ።</span> | 24 s |
+| 197 | `am/sum-review-profile-1.mp3` | <span lang="am">የእኔ መገለጫ፦ 1 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ለውጦቼን አስቀምጥ» አለ።</span> | 12 s |
+| 198 | `am/sum-review-profile-2.mp3` | <span lang="am">የእኔ መገለጫ፦ 2 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ለውጦቼን አስቀምጥ» አለ።</span> | 12 s |
+| 199 | `am/sum-review-profile-3.mp3` | <span lang="am">የእኔ መገለጫ፦ 3 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ለውጦቼን አስቀምጥ» አለ።</span> | 12 s |
+| 200 | `am/sum-review-profile-4.mp3` | <span lang="am">የእኔ መገለጫ፦ 4 መልሶች፣ እያንዳንዱ «ቀይር» አዝራር አለው። ከታች «ለውጦቼን አስቀምጥ» አለ።</span> | 12 s |
+| 201 | `am/sum-done-profile.mp3` | <span lang="am">መገለጫዎ ተዘምኗል። ቅጾች ከአሁን ጀምሮ በአዲሱ ዝርዝርዎ ይሞላሉ። ከታች ቀጣዮቹ እርምጃዎች አሉ።</span> | 13 s |
+| 202 | `am/sum-step-1-1.mp3` | <span lang="am">ደረጃ 1 ከ1፦</span> | 2 s |
+| 203 | `am/sum-step-1-2.mp3` | <span lang="am">ደረጃ 1 ከ2፦</span> | 2 s |
+| 204 | `am/sum-step-2-2.mp3` | <span lang="am">ደረጃ 2 ከ2፦</span> | 2 s |
+| 205 | `am/sum-step-1-3.mp3` | <span lang="am">ደረጃ 1 ከ3፦</span> | 2 s |
+| 206 | `am/sum-step-2-3.mp3` | <span lang="am">ደረጃ 2 ከ3፦</span> | 2 s |
+| 207 | `am/sum-step-3-3.mp3` | <span lang="am">ደረጃ 3 ከ3፦</span> | 2 s |
+| 208 | `am/sum-step-1-4.mp3` | <span lang="am">ደረጃ 1 ከ4፦</span> | 2 s |
+| 209 | `am/sum-step-2-4.mp3` | <span lang="am">ደረጃ 2 ከ4፦</span> | 2 s |
+| 210 | `am/sum-step-3-4.mp3` | <span lang="am">ደረጃ 3 ከ4፦</span> | 2 s |
+| 211 | `am/sum-step-4-4.mp3` | <span lang="am">ደረጃ 4 ከ4፦</span> | 2 s |
+| 212 | `am/sum-step-1-5.mp3` | <span lang="am">ደረጃ 1 ከ5፦</span> | 2 s |
+| 213 | `am/sum-step-2-5.mp3` | <span lang="am">ደረጃ 2 ከ5፦</span> | 2 s |
+| 214 | `am/sum-step-3-5.mp3` | <span lang="am">ደረጃ 3 ከ5፦</span> | 2 s |
+| 215 | `am/sum-step-4-5.mp3` | <span lang="am">ደረጃ 4 ከ5፦</span> | 2 s |
+| 216 | `am/sum-step-5-5.mp3` | <span lang="am">ደረጃ 5 ከ5፦</span> | 2 s |
+| 217 | `am/sum-step-1-6.mp3` | <span lang="am">ደረጃ 1 ከ6፦</span> | 2 s |
+| 218 | `am/sum-step-2-6.mp3` | <span lang="am">ደረጃ 2 ከ6፦</span> | 2 s |
+| 219 | `am/sum-step-3-6.mp3` | <span lang="am">ደረጃ 3 ከ6፦</span> | 2 s |
+| 220 | `am/sum-step-4-6.mp3` | <span lang="am">ደረጃ 4 ከ6፦</span> | 2 s |
+| 221 | `am/sum-step-5-6.mp3` | <span lang="am">ደረጃ 5 ከ6፦</span> | 2 s |
+| 222 | `am/sum-step-6-6.mp3` | <span lang="am">ደረጃ 6 ከ6፦</span> | 2 s |
+| 223 | `am/sum-step-1-7.mp3` | <span lang="am">ደረጃ 1 ከ7፦</span> | 2 s |
+| 224 | `am/sum-step-2-7.mp3` | <span lang="am">ደረጃ 2 ከ7፦</span> | 2 s |
+| 225 | `am/sum-step-3-7.mp3` | <span lang="am">ደረጃ 3 ከ7፦</span> | 2 s |
+| 226 | `am/sum-step-4-7.mp3` | <span lang="am">ደረጃ 4 ከ7፦</span> | 2 s |
+| 227 | `am/sum-step-5-7.mp3` | <span lang="am">ደረጃ 5 ከ7፦</span> | 2 s |
+| 228 | `am/sum-step-6-7.mp3` | <span lang="am">ደረጃ 6 ከ7፦</span> | 2 s |
+| 229 | `am/sum-step-7-7.mp3` | <span lang="am">ደረጃ 7 ከ7፦</span> | 2 s |
+| 230 | `am/sum-step-1-8.mp3` | <span lang="am">ደረጃ 1 ከ8፦</span> | 2 s |
+| 231 | `am/sum-step-2-8.mp3` | <span lang="am">ደረጃ 2 ከ8፦</span> | 2 s |
+| 232 | `am/sum-step-3-8.mp3` | <span lang="am">ደረጃ 3 ከ8፦</span> | 2 s |
+| 233 | `am/sum-step-4-8.mp3` | <span lang="am">ደረጃ 4 ከ8፦</span> | 2 s |
+| 234 | `am/sum-step-5-8.mp3` | <span lang="am">ደረጃ 5 ከ8፦</span> | 2 s |
+| 235 | `am/sum-step-6-8.mp3` | <span lang="am">ደረጃ 6 ከ8፦</span> | 2 s |
+| 236 | `am/sum-step-7-8.mp3` | <span lang="am">ደረጃ 7 ከ8፦</span> | 2 s |
+| 237 | `am/sum-step-8-8.mp3` | <span lang="am">ደረጃ 8 ከ8፦</span> | 2 s |
+| 238 | `am/sum-one.mp3` | <span lang="am">አንድ መልስ ይምረጡ።</span> | 3 s |
+| 239 | `am/sum-many.mp3` | <span lang="am">የሚስማሙትን ሁሉ ይምረጡ።</span> | 4 s |
+| 240 | `am/sum-date.mp3` | <span lang="am">መጀመሪያ አቆጣጠሩን፣ ከዚያ ቀን፣ ወርና ዓመት ይምረጡ።</span> | 8 s |
+| 241 | `am/sum-say.mp3` | <span lang="am">መጻፍ ወይም መናገር ይችላሉ።</span> | 4 s |
+| 242 | `am/sum-type.mp3` | <span lang="am">ይጻፉት።</span> | 2 s |
+| 243 | `am/sum-skip.mp3` | <span lang="am">መዝለል ይችላሉ።</span> | 3 s |
+| 244 | `am/sum-saved.mp3` | <span lang="am">መልሶችዎ በዚህ ስልክ ላይ ተቀምጠዋል። በኋላ ለመቀጠል ሊንኩ ከታች አለ።</span> | 10 s |
+| 245 | `am/sum-date-voice.mp3` | <span lang="am">መጀመሪያ አቆጣጠርዎን ይምረጡ። ከዚያ ቀኑን፣ ወሩንና ዓመቱን ይጻፉ፤ ወይም አንድ በአንድ ለመናገር «በድምፅ ይመልሱ» ይምረጡ።</span> | 17 s |
+| 246 | `am/sum-both.mp3` | <span lang="am">ከታች «ቀጥል» እና «ተመለስ» አሉ።</span> | 4 s |
+| 247 | `am/sum-only.mp3` | <span lang="am">ከታች «ቀጥል» አለ።</span> | 3 s |
 
 ## Amharic — Messages
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 250 | `am/help.mp3` | <span lang="am">እርዳታ ይፈልጋሉ? የጊዜ ገደብ የለም። መልሶችዎ ከእያንዳንዱ ጥያቄ በኋላ በዚህ ስልክ ላይ ይቀመጣሉ። እንደ AAAPD ያለ አጋር ድርጅት አብሮዎት እንዲሞላ መጠየቅ ወይም በኋላ መመለስ ይችላሉ።</span> | 24 s |
-| 251 | `am/msg-heard.mp3` | <span lang="am">የሰማሁት፦</span> | 2 s |
-| 252 | `am/msg-your-answer.mp3` | <span lang="am">መልስዎ፦</span> | 2 s |
-| 253 | `am/msg-nothing-typed.mp3` | <span lang="am">እስካሁን ምንም አልተጻፈም።</span> | 4 s |
-| 254 | `am/msg-heard-choose-type.mp3` | <span lang="am">«ይህን መልስ ተጠቀም»፣ «እንደገና ይናገሩ» ወይም «በመጻፍ ይመልሱ»ን ይምረጡ።</span> | 10 s |
-| 255 | `am/msg-heard-choose-tap.mp3` | <span lang="am">«ይህን መልስ ተጠቀም»፣ «እንደገና ይናገሩ» ወይም «በመንካት ይመልሱ»ን ይምረጡ።</span> | 10 s |
-| 256 | `am/msg-selected.mp3` | <span lang="am">የተመረጠ፦</span> | 2 s |
-| 257 | `am/msg-not-selected.mp3` | <span lang="am">አልተመረጠም፦</span> | 3 s |
-| 258 | `am/msg-offline.mp3` | <span lang="am">ከኢንተርኔት ውጪ ነዎት። መልሶችዎ በዚህ ስልክ ላይ ይቀመጣሉ፤ መቀጠልም ይችላሉ። በድምፅ መመለስ ግንኙነት ያስፈልገዋል።</span> | 16 s |
-| 259 | `am/msg-online.mp3` | <span lang="am">እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።</span> | 6 s |
-| 260 | `am/error-choose-one.mp3` | <span lang="am">ለመቀጠል አንድ መልስ ይምረጡ።</span> | 5 s |
-| 261 | `am/error-choose-some.mp3` | <span lang="am">ቢያንስ አንድ መልስ ይምረጡ።</span> | 4 s |
-| 262 | `am/error-required.mp3` | <span lang="am">ለመቀጠል እባክዎ ይህን ጥያቄ ይመልሱ።</span> | 6 s |
-| 263 | `am/error-phone.mp3` | <span lang="am">ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 23 45 67።</span> | 9 s |
-| 264 | `am/error-date.mp3` | <span lang="am">በኢትዮጵያ አቆጣጠር ትክክለኛ ቀን ያስገቡ። ቀን ከ1 እስከ 30፣ ጳጉሜን ከ1 እስከ 5 ወይም 6።</span> | 13 s |
-| 265 | `am/error-consent.mp3` | <span lang="am">ለመቀጠል መስማማት ያስፈልጋል። እርግጠኛ ካልሆኑ "እርዳታ"ን ይምረጡ።</span> | 10 s |
-| 266 | `am/error-mode.mp3` | <span lang="am">ለመቀጠል አንድ መንገድ ይምረጡ።</span> | 5 s |
-| 267 | `am/saved-for-later.mp3` | <span lang="am">መልሶችዎ ተቀምጠዋል. ምንም አልጠፋም። ለመቀጠል ይህን ሊንክ በዚህ ስልክ ይክፈቱ፦</span> | 11 s |
-| 268 | `am/resumed.mp3` | <span lang="am">እንኳን ደህና መጡ። መልሶችዎን አስቀምጠናል።</span> | 7 s |
-| 269 | `am/prefilled.mp3` | <span lang="am">ይህን ከመገለጫዎ ሞልተነዋል። መቀየር ይችላሉ።</span> | 7 s |
-| 270 | `am/voice-consent.mp3` | <span lang="am">ድምፅዎን ከመጠቀምዎ በፊት. ድምፅዎን ወደ ጽሑፍ ለመቀየር ቅጂዎ ወደ የንግግር አገልግሎት ይላካል፦ ለአማርኛና ለአፋን ኦሮሞ Addis AI (ኢትዮጵያ)፣ ለእንግሊዝኛ ወይም Addis AI በማይገኝበት ጊዜ Google (በChrome)። በምትኩ መጻፍ ወይም መንካት ይችላሉ። ይህን በማንኛውም ጊዜ በቅንብሮች ውስጥ ማጥፋት ይችላሉ። ድምፅዎን መጠቀም ይፈልጋሉ?</span> | 42 s |
+| 248 | `am/help.mp3` | <span lang="am">እርዳታ ይፈልጋሉ? የጊዜ ገደብ የለም። መልሶችዎ ከእያንዳንዱ ጥያቄ በኋላ በዚህ ስልክ ላይ ይቀመጣሉ። እንደ AAAPD ያለ አጋር ድርጅት አብሮዎት እንዲሞላ መጠየቅ ወይም በኋላ መመለስ ይችላሉ።</span> | 24 s |
+| 249 | `am/msg-heard.mp3` | <span lang="am">የሰማሁት፦</span> | 2 s |
+| 250 | `am/msg-your-answer.mp3` | <span lang="am">መልስዎ፦</span> | 2 s |
+| 251 | `am/msg-nothing-typed.mp3` | <span lang="am">እስካሁን ምንም አልተጻፈም።</span> | 4 s |
+| 252 | `am/msg-heard-choose-type.mp3` | <span lang="am">«ይህን መልስ ተጠቀም»፣ «እንደገና ይናገሩ» ወይም «በመጻፍ ይመልሱ»ን ይምረጡ።</span> | 10 s |
+| 253 | `am/msg-heard-choose-tap.mp3` | <span lang="am">«ይህን መልስ ተጠቀም»፣ «እንደገና ይናገሩ» ወይም «በመንካት ይመልሱ»ን ይምረጡ።</span> | 10 s |
+| 254 | `am/msg-selected.mp3` | <span lang="am">የተመረጠ፦</span> | 2 s |
+| 255 | `am/msg-not-selected.mp3` | <span lang="am">አልተመረጠም፦</span> | 3 s |
+| 256 | `am/msg-offline.mp3` | <span lang="am">ከኢንተርኔት ውጪ ነዎት። መልሶችዎ በዚህ ስልክ ላይ ይቀመጣሉ፤ መቀጠልም ይችላሉ። በድምፅ መመለስ ግንኙነት ያስፈልገዋል።</span> | 16 s |
+| 257 | `am/msg-online.mp3` | <span lang="am">እንደገና ከኢንተርኔት ጋር ተገናኝተዋል።</span> | 6 s |
+| 258 | `am/error-choose-one.mp3` | <span lang="am">ለመቀጠል አንድ መልስ ይምረጡ።</span> | 5 s |
+| 259 | `am/error-choose-some.mp3` | <span lang="am">ቢያንስ አንድ መልስ ይምረጡ።</span> | 4 s |
+| 260 | `am/error-required.mp3` | <span lang="am">ለመቀጠል እባክዎ ይህን ጥያቄ ይመልሱ።</span> | 6 s |
+| 261 | `am/error-phone.mp3` | <span lang="am">ባለ 10 አሃዝ ስልክ ቁጥር ያስገቡ፤ ለምሳሌ 0911 23 45 67።</span> | 9 s |
+| 262 | `am/error-date.mp3` | <span lang="am">በኢትዮጵያ አቆጣጠር ትክክለኛ ቀን ያስገቡ። ቀን ከ1 እስከ 30፣ ጳጉሜን ከ1 እስከ 5 ወይም 6።</span> | 13 s |
+| 263 | `am/error-consent.mp3` | <span lang="am">ለመቀጠል መስማማት ያስፈልጋል። እርግጠኛ ካልሆኑ "እርዳታ"ን ይምረጡ።</span> | 10 s |
+| 264 | `am/error-mode.mp3` | <span lang="am">ለመቀጠል አንድ መንገድ ይምረጡ።</span> | 5 s |
+| 265 | `am/saved-for-later.mp3` | <span lang="am">መልሶችዎ ተቀምጠዋል. ምንም አልጠፋም። ለመቀጠል ይህን ሊንክ በዚህ ስልክ ይክፈቱ፦</span> | 11 s |
+| 266 | `am/resumed.mp3` | <span lang="am">እንኳን ደህና መጡ። መልሶችዎን አስቀምጠናል።</span> | 7 s |
+| 267 | `am/prefilled.mp3` | <span lang="am">ይህን ከመገለጫዎ ሞልተነዋል። መቀየር ይችላሉ።</span> | 7 s |
+| 268 | `am/voice-consent.mp3` | <span lang="am">ድምፅዎን ከመጠቀምዎ በፊት. ድምፅዎን ወደ ጽሑፍ ለመቀየር ቅጂዎ ወደ የንግግር አገልግሎት ይላካል፦ ለአማርኛና ለአፋን ኦሮሞ Addis AI (ኢትዮጵያ)፣ ለእንግሊዝኛ ወይም Addis AI በማይገኝበት ጊዜ Google (በChrome)። በምትኩ መጻፍ ወይም መንካት ይችላሉ። ይህን በማንኛውም ጊዜ በቅንብሮች ውስጥ ማጥፋት ይችላሉ። ድምፅዎን መጠቀም ይፈልጋሉ?</span> | 42 s |
+| 269 | `am/voice-allow.mp3` | <span lang="am">አዎ፣ ድምፄን ተጠቀም</span> | 3 s |
+| 270 | `am/voice-deny.mp3` | <span lang="am">አይ፣ እጽፋለሁ ወይም እነካለሁ</span> | 5 s |
 | 271 | `am/voice-check.mp3` | <span lang="am">ያረጋግጡት፤ ካስፈለገም ያስተካክሉት። «ይህን መልስ ተጠቀም»ን እስኪመርጡ ድረስ ምንም አይቀመጥም።</span> | 13 s |
 | 272 | `am/voice-used.mp3` | <span lang="am">ከድምፅዎ መልስ ተጨምሯል። ያረጋግጡት፤ ከዚያ «ቀጥል»ን ይምረጡ።</span> | 9 s |
 
@@ -794,152 +794,152 @@
 |---|---|---|---|
 | 581 | `om/apply-name-question.mp3` | <span lang="om">Maqaa kee iyyannoo kanaaf</span> | 3 s |
 | 582 | `om/apply-phone-question.mp3` | <span lang="om">Lakkoofsa bilbila keetii</span> | 2 s |
-| 583 | `om/apply-why-question.mp3` | <span lang="om">Hojii kana maaliif barbaadda? Himoonni muraasni ni ga'u. Barreessuu, ykn sagaleen deebiftee jechoota osoo hin fayyadamin dura ilaaluu dandeessa.</span> | 11 s |
-| 584 | `om/apply-experience-question.mp3` | <span lang="om">Kanaan dura hojii ykn barnoota akkamii hojjette? Hojiin kaffaltii qabu, tola ooltummaan, koorsiiwwan fi daldalli maatii hundi ni lakkaa'amu.</span> | 11 s |
-| 585 | `om/apply-interview-question.mp3` | <span lang="om">Akkamitti gaafatamuu barbaadda?</span> | 2 s |
-| 586 | `om/apply-interview-option-phone.mp3` | <span lang="om">Bilbilaan</span> | 1 s |
-| 587 | `om/apply-interview-option-in-person.mp3` | <span lang="om">Fuulaa fuulatti</span> | 2 s |
-| 588 | `om/apply-interview-option-written.mp3` | <span lang="om">Gaaffii barreeffamaan</span> | 2 s |
-| 589 | `om/apply-interview-option-interpreter.mp3` | <span lang="om">Hiikaa afaan mallattoo wajjin</span> | 3 s |
-| 590 | `om/apply-share-passport-option-share.mp3` | <span lang="om">Eeyyee, tarree deeggarsaa koo qoodi</span> | 3 s |
-| 591 | `om/apply-share-passport-option-keep.mp3` | <span lang="om">Lakki, dhuunfaan haa turu</span> | 3 s |
-| 592 | `om/apply-check-answers.mp3` | <span lang="om">Deebii kee mirkaneessi. Osoo hin ergin dura wanti hundi sirrii ta'uu isaa mirkaneeffadhu.</span> | 8 s |
-| 593 | `om/apply-done.mp3` | <span lang="om">Iyyannoon kee ergameera Armaan gaditti cuunfaa waan ergite jira.</span> | 5 s |
+| 583 | `om/apply-experience-question.mp3` | <span lang="om">Kanaan dura hojii ykn barnoota akkamii hojjette? Hojiin kaffaltii qabu, tola ooltummaan, koorsiiwwan fi daldalli maatii hundi ni lakkaa'amu.</span> | 11 s |
+| 584 | `om/apply-interview-question.mp3` | <span lang="om">Akkamitti gaafatamuu barbaadda?</span> | 2 s |
+| 585 | `om/apply-interview-option-phone.mp3` | <span lang="om">Bilbilaan</span> | 1 s |
+| 586 | `om/apply-interview-option-in-person.mp3` | <span lang="om">Fuulaa fuulatti</span> | 2 s |
+| 587 | `om/apply-interview-option-written.mp3` | <span lang="om">Gaaffii barreeffamaan</span> | 2 s |
+| 588 | `om/apply-interview-option-interpreter.mp3` | <span lang="om">Hiikaa afaan mallattoo wajjin</span> | 3 s |
+| 589 | `om/apply-share-passport-option-share.mp3` | <span lang="om">Eeyyee, tarree deeggarsaa koo qoodi</span> | 3 s |
+| 590 | `om/apply-share-passport-option-keep.mp3` | <span lang="om">Lakki, dhuunfaan haa turu</span> | 3 s |
+| 591 | `om/apply-check-answers.mp3` | <span lang="om">Deebii kee mirkaneessi. Osoo hin ergin dura wanti hundi sirrii ta'uu isaa mirkaneeffadhu.</span> | 8 s |
+| 592 | `om/apply-done.mp3` | <span lang="om">Iyyannoon kee ergameera Armaan gaditti cuunfaa waan ergite jira.</span> | 5 s |
 
 ## Afaan Oromo — Summaries
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 594 | `om/sum-welcome-apply.mp3` | <span lang="om">Hojii kanaaf iyyadhu. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "Itti fufi" jira.</span> | 13 s |
-| 595 | `om/sum-review-apply-1.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 1, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
-| 596 | `om/sum-review-apply-2.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 2, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
-| 597 | `om/sum-review-apply-3.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 3, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
-| 598 | `om/sum-review-apply-4.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 4, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
-| 599 | `om/sum-review-apply-5.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 5, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
-| 600 | `om/sum-review-apply-6.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 6, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
-| 601 | `om/sum-done-apply.mp3` | <span lang="om">Iyyannoon kee ergameera. Armaan gaditti cuunfaa waan ergite jira. Gadi tarkaanfiiwwan itti aanan jiru.</span> | 8 s |
+| 593 | `om/sum-welcome-apply.mp3` | <span lang="om">Hojii kanaaf iyyadhu. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "Itti fufi" jira.</span> | 13 s |
+| 594 | `om/sum-review-apply-1.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 1, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
+| 595 | `om/sum-review-apply-2.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 2, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
+| 596 | `om/sum-review-apply-3.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 3, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
+| 597 | `om/sum-review-apply-4.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 4, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
+| 598 | `om/sum-review-apply-5.mp3` | <span lang="om">Deebii kee mirkaneessi: deebii 5, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Iyyannoo koo ergi" jira.</span> | 8 s |
+| 599 | `om/sum-done-apply.mp3` | <span lang="om">Iyyannoon kee ergameera. Armaan gaditti cuunfaa waan ergite jira. Gadi tarkaanfiiwwan itti aanan jiru.</span> | 8 s |
 
 ## Afaan Oromo — Form: takeover
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 602 | `om/takeover-name-question.mp3` | <span lang="om">Maqaa akkamiin si waamuu qabna? Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta'u. Yoo barbaadde, maqaa kee guutuu booda Piroofaayilii koo keessatti dabaluu dandeessa.</span> | 14 s |
-| 603 | `om/takeover-phone-question.mp3` | <span lang="om">Lakkoofsi bilbila keetii meeqa? Kan itti fayyadamnu geessituu itti fufuu siif erguuf qofa. Fakkeenyaaf 0911 23 45 67.</span> | 10 s |
-| 604 | `om/takeover-dob-question.mp3` | <span lang="om">Yoom dhalatte? Dura dhaha Itoophiyaa ykn dhaha Gorgooriyaan filadhu. Yoo hin mirkaneeffatin kana dabarsuu dandeessa.</span> | 8 s |
-| 605 | `om/takeover-dob-calendar.mp3` | <span lang="om">Dhaha kam fayyadamta?</span> | 2 s |
-| 606 | `om/takeover-dob-option-eth.mp3` | <span lang="om">Dhaha Itoophiyaa</span> | 2 s |
-| 607 | `om/takeover-dob-option-greg.mp3` | <span lang="om">Dhaha Gorgooriyaan (Awurooppaa)</span> | 2 s |
-| 608 | `om/takeover-check-answers.mp3` | <span lang="om">Herrega kee fudhadhu. dhaabbata michuu akka galmooftu si gargaare. Waan galchan ilaali, kan dogoggora ta'e jijjiiri. Kana booda herrega kana kan fayyadamu ati qofa.</span> | 13 s |
-| 609 | `om/takeover-check-answers-note.mp3` | <span lang="om">Yeroo xumurtu, maqaan nama si gargaaree piroofaayilii kee irraa haqama; kan hafu dhaabbaticha qofa. Namni si gargaare Paaspoortii Deeggarsaa kee arguu hin danda'u: yeroo qophoofte ofii keetii guuti.</span> | 15 s |
-| 610 | `om/takeover-done.mp3` | <span lang="om">Herregni kee amma kan kee ti Amma booda kan itti fayyadamu ati qofa. Maqaan nama si gargaaree haqameera.</span> | 10 s |
+| 600 | `om/takeover-name-question.mp3` | <span lang="om">Maqaa akkamiin si waamuu qabna? Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta'u. Yoo barbaadde, maqaa kee guutuu booda Piroofaayilii koo keessatti dabaluu dandeessa.</span> | 14 s |
+| 601 | `om/takeover-phone-question.mp3` | <span lang="om">Lakkoofsi bilbila keetii meeqa? Kan itti fayyadamnu geessituu itti fufuu siif erguuf qofa. Fakkeenyaaf 0911 23 45 67.</span> | 10 s |
+| 602 | `om/takeover-dob-question.mp3` | <span lang="om">Yoom dhalatte? Dura dhaha Itoophiyaa ykn dhaha Gorgooriyaan filadhu. Yoo hin mirkaneeffatin kana dabarsuu dandeessa.</span> | 8 s |
+| 603 | `om/takeover-dob-calendar.mp3` | <span lang="om">Dhaha kam fayyadamta?</span> | 2 s |
+| 604 | `om/takeover-dob-option-eth.mp3` | <span lang="om">Dhaha Itoophiyaa</span> | 2 s |
+| 605 | `om/takeover-dob-option-greg.mp3` | <span lang="om">Dhaha Gorgooriyaan (Awurooppaa)</span> | 2 s |
+| 606 | `om/takeover-check-answers.mp3` | <span lang="om">Herrega kee fudhadhu. dhaabbata michuu akka galmooftu si gargaare. Waan galchan ilaali, kan dogoggora ta'e jijjiiri. Kana booda herrega kana kan fayyadamu ati qofa.</span> | 13 s |
+| 607 | `om/takeover-check-answers-note.mp3` | <span lang="om">Yeroo xumurtu, maqaan nama si gargaaree piroofaayilii kee irraa haqama; kan hafu dhaabbaticha qofa. Namni si gargaare Paaspoortii Deeggarsaa kee arguu hin danda'u: yeroo qophoofte ofii keetii guuti.</span> | 15 s |
+| 608 | `om/takeover-done.mp3` | <span lang="om">Herregni kee amma kan kee ti Amma booda kan itti fayyadamu ati qofa. Maqaan nama si gargaaree haqameera.</span> | 10 s |
 
 ## Afaan Oromo — Summaries
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 611 | `om/sum-welcome-takeover.mp3` | <span lang="om">Herrega kee fudhadhu. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "Itti fufi" jira.</span> | 13 s |
-| 612 | `om/sum-review-takeover-1.mp3` | <span lang="om">Herrega kee fudhadhu: deebii 1, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Amma herregni kun kan koo ti" jira.</span> | 10 s |
-| 613 | `om/sum-review-takeover-2.mp3` | <span lang="om">Herrega kee fudhadhu: deebii 2, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Amma herregni kun kan koo ti" jira.</span> | 10 s |
-| 614 | `om/sum-review-takeover-3.mp3` | <span lang="om">Herrega kee fudhadhu: deebii 3, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Amma herregni kun kan koo ti" jira.</span> | 10 s |
-| 615 | `om/sum-done-takeover.mp3` | <span lang="om">Herregni kee amma kan kee ti. Amma booda kan itti fayyadamu ati qofa. Maqaan nama si gargaaree haqameera. Gadi tarkaanfiiwwan itti aanan jiru.</span> | 12 s |
+| 609 | `om/sum-welcome-takeover.mp3` | <span lang="om">Herrega kee fudhadhu. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "Itti fufi" jira.</span> | 13 s |
+| 610 | `om/sum-review-takeover-1.mp3` | <span lang="om">Herrega kee fudhadhu: deebii 1, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Amma herregni kun kan koo ti" jira.</span> | 10 s |
+| 611 | `om/sum-review-takeover-2.mp3` | <span lang="om">Herrega kee fudhadhu: deebii 2, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Amma herregni kun kan koo ti" jira.</span> | 10 s |
+| 612 | `om/sum-review-takeover-3.mp3` | <span lang="om">Herrega kee fudhadhu: deebii 3, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Amma herregni kun kan koo ti" jira.</span> | 10 s |
+| 613 | `om/sum-done-takeover.mp3` | <span lang="om">Herregni kee amma kan kee ti. Amma booda kan itti fayyadamu ati qofa. Maqaan nama si gargaaree haqameera. Gadi tarkaanfiiwwan itti aanan jiru.</span> | 12 s |
 
 ## Afaan Oromo — Form: profile
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 616 | `om/profile-name-question.mp3` | <span lang="om">Maqaa akkamiin si waamuu qabna? Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta'u. Yoo barbaadde, maqaa kee guutuu booda Piroofaayilii koo keessatti dabaluu dandeessa.</span> | 14 s |
-| 617 | `om/profile-full-name-question.mp3` | <span lang="om">Maqaan kee guutuun eenyu? Dirqama miti. Yoo iyyannoo hojii irratti akka mul'atu barbaadde qofa dabali. Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta'u.</span> | 14 s |
-| 618 | `om/profile-phone-question.mp3` | <span lang="om">Lakkoofsi bilbila keetii meeqa? Kan itti fayyadamnu geessituu itti fufuu siif erguuf qofa. Fakkeenyaaf 0911 23 45 67.</span> | 10 s |
-| 619 | `om/profile-dob-question.mp3` | <span lang="om">Yoom dhalatte? Dura dhaha Itoophiyaa ykn dhaha Gorgooriyaan filadhu. Yoo hin mirkaneeffatin kana dabarsuu dandeessa.</span> | 8 s |
-| 620 | `om/profile-dob-calendar.mp3` | <span lang="om">Dhaha kam fayyadamta?</span> | 2 s |
-| 621 | `om/profile-dob-option-eth.mp3` | <span lang="om">Dhaha Itoophiyaa</span> | 2 s |
-| 622 | `om/profile-dob-option-greg.mp3` | <span lang="om">Dhaha Gorgooriyaan (Awurooppaa)</span> | 2 s |
-| 623 | `om/profile-check-answers.mp3` | <span lang="om">Piroofaayilii koo. Kunneen odeeffannoo ati nuuf kennite dha. Tokko haaromsuuf "Jijjiiri" filadhu, achiis kuusi.</span> | 8 s |
-| 624 | `om/profile-check-answers-note.mp3` | <span lang="om">Piroofaayiliin kee bilbila kana irratti kuufameera.</span> | 4 s |
-| 625 | `om/profile-done.mp3` | <span lang="om">Piroofaayiliin kee haaromfameera Amma unkaaleen odeeffannoo kee haaraan guutamu.</span> | 5 s |
+| 614 | `om/profile-name-question.mp3` | <span lang="om">Maqaa akkamiin si waamuu qabna? Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta'u. Yoo barbaadde, maqaa kee guutuu booda Piroofaayilii koo keessatti dabaluu dandeessa.</span> | 14 s |
+| 615 | `om/profile-full-name-question.mp3` | <span lang="om">Maqaan kee guutuun eenyu? Dirqama miti. Yoo iyyannoo hojii irratti akka mul'atu barbaadde qofa dabali. Qubeen Afaan Amaaraa, Afaan Oromoo ykn Ingiliffaa hundi ni ta'u.</span> | 14 s |
+| 616 | `om/profile-phone-question.mp3` | <span lang="om">Lakkoofsi bilbila keetii meeqa? Kan itti fayyadamnu geessituu itti fufuu siif erguuf qofa. Fakkeenyaaf 0911 23 45 67.</span> | 10 s |
+| 617 | `om/profile-dob-question.mp3` | <span lang="om">Yoom dhalatte? Dura dhaha Itoophiyaa ykn dhaha Gorgooriyaan filadhu. Yoo hin mirkaneeffatin kana dabarsuu dandeessa.</span> | 8 s |
+| 618 | `om/profile-dob-calendar.mp3` | <span lang="om">Dhaha kam fayyadamta?</span> | 2 s |
+| 619 | `om/profile-dob-option-eth.mp3` | <span lang="om">Dhaha Itoophiyaa</span> | 2 s |
+| 620 | `om/profile-dob-option-greg.mp3` | <span lang="om">Dhaha Gorgooriyaan (Awurooppaa)</span> | 2 s |
+| 621 | `om/profile-check-answers.mp3` | <span lang="om">Piroofaayilii koo. Kunneen odeeffannoo ati nuuf kennite dha. Tokko haaromsuuf "Jijjiiri" filadhu, achiis kuusi.</span> | 8 s |
+| 622 | `om/profile-check-answers-note.mp3` | <span lang="om">Piroofaayiliin kee bilbila kana irratti kuufameera.</span> | 4 s |
+| 623 | `om/profile-done.mp3` | <span lang="om">Piroofaayiliin kee haaromfameera Amma unkaaleen odeeffannoo kee haaraan guutamu.</span> | 5 s |
 
 ## Afaan Oromo — Summaries
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 626 | `om/sum-welcome-profile.mp3` | <span lang="om">Piroofaayilii koo. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "Itti fufi" jira.</span> | 13 s |
-| 627 | `om/sum-review-profile-1.mp3` | <span lang="om">Piroofaayilii koo: deebii 1, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Jijjiirama koo kuusi" jira.</span> | 8 s |
-| 628 | `om/sum-review-profile-2.mp3` | <span lang="om">Piroofaayilii koo: deebii 2, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Jijjiirama koo kuusi" jira.</span> | 8 s |
-| 629 | `om/sum-review-profile-3.mp3` | <span lang="om">Piroofaayilii koo: deebii 3, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Jijjiirama koo kuusi" jira.</span> | 8 s |
-| 630 | `om/sum-review-profile-4.mp3` | <span lang="om">Piroofaayilii koo: deebii 4, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Jijjiirama koo kuusi" jira.</span> | 8 s |
-| 631 | `om/sum-done-profile.mp3` | <span lang="om">Piroofaayiliin kee haaromfameera. Amma unkaaleen odeeffannoo kee haaraan guutamu. Gadi tarkaanfiiwwan itti aanan jiru.</span> | 8 s |
-| 632 | `om/sum-step-1-1.mp3` | <span lang="om">Tarkaanfii 1 keessaa 1:</span> | 2 s |
-| 633 | `om/sum-step-1-2.mp3` | <span lang="om">Tarkaanfii 1 keessaa 2:</span> | 2 s |
-| 634 | `om/sum-step-2-2.mp3` | <span lang="om">Tarkaanfii 2 keessaa 2:</span> | 2 s |
-| 635 | `om/sum-step-1-3.mp3` | <span lang="om">Tarkaanfii 1 keessaa 3:</span> | 2 s |
-| 636 | `om/sum-step-2-3.mp3` | <span lang="om">Tarkaanfii 2 keessaa 3:</span> | 2 s |
-| 637 | `om/sum-step-3-3.mp3` | <span lang="om">Tarkaanfii 3 keessaa 3:</span> | 2 s |
-| 638 | `om/sum-step-1-4.mp3` | <span lang="om">Tarkaanfii 1 keessaa 4:</span> | 2 s |
-| 639 | `om/sum-step-2-4.mp3` | <span lang="om">Tarkaanfii 2 keessaa 4:</span> | 2 s |
-| 640 | `om/sum-step-3-4.mp3` | <span lang="om">Tarkaanfii 3 keessaa 4:</span> | 2 s |
-| 641 | `om/sum-step-4-4.mp3` | <span lang="om">Tarkaanfii 4 keessaa 4:</span> | 2 s |
-| 642 | `om/sum-step-1-5.mp3` | <span lang="om">Tarkaanfii 1 keessaa 5:</span> | 2 s |
-| 643 | `om/sum-step-2-5.mp3` | <span lang="om">Tarkaanfii 2 keessaa 5:</span> | 2 s |
-| 644 | `om/sum-step-3-5.mp3` | <span lang="om">Tarkaanfii 3 keessaa 5:</span> | 2 s |
-| 645 | `om/sum-step-4-5.mp3` | <span lang="om">Tarkaanfii 4 keessaa 5:</span> | 2 s |
-| 646 | `om/sum-step-5-5.mp3` | <span lang="om">Tarkaanfii 5 keessaa 5:</span> | 2 s |
-| 647 | `om/sum-step-1-6.mp3` | <span lang="om">Tarkaanfii 1 keessaa 6:</span> | 2 s |
-| 648 | `om/sum-step-2-6.mp3` | <span lang="om">Tarkaanfii 2 keessaa 6:</span> | 2 s |
-| 649 | `om/sum-step-3-6.mp3` | <span lang="om">Tarkaanfii 3 keessaa 6:</span> | 2 s |
-| 650 | `om/sum-step-4-6.mp3` | <span lang="om">Tarkaanfii 4 keessaa 6:</span> | 2 s |
-| 651 | `om/sum-step-5-6.mp3` | <span lang="om">Tarkaanfii 5 keessaa 6:</span> | 2 s |
-| 652 | `om/sum-step-6-6.mp3` | <span lang="om">Tarkaanfii 6 keessaa 6:</span> | 2 s |
-| 653 | `om/sum-step-1-7.mp3` | <span lang="om">Tarkaanfii 1 keessaa 7:</span> | 2 s |
-| 654 | `om/sum-step-2-7.mp3` | <span lang="om">Tarkaanfii 2 keessaa 7:</span> | 2 s |
-| 655 | `om/sum-step-3-7.mp3` | <span lang="om">Tarkaanfii 3 keessaa 7:</span> | 2 s |
-| 656 | `om/sum-step-4-7.mp3` | <span lang="om">Tarkaanfii 4 keessaa 7:</span> | 2 s |
-| 657 | `om/sum-step-5-7.mp3` | <span lang="om">Tarkaanfii 5 keessaa 7:</span> | 2 s |
-| 658 | `om/sum-step-6-7.mp3` | <span lang="om">Tarkaanfii 6 keessaa 7:</span> | 2 s |
-| 659 | `om/sum-step-7-7.mp3` | <span lang="om">Tarkaanfii 7 keessaa 7:</span> | 2 s |
-| 660 | `om/sum-step-1-8.mp3` | <span lang="om">Tarkaanfii 1 keessaa 8:</span> | 2 s |
-| 661 | `om/sum-step-2-8.mp3` | <span lang="om">Tarkaanfii 2 keessaa 8:</span> | 2 s |
-| 662 | `om/sum-step-3-8.mp3` | <span lang="om">Tarkaanfii 3 keessaa 8:</span> | 2 s |
-| 663 | `om/sum-step-4-8.mp3` | <span lang="om">Tarkaanfii 4 keessaa 8:</span> | 2 s |
-| 664 | `om/sum-step-5-8.mp3` | <span lang="om">Tarkaanfii 5 keessaa 8:</span> | 2 s |
-| 665 | `om/sum-step-6-8.mp3` | <span lang="om">Tarkaanfii 6 keessaa 8:</span> | 2 s |
-| 666 | `om/sum-step-7-8.mp3` | <span lang="om">Tarkaanfii 7 keessaa 8:</span> | 2 s |
-| 667 | `om/sum-step-8-8.mp3` | <span lang="om">Tarkaanfii 8 keessaa 8:</span> | 2 s |
-| 668 | `om/sum-one.mp3` | <span lang="om">Deebii tokko filadhu.</span> | 2 s |
-| 669 | `om/sum-many.mp3` | <span lang="om">Kan siif ta'an hunda filadhu.</span> | 4 s |
-| 670 | `om/sum-date.mp3` | <span lang="om">Dura dhaha, sana booda guyyaa, ji'aa fi waggaa filadhu.</span> | 6 s |
-| 671 | `om/sum-say.mp3` | <span lang="om">Barreessuu ykn dubbachuu dandeessa.</span> | 3 s |
-| 672 | `om/sum-type.mp3` | <span lang="om">Barreessi.</span> | 1 s |
-| 673 | `om/sum-skip.mp3` | <span lang="om">Dabarsuu dandeessa.</span> | 2 s |
-| 674 | `om/sum-saved.mp3` | <span lang="om">Deebiin kee bilbila kana irratti kuufameera. Booda itti fufuuf geessituun gadi jira.</span> | 7 s |
-| 675 | `om/sum-date-voice.mp3` | <span lang="om">Dura dhaha kee filadhu. Sana booda guyyaa, ji'aa fi waggaa barreessi, ykn tokko tokkoon jechuuf "Sagaleen deebisi" filadhu.</span> | 10 s |
-| 676 | `om/sum-both.mp3` | <span lang="om">Gadi "Itti fufi" fi "Duubatti" jiru.</span> | 4 s |
-| 677 | `om/sum-only.mp3` | <span lang="om">Gadi "Itti fufi" jira.</span> | 3 s |
+| 624 | `om/sum-welcome-profile.mp3` | <span lang="om">Piroofaayilii koo. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "Itti fufi" jira.</span> | 13 s |
+| 625 | `om/sum-review-profile-1.mp3` | <span lang="om">Piroofaayilii koo: deebii 1, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Jijjiirama koo kuusi" jira.</span> | 8 s |
+| 626 | `om/sum-review-profile-2.mp3` | <span lang="om">Piroofaayilii koo: deebii 2, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Jijjiirama koo kuusi" jira.</span> | 8 s |
+| 627 | `om/sum-review-profile-3.mp3` | <span lang="om">Piroofaayilii koo: deebii 3, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Jijjiirama koo kuusi" jira.</span> | 8 s |
+| 628 | `om/sum-review-profile-4.mp3` | <span lang="om">Piroofaayilii koo: deebii 4, tokkoon tokkoon isaa qabduu "Jijjiiri" qaba. Gadi "Jijjiirama koo kuusi" jira.</span> | 8 s |
+| 629 | `om/sum-done-profile.mp3` | <span lang="om">Piroofaayiliin kee haaromfameera. Amma unkaaleen odeeffannoo kee haaraan guutamu. Gadi tarkaanfiiwwan itti aanan jiru.</span> | 8 s |
+| 630 | `om/sum-step-1-1.mp3` | <span lang="om">Tarkaanfii 1 keessaa 1:</span> | 2 s |
+| 631 | `om/sum-step-1-2.mp3` | <span lang="om">Tarkaanfii 1 keessaa 2:</span> | 2 s |
+| 632 | `om/sum-step-2-2.mp3` | <span lang="om">Tarkaanfii 2 keessaa 2:</span> | 2 s |
+| 633 | `om/sum-step-1-3.mp3` | <span lang="om">Tarkaanfii 1 keessaa 3:</span> | 2 s |
+| 634 | `om/sum-step-2-3.mp3` | <span lang="om">Tarkaanfii 2 keessaa 3:</span> | 2 s |
+| 635 | `om/sum-step-3-3.mp3` | <span lang="om">Tarkaanfii 3 keessaa 3:</span> | 2 s |
+| 636 | `om/sum-step-1-4.mp3` | <span lang="om">Tarkaanfii 1 keessaa 4:</span> | 2 s |
+| 637 | `om/sum-step-2-4.mp3` | <span lang="om">Tarkaanfii 2 keessaa 4:</span> | 2 s |
+| 638 | `om/sum-step-3-4.mp3` | <span lang="om">Tarkaanfii 3 keessaa 4:</span> | 2 s |
+| 639 | `om/sum-step-4-4.mp3` | <span lang="om">Tarkaanfii 4 keessaa 4:</span> | 2 s |
+| 640 | `om/sum-step-1-5.mp3` | <span lang="om">Tarkaanfii 1 keessaa 5:</span> | 2 s |
+| 641 | `om/sum-step-2-5.mp3` | <span lang="om">Tarkaanfii 2 keessaa 5:</span> | 2 s |
+| 642 | `om/sum-step-3-5.mp3` | <span lang="om">Tarkaanfii 3 keessaa 5:</span> | 2 s |
+| 643 | `om/sum-step-4-5.mp3` | <span lang="om">Tarkaanfii 4 keessaa 5:</span> | 2 s |
+| 644 | `om/sum-step-5-5.mp3` | <span lang="om">Tarkaanfii 5 keessaa 5:</span> | 2 s |
+| 645 | `om/sum-step-1-6.mp3` | <span lang="om">Tarkaanfii 1 keessaa 6:</span> | 2 s |
+| 646 | `om/sum-step-2-6.mp3` | <span lang="om">Tarkaanfii 2 keessaa 6:</span> | 2 s |
+| 647 | `om/sum-step-3-6.mp3` | <span lang="om">Tarkaanfii 3 keessaa 6:</span> | 2 s |
+| 648 | `om/sum-step-4-6.mp3` | <span lang="om">Tarkaanfii 4 keessaa 6:</span> | 2 s |
+| 649 | `om/sum-step-5-6.mp3` | <span lang="om">Tarkaanfii 5 keessaa 6:</span> | 2 s |
+| 650 | `om/sum-step-6-6.mp3` | <span lang="om">Tarkaanfii 6 keessaa 6:</span> | 2 s |
+| 651 | `om/sum-step-1-7.mp3` | <span lang="om">Tarkaanfii 1 keessaa 7:</span> | 2 s |
+| 652 | `om/sum-step-2-7.mp3` | <span lang="om">Tarkaanfii 2 keessaa 7:</span> | 2 s |
+| 653 | `om/sum-step-3-7.mp3` | <span lang="om">Tarkaanfii 3 keessaa 7:</span> | 2 s |
+| 654 | `om/sum-step-4-7.mp3` | <span lang="om">Tarkaanfii 4 keessaa 7:</span> | 2 s |
+| 655 | `om/sum-step-5-7.mp3` | <span lang="om">Tarkaanfii 5 keessaa 7:</span> | 2 s |
+| 656 | `om/sum-step-6-7.mp3` | <span lang="om">Tarkaanfii 6 keessaa 7:</span> | 2 s |
+| 657 | `om/sum-step-7-7.mp3` | <span lang="om">Tarkaanfii 7 keessaa 7:</span> | 2 s |
+| 658 | `om/sum-step-1-8.mp3` | <span lang="om">Tarkaanfii 1 keessaa 8:</span> | 2 s |
+| 659 | `om/sum-step-2-8.mp3` | <span lang="om">Tarkaanfii 2 keessaa 8:</span> | 2 s |
+| 660 | `om/sum-step-3-8.mp3` | <span lang="om">Tarkaanfii 3 keessaa 8:</span> | 2 s |
+| 661 | `om/sum-step-4-8.mp3` | <span lang="om">Tarkaanfii 4 keessaa 8:</span> | 2 s |
+| 662 | `om/sum-step-5-8.mp3` | <span lang="om">Tarkaanfii 5 keessaa 8:</span> | 2 s |
+| 663 | `om/sum-step-6-8.mp3` | <span lang="om">Tarkaanfii 6 keessaa 8:</span> | 2 s |
+| 664 | `om/sum-step-7-8.mp3` | <span lang="om">Tarkaanfii 7 keessaa 8:</span> | 2 s |
+| 665 | `om/sum-step-8-8.mp3` | <span lang="om">Tarkaanfii 8 keessaa 8:</span> | 2 s |
+| 666 | `om/sum-one.mp3` | <span lang="om">Deebii tokko filadhu.</span> | 2 s |
+| 667 | `om/sum-many.mp3` | <span lang="om">Kan siif ta'an hunda filadhu.</span> | 4 s |
+| 668 | `om/sum-date.mp3` | <span lang="om">Dura dhaha, sana booda guyyaa, ji'aa fi waggaa filadhu.</span> | 6 s |
+| 669 | `om/sum-say.mp3` | <span lang="om">Barreessuu ykn dubbachuu dandeessa.</span> | 3 s |
+| 670 | `om/sum-type.mp3` | <span lang="om">Barreessi.</span> | 1 s |
+| 671 | `om/sum-skip.mp3` | <span lang="om">Dabarsuu dandeessa.</span> | 2 s |
+| 672 | `om/sum-saved.mp3` | <span lang="om">Deebiin kee bilbila kana irratti kuufameera. Booda itti fufuuf geessituun gadi jira.</span> | 7 s |
+| 673 | `om/sum-date-voice.mp3` | <span lang="om">Dura dhaha kee filadhu. Sana booda guyyaa, ji'aa fi waggaa barreessi, ykn tokko tokkoon jechuuf "Sagaleen deebisi" filadhu.</span> | 10 s |
+| 674 | `om/sum-both.mp3` | <span lang="om">Gadi "Itti fufi" fi "Duubatti" jiru.</span> | 4 s |
+| 675 | `om/sum-only.mp3` | <span lang="om">Gadi "Itti fufi" jira.</span> | 3 s |
 
 ## Afaan Oromo — Messages
 
 | # | File | Exact text | About |
 |---|---|---|---|
-| 678 | `om/help.mp3` | <span lang="om">Gargaarsa barbaaddaa? Daangaan yeroo hin jiru. Deebiin kee gaaffii hunda booda bilbila kana irratti kuufama. Dhaabbata michuu kan akka AAAPD akka siif guutu gaafachuu ykn booda deebi'uu dandeessa.</span> | 15 s |
-| 679 | `om/msg-heard.mp3` | <span lang="om">Kan ani dhage'e:</span> | 3 s |
-| 680 | `om/msg-your-answer.mp3` | <span lang="om">Deebii kee:</span> | 2 s |
-| 681 | `om/msg-nothing-typed.mp3` | <span lang="om">Ammaaf wanti barreeffame hin jiru.</span> | 3 s |
-| 682 | `om/msg-heard-choose-type.mp3` | <span lang="om">"Deebii kana fayyadami", "Irra deebi'ii jedhi" ykn "Kanaa mannaa barreessi" filadhu.</span> | 7 s |
-| 683 | `om/msg-heard-choose-tap.mp3` | <span lang="om">"Deebii kana fayyadami", "Irra deebi'ii jedhi" ykn "Kanaa mannaa tuqi" filadhu.</span> | 7 s |
-| 684 | `om/msg-selected.mp3` | <span lang="om">Filatameera:</span> | 1 s |
-| 685 | `om/msg-not-selected.mp3` | <span lang="om">Hin filatamne:</span> | 2 s |
-| 686 | `om/msg-offline.mp3` | <span lang="om">Interneetii irraa ala jirta. Deebiin kee bilbila kana irratti kuufameera, itti fufuu dandeessa. Deebiin sagaleen walqunnamtii barbaada.</span> | 9 s |
-| 687 | `om/msg-online.mp3` | <span lang="om">Interneetiitti deebi'teetta.</span> | 2 s |
-| 688 | `om/error-choose-one.mp3` | <span lang="om">Itti fufuuf deebii tokko filadhu.</span> | 3 s |
-| 689 | `om/error-choose-some.mp3` | <span lang="om">Yoo xiqqaate deebii tokko filadhu.</span> | 3 s |
-| 690 | `om/error-required.mp3` | <span lang="om">Itti fufuuf maaloo gaaffii kana deebisi.</span> | 4 s |
-| 691 | `om/error-phone.mp3` | <span lang="om">Lakkoofsa bilbilaa dijiitii 10 qabu galchi, fakkeenyaaf 0911 23 45 67.</span> | 7 s |
-| 692 | `om/error-date.mp3` | <span lang="om">Guyyaa dhugaa dhaha Itoophiyaatiin galchi. Guyyaan 1 hanga 30, Qaammee 1 hanga 5 ykn 6.</span> | 7 s |
-| 693 | `om/error-consent.mp3` | <span lang="om">Itti fufuuf walii galuu qabda. Yoo hin mirkaneeffatin, "Gargaarsa argadhu" filadhu.</span> | 6 s |
-| 694 | `om/error-mode.mp3` | <span lang="om">Itti fufuuf karaa tokko filadhu.</span> | 3 s |
-| 695 | `om/saved-for-later.mp3` | <span lang="om">Deebiin kee kuufameera. Homtuu hin badne. Itti fufuuf geessituu kana bilbila kana irratti bani:</span> | 8 s |
-| 696 | `om/resumed.mp3` | <span lang="om">Baga nagaan deebite. Deebii kee kuufneerra.</span> | 4 s |
-| 697 | `om/prefilled.mp3` | <span lang="om">Kana piroofaayilii kee irraa guutneerra. Jijjiiruu dandeessa.</span> | 4 s |
-| 698 | `om/voice-consent.mp3` | <span lang="om">Osoo sagalee kee hin fayyadamin dura. Sagalee kee gara barreeffamaatti jijjiiruuf, waraabbiin kee tajaajila dubbii tokkotti ergama: Afaan Amaaraa fi Afaan Oromootiif Addis AI (Itoophiyaa), Ingiliffaaf ykn yeroo Addis AI hin jirretti Google (Chrome keessatti). Kanaa mannaa barreessuu ykn tuquu dandeessa. Yeroo kamiyyuu Qindaa'ina keessatti cufuu dandeessa. Sagalee kee fayyadamuu barbaaddaa?</span> | 27 s |
+| 676 | `om/help.mp3` | <span lang="om">Gargaarsa barbaaddaa? Daangaan yeroo hin jiru. Deebiin kee gaaffii hunda booda bilbila kana irratti kuufama. Dhaabbata michuu kan akka AAAPD akka siif guutu gaafachuu ykn booda deebi'uu dandeessa.</span> | 15 s |
+| 677 | `om/msg-heard.mp3` | <span lang="om">Kan ani dhage'e:</span> | 3 s |
+| 678 | `om/msg-your-answer.mp3` | <span lang="om">Deebii kee:</span> | 2 s |
+| 679 | `om/msg-nothing-typed.mp3` | <span lang="om">Ammaaf wanti barreeffame hin jiru.</span> | 3 s |
+| 680 | `om/msg-heard-choose-type.mp3` | <span lang="om">"Deebii kana fayyadami", "Irra deebi'ii jedhi" ykn "Kanaa mannaa barreessi" filadhu.</span> | 7 s |
+| 681 | `om/msg-heard-choose-tap.mp3` | <span lang="om">"Deebii kana fayyadami", "Irra deebi'ii jedhi" ykn "Kanaa mannaa tuqi" filadhu.</span> | 7 s |
+| 682 | `om/msg-selected.mp3` | <span lang="om">Filatameera:</span> | 1 s |
+| 683 | `om/msg-not-selected.mp3` | <span lang="om">Hin filatamne:</span> | 2 s |
+| 684 | `om/msg-offline.mp3` | <span lang="om">Interneetii irraa ala jirta. Deebiin kee bilbila kana irratti kuufameera, itti fufuu dandeessa. Deebiin sagaleen walqunnamtii barbaada.</span> | 9 s |
+| 685 | `om/msg-online.mp3` | <span lang="om">Interneetiitti deebi'teetta.</span> | 2 s |
+| 686 | `om/error-choose-one.mp3` | <span lang="om">Itti fufuuf deebii tokko filadhu.</span> | 3 s |
+| 687 | `om/error-choose-some.mp3` | <span lang="om">Yoo xiqqaate deebii tokko filadhu.</span> | 3 s |
+| 688 | `om/error-required.mp3` | <span lang="om">Itti fufuuf maaloo gaaffii kana deebisi.</span> | 4 s |
+| 689 | `om/error-phone.mp3` | <span lang="om">Lakkoofsa bilbilaa dijiitii 10 qabu galchi, fakkeenyaaf 0911 23 45 67.</span> | 7 s |
+| 690 | `om/error-date.mp3` | <span lang="om">Guyyaa dhugaa dhaha Itoophiyaatiin galchi. Guyyaan 1 hanga 30, Qaammee 1 hanga 5 ykn 6.</span> | 7 s |
+| 691 | `om/error-consent.mp3` | <span lang="om">Itti fufuuf walii galuu qabda. Yoo hin mirkaneeffatin, "Gargaarsa argadhu" filadhu.</span> | 6 s |
+| 692 | `om/error-mode.mp3` | <span lang="om">Itti fufuuf karaa tokko filadhu.</span> | 3 s |
+| 693 | `om/saved-for-later.mp3` | <span lang="om">Deebiin kee kuufameera. Homtuu hin badne. Itti fufuuf geessituu kana bilbila kana irratti bani:</span> | 8 s |
+| 694 | `om/resumed.mp3` | <span lang="om">Baga nagaan deebite. Deebii kee kuufneerra.</span> | 4 s |
+| 695 | `om/prefilled.mp3` | <span lang="om">Kana piroofaayilii kee irraa guutneerra. Jijjiiruu dandeessa.</span> | 4 s |
+| 696 | `om/voice-consent.mp3` | <span lang="om">Osoo sagalee kee hin fayyadamin dura. Sagalee kee gara barreeffamaatti jijjiiruuf, waraabbiin kee tajaajila dubbii tokkotti ergama: Afaan Amaaraa fi Afaan Oromootiif Addis AI (Itoophiyaa), Ingiliffaaf ykn yeroo Addis AI hin jirretti Google (Chrome keessatti). Kanaa mannaa barreessuu ykn tuquu dandeessa. Yeroo kamiyyuu Qindaa'ina keessatti cufuu dandeessa. Sagalee kee fayyadamuu barbaaddaa?</span> | 27 s |
+| 697 | `om/voice-allow.mp3` | <span lang="om">Eeyyee, sagalee koo fayyadami</span> | 3 s |
+| 698 | `om/voice-deny.mp3` | <span lang="om">Lakki, nan barreessa ykn nan tuqa</span> | 4 s |
 | 699 | `om/voice-check.mp3` | <span lang="om">Ilaali, yoo barbaachise sirreessi. Hanga "Deebii kana fayyadami" filattutti homtuu hin kuufamu.</span> | 7 s |
 | 700 | `om/voice-used.mp3` | <span lang="om">Deebiin sagalee kee irraa itti dabalameera. Ilaali, achiis "Itti fufi" filadhu.</span> | 6 s |
 

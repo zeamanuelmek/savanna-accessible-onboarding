@@ -294,15 +294,14 @@ test('the application confirmation reads what was sent, and "Read all my answers
   await readingOn(page); await signedInLearner(page);
   await at(page, '/apply.html?job=s1'); await page.waitForSelector('.dm-q');
   await next(page); await next(page);
-  await page.fill('[data-ref=input]', 'I like people.'); await next(page);
-  await page.fill('[data-ref=input]', 'Volunteering.'); await next(page);
+  await page.fill('[data-ref=input]', 'Volunteering.'); await next(page); // "Why do you want this job?" was removed (16 Nov)
   await next(page); // interview: optional
   await next(page); // Send my application
   await expect(page.locator('.dm-done-slot h2')).toHaveText(/^Your application was sent to /);
-  await expect.poll(async () => (await said(page)).join(' | ')).toMatch(/Your application is sent.*Your application was sent to .*I like people\..*This is a demo: nothing was actually sent\./);
+  await expect.poll(async () => (await said(page)).join(' | ')).toMatch(/Your application is sent.*Your application was sent to .*Volunteering\..*This is a demo: nothing was actually sent\./);
   await page.evaluate(() => { window.__said = []; });
   await page.getByRole('button', { name: 'Read all my answers' }).click();
-  await expect.poll(() => said(page)).toEqual(expect.arrayContaining(['Why do you want this job?', 'I like people.']));
+  await expect.poll(() => said(page)).toEqual(expect.arrayContaining(['What work or learning have you done before?', 'Volunteering.']));
   await expect(page.locator('#so-playbar')).toHaveCount(1); // the same player
 });
 
