@@ -46,7 +46,7 @@ Log-in is a labelled simulation: there is no server and no SMS. Accounts live on
 Automated (Playwright + axe-core, Chromium, phone and desktop sizes, one worker), on commit `d24af23` (16 Nov):
 every affected file passes (302 tests in the last two batches, after updating tests to the new behaviour), and
 **192 axe scans (48 screens × 2 languages × 2 sizes), 0 serious or critical**. A full-suite run is the last step
-before submitting. The gate task (sign up and save a Support Passport) passes by keyboard only, at 200% zoom
+before submitting. **Final check on `b8ae19f` (16 Nov, 08:37): 96 axe scans at phone size (48 screens × 2 languages), 0 serious or critical**; the desktop-size scan was not re-run on this commit. The gate task (sign up and save a Support Passport) passes by keyboard only, at 200% zoom
 and with sound off, on phone and desktop sizes. Addis AI: checked on the live site (16 Nov):
 `/api/tts` returns audio for Amharic and Oromo and `/api/stt` transcribes a real Amharic clip; in a real browser with
 no Amharic system voice, turning on automatic reading plays the recorded Amharic clips. Manual checks (NVDA, TalkBack in an Android WebView, co-designer gate, cheapest
@@ -67,6 +67,7 @@ Android phone on 3G): the team's results go in the conformance report.
 - Voice input needs a connection and a browser speech engine; never offered on ID or support-needs questions.
 - Browsers allow sound only after an interaction with each page: then "Tap anywhere or press any key to hear this
   page" is shown. Settings has no per-setting Listen button.
+- Reading every visible line on log-in and sign-up steps is planned; today pages read their summary and each question.
 - Docker Compose is written and its paths checked, but **not yet run on a machine with Docker**.
 
 ## Open items before submitting

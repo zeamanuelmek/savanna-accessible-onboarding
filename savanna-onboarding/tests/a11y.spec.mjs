@@ -29,7 +29,7 @@ const screens = {
   'savanna: Support Passport card': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/passport.html'); },
   'savanna: jobs': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/jobs.html'); },
   'savanna: employer form': async p => at(p, '/employer.html'),
-  'savanna: application confirmation': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/apply.html?job=s1'); await p.waitForSelector('.dm-q'); await next(p); await next(p); await p.fill('[data-ref=input]', 'x'); await next(p); await p.fill('[data-ref=input]', 'y'); await next(p); for (let i = 0; i < 4 && !(await p.locator('.dm-done-slot [data-read-all]').count()); i++) { if (await p.locator('input[value=keep]').count()) await p.locator('.dm-opt:has(input[value=keep])').click(); await next(p); } await p.waitForSelector('.dm-done-slot [data-read-all]'); },
+  'savanna: application confirmation': async p => { await at(p, '/index.html'); await learner(p); await at(p, '/apply.html?job=s1'); await p.waitForSelector('.dm-q'); await next(p); await next(p); await p.fill('[data-ref=input]', 'x'); await next(p); for (let i = 0; i < 4 && !(await p.locator('.dm-done-slot [data-read-all]').count()); i++) { if (await p.locator('input[value=keep]').count()) await p.locator('.dm-opt:has(input[value=keep])').click(); await next(p); } await p.waitForSelector('.dm-done-slot [data-read-all]'); },
   'test host: form mounted': async p => { await at(p, '/test-host/'); await p.locator('#mount').click(); await p.locator('#slot .dm-q').waitFor(); },
   'home': async p => go(p, '#/'),
   'signup: welcome': async p => go(p, '#/signup'),
