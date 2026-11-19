@@ -28,6 +28,43 @@ document.addEventListener('savanna-onboarding:complete', function (e) {
 });
 ```
 
+### Which schema checks which event
+
+The host demo (`/host-demo/`) reads the JSON blocks on this page and checks every event it receives against them, so
+this table and the schemas below are the contract.
+
+| Event | `$id` of the schema for `event.detail` |
+|---|---|
+| `savanna-onboarding:ready`, `savanna-onboarding:audioblocked` | `savanna-onboarding/no-detail` |
+| `savanna-onboarding:prefs` | `savanna-onboarding/prefs` (section 2) |
+| `savanna-onboarding:step` | `savanna-onboarding/step` |
+| `savanna-onboarding:complete` | `savanna-onboarding/complete` (section 3), and its `answers` against `savanna-onboarding/answers/<form>` |
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "savanna-onboarding/no-detail",
+  "description": "ready and audioblocked carry no data",
+  "type": "null"
+}
+```
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "savanna-onboarding/step",
+  "type": "object",
+  "properties": {
+    "form":    { "type": "string", "description": "The form id, for example signup or passport" },
+    "mode":    { "enum": ["welcome", "question", "review", "done", "saved"] },
+    "step":    { "type": "integer", "minimum": 0, "description": "Index of the question in the form (0 = the first)" },
+    "summary": { "type": "string", "description": "Short screen summary in English; may be empty" }
+  },
+  "required": ["form", "mode", "step", "summary"],
+  "additionalProperties": false
+}
+```
+
 The module sends **only answers to questions the learner was actually shown**. Answers from a route they abandoned
 (for example an ID number typed before switching to "I have none of these") are deleted, not sent. The draft is
 deleted from the device when the form is completed.
@@ -165,11 +202,38 @@ Starts on the summary, prefilled from the profile the host saved. Same fields an
 partner questions and the consent question: `name`, `phone`, `dob` — plus **`full_name`** (optional, string, same
 letters rule as `name`; the only place the full name is asked). The ID has its own form, `identity`.
 
+```json
+{
+  "$id": "savanna-onboarding/answers/profile",
+  "type": "object",
+  "properties": {
+    "name":      { "type": "string" },
+    "full_name": { "type": "string", "description": "Optional" },
+    "phone":     { "$ref": "#/$defs/phone" },
+    "dob":       { "oneOf": [{ "$ref": "#/$defs/ethDate" }, { "const": "" }], "description": "Optional" }
+  },
+  "required": ["name", "phone"]
+}
+```
+
 ### 3.2a `takeover`: learner takes over after partner sign-up
 
 Fields `name`, `phone` and `dob`, as in `profile`. Shown to the learner (alone) after a partner organisation signed
 them up. The learner adds an ID later, alone, in `identity`, if they want to. The
 host should then remove the staff member's name and keep only the organisation (the demo does this).
+
+```json
+{
+  "$id": "savanna-onboarding/answers/takeover",
+  "type": "object",
+  "properties": {
+    "name":  { "type": "string" },
+    "phone": { "$ref": "#/$defs/phone" },
+    "dob":   { "oneOf": [{ "$ref": "#/$defs/ethDate" }, { "const": "" }], "description": "Optional" }
+  },
+  "required": ["name", "phone"]
+}
+```
 
 ### 3.3 `passport`: Support Passport
 

@@ -8,6 +8,7 @@ Digital Bridge Accessibility Hackathon 2026 (ALX Ethiopia), Track 1: Accessible 
 |---|---|
 | `/` | The learner journey inside Savanna's own pages: home → sign up → dashboard → Add your ID → Support Passport → jobs and apply → employer form |
 | `/test-host/` | (not linked from learner pages) An ordinary page (not Savanna) that installs the module with two script tags and shows what the host receives |
+| [`/host-demo/`](https://savanna-accessible-onboarding.vercel.app/host-demo/) | (not linked from learner pages; added 19 Nov for pitch day) **The full loop:** a platform page that mounts sign-up and the Support Passport with the public API, receives every event, saves each record in the browser (IndexedDB), shows a live "Records received by the platform" table with a JSON Schema check (pass/fail) per record, Download JSON / CSV, Delete all, and an optional "Send to your endpoint" box (off by default) |
 | `/showroom.html` | Developer and test page (all journeys, raw data views). Not linked from learner pages: open it by this address |
 
 ## How to log in (simulated)
@@ -19,7 +20,7 @@ Log-in is a labelled simulation: there is no server and no SMS. Accounts live on
 
 ## How to run it
 
-- **Docker:** `docker compose up`, then http://localhost:8080 (also `/test-host/`, `/showroom.html`).
+- **Docker:** `docker compose up`, then http://localhost:8080 (also `/host-demo/`, `/test-host/`, `/showroom.html`).
   Optional, paid: Addis AI speech for Amharic and Afaan Oromo: copy `.env.example` to `.env`, set `ADDIS_API_KEY`, then
   `docker compose --profile addis up`. Without a key everything works with the browser's own speech.
 - **Without Docker:** `cd savanna-onboarding && npx --yes serve -l 8080 .`
@@ -35,6 +36,7 @@ Log-in is a labelled simulation: there is no server and no SMS. Accounts live on
 | D3 Docker Compose | [`docker-compose.yml`](docker-compose.yml) + [`docker/nginx.conf`](docker/nginx.conf) (`docker compose up`; optional `--profile addis`) |
 | D4 WCAG 2.2 AA conformance report | [`savanna-onboarding/docs/conformance-report.md`](savanna-onboarding/docs/conformance-report.md) — automated part complete; "Manual result" column for the team |
 | Data and events for hosts (JSON Schema, JobPosting) | [`savanna-onboarding/docs/api-schema.md`](savanna-onboarding/docs/api-schema.md) |
+| How to plug it in (one page: script tags, mount/unmount, every event and field) | [`savanna-onboarding/docs/plug-in.md`](savanna-onboarding/docs/plug-in.md) · working example: `/host-demo/` |
 | Architecture | [`savanna-onboarding/docs/architecture.md`](savanna-onboarding/docs/architecture.md) |
 | Demo script | [`savanna-onboarding/docs/demo-script.md`](savanna-onboarding/docs/demo-script.md) |
 | Privacy and security review | [`savanna-onboarding/docs/privacy-security.md`](savanna-onboarding/docs/privacy-security.md) |

@@ -9,6 +9,7 @@ Hackathon 2026 (ALX Ethiopia), Track 1.
   log-in is simulated). Test host page: `/test-host/`. Developer and test page: `/showroom.html`.
 - **Install guide (under an hour), features, keyboard and ARIA support:** [`savanna-onboarding/README.md`](savanna-onboarding/README.md)
 - **Run it locally:** `docker compose up`, then open http://localhost:8080 (optional Addis AI speech: `docker compose --profile addis up`, key in `.env`; see the install guide)
+- **How to plug it in (one page: script tags, `mount()` / `unmount()`, every event and field):** [`savanna-onboarding/docs/plug-in.md`](savanna-onboarding/docs/plug-in.md) · working example with saved records: `/host-demo/`
 - **Data and events for the host (JSON Schema, JobPosting):** [`savanna-onboarding/docs/api-schema.md`](savanna-onboarding/docs/api-schema.md)
 - **WCAG 2.2 AA conformance report:** [`savanna-onboarding/docs/conformance-report.md`](savanna-onboarding/docs/conformance-report.md)
 - **Progress, test results and decisions:** [`DEVELOPMENT_PROGRESS.md`](DEVELOPMENT_PROGRESS.md) · design tokens: [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md)

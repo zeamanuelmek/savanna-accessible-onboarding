@@ -7,7 +7,7 @@
    Pages: network first (always fresh when online), the saved copy when offline. Other files: the saved copy at once,
    refreshed in the background. Nothing is sent anywhere; only this site's own files are handled.
    A host such as Savanna can register this file, or copy the CORE list into its own service worker. */
-var CACHE = 'savanna-onboarding-v12';
+var CACHE = 'savanna-onboarding-v13';
 var CORE = [
   './', 'index.html', 'signup.html', 'login.html', 'dashboard.html', 'profile.html', 'passport.html', 'takeover.html',
   'jobs.html', 'apply.html', 'employer.html', 'settings.html', 'showroom.html', 'test-host/',
@@ -42,7 +42,7 @@ function isAudio(url) { return /\/assets\/audio\/[a-z]{2}\/[^/]+\.(mp3|m4a)$/.te
 self.addEventListener('fetch', function (e) {
   var req = e.request, url = new URL(req.url);
   if (req.method !== 'GET' || url.origin !== self.location.origin) return;
-  if (/\/(tests|tools|node_modules)\//.test(url.pathname)) return;
+  if (/\/(tests|tools|node_modules|api)\//.test(url.pathname)) return; // api: the speech proxy's live answers, never cached
 
   // Recorded clips: the saved copy, or download the whole file once and keep it (media players ask for byte ranges).
   if (isAudio(url)) {

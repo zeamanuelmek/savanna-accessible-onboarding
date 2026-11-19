@@ -1787,3 +1787,78 @@ Owner request: "Date of birth by voice is too hard. Make it smart, without break
   listed in README.md and SUBMISSION.md. Service worker cache v12; 861 clips.
 - Skipped (not enough time to do safely): reading every visible line in order on every page (log-in, home, sign-up).
 - Tests (one worker): career, journey (incl. gate journey), gate, voice, summaries, engine, readaloud: all passed.
+
+## Pitch-day fixes (19 Nov, for 21 Nov): the judges' three requests
+
+Judges' order: (1) show the full loop to a host, (2) the demo works without the paid speech key, with the fallback
+clearly shown, (3) keyboard-only path with visible focus and no traps. Then screenshots for the pitch.
+
+**Live check first (19 Nov, before any change):** `/api/tts` and `/api/stt` on the live site, with the site's Origin.
+- The earlier **422 is gone**. `POST /api/tts` (Amharic) answers 200 with an MP3, `X-Cache: miss` (a fresh Addis AI call).
+- **STT works:** a recorded Amharic clip (`am/a11y-contrast-off.mp3`) came back as `{"text":"ከፍተኛ እንሥር ጠፍቷል"}` (200).
+- **TTS audio looks truncated (open issue):** two sentences ("ስምዎ ማን ነው?", "ስሜ አበበ በቀለ ነው።") came back as
+  0.46 s and 0.42 s of sound, and Addis AI's own STT finds no words in them. Not fixed: the proxy uses the MP3 inline
+  in `data.audio`; finding out why needs Addis AI's raw answer (the key). The learner path is not affected: reading
+  uses our recorded clips first. Also noted: when `data.audio` is missing, the proxy sends the key to whatever host
+  `data.audio_url` names; worth restricting to Addis AI's host.
+
+**1. The full loop: `/host-demo/`** (new: `host-demo/index.html`, `host-demo.js`, `host-demo.css`, `schema-check.js`)
+- A platform page that mounts sign-up and the Support Passport with `SavannaOnboarding.mount()` / `unmount()` only,
+  listens for every event (`ready`, `prefs`, `step`, `complete`, `audioblocked`; its script runs before the module, so
+  it also gets `ready`), and saves each as a record in IndexedDB (in memory if the browser refuses).
+- Live table "Records received by the platform": number, event, time, fields, schema pass/fail, endpoint result.
+  Choosing an event name opens the full JSON and the schema check (focus moves to it; Close returns focus).
+- **Schema check against `docs/api-schema.md` itself:** the page reads the Markdown and uses every JSON block with a
+  `$id` plus the shared `$defs`, so the check cannot drift from the documentation. A small validator (no dependency)
+  for the keywords the document uses. New in `api-schema.md`: "Which schema checks which event", and schemas for
+  `no-detail` (ready, audioblocked), `step`, `answers/profile`, `answers/takeover`.
+- Download JSON (with each record's check), Download CSV (BOM so Excel shows Amharic), Delete all (inline
+  confirmation, no browser dialog).
+- **"Send to your endpoint" (off by default):** an address box plus a checkbox; each new record is POSTed as JSON
+  (`{ event, receivedAt, recordId, detail }`), and the row shows "sent (201)" or "failed". Documented as the start
+  of a "bring your own backend" adapter. The site's CSP allowed only `connect-src 'self'`, so `/host-demo/` gets its
+  own CSP with `connect-src 'self' https: http://localhost:* http://127.0.0.1:*` (`vercel.json` rule
+  `/host-demo/(.*)`, the same in `docker/nginx.conf`; the test server now applies Vercel's `(.*)` patterns too).
+  Learner pages keep the strict policy.
+- Linked from `SUBMISSION.md`, `README.md`, `savanna-onboarding/README.md` and `docs/plug-in.md`; never from learner
+  pages (tested).
+- **`docs/plug-in.md`:** one page: the script tags, `mount()` / `unmount()` with every option, every event with every
+  field in tables and an example payload each, voice without a key, other helpers.
+
+**2. Voice without the paid key, with the fallback shown** (`savanna-onboarding.js`, `api/_addis.js`, `sw.js`)
+- The proxy answers `GET /api/stt` (and `/api/tts`) with `{ "ready": true|false }`: is a key set? No recording, no
+  paid call, the key is never shown. The module asks once per page. No key, or no proxy (404, or 502 from nginx in
+  Docker without the Addis profile): Amharic voice uses Chrome's own recognition (`am-ET`) from the start. An older
+  proxy (405): unknown, tried, and falls back on failure.
+- **A plain status line under the voice button names the engine:** "Voice: Addis AI" / "Voice: your browser"
+  (Amharic "ድምፅ፦ Addis AI" / "ድምፅ፦ የእርስዎ ብራውዘር", Afaan Oromo drafts). Also in the date-by-voice panel.
+- If Addis AI fails during use, the module switches to the browser for that tab (Addis AI is tried again after a
+  minute), the line changes, and the learner hears: "The Addis AI speech service did not answer. Press 'Answer by
+  voice' again to use your browser's own speech recognition, or type your answer." (Amharic text is a draft.)
+- Reading aloud: unchanged (recorded clips first, then Addis AI if set up, then the phone's voice).
+- `SavannaOnboarding.voiceEngine(lang)` → `'addis' | 'browser' | null`; `speechProxy()` now includes `ready`.
+- Service worker: `/api/` is never cached (the readiness answer must be live); cache v13.
+
+**3. Keyboard-only path** (`tests/keyboard-sweep.spec.mjs`, no product change needed)
+- Home → sign-up → Support Passport saved, keys only, at 1440×900 and 393×851. On each of the 15 screens: Tab
+  through the whole page until focus leaves it, then Shift+Tab all the way back. Every stop has a visible focus
+  indicator, no element is met twice in one pass (no trap), and both directions reach the same number of stops
+  (for example 33 on "what would help" at 1440×900). The Accessibility and Language menus open with Enter, Tab goes
+  into them, Escape closes them and returns focus to their button; on the phone, the same for "Menu".
+
+**Tests:** new `voice-engine.spec.mjs` (name question in Amharic and English, key on and key off; Addis AI failing
+during use; no proxy at all), `host-demo.spec.mjs` (full loop with every record passing the schema; persistence
+after reload; JSON and CSV; Delete all; endpoint off by default, on, unreachable; the validator failing bad
+records; axe; no links from learner pages), `keyboard-sweep.spec.mjs`. Updated: `addis.spec.mjs` (readiness
+check; the fallback message; a race in the TTS mock). Stale tests fixed: `identity.spec.mjs` still filled the
+question removed on 16 Nov; `offline.spec.mjs` used the cache name `v10` (it now reads the name from `sw.js`).
+
+**Test runs (19 Nov, one worker each, because a full parallel run was stopped by Windows for low memory):**
+- voice-engine, addis, host-demo, offline, identity, security (both sizes): 103 passed, then 3 fixed (2 test races,
+  1 test design) and re-run: host-demo + addis 50/50.
+- voice, smoke, names, dob-voice, wcag, summaries, journey (desktop): 104 passed, 1 skipped (by design).
+- a11y, journey, gate, keyboard, voice (phone): 141 passed. a11y, gate, keyboard-sweep (desktop): 100 passed.
+  axe: zero serious or critical issues on every screen, including `/host-demo/`.
+- Not re-run cleanly today: career, engine, readaloud, readback, design, date-language, known-issues,
+  reference-audit (none touched by these changes). Before the memory stop they ran in the parallel run without
+  failures, except the a11y "menu open" screen (a 30 s timeout under load; passed in the clean re-run).

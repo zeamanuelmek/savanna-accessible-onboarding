@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-15T08:40:15.965Z",
+  "generated": "2026-11-19T20:10:22.777Z",
   "note": "Measured from the frozen Savanna reference pages served on http://localhost (not an ALX domain).",
   "results": {
     "homepage-v1-paced": {
@@ -210,6 +210,18 @@
       ],
       "fontRequests": [
         {
+          "url": "http://localhost:4173/reference/assets/fonts/fa-regular-400.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/reference/assets/fonts/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/reference/assets/fonts/fa-solid-900.woff2",
+          "status": 200
+        },
+        {
           "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2",
           "status": 200
         },
@@ -222,19 +234,7 @@
           "status": 200
         },
         {
-          "url": "http://localhost:4173/reference/assets/fonts/pxiEyp8kv8JHgFVrJJfecnFHGPc.woff2",
-          "status": 200
-        },
-        {
-          "url": "http://localhost:4173/reference/assets/fonts/fa-regular-400.woff2",
-          "status": 200
-        },
-        {
           "url": "http://localhost:4173/reference/assets/fonts/rP2Yp2ywxg089UriI5-g4vlH9VoD8Cmcqbu0-K6z9mXg.woff2",
-          "status": 200
-        },
-        {
-          "url": "http://localhost:4173/reference/assets/fonts/fa-solid-900.woff2",
           "status": 200
         }
       ]
@@ -467,7 +467,7 @@
       ],
       "fontRequests": [
         {
-          "url": "http://localhost:4173/reference/assets/fonts/fa-solid-900.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2",
           "status": 200
         },
         {
@@ -475,7 +475,7 @@
           "status": 200
         },
         {
-          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLGT9Z1xlFd2JQEk.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/fa-solid-900.woff2",
           "status": 200
         },
         {
@@ -747,11 +747,7 @@
           "status": 200
         },
         {
-          "url": "http://localhost:4173/reference/assets/fonts/fa-regular-400.woff2",
-          "status": 200
-        },
-        {
-          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/fa-solid-900.woff2",
           "status": 200
         },
         {
@@ -759,11 +755,15 @@
           "status": 200
         },
         {
-          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLEj6Z1xlFd2JQEk.woff2",
           "status": 200
         },
         {
-          "url": "http://localhost:4173/reference/assets/fonts/fa-solid-900.woff2",
+          "url": "http://localhost:4173/reference/assets/fonts/fa-regular-400.woff2",
+          "status": 200
+        },
+        {
+          "url": "http://localhost:4173/reference/assets/fonts/pxiByp8kv8JHgFVrLCz7Z1xlFd2JQEk.woff2",
           "status": 200
         }
       ]

@@ -16,15 +16,17 @@ const PORT = Number(process.env.PORT || 4173);
 const VERCEL = JSON.parse(await readFile(join(MODULE_ROOT, 'vercel.json'), 'utf8'));
 function securityHeaders(path) {
   const out = {};
+  // Vercel's "(.*)" pattern; a later matching rule replaces the same header (for example the host demo's own CSP)
   for (const rule of VERCEL.headers) {
-    if (rule.source === '/(.*)' || rule.source === path) for (const h of rule.headers) out[h.key.toLowerCase()] = h.value;
+    const re = new RegExp('^' + rule.source.split('(.*)').map(s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('.*') + '$');
+    if (re.test(path)) for (const h of rule.headers) out[h.key.toLowerCase()] = h.value;
   }
   return out;
 }
 const TYPES = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml',
-  '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.riv': 'application/octet-stream', '.mp3': 'audio/mpeg'
+  '.md': 'text/markdown; charset=utf-8', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.riv': 'application/octet-stream', '.mp3': 'audio/mpeg'
 };
 
 function resolvePath(urlPath) {

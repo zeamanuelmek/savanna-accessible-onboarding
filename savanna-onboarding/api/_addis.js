@@ -15,6 +15,7 @@
                                 -> 200 { "text": "…" }
      POST /api/tts              JSON { "text": "…", "lang": "am"|"om" }, text at most 600 characters
                                 -> 200 audio/mpeg
+     GET  /api/stt or /api/tts  -> 200 { "ready": true|false }  (is a key set? free; added 19 Nov)
      Errors -> { "error": code }: not_configured (503), no_credit (402), busy / rate_limited (429), origin (403),
      too_long / too_large (413), language / bad_request (400), unsupported_type (415), unavailable (502).
 
@@ -112,7 +113,10 @@ function upstreamCode(status) {
 }
 
 function guard(req, res, kind) {
-  if (req.method !== 'POST') { res.setHeader('Allow', 'POST'); fail(res, 405, 'bad_request'); return null; }
+  // Readiness check for the module: GET answers { ready } only (is a key set?). No upstream call, nothing paid, the
+  // key itself is never shown. The voice panel uses it to show "Voice: Addis AI" or "Voice: your browser".
+  if (req.method === 'GET' || req.method === 'HEAD') { send(res, 200, { ready: !!process.env.ADDIS_API_KEY }); return null; }
+  if (req.method !== 'POST') { res.setHeader('Allow', 'GET, POST'); fail(res, 405, 'bad_request'); return null; }
   if (!originAllowed(req)) { fail(res, 403, 'origin'); return null; }
   const key = process.env.ADDIS_API_KEY;
   if (!key) { fail(res, 503, 'not_configured'); return null; }

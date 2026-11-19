@@ -178,6 +178,12 @@ Then, for Amharic and Afaan Oromo only (English keeps the browser's engines):
 - **Errors** are `{ "error": "not_configured" | "no_credit" | "busy" | "rate_limited" | "origin" | … }`. On any
   error, or with no proxy (404), the module falls back to the browser's speech with a plain message, and a proxy that
   is not set up is not asked again in that tab. `SavannaOnboarding.speechProxy()` tells you the state.
+- **Readiness check** (19 Nov): the module asks `GET /api/stt` once per page; the proxy answers `{ "ready": true|false }`
+  (is a key set?), with no recording and no paid call. Without a key (or with no proxy: 404, 502), Amharic voice uses the
+  browser's own recognition (`am-ET`) from the start. If Addis AI fails during use, the module switches to the browser
+  for that tab (Addis AI is tried again after a minute) and says so.
+- **The voice panel names the engine in use**, under the voice button: "Voice: Addis AI" or "Voice: your browser"
+  (Amharic and Afaan Oromo versions too). `SavannaOnboarding.voiceEngine(lang)` returns `'addis'`, `'browser'` or `null`.
 
 **Reference proxy** (in this repository, for our demo): `api/_addis.js`, used by the Vercel functions `api/stt.js`
 and `api/tts.js`, and by `proxy/server.cjs` in Docker Compose (`docker compose --profile addis up`). It reads the key

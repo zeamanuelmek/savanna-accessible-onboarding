@@ -10,7 +10,11 @@ or any other site adds with **two script tags**. No framework, no build step, no
 |---|---|
 | [`/`](https://savanna-accessible-onboarding.vercel.app/) | **The learner journey inside Savanna's own pages** (ALX starter kit): home → sign up → dashboard → profile and Support Passport → jobs and apply → employer form. Log-in is simulated |
 | [`/test-host/`](https://savanna-accessible-onboarding.vercel.app/test-host/) | **Test host page**: an ordinary page (not Savanna) that uses only the public API, and shows exactly what the host receives |
+| [`/host-demo/`](https://savanna-accessible-onboarding.vercel.app/host-demo/) | **Host demo, the full loop**: a platform page that receives every event, saves each record in the browser, checks it against the JSON Schemas, and exports JSON / CSV. Optional "Send to your endpoint". Not linked from learner pages |
 | [`/showroom.html`](https://savanna-accessible-onboarding.vercel.app/showroom.html) | Developer and test page (all journeys behind one menu). Not linked from learner pages: open it by this address |
+
+**Plugging it in:** [`docs/plug-in.md`](docs/plug-in.md) is one page with the script tags, `mount()` / `unmount()`, and
+every event with every field.
 
 **Access without disclosure:** learners choose how they want to interact (read-aloud, voice, larger text, simple
 mode) without ever stating or proving a disability. **Nothing leaves the host without consent:** the module sends no

@@ -100,6 +100,8 @@
       speak: 'Answer by voice', stop: 'Stop listening', listening: 'Microphone on. Listening… speak now, and press Stop listening when you have finished.',
       heard: 'I heard:', yes: 'Use this answer', again: 'Say it again', type: 'Type it instead',
       recStart: 'Recording. Speak now, then press Stop when you have finished.',
+      engineAddis: 'Voice: Addis AI', engineBrowser: 'Voice: your browser',
+      voiceFallback: 'The Addis AI speech service did not answer. Press "{speak}" again to use your browser\'s own speech recognition, or type your answer.',
       readFail: 'Reading aloud isn\'t available right now. Everything is written on the screen.',
       selected: 'Selected:', notSelected: 'Not selected:',
       heardChoose: 'Choose {yes}, {again}, or {type}.', yourAnswer: 'Your answer:', nothingTyped: 'Nothing is typed yet.',
@@ -211,6 +213,8 @@
       speak: 'በድምፅ ይመልሱ', stop: 'ማዳመጥ አቁም', listening: 'ማይክሮፎኑ በርቷል። እያዳመጥኩ ነው… አሁን ይናገሩ፤ ሲጨርሱ «ማዳመጥ አቁም»ን ይጫኑ።',
       heard: 'የሰማሁት፦', yes: 'ይህን መልስ ተጠቀም', again: 'እንደገና ይናገሩ', type: 'በመጻፍ ይመልሱ',
       recStart: 'እየተቀዳ ነው። አሁን ይናገሩ፤ ሲጨርሱ «{stop}»ን ይጫኑ።',
+      engineAddis: 'ድምፅ፦ Addis AI', engineBrowser: 'ድምፅ፦ የእርስዎ ብራውዘር',
+      voiceFallback: 'የAddis AI የንግግር አገልግሎት አልመለሰም። የብራውዘርዎን የንግግር ማወቂያ ለመጠቀም «{speak}»ን እንደገና ይጫኑ፣ ወይም መልስዎን ይጻፉ።',
       readFail: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
       selected: 'ተመርጧል፦', notSelected: 'አልተመረጠም፦',
       heardChoose: '«{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።', yourAnswer: 'መልስዎ፦', nothingTyped: 'እስካሁን ምንም አልተጻፈም።',
@@ -328,6 +332,8 @@
       listening: 'Maayikiraafoonni banameera. Dhaggeeffachaa jira… amma dubbadhu, yoo xumurte "Dhaggeeffachuu dhaabi" tuqi.',
       heard: 'Kan ani dhage\'e:',
       recStart: 'Waraabamaa jira. Amma dubbadhu, yoo xumurte "{stop}" tuqi.',
+      engineAddis: 'Sagalee: Addis AI', engineBrowser: 'Sagalee: biraawuzara kee',
+      voiceFallback: 'Tajaajilli dubbii Addis AI deebii hin kennine. Beekumsa dubbii biraawuzara keetii fayyadamuuf "{speak}" irra deebi\'ii tuqi, ykn deebii kee barreessi.',
       readFail: 'Sagaleen dubbisuun amma hin jiru. Wanti hundi iskiriinii irratti barreeffameera.',
       selected: 'Filatame:',
       notSelected: 'Hin filatamne:',
@@ -888,12 +894,27 @@
      browser's engines with a plain message, and the proxy is not asked again in this tab when it is not set up. */
   // Paused only when the proxy is not set up (no proxy, no key, wrong origin), and tried again after 60 seconds. A
   // passing failure ("unavailable", "busy") never switches it off: the next piece simply tries again.
-  var REMOTE = { url: null, langs: ['am', 'om'], downUntil: 0, maxSeconds: 30, timeoutMs: 20000, retryMs: 60000 };
+  var REMOTE = { url: null, ready: null, langs: ['am', 'om'], downUntil: 0, maxSeconds: 30, timeoutMs: 20000, retryMs: 60000 };
   try { var du = sessionStorage.getItem('savanna-onboarding.remoteDown'); REMOTE.downUntil = du === '1' ? Infinity : +du || 0; } catch (e) {}
-  function setSpeechProxy(url) { REMOTE.url = url ? String(url).replace(/\/+$/, '') : null; }
+  function setSpeechProxy(url) {
+    var u = url ? String(url).replace(/\/+$/, '') : null;
+    if (u !== REMOTE.url) { REMOTE.url = u; REMOTE.ready = null; probeRemote(); }
+  }
+  /* Is the proxy set up? GET <proxy>/stt answers { "ready": true|false } (free: no recording, no paid call, the key is
+     never shown). Asked once per page. An older proxy without this check (405), or no answer: unknown, so the module
+     tries it and falls back on failure. The voice panel names the engine in use ("Voice: Addis AI" / "Voice: your
+     browser"), so the fallback is always visible. */
+  function probeRemote() {
+    var u = REMOTE.url;
+    if (!u || !window.fetch || remoteIsDown()) { refreshEngines(); return; }
+    fetch(u + '/stt', { method: 'GET', credentials: 'same-origin', cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : r.status === 405 ? null : { ready: false }; }) // 404/502: no proxy here
+      .then(function (j) { if (REMOTE.url === u && j && typeof j.ready === 'boolean') REMOTE.ready = j.ready; }, function () {})
+      .then(refreshEngines);
+  }
   function remoteIsDown() { return Date.now() < REMOTE.downUntil; }
-  function remoteOn(lang) { return !!REMOTE.url && !remoteIsDown() && REMOTE.langs.indexOf(lang) !== -1 && navigator.onLine !== false && !!window.fetch; }
-  function remoteDown() { REMOTE.downUntil = Date.now() + REMOTE.retryMs; try { sessionStorage.setItem('savanna-onboarding.remoteDown', String(REMOTE.downUntil)); } catch (e) {} }
+  function remoteOn(lang) { return !!REMOTE.url && REMOTE.ready !== false && !remoteIsDown() && REMOTE.langs.indexOf(lang) !== -1 && navigator.onLine !== false && !!window.fetch; }
+  function remoteDown() { REMOTE.downUntil = Date.now() + REMOTE.retryMs; try { sessionStorage.setItem('savanna-onboarding.remoteDown', String(REMOTE.downUntil)); } catch (e) {} refreshEngines(); }
   /** POST to the proxy; resolves with the Response, rejects with a short code. Not set up -> remembered for this tab. */
   function remoteFetch(path, init) {
     var ctl = window.AbortController ? new AbortController() : null, timer = ctl ? setTimeout(function () { ctl.abort(); }, REMOTE.timeoutMs) : null;
@@ -974,7 +995,10 @@
           remoteStt(blob, lang).then(function (text) {
             if (!text) h.error('no-speech'); else h.result([text]);
             end();
-          }, function (code) { h.error(code === 'no_credit' ? 'remote-no-credit' : 'remote-failed'); end(); });
+          }, function (code) {
+            remoteDown(); // the next press uses the browser's own engine (Addis AI is tried again after a minute)
+            h.error(browserInput.supported(lang) ? 'remote-fallback' : code === 'no_credit' ? 'remote-no-credit' : 'remote-failed'); end();
+          });
         };
         rec.start();
         timer = setTimeout(function () { if (rec && rec.state === 'recording') { stopped = 'stop'; rec.stop(); } }, REMOTE.maxSeconds * 1000); // protects the balance
@@ -993,6 +1017,22 @@
     supported: function (lang) { return (remoteOn(lang) && remoteInput.supported()) || browserInput.supported(lang); },
     start: function (lang, h) { return (remoteOn(lang) && remoteInput.supported() ? remoteInput : browserInput).start(lang, h); }
   };
+  /** The engine that will listen for this language: 'addis', 'browser', or null (none, or the host's own adapter). */
+  function inputEngine(lang) {
+    if (speech.input !== autoInput) return null;
+    if (remoteOn(lang) && remoteInput.supported()) return 'addis';
+    return browserInput.supported(lang) ? 'browser' : null;
+  }
+  function engineText(lang) { var e = inputEngine(lang); return e ? t(e === 'addis' ? 'engineAddis' : 'engineBrowser', lang) : ''; }
+  /** Updates every "Voice: ..." line on the page (after the proxy check, or after a fallback). */
+  function refreshEngines() {
+    if (!document.querySelectorAll) return;
+    Array.prototype.forEach.call(document.querySelectorAll('.dm-engine'), function (p) {
+      var txt = engineText(p.getAttribute('data-lang') || 'en');
+      p.textContent = txt; p.hidden = !txt;
+    });
+  }
+  function engineLine(lang) { var txt = engineText(lang); return '<p class="dm-engine" data-lang="' + lang + '"' + (txt ? '' : ' hidden') + '>' + esc(txt) + '</p>'; }
   var speech = { input: autoInput, output: {
     speak: function (text, lang, audioUrl, done, opts) { return speak(text, lang, audioUrl, done, opts); },
     stop: function () { stopSpeaking(); },
@@ -1013,7 +1053,7 @@
       o.start(); o.stop(c.currentTime + 0.15);
     } catch (e) { /* no beep */ }
   }
-  function setSpeech(o) { if (o && o.input) speech.input = o.input; if (o && o.output) speech.output = o.output; }
+  function setSpeech(o) { if (o && o.input) speech.input = o.input; if (o && o.output) speech.output = o.output; refreshEngines(); }
 
   /* ---------- recorded audio ----------
      Clips live in assets/audio/<lang>/ next to this script, named as in docs/audio-script.md
@@ -1778,6 +1818,7 @@
     '.dm a,.dm samp,.dm q{overflow-wrap:anywhere}', // long links (resume link) wrap at 400% zoom
 
     '.dm-tools{display:flex;flex-wrap:wrap;gap:.6em;margin:1em 0}',
+    '.dm-engine{margin:-.4em 0 1em;font-size:.9em;color:var(--so-text-muted)}',
     '.dm-sr-tip p{margin:0 0 .4em}', '.dm-sr-tip p:last-child{margin:0}',
     '.dm-offline-audio{margin:0 0 1.5em}', '.dm-offline-audio h2{font-size:1.2em;margin:0 0 .4em;color:var(--so-heading)}',
     '.dm-offline-audio progress{width:100%;height:1.2em;accent-color:var(--so-heading)}',
@@ -1973,6 +2014,7 @@
         ? '<button type="button" class="dm-btn" data-act="date-voice">' + pic(vm.pictures, '🎤') + t('dvOpen', lang) + '</button>'
         : '<button type="button" class="dm-btn" data-act="speak" aria-pressed="false">' + pic(vm.pictures, '🎤') + t('speak', lang) + '</button>';
       h += '</div>';
+      if (canSpeak) h += engineLine(lang); // which engine listens: "Voice: Addis AI" or "Voice: your browser"
       // A learner who chose "speak my answers" is told plainly when this browser (e.g. an app's WebView) cannot listen.
       if (voiceAllowed(f, vm) && !canSpeak && vm.prefsMode === 'speak') h += '<p class="dm-note">' + t('voiceUnsupported', lang) + '</p>';
       if (f.askHelper) {
@@ -2137,7 +2179,7 @@
           '<div class="dm-actions">' + btn('heard-yes', t('yes', lang), 'dm-primary') + btn('heard-again', t('again', lang)) + btn('heard-type', t('type', lang)) + '</div></div>';
       }
       h += '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="speak" aria-pressed="false">' + pic(vm.pictures, '🎤') + t('speak', lang) + '</button>' +
-        btn('dv-listen', pic(vm.pictures, '🔊') + t('listen', lang)) + btn('heard-type', t('type', lang)) + '</div>';
+        btn('dv-listen', pic(vm.pictures, '🔊') + t('listen', lang)) + btn('heard-type', t('type', lang)) + '</div>' + engineLine(lang);
       if (dv.part === 'year' && dv.mode === 'full') h += '<p><button type="button" class="dm-link" data-act="dv-unknown">' + t('dvDontKnow', lang) + '</button></p>';
       return h + '</div>';
     },
@@ -2653,7 +2695,8 @@
       error: function (code) {
         if (self.voice !== v || code === 'aborted') return;
         v.state = 'error'; self.setVoiceButton(false);
-        self.status(t({ 'not-allowed': 'voiceDenied', network: 'voiceNetwork', 'no-speech': 'voiceNoSpeech', 'audio-capture': 'voiceNoMic', 'language-not-supported': 'voiceLangUnsupported', 'remote-failed': 'voiceRemoteFailed', 'remote-no-credit': 'voiceNoCredit' }[code] || 'voiceError', lang));
+        self.status(t({ 'not-allowed': 'voiceDenied', network: 'voiceNetwork', 'no-speech': 'voiceNoSpeech', 'audio-capture': 'voiceNoMic', 'language-not-supported': 'voiceLangUnsupported', 'remote-failed': 'voiceRemoteFailed', 'remote-no-credit': 'voiceNoCredit', 'remote-fallback': 'voiceFallback' }[code] || 'voiceError', lang, { speak: t('speak', lang) }));
+        refreshEngines();
       },
       end: function () {
         if (self.voice !== v) return;
@@ -3107,7 +3150,9 @@
     /** Pieces to read an element's content (headings, paragraphs, lists), each in its own language: for Player.play. */
     itemsFromElement: itemsFromElement,
     /** The host's speech proxy (for example '/api'): Amharic and Afaan Oromo speech through it; null turns it off. */
-    setSpeechProxy: setSpeechProxy, speechProxy: function () { return { url: REMOTE.url, down: remoteIsDown(), languages: REMOTE.langs.slice() }; }, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
+    setSpeechProxy: setSpeechProxy, speechProxy: function () { return { url: REMOTE.url, ready: REMOTE.ready, down: remoteIsDown(), languages: REMOTE.langs.slice() }; },
+    /** Which engine listens for a language now: 'addis' (through the host's proxy), 'browser', or null. */
+    voiceEngine: function (lang) { return inputEngine(lang || getPrefs().lang || 'en'); }, languages: LANGS, languageNames: LANG_NAMES, prefsForMode: prefsForMode,
     /** Adds the module's styles and fonts to the page (done automatically when a form or settings element appears). */
     styles: function () { injectCss(); applyPrefs(); }
   };

@@ -18,12 +18,14 @@ function wav(ms = 200) {
   b.writeUInt16LE(8, 34); b.write('data', 36); b.writeUInt32LE(n, 40); b.fill(128, 44); return b;
 }
 /** Mocks POST /api/tts and /api/stt; records each request. */
-async function mockProxy(page, { tts = 200, stt = 200, text = 'አበበ' } = {}) {
-  const calls = { tts: [], stt: [] };
+async function mockProxy(page, { tts = 200, stt = 200, text = 'አበበ', ready = true } = {}) {
+  const calls = { tts: [], stt: [], probes: 0 };
+  // the free readiness check (GET <proxy>/stt -> { ready }): is a key set on the proxy?
+  await page.route('**/api/stt', r => { calls.probes++; return r.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ready }) }); });
   await page.route('**/assets/audio/manifest.json', r => r.fulfill({ contentType: 'application/json', body: '{}' })); // no recordings
   await page.route('**/api/tts', async r => {
+    calls.origin = await r.request().headerValue('origin'); // read before the request is counted (no race)
     calls.tts.push(JSON.parse(r.request().postData() || '{}'));
-    calls.origin = await r.request().headerValue('origin');
     if (tts === 200) return r.fulfill({ status: 200, contentType: 'audio/mpeg', body: wav() });
     const code = { 402: 'no_credit', 503: 'not_configured', 502: 'unavailable' }[tts] || 'unavailable';
     return r.fulfill({ status: tts, contentType: 'application/json', body: JSON.stringify({ error: code }) });
@@ -185,9 +187,11 @@ test.describe('in the browser (proxy mocked)', () => {
     await fakeRecorder(page);
     await mockProxy(page, { stt: 402 });
     await signupTo(page, 'name');
+    await expect(page.locator('.dm-engine')).toHaveText('ድምፅ፦ Addis AI');
     await page.locator('[data-act=speak]').click();
     await page.locator('[data-act=speak]').click();
-    await expect(page.locator('.dm-status')).toContainText('የንግግር አገልግሎቱ አሁን አይገኝም');
+    await expect(page.locator('.dm-status')).toContainText('የAddis AI የንግግር አገልግሎት አልመለሰም'); // "press Answer by voice again to use your browser"
+    await expect(page.locator('.dm-engine')).toHaveText('ድምፅ፦ የእርስዎ ብራውዘር'); // the fallback is shown
     await page.fill('[data-ref=input]', 'አበበ'); await next(page); // typing always works
     await expect(page.locator('.dm-q')).not.toContainText('ምን ብለን');
   });
@@ -234,6 +238,18 @@ test.describe('the reference proxy (Node, fake fetch, no network)', () => {
     global.fetch = realFetch; delete process.env.ADDIS_API_KEY;
     for (const k of ['log', 'warn', 'error']) console[k] = console['_' + k];
     expect(logs.join('\n')).not.toContain(KEY); // the key is never logged
+  });
+
+  test('readiness check: GET answers { ready } only, never the key, with no call to Addis AI', async () => {
+    const { handleStt, handleTts } = addis();
+    let fetched = 0; global.fetch = () => { fetched++; return Promise.reject(new Error('no')); };
+    let r = await call(handleStt, { method: 'GET', url: '/api/stt' });
+    expect([r.status, JSON.parse(r.body)]).toEqual([200, { ready: false }]);
+    process.env.ADDIS_API_KEY = KEY;
+    r = await call(handleTts, { method: 'GET', origin: 'https://evil.example' });
+    expect([r.status, JSON.parse(r.body)]).toEqual([200, { ready: true }]);
+    expect(String(r.body)).not.toContain(KEY);
+    expect(fetched).toBe(0);
   });
 
   test('no key: not_configured; other sites are refused; long text is refused', async () => {

@@ -140,7 +140,7 @@ async function applyTo(page) {
   await go(page, '#/jobs'); // a different page first, so the application form is drawn afresh
   await go(page, '#/apply/s1');
   await next(page); await next(page); // name, phone: prefilled
-  await fill(page, 'I like helping people.'); await next(page);
+  // ("Why do you want this job?" was removed on 16 Nov)
   await fill(page, 'Volunteer at a youth centre.'); await next(page);
   await next(page); // interview: optional
 }
