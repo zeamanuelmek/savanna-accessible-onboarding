@@ -37,7 +37,7 @@ async function learner({ lang = 'en', consent = false, signedIn = false } = {}) 
     if (c) localStorage.setItem('savanna-onboarding.voiceConsent', 'true'); // the learner agreed to voice earlier
     if (s) {
       localStorage.setItem('savanna-onboarding.profile', JSON.stringify({ name: 'Abebe Kebede', phone: '0911234567', id_route: null, assurance_level: 'no_id_yet', registered_by: null }));
-      localStorage.setItem('savanna-onboarding.passport', JSON.stringify({ needs: ['screen_reader', 'captions', 'remote'], sharing: 'ask', updated: new Date().toISOString() }));
+      localStorage.setItem('savanna-onboarding.passport', JSON.stringify({ needs: ['screen_reader', 'flexible_hours'], sharing: 'ask', updated: new Date().toISOString() }));
       localStorage.setItem('savanna-demo.session', JSON.stringify({ at: new Date().toISOString() }));
     }
     sessionStorage.setItem('__seeded', '1');
@@ -47,7 +47,9 @@ async function learner({ lang = 'en', consent = false, signedIn = false } = {}) 
 }
 async function at(page, p) { await page.goto(BASE + p, { waitUntil: 'networkidle' }); await page.waitForFunction(() => !!window.SavannaOnboarding); await page.evaluate(() => document.fonts.ready); }
 async function shot(page, name, what) {
-  await page.waitForTimeout(400);
+  // stop any reading so the "Now reading…" bar does not cover the page (screenshots are silent anyway)
+  await page.evaluate(() => window.SavannaOnboarding && window.SavannaOnboarding.stopSpeaking());
+  await page.waitForTimeout(600);
   await page.screenshot({ path: path.join(OUT, name) });
   summary.shots.push({ file: 'pitch-screenshots/' + name, what });
   console.log('saved', name);
