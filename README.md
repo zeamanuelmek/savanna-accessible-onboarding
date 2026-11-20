@@ -11,6 +11,7 @@ Hackathon 2026 (ALX Ethiopia), Track 1.
 - **Run it locally:** `docker compose up`, then open http://localhost:8080 (optional Addis AI speech: `docker compose --profile addis up`, key in `.env`; see the install guide)
 - **How to plug it in (one page: script tags, `mount()` / `unmount()`, every event and field):** [`savanna-onboarding/docs/plug-in.md`](savanna-onboarding/docs/plug-in.md) · working example with saved records: `/host-demo/`
 - **Data and events for the host (JSON Schema, JobPosting):** [`savanna-onboarding/docs/api-schema.md`](savanna-onboarding/docs/api-schema.md)
+- **The host demo's "Send to your endpoint" POST (OpenAPI 3.1 webhook):** [`savanna-onboarding/docs/openapi.yaml`](savanna-onboarding/docs/openapi.yaml)
 - **WCAG 2.2 AA conformance report:** [`savanna-onboarding/docs/conformance-report.md`](savanna-onboarding/docs/conformance-report.md)
 - **Progress, test results and decisions:** [`DEVELOPMENT_PROGRESS.md`](DEVELOPMENT_PROGRESS.md) · design tokens: [`DESIGN_TOKENS.md`](DESIGN_TOKENS.md)
 - **Licence:** [`LICENSE`](LICENSE). Released under MIT, chosen pending confirmation of the open licence ALX named at kickoff; we will relicense if required. Savanna's own files in `savanna-onboarding/vendor/` belong to ALX and keep their own terms.

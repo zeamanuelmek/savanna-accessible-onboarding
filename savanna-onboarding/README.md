@@ -14,7 +14,8 @@ or any other site adds with **two script tags**. No framework, no build step, no
 | [`/showroom.html`](https://savanna-accessible-onboarding.vercel.app/showroom.html) | Developer and test page (all journeys behind one menu). Not linked from learner pages: open it by this address |
 
 **Plugging it in:** [`docs/plug-in.md`](docs/plug-in.md) is one page with the script tags, `mount()` / `unmount()`, and
-every event with every field.
+every event with every field. The "Send to your endpoint" POST is described in OpenAPI 3.1:
+[`docs/openapi.yaml`](docs/openapi.yaml).
 
 **Access without disclosure:** learners choose how they want to interact (read-aloud, voice, larger text, simple
 mode) without ever stating or proving a disability. **Nothing leaves the host without consent:** the module sends no

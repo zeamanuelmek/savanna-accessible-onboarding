@@ -1,0 +1,516 @@
+# OpenAPI 3.1: the host demo's "Send to your endpoint" webhook (added 20 Nov).
+# Made from the JSON Schemas in docs/api-schema.md, which is the contract. Guide: docs/plug-in.md, section 4.
+openapi: "3.1.0"
+info:
+  title: "Savanna Accessible Onboarding Module: \"Send to your endpoint\" webhook"
+  version: "0.12.0"
+  summary: "The JSON POST the host demo sends to a URL the host types in, one per event."
+  description: "IMPORTANT: the module itself sends nothing over the network. This POST is made by the host demo page (`/host-demo/`), and only while the host has ticked \"Send to your endpoint\" (off by default). It is the start of a \"bring your own backend\" adapter: a host copies the `send` function in `host-demo/host-demo.js`, points it at its own API, and adds the learner's consent and its own authentication there.\n\nThe event bodies use the JSON Schemas in `docs/api-schema.md`, which is the contract. The schemas under `components` are copies of those, with the original `$id` kept in `x-schema-id`. If the two ever differ, api-schema.md wins.\n\nHow it is sent: `fetch(url, { method: \"POST\", headers: { \"Content-Type\": \"application/json\" }, mode: \"cors\", credentials: \"omit\", referrerPolicy: \"no-referrer\" })`. No cookies, no authentication header, no retries.\n\nCORS: because the body is JSON, the browser first sends a preflight (OPTIONS). Your endpoint must answer it with `Access-Control-Allow-Origin` (the demo's origin), `Access-Control-Allow-Methods: POST` and `Access-Control-Allow-Headers: content-type`, and add `Access-Control-Allow-Origin` to the POST answer as well.\n\nThe demo's security policy allows https addresses, and http only on localhost and 127.0.0.1. The deprecated `dimts:` copies of each event are not sent."
+  license:
+    name: "MIT"
+    identifier: "MIT"
+webhooks:
+  savannaOnboardingEvent:
+    post:
+      operationId: "receiveSavannaOnboardingEvent"
+      security: []
+      summary: "One event received by the host page"
+      description: "Sent once for each event the host page receives, in the order received, while \"Send to your endpoint\" is on. Records received before it was turned on are not sent."
+      requestBody:
+        required: true
+        content:
+          "application/json":
+            schema:
+              $ref: "#/components/schemas/WebhookBody"
+            examples:
+              ready:
+                summary: "The module loaded"
+                value:
+                  event: "savanna-onboarding:ready"
+                  receivedAt: "2026-11-19T09:30:01.000Z"
+                  recordId: 1
+                  detail: null
+              step:
+                summary: "A question opened"
+                value:
+                  event: "savanna-onboarding:step"
+                  receivedAt: "2026-11-19T09:30:02.000Z"
+                  recordId: 2
+                  detail:
+                    form: "signup"
+                    mode: "question"
+                    step: 1
+                    summary: "Step 2 of 5: your name. You can type it or say it. Below are Continue and Back."
+              prefs:
+                summary: "A setting changed"
+                value:
+                  event: "savanna-onboarding:prefs"
+                  receivedAt: "2026-11-19T09:30:03.000Z"
+                  recordId: 3
+                  detail:
+                    lang: "am"
+                    easy: true
+                    mode: "listen"
+                    size: "large"
+                    contrast: "normal"
+                    motion: "normal"
+                    pictures: false
+                    autoRead: "on"
+              completeSignup:
+                summary: "Sign-up finished"
+                value:
+                  event: "savanna-onboarding:complete"
+                  receivedAt: "2026-11-19T09:30:04.000Z"
+                  recordId: 4
+                  detail:
+                    form: "signup"
+                    instance: null
+                    lang: "en"
+                    answers:
+                      filler: "self"
+                      name: "Abebe Kebede"
+                      phone: "0911234567"
+                      consent: "yes"
+              completePassport:
+                summary: "Support Passport saved"
+                value:
+                  event: "savanna-onboarding:complete"
+                  receivedAt: "2026-11-19T09:30:05.000Z"
+                  recordId: 5
+                  detail:
+                    form: "passport"
+                    instance: null
+                    lang: "en"
+                    answers:
+                      want: "yes"
+                      needs: ["screen_reader", "captions"]
+                      sharing: "ask"
+      responses:
+        "2XX":
+          description: "Received. Any 2xx answer counts as sent; the answer body is ignored."
+        default:
+          description: "Anything else is shown as \"failed (status)\" in the host demo. Nothing is retried."
+components:
+  schemas:
+    NoDetail:
+      description: "ready and audioblocked carry no data Copy of `savanna-onboarding/no-detail` in api-schema.md."
+      type: "null"
+      x-schema-id: "savanna-onboarding/no-detail"
+    StepDetail:
+      type: "object"
+      properties:
+        form:
+          type: "string"
+          description: "The form id, for example signup or passport"
+        mode:
+          enum: ["welcome", "question", "review", "done", "saved"]
+        step:
+          type: "integer"
+          minimum: 0
+          description: "Index of the question in the form (0 = the first)"
+        summary:
+          type: "string"
+          description: "Short screen summary in English; may be empty"
+      required: ["form", "mode", "step", "summary"]
+      additionalProperties: false
+      x-schema-id: "savanna-onboarding/step"
+      description: "Copy of `savanna-onboarding/step` in api-schema.md."
+    PrefsDetail:
+      type: "object"
+      properties:
+        lang:
+          enum: ["am", "en", "om"]
+        easy:
+          type: "boolean"
+          description: "Read questions aloud"
+        mode:
+          enum: ["", "read_type", "listen", "speak", "simple"]
+        size:
+          enum: ["normal", "large", "xlarge"]
+        contrast:
+          enum: ["normal", "high"]
+        motion:
+          enum: ["normal", "reduce"]
+          description: "Stop motion"
+        pictures:
+          type: "boolean"
+          description: "Simple steps with pictures and big text"
+        autoRead:
+          enum: ["ask", "on", "off"]
+          description: "Automatic reading of page summaries. ask = not chosen yet (the first tap or key press turns it on)"
+      required: ["lang", "easy", "mode", "size", "contrast"]
+      additionalProperties: false
+      x-schema-id: "savanna-onboarding/prefs"
+      description: "Copy of `savanna-onboarding/prefs` in api-schema.md."
+    CompleteDetail:
+      type: "object"
+      properties:
+        form:
+          enum: ["signup", "identity", "profile", "takeover", "passport", "employer", "apply"]
+          description: "Or the id of a form the host registered itself"
+        instance:
+          type: ["string", "null"]
+          description: "The element's instance attribute (for example the job id on apply)"
+        lang:
+          enum: ["am", "en", "om"]
+          description: "Language the learner used (om = Afaan Oromo)"
+        answers:
+          type: "object"
+          description: "One of the answer schemas below, chosen by `form`"
+      required: ["form", "instance", "lang", "answers"]
+      x-schema-id: "savanna-onboarding/complete"
+      description: "Copy of `savanna-onboarding/complete` in api-schema.md."
+    ethDate:
+      description: "A date in the calendar the learner chose (Ethiopian or Gregorian). `gregorian` is always the same day in the Gregorian calendar, worked out on the device: use it for storage and comparison. Answers saved before 15 Nov have no `cal` and are Ethiopian. Since 16 Nov a learner answering by voice can choose \"I don't know my exact date of birth\" and give only the year ({ cal, precision: 'year', y }) or only the age ({ cal, precision: 'age', age, asOf }): these have no `d`, `m` or `gregorian`, and are shown as \"About ...\". An Ethiopian year covers parts of two Gregorian years (y + 7 and y + 8)."
+      type: "object"
+      properties:
+        precision:
+          enum: ["year", "age"]
+          description: "Present only when the exact date is not known. Absent = an exact date"
+        age:
+          type: "integer"
+          minimum: 1
+          maximum: 129
+          description: "precision 'age': the age the learner said"
+        asOf:
+          type: "string"
+          format: "date"
+          description: "precision 'age': the day the age was given (Gregorian)"
+        cal:
+          enum: ["eth", "greg"]
+          default: "eth"
+          description: "eth = Ethiopian calendar, greg = Gregorian"
+        d:
+          type: "integer"
+          minimum: 1
+          maximum: 31
+        m:
+          type: "integer"
+          minimum: 1
+          maximum: 13
+          description: "Ethiopian: 1 = Meskerem ... 13 = Pagume. Gregorian: 1 = January ... 12 = December"
+        y:
+          type: "integer"
+          minimum: 1900
+          maximum: 2030
+        gregorian:
+          type: "string"
+          format: "date"
+      oneOf:
+        - required: ["d", "m", "y", "gregorian"]
+          not:
+            required: ["precision"]
+        - required: ["precision", "y"]
+          properties:
+            precision:
+              const: "year"
+        - required: ["precision", "age", "asOf"]
+          properties:
+            precision:
+              const: "age"
+    need:
+      description: "Shared support vocabulary, used by learners AND employers. A need, never a diagnosis."
+      enum: ["screen_reader", "audio", "sign_language", "captions", "simple_words", "written", "step_free", "extra_time", "flexible_hours", "remote", "helper"]
+    idRoute:
+      enum: ["fayda", "kebele", "passport", "refugee", "other", "none"]
+    partner:
+      enum: ["aaapd", "tib", "other"]
+    referralPartner:
+      enum: ["aaapd", "tib", "unhcr_partner", "unsure"]
+    phone:
+      type: "string"
+      description: "As typed; validated as 10 digits (or +251 / 251 followed by 9 digits)"
+    AnswersSignup:
+      type: "object"
+      properties:
+        filler:
+          enum: ["self", "partner"]
+        partner_org:
+          $ref: "#/components/schemas/partner"
+          description: "Only when filler = partner"
+        staff_name:
+          type: "string"
+          description: "Only when filler = partner"
+        learner_consent:
+          const: "yes"
+          description: "Only when filler = partner. The learner must agree"
+        name:
+          type: "string"
+          description: "What the learner wants to be called (\"What should we call you?\"). Amharic (Ethiopic) or Latin letters, spaces, ' - . only. Not necessarily the full legal name"
+        phone:
+          $ref: "#/components/schemas/phone"
+        dob:
+          oneOf:
+            - $ref: "#/components/schemas/ethDate"
+            - const: ""
+          description: "Optional"
+        consent:
+          const: "yes"
+      required: ["filler", "name", "phone", "consent"]
+      x-schema-id: "savanna-onboarding/answers/signup"
+      description: "Copy of `savanna-onboarding/answers/signup` in api-schema.md."
+    AnswersIdentity:
+      type: "object"
+      properties:
+        id_route:
+          $ref: "#/components/schemas/idRoute"
+        id_number:
+          type: "string"
+          description: "Optional; may be empty. Only when id_route is not none. NEVER verified"
+        referral_partner:
+          $ref: "#/components/schemas/referralPartner"
+          description: "Only when id_route = none"
+      required: ["id_route"]
+      x-schema-id: "savanna-onboarding/answers/identity"
+      description: "Copy of `savanna-onboarding/answers/identity` in api-schema.md."
+    AnswersProfile:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        full_name:
+          type: "string"
+          description: "Optional"
+        phone:
+          $ref: "#/components/schemas/phone"
+        dob:
+          oneOf:
+            - $ref: "#/components/schemas/ethDate"
+            - const: ""
+          description: "Optional"
+      required: ["name", "phone"]
+      x-schema-id: "savanna-onboarding/answers/profile"
+      description: "Copy of `savanna-onboarding/answers/profile` in api-schema.md."
+    AnswersTakeover:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        phone:
+          $ref: "#/components/schemas/phone"
+        dob:
+          oneOf:
+            - $ref: "#/components/schemas/ethDate"
+            - const: ""
+          description: "Optional"
+      required: ["name", "phone"]
+      x-schema-id: "savanna-onboarding/answers/takeover"
+      description: "Copy of `savanna-onboarding/answers/takeover` in api-schema.md."
+    AnswersPassport:
+      type: "object"
+      properties:
+        want:
+          enum: ["yes", "later"]
+        needs:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/need"
+          minItems: 1
+          description: "Only when want = yes"
+        other_need:
+          type: "string"
+          description: "Optional, free text in the learner's words"
+        sharing:
+          enum: ["ask", "trainers"]
+          description: "ask = only me, ask every time I apply"
+      required: ["want"]
+      x-schema-id: "savanna-onboarding/answers/passport"
+      description: "Copy of `savanna-onboarding/answers/passport` in api-schema.md."
+    AnswersApply:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+          description: "Prefilled from the profile: the full name if the learner added one, otherwise the name we call them"
+        phone:
+          $ref: "#/components/schemas/phone"
+          description: "Prefilled from the profile"
+        experience:
+          type: "string"
+        interview:
+          type: "array"
+          items:
+            enum: ["phone", "in_person", "written", "interpreter"]
+        share_passport:
+          enum: ["share", "keep"]
+          description: "Only asked when a Support Passport with needs exists. Per application"
+      required: ["name", "phone", "experience"]
+      x-schema-id: "savanna-onboarding/answers/apply"
+      description: "Copy of `savanna-onboarding/answers/apply` in api-schema.md."
+    AnswersEmployer:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        org:
+          type: "string"
+        location:
+          type: "string"
+        mode:
+          enum: ["onsite", "remote", "hybrid"]
+        offers:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/need"
+          minItems: 1
+        description:
+          type: "string"
+        contact:
+          type: "string"
+          description: "Phone number or email, as typed"
+      required: ["title", "org", "location", "mode", "offers", "description", "contact"]
+      x-schema-id: "savanna-onboarding/answers/employer"
+      description: "Copy of `savanna-onboarding/answers/employer` in api-schema.md."
+    ReadyEvent:
+      type: "object"
+      description: "The module script loaded."
+      required: ["event", "receivedAt", "recordId", "detail"]
+      additionalProperties: false
+      properties:
+        event:
+          const: "savanna-onboarding:ready"
+        receivedAt:
+          type: "string"
+          format: "date-time"
+          description: "When the host page received the event (ISO 8601, UTC)"
+        recordId:
+          type: "integer"
+          minimum: 1
+          description: "The record number in the host demo (1, 2, 3 ...), unique in that browser"
+        detail:
+          $ref: "#/components/schemas/NoDetail"
+    AudioBlockedEvent:
+      type: "object"
+      description: "The browser refused to play sound until the learner taps or presses a key."
+      required: ["event", "receivedAt", "recordId", "detail"]
+      additionalProperties: false
+      properties:
+        event:
+          const: "savanna-onboarding:audioblocked"
+        receivedAt:
+          type: "string"
+          format: "date-time"
+          description: "When the host page received the event (ISO 8601, UTC)"
+        recordId:
+          type: "integer"
+          minimum: 1
+          description: "The record number in the host demo (1, 2, 3 ...), unique in that browser"
+        detail:
+          $ref: "#/components/schemas/NoDetail"
+    PrefsEvent:
+      type: "object"
+      description: "The learner changed a setting (how they like to use forms, never why)."
+      required: ["event", "receivedAt", "recordId", "detail"]
+      additionalProperties: false
+      properties:
+        event:
+          const: "savanna-onboarding:prefs"
+        receivedAt:
+          type: "string"
+          format: "date-time"
+          description: "When the host page received the event (ISO 8601, UTC)"
+        recordId:
+          type: "integer"
+          minimum: 1
+          description: "The record number in the host demo (1, 2, 3 ...), unique in that browser"
+        detail:
+          $ref: "#/components/schemas/PrefsDetail"
+    StepEvent:
+      type: "object"
+      description: "A new screen of a form opened."
+      required: ["event", "receivedAt", "recordId", "detail"]
+      additionalProperties: false
+      properties:
+        event:
+          const: "savanna-onboarding:step"
+        receivedAt:
+          type: "string"
+          format: "date-time"
+          description: "When the host page received the event (ISO 8601, UTC)"
+        recordId:
+          type: "integer"
+          minimum: 1
+          description: "The record number in the host demo (1, 2, 3 ...), unique in that browser"
+        detail:
+          $ref: "#/components/schemas/StepDetail"
+    CompleteEvent:
+      type: "object"
+      description: "The learner pressed the final button on \"Check your answers\"."
+      required: ["event", "receivedAt", "recordId", "detail"]
+      additionalProperties: false
+      properties:
+        event:
+          const: "savanna-onboarding:complete"
+        receivedAt:
+          type: "string"
+          format: "date-time"
+          description: "When the host page received the event (ISO 8601, UTC)"
+        recordId:
+          type: "integer"
+          minimum: 1
+          description: "The record number in the host demo (1, 2, 3 ...), unique in that browser"
+        detail:
+          $ref: "#/components/schemas/CompleteDetailByForm"
+    CompleteDetailByForm:
+      description: "The completion envelope, with `answers` checked against the answer schema for its `form`."
+      allOf:
+        - $ref: "#/components/schemas/CompleteDetail"
+        - oneOf:
+            - properties:
+                form:
+                  const: "signup"
+                answers:
+                  $ref: "#/components/schemas/AnswersSignup"
+              required: ["form", "answers"]
+            - properties:
+                form:
+                  const: "identity"
+                answers:
+                  $ref: "#/components/schemas/AnswersIdentity"
+              required: ["form", "answers"]
+            - properties:
+                form:
+                  const: "profile"
+                answers:
+                  $ref: "#/components/schemas/AnswersProfile"
+              required: ["form", "answers"]
+            - properties:
+                form:
+                  const: "takeover"
+                answers:
+                  $ref: "#/components/schemas/AnswersTakeover"
+              required: ["form", "answers"]
+            - properties:
+                form:
+                  const: "passport"
+                answers:
+                  $ref: "#/components/schemas/AnswersPassport"
+              required: ["form", "answers"]
+            - properties:
+                form:
+                  const: "apply"
+                answers:
+                  $ref: "#/components/schemas/AnswersApply"
+              required: ["form", "answers"]
+            - properties:
+                form:
+                  const: "employer"
+                answers:
+                  $ref: "#/components/schemas/AnswersEmployer"
+              required: ["form", "answers"]
+    WebhookBody:
+      description: "One event, as the host page received it."
+      oneOf:
+        - $ref: "#/components/schemas/ReadyEvent"
+        - $ref: "#/components/schemas/AudioBlockedEvent"
+        - $ref: "#/components/schemas/PrefsEvent"
+        - $ref: "#/components/schemas/StepEvent"
+        - $ref: "#/components/schemas/CompleteEvent"
+      discriminator:
+        propertyName: "event"
+        mapping:
+          "savanna-onboarding:ready": "#/components/schemas/ReadyEvent"
+          "savanna-onboarding:audioblocked": "#/components/schemas/AudioBlockedEvent"
+          "savanna-onboarding:prefs": "#/components/schemas/PrefsEvent"
+          "savanna-onboarding:step": "#/components/schemas/StepEvent"
+          "savanna-onboarding:complete": "#/components/schemas/CompleteEvent"

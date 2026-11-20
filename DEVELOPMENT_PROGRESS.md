@@ -1906,3 +1906,28 @@ numbers and months.
 114 passed, 2 failed on timing (a 30 s timeout while loading; a step under load) and both passed on a re-run, with
 `offline.spec.mjs` again after the cache change (16 passed).
 
+
+## Documents only (20 Nov, frozen): webhook in OpenAPI, secret check
+
+**`savanna-onboarding/docs/openapi.yaml` (new, OpenAPI 3.1).** Describes the host demo's "Send to your endpoint"
+POST as a webhook (`webhooks.savannaOnboardingEvent`): body `{ event, receivedAt, recordId, detail }`, one schema per
+event (chosen by `event`), `detail` using copies of the JSON Schemas in `api-schema.md` (original `$id` kept in
+`x-schema-id`; `complete` checks `answers` against the schema for its `form`), five examples, the CORS answers the
+endpoint needs, no authentication (`security: []`), any 2xx = sent. It says plainly that the module sends nothing:
+the POST is made by the host demo, only when the box is ticked. The copies were made by a one-off script from the
+JSON blocks in `api-schema.md` (not committed: frozen); api-schema.md stays the contract.
+Linked from `docs/plug-in.md` (section 4), `savanna-onboarding/README.md` and the root `README.md`.
+**Lint:** Redocly CLI 2.11.1 (`npx @redocly/cli lint`, recommended rules, which also check every example against its
+schema): valid. Skipped one rule, `no-empty-servers` (a webhook goes to the host's own address, so there is no
+server to list). One warning left, a false alarm: `ethDate` says "an exact date has no `precision`" with
+`not: { required: ["precision"] }`, which is correct JSON Schema.
+
+**Secret check (all 39 commits on every branch, local and GitHub, plus the files on disk):**
+- the real Addis AI key (read from `.env` and compared, never printed): in **no** commit, added or removed, and in
+  no tracked file; nor its first or last 8 characters;
+- `.env` was never committed. The only env file in history is `.env.example`, with an empty `ADDIS_API_KEY=`.
+  `.env` is git-ignored (`.gitignore`) and kept out of the deploy (`.vercelignore`); the live site answers 404 for
+  `/.env` and `/.env.example`;
+- a scan of the whole history for secret shapes (AWS, Google, GitHub, Slack, Vercel, `sk-` keys, private keys,
+  JWTs, long `api_key`/`token`/`password` values) found none; every `ADDIS_API_KEY=` line in history is a
+  placeholder (`…` or `sk_…`) or code that reads the environment.

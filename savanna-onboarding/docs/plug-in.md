@@ -156,6 +156,10 @@ API, and add consent and authentication there. The body it sends:
 { "event": "savanna-onboarding:complete", "receivedAt": "2026-11-19T09:30:00.000Z", "recordId": 7, "detail": { "form": "passport", "…": "…" } }
 ```
 
+The full description of this POST, one body per event with the schemas, is **[openapi.yaml](openapi.yaml)**
+(OpenAPI 3.1, a webhook). Load it into any OpenAPI tool to build or test your receiving endpoint. Note the CORS
+answers your endpoint needs (described there). There is no authentication: add your own in your adapter.
+
 ## 5. Voice without a paid key
 
 Voice answers work in Chrome (on Android too) without any key: the browser's own speech recognition, for Amharic
