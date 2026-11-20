@@ -5,7 +5,7 @@
 //
 //   node tools/generate-audio-addis.cjs            (from savanna-onboarding/; the key is read from ../.env or the
 //                                                    environment variable ADDIS_API_KEY, and is never printed)
-//   options: --only key1,key2   --dry (list what would be made, with an estimate)   --lang om
+//   options: --only key1,key2   --dry (list what would be made, with an estimate)   --lang om   --fresh (new request id)
 //
 // Uses only Addis AI's documented TTS: POST /api/v1/voice/generations with text, voice_id, language, output_format and
 // client_request_id (required for paid generation; here a hash of the words, so a re-run is an idempotent replay).
@@ -24,6 +24,8 @@ const LANG = opt('--lang', 'om');
 const VOICE = { om: 'om-bikila', am: 'am-hamen' }[LANG];
 const only = (opt('--only', '') || '').split(',').filter(Boolean);
 const dry = args.includes('--dry');
+// --fresh: a new request id, so Addis AI makes the clip again instead of replaying an earlier (possibly cut-off) result
+const fresh = args.includes('--fresh') ? '-' + Date.now().toString(36) : '';
 
 function readKey() {
   if (process.env.ADDIS_API_KEY) return process.env.ADDIS_API_KEY.trim();
@@ -54,7 +56,7 @@ async function one(r) {
       const res = await fetch('https://api.addisassistant.com/api/v1/voice/generations', {
         method: 'POST', headers: { 'x-api-key': key, 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: r.text, voice_id: VOICE, language: LANG, output_format: 'mp3_44100',
-          client_request_id: 'savanna-clip-' + crypto.createHash('sha256').update(LANG + '\n' + VOICE + '\n' + r.text).digest('hex').slice(0, 40) })
+          client_request_id: 'savanna-clip-' + crypto.createHash('sha256').update(LANG + '\n' + VOICE + '\n' + r.text).digest('hex').slice(0, 40) + fresh })
       });
       if (res.status === 402) { stop = true; console.error('No credit left (402): stopped. Top up and run again; finished clips are kept.'); return; }
       if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + (await res.text()).split(key).join('[key]').slice(0, 200));

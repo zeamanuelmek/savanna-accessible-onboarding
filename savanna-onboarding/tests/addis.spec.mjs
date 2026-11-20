@@ -294,7 +294,7 @@ test.describe('the reference proxy (Node, fake fetch, no network)', () => {
     const sent = [];
     global.fetch = async (url, init) => {
       sent.push({ url: String(url), init });
-      if (String(url).endsWith('/api/v1/voice/generations')) return new Response(JSON.stringify({ data: { audio_url: 'https://cdn.example/clip.mp3' } }), { status: 200 });
+      if (String(url).endsWith('/api/v1/voice/generations')) return new Response(JSON.stringify({ data: { audio_url: 'https://cdn.addisassistant.com/audio/clips/x.mp3?sig=1' } }), { status: 200 });
       return new Response(Buffer.from('ID3-mp3-bytes'), { status: 200 });
     };
     const body = JSON.stringify({ text: 'ሰላም', lang: 'am' });
@@ -330,6 +330,40 @@ test.describe('the reference proxy (Node, fake fetch, no network)', () => {
     const line = logs.find(l => l.includes('tts upstream 422'));
     expect(line).toContain('CLIENT_REQUEST_ID_REQUIRED');
     expect(line).not.toContain('ሰላም'); // the learner's text is never logged
+  });
+
+  test('the key goes ONLY to Addis AI hosts: an audio link elsewhere is never fetched; redirects are never followed', async () => {
+    process.env.ADDIS_API_KEY = KEY;
+    const { handleTts, _test: { keyAllowed, onAddisDomain } } = addis();
+    const sent = [];
+    let link;
+    global.fetch = async (url, init = {}) => {
+      sent.push({ url: String(url), key: (init.headers || {})['x-api-key'], redirect: init.redirect });
+      if (String(url).endsWith('/api/v1/voice/generations')) return new Response(JSON.stringify({ data: { audio_url: link } }), { status: 201 });
+      return new Response(Buffer.from('ID3-linked-mp3'), { status: 200 });
+    };
+    // 1. a link to another host: not fetched at all, no audio
+    for (const bad of ['https://evil.example/steal.mp3', 'https://addisassistant.com.evil.example/a.mp3', 'http://cdn.addisassistant.com/a.mp3', 'https://user:pw@cdn.addisassistant.com/a.mp3']) {
+      link = bad; sent.length = 0;
+      const r = await call(handleTts, { body: JSON.stringify({ text: 'bad ' + bad, lang: 'om' }) });
+      expect(r.status, bad).toBe(502);
+      expect(sent.map(s => s.url), bad).toEqual(['https://api.addisassistant.com/api/v1/voice/generations']);
+    }
+    // 2. a link on Addis AI's own CDN: fetched, with the key, never following a redirect
+    link = 'https://cdn.addisassistant.com/audio/clips/1.mp3?sig=abc'; sent.length = 0;
+    let r = await call(handleTts, { body: JSON.stringify({ text: 'cdn', lang: 'om' }) });
+    expect([r.status, Buffer.from(r.body).toString()]).toEqual([200, 'ID3-linked-mp3']);
+    expect(sent.map(s => [s.url, s.key, s.redirect])).toEqual([['https://api.addisassistant.com/api/v1/voice/generations', KEY, 'error'], [link, KEY, 'error']]);
+    // 3. another Addis AI subdomain (not on the allow-list): fetched WITHOUT the key
+    link = 'https://media.addisassistant.com/a.mp3'; sent.length = 0;
+    r = await call(handleTts, { body: JSON.stringify({ text: 'media', lang: 'om' }) });
+    expect(r.status).toBe(200);
+    expect(sent[1]).toEqual({ url: link, key: undefined, redirect: 'error' });
+    // the allow-list itself
+    expect(keyAllowed('https://api.addisassistant.com/x')).toBe(true);
+    expect(keyAllowed('https://api.addisassistant.com:8443/x')).toBe(false);
+    expect(keyAllowed('https://api.addisassistant.com.evil.example/x')).toBe(false);
+    expect(onAddisDomain('https://evil-addisassistant.com/x')).toBe(false);
   });
 
   test('STT: multipart audio + request_data with language_code; transcription returned; 402 -> no_credit', async () => {

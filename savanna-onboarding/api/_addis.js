@@ -24,11 +24,16 @@
    text + language + voice, so the same words are never paid for twice (here in memory, and in the browser).
 
    The key is read ONLY from the environment variable ADDIS_API_KEY. It is never logged, never sent to the browser,
-   and never part of an error message. */
+   and never part of an error message. It is sent ONLY to Addis AI's own hosts (KEY_HOSTS, an allow-list, 20 Nov),
+   never through a redirect; an audio link outside addisassistant.com is not fetched. */
 'use strict';
 const crypto = require('crypto');
 
 const API = 'https://api.addisassistant.com';
+// The ONLY hosts that ever receive our key (allow-list, 20 Nov). Anything else, including an audio link in Addis AI's
+// answer that points elsewhere, never gets it; a link outside Addis AI's own domain is not fetched at all.
+const KEY_HOSTS = ['api.addisassistant.com', 'cdn.addisassistant.com'];
+const ADDIS_DOMAIN = 'addisassistant.com';
 const VOICES = { am: 'am-hamen', om: 'om-bikila' };
 const LIMITS = { ttsChars: 600, sttBytes: 2 * 1024 * 1024, jsonBytes: 16 * 1024, upstreamMs: 25000 };
 const STT_TYPES = { 'audio/webm': 'webm', 'audio/mp4': 'm4a', 'audio/x-m4a': 'm4a', 'audio/wav': 'wav', 'audio/x-wav': 'wav', 'audio/wave': 'wav', 'audio/mpeg': 'mp3', 'audio/mp3': 'mp3' };
@@ -112,6 +117,28 @@ function upstreamCode(status) {
   return { status: 502, code: 'unavailable' };
 }
 
+/** True when `url` is https on one of KEY_HOSTS: only then may the key be attached. */
+function keyAllowed(url) {
+  try { const u = new URL(url); return u.protocol === 'https:' && !u.username && !u.password && KEY_HOSTS.includes(u.hostname) && (!u.port || u.port === '443'); } catch (e) { return false; }
+}
+/** True when `url` is https on Addis AI's own domain (addisassistant.com or a subdomain). */
+function onAddisDomain(url) {
+  try { const u = new URL(url); return u.protocol === 'https:' && !u.username && !u.password && (u.hostname === ADDIS_DOMAIN || u.hostname.endsWith('.' + ADDIS_DOMAIN)); } catch (e) { return false; }
+}
+/** fetch() that attaches the key only for allow-listed hosts and never follows a redirect (a redirect could carry the
+ *  key header to another host). Throws for any other host, so a mistake can never leak the key. */
+function addisFetch(url, init, key) {
+  if (!keyAllowed(url)) throw new Error('host not allowed');
+  return fetch(url, Object.assign({}, init, { headers: Object.assign({}, init.headers, { 'x-api-key': key }), redirect: 'error' }));
+}
+/** Downloads the audio link from Addis AI's answer: only on Addis AI's domain; the key only for allow-listed hosts. */
+async function fetchAudioLink(link, key) {
+  if (!onAddisDomain(link)) { console.warn('[addis-proxy] tts: audio link not on addisassistant.com, not fetched'); return null; }
+  const init = { signal: AbortSignal.timeout(LIMITS.upstreamMs) };
+  const a = keyAllowed(link) ? await addisFetch(link, init, key) : await fetch(link, Object.assign(init, { redirect: 'error' }));
+  return a.ok ? Buffer.from(await a.arrayBuffer()) : null;
+}
+
 function guard(req, res, kind) {
   // Readiness check for the module: GET answers { ready } only (is a key set?). No upstream call, nothing paid, the
   // key itself is never shown. The voice panel uses it to show "Voice: Addis AI" or "Voice: your browser".
@@ -149,22 +176,19 @@ async function handleTts(req, res) {
   const hit = ttsCache.get(k);
   if (hit) return send(res, 200, hit, { 'X-Cache': 'hit' });
   try {
-    const r = await fetch(API + '/api/v1/voice/generations', {
+    const r = await addisFetch(API + '/api/v1/voice/generations', {
       method: 'POST',
-      headers: { 'x-api-key': key, 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       // the same words always get the same request id (a hash), so a repeat is an idempotent replay, not a new charge
       body: JSON.stringify({ text, voice_id: voice, language: lang, output_format: 'mp3_44100', client_request_id: 'savanna-' + k.slice(0, 40) }),
       signal: AbortSignal.timeout(LIMITS.upstreamMs)
-    });
+    }, key);
     if (!r.ok) { const u = upstreamCode(r.status); await logUpstream('tts', r, text); return fail(res, u.status, u.code); }
     const json = await r.json();
     const d = (json && json.data) || {};
     let buf = null;
     if (typeof d.audio === 'string' && /^data:audio\/[a-z0-9.+-]+;base64,/i.test(d.audio)) buf = Buffer.from(d.audio.slice(d.audio.indexOf(',') + 1), 'base64');
-    else if (d.audio_url) {
-      const a = await fetch(d.audio_url, { headers: { 'x-api-key': key }, signal: AbortSignal.timeout(LIMITS.upstreamMs) });
-      if (a.ok) buf = Buffer.from(await a.arrayBuffer());
-    }
+    else if (typeof d.audio_url === 'string') buf = await fetchAudioLink(d.audio_url, key);
     if (!buf || !buf.length) { console.warn('[addis-proxy] tts: no audio in the response'); return fail(res, 502, 'unavailable'); }
     cachePut(k, buf);
     return send(res, 200, buf, { 'X-Cache': 'miss' });
@@ -191,7 +215,7 @@ async function handleStt(req, res) {
     const form = new FormData();
     form.append('audio', new Blob([audio], { type }), 'answer.' + ext);
     form.append('request_data', JSON.stringify({ language_code: lang }));
-    const r = await fetch(API + '/api/v2/stt', { method: 'POST', headers: { 'x-api-key': key }, body: form, signal: AbortSignal.timeout(LIMITS.upstreamMs) });
+    const r = await addisFetch(API + '/api/v2/stt', { method: 'POST', headers: {}, body: form, signal: AbortSignal.timeout(LIMITS.upstreamMs) }, key);
     if (!r.ok) { const u = upstreamCode(r.status); await logUpstream('stt', r, ''); return fail(res, u.status, u.code); }
     const json = await r.json();
     const text = json && json.data && typeof json.data.transcription === 'string' ? json.data.transcription.trim() : '';
@@ -202,4 +226,4 @@ async function handleStt(req, res) {
   }
 }
 
-module.exports = { handleTts, handleStt, VOICES, LIMITS, _test: { originAllowed, upstreamCode, cacheKey } };
+module.exports = { handleTts, handleStt, VOICES, LIMITS, _test: { originAllowed, upstreamCode, cacheKey, keyAllowed, onAddisDomain } };

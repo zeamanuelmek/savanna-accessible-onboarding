@@ -1796,7 +1796,8 @@ clearly shown, (3) keyboard-only path with visible focus and no traps. Then scre
 **Live check first (19 Nov, before any change):** `/api/tts` and `/api/stt` on the live site, with the site's Origin.
 - The earlier **422 is gone**. `POST /api/tts` (Amharic) answers 200 with an MP3, `X-Cache: miss` (a fresh Addis AI call).
 - **STT works:** a recorded Amharic clip (`am/a11y-contrast-off.mp3`) came back as `{"text":"ከፍተኛ እንሥር ጠፍቷል"}` (200).
-- **TTS audio looks truncated (open issue):** two sentences ("ስምዎ ማን ነው?", "ስሜ አበበ በቀለ ነው።") came back as
+- ~~**TTS audio looks truncated (open issue)**~~ **Wrong finding, corrected 20 Nov:** the test, not the proxy, was at
+  fault (Windows' curl turned the Amharic letters into "?" marks; see the 20 Nov section). Original note: two sentences ("ስምዎ ማን ነው?", "ስሜ አበበ በቀለ ነው።") came back as
   0.46 s and 0.42 s of sound, and Addis AI's own STT finds no words in them. Not fixed: the proxy uses the MP3 inline
   in `data.audio`; finding out why needs Addis AI's raw answer (the key). The learner path is not affected: reading
   uses our recorded clips first. Also noted: when `data.audio` is missing, the proxy sends the key to whatever host
@@ -1862,3 +1863,46 @@ question removed on 16 Nov; `offline.spec.mjs` used the cache name `v10` (it now
 - Not re-run cleanly today: career, engine, readaloud, readback, design, date-language, known-issues,
   reference-audit (none touched by these changes). Before the memory stop they ran in the parallel run without
   failures, except the a11y "menu open" screen (a 30 s timeout under load; passed in the clean re-run).
+
+## Pre-pitch fixes (20 Nov): the Addis AI key, the "cut-off" speech, the Oromo clips
+
+Asked by the team, with a one-hour limit, then freeze for pitching day.
+
+**1. The key only goes to Addis AI (security fix, `api/_addis.js`).** Before: if Addis AI's answer had no inline audio,
+the proxy fetched `data.audio_url` *with our key*, whatever host it named. Now:
+- an allow-list `KEY_HOSTS` = `api.addisassistant.com`, `cdn.addisassistant.com`. Every call that carries the key goes
+  through `addisFetch()`, which refuses any other host (https only, port 443, no user:password) and never follows a
+  redirect (`redirect: 'error'`; a redirect could carry the key header elsewhere);
+- an audio link outside `addisassistant.com` is not fetched at all; a link on another Addis AI subdomain is fetched
+  without the key.
+- New test (`addis.spec.mjs`, "the key goes ONLY to Addis AI hosts"): links to `evil.example`, a look-alike
+  `addisassistant.com.evil.example`, plain http and `user:pw@` are never fetched; the CDN link gets the key and no
+  redirect; another subdomain gets no key.
+
+**2. The "cut-off" text-to-speech was a test mistake, not a proxy bug.** The raw Addis AI answer (status 201, JSON):
+`data.audio` is the whole MP3 as a base64 `data:` URL (not chunked, not streamed), plus a signed `data.audio_url` on
+`cdn.addisassistant.com` (`playback.requires_auth: true`, expires after one hour) and `duration_seconds`. Both give the
+same bytes. The proxy already read it correctly. Yesterday's 0.42–0.46 s results came from sending the Amharic text
+with curl in Git Bash on Windows, which turned the Ethiopic letters into "?" marks: Addis AI read out question
+marks (and two different "?" texts of the same length even shared a cache entry). Sent as real UTF-8 (Node), the
+**live** proxy returned "ስሜ አበበ በቀለ ነው።" 1.45 s, "ስልክ ቁጥርዎ ምንድን ነው?" 1.54 s, "እንኳን ደህና መጡ። ይህ ቅጽ ጥቂት
+ጥያቄዎችን ይጠይቃል።" 3.62 s, and the **live** `/api/stt` read them back: "ስሜ አበበ በቀለ ነው", "ስልክ ቁጥሩ ምንድነው",
+"እንኳን ደህና መጥቶ ይህ ከጽቂት ጥያቄዎችን ይጠይቃል". Live Addis AI TTS stays on; no proxy reading change was needed.
+
+**3. Oromo clips (made with Addis AI on 15–16 Nov).** All 431 `om/` clips measured with ffprobe. Every sentence clip
+has a normal speaking rate (none faster than 22 characters a second). 47 clips were under 1 second, all single words
+or numbers, and some were really cut: e.g. `num-1` "tokko" 0.22 s and `num-8` "saddeet" 0.23 s, against 0.53 s and
+0.89 s when made again. Addis AI's output for single words varies from call to call, so: all 47 made again with a new
+request id (`generate-audio-addis.cjs --fresh`, new option), the longer copy of each kept (a cut only ever
+shortens), and anything still shorter than its text needs (max 0.5 s, characters ÷ 14) made again, up to two more
+times. Result: all 47 pass; 37 got longer (e.g. "tokko" 0.22 → 0.93 s, "kudha sagal" 0.82 → 2.45 s, "AAAPD"
+0.52 → 1.44 s), 10 kept the old copy. Manifest rewritten (`check-audio.cjs`: 857 of 857 clips found). Addis AI's STT
+cannot check single words (it returns "" even for a good "Eeyyee"), so the native speaker should still listen to the
+numbers and months.
+
+`sw.js` cache name v13 → v14, so phones that already played an old clip get the new one.
+
+**Tests (one worker):** `addis.spec.mjs` 38 passed (both sizes). dob-voice, readaloud, readback, offline, voice-engine:
+114 passed, 2 failed on timing (a 30 s timeout while loading; a step under load) and both passed on a re-run, with
+`offline.spec.mjs` again after the cache change (16 passed).
+
