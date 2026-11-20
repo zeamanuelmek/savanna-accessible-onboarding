@@ -1931,3 +1931,26 @@ server to list). One warning left, a false alarm: `ethDate` says "an exact date 
 - a scan of the whole history for secret shapes (AWS, Google, GitHub, Slack, Vercel, `sk-` keys, private keys,
   JWTs, long `api_key`/`token`/`password` values) found none; every `ADDIS_API_KEY=` line in history is a
   placeholder (`…` or `sk_…`) or code that reads the environment.
+
+## "I heard…" on name fields: a pointer to "Spell it" (20 Nov, team request)
+
+Audio-first learners did not know the "Spell it" button above the transcript exists: the spoken message after
+"I heard …" only named the three buttons below. Now, **on name fields only** (where "Spell it" is shown:
+`isNameField`, i.e. the name questions and the staff name; not phone, ID or date), one more sentence follows:
+- en: To hear the name letter by letter, choose "Spell it" above.
+- am: ስሙን ፊደል በፊደል ለመስማት፣ ከላይ ያለውን «ፊደል በፊደል አንብብ» ይምረጡ። (the team's wording)
+- om: Maqicha qubee qubeen dhaggeeffachuuf, "Qubee qubeen dubbisi" isa gubbaa jiru filadhu. **DRAFT** for
+  native-speaker review.
+The button's name is filled in from the `spell` label, so the sentence always matches the button.
+It is (1) a separate recorded clip `msg-heard-spell`, played after `msg-heard-choose-type`; (2) visible, as a hint
+below the three buttons (`data-ref="heard-spell"`); (3) in the status live region, after "I heard: … Choose …", so
+screen readers announce it. The read-back and text-to-speech code is unchanged (one more item in the "I heard"
+queue).
+Clips: `am/msg-heard-spell.mp3` with edge-tts am-ET-MekdesNeural (`tools/generate-audio.py --only`, 5.6 s);
+`om/msg-heard-spell.mp3` with Addis AI om-bikila (`tools/generate-audio-addis.cjs --lang om --only`, 5.5 s).
+Addis AI's STT read both back ("ስሙም ፊደል በፊደል ለመስማት ከላይ ያለውን ፊደል በፊደል አንብብ ይምረቱ";
+"maqichaa qubee qubee nageeffachuuf qubee qubeen dubbisii isa gubbaa jiruu filatti"). Audio script regenerated
+(`tools/audio-script.cjs`), `tools/check-audio.cjs`: 859 of 859 clips found, manifest 863 clips.
+Tests: `readback.spec.mjs`: the English name test now expects the sentence (spoken, on screen, in the live region);
+new Amharic test: the clips play in the order msg-heard, msg-heard-choose-type, msg-heard-spell, and on the phone
+question no pointer is played or shown. The existing phone test still expects exactly the three spoken pieces.

@@ -29,7 +29,7 @@ test('the transcript can be corrected before it is used, and is saved only on Co
   await say(page, { alts: ['Abebe Kebedde', 'Abebe Kebede'] });
   await speakAnswer(page);
   await expect(page.locator('[data-ref=heard-edit]')).toBeFocused(); // focus on the editable transcript
-  await expect(page.locator('.dm-status')).toHaveText('I heard: Abebe Kebedde. Choose Use this answer, Say it again, or Type it instead.');
+  await expect(page.locator('.dm-status')).toHaveText('I heard: Abebe Kebedde. Choose Use this answer, Say it again, or Type it instead. To hear the name letter by letter, choose "Spell it" above.'); // name field: the pointer to Spell it
   await expect(page.locator('[data-ref=heard-edit]')).toHaveValue('Abebe Kebedde');
   await expect(page.locator('[data-ref=input]')).toHaveValue(''); // not in the answer yet
   await page.locator('[data-act=heard-alt]').first().click(); // "Or did you say: Abebe Kebede"
@@ -192,6 +192,6 @@ test('recording feedback in Amharic too: announced start and what was heard', as
   await expect(page.locator('.dm-status')).toHaveText('እየተቀዳ ነው። አሁን ይናገሩ፤ ሲጨርሱ «ማዳመጥ አቁም»ን ይጫኑ።');
   await expect(page.locator('[data-act=speak]')).toBeFocused();
   await page.locator('[data-act=speak]').click();
-  await expect(page.locator('.dm-status')).toHaveText('የሰማሁት፦ አበበ። «ይህን መልስ ተጠቀም»፣ «እንደገና ይናገሩ» ወይም «በመጻፍ ይመልሱ»ን ይምረጡ።');
+  await expect(page.locator('.dm-status')).toHaveText('የሰማሁት፦ አበበ። «ይህን መልስ ተጠቀም»፣ «እንደገና ይናገሩ» ወይም «በመጻፍ ይመልሱ»ን ይምረጡ። ስሙን ፊደል በፊደል ለመስማት፣ ከላይ ያለውን «ፊደል በፊደል አንብብ» ይምረጡ።');
   await expect(page.locator('[data-ref=heard-edit]')).toBeFocused();
 });

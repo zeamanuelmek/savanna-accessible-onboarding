@@ -429,5 +429,6 @@
  "num-1000": "kuma",
  "num-and": "fi",
  "voice-allow": "Eeyyee, sagalee koo fayyadami",
- "voice-deny": "Lakki, nan barreessa ykn nan tuqa"
+ "voice-deny": "Lakki, nan barreessa ykn nan tuqa",
+ "msg-heard-spell": "Maqicha qubee qubeen dhaggeeffachuuf, \"Qubee qubeen dubbisi\" isa gubbaa jiru filadhu."
 }

@@ -105,7 +105,7 @@
       readFail: 'Reading aloud isn\'t available right now. Everything is written on the screen.',
       selected: 'Selected:', notSelected: 'Not selected:',
       heardChoose: 'Choose {yes}, {again}, or {type}.', yourAnswer: 'Your answer:', nothingTyped: 'Nothing is typed yet.',
-      spell: 'Spell it', readBack: 'Read back my answer', readBackId: 'Read back the number', idNote: 'People near you may hear this.',
+      spell: 'Spell it', heardSpell: 'To hear the name letter by letter, choose "{spell}" above.', readBack: 'Read back my answer', readBackId: 'Read back the number', idNote: 'People near you may hear this.',
       readItAloud: 'Read it aloud', cancel: 'Cancel', readAll: 'Read all my answers',
       readAllIdQ: 'Your ID number is in these answers. People near you may hear it.', readAllWith: 'Read with my ID number', readAllWithout: 'Read without it',
       voiceRemoteFailed: 'The speech service did not answer. Please try again, or type your answer.', voiceNoCredit: 'The speech service is not available right now. Please type your answer.',
@@ -218,7 +218,7 @@
       readFail: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
       selected: 'ተመርጧል፦', notSelected: 'አልተመረጠም፦',
       heardChoose: '«{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።', yourAnswer: 'መልስዎ፦', nothingTyped: 'እስካሁን ምንም አልተጻፈም።',
-      spell: 'ፊደል በፊደል አንብብ', readBack: 'መልሴን አንብብልኝ', readBackId: 'ቁጥሩን አንብብልኝ', idNote: 'በአጠገብዎ ያሉ ሰዎች ሊሰሙት ይችላሉ።',
+      spell: 'ፊደል በፊደል አንብብ', heardSpell: 'ስሙን ፊደል በፊደል ለመስማት፣ ከላይ ያለውን «{spell}» ይምረጡ።', readBack: 'መልሴን አንብብልኝ', readBackId: 'ቁጥሩን አንብብልኝ', idNote: 'በአጠገብዎ ያሉ ሰዎች ሊሰሙት ይችላሉ።',
       readItAloud: 'ጮክ ብለህ አንብበው', cancel: 'ተው', readAll: 'መልሶቼን ሁሉ አንብብልኝ',
       readAllIdQ: 'የመታወቂያ ቁጥርዎ በእነዚህ መልሶች ውስጥ አለ። በአጠገብዎ ያሉ ሰዎች ሊሰሙት ይችላሉ።', readAllWith: 'ከመታወቂያ ቁጥሬ ጋር አንብብ', readAllWithout: 'ያለ እሱ አንብብ',
       voiceRemoteFailed: 'የንግግር አገልግሎቱ አልመለሰም። እባክዎ እንደገና ይሞክሩ፣ ወይም መልስዎን ይጻፉ።', voiceNoCredit: 'የንግግር አገልግሎቱ አሁን አይገኝም። እባክዎ መልስዎን ይጻፉ።',
@@ -341,6 +341,7 @@
       yourAnswer: 'Deebii kee:',
       nothingTyped: 'Ammaaf wanti barreeffame hin jiru.',
       spell: 'Qubee qubeen dubbisi',
+      heardSpell: 'Maqicha qubee qubeen dhaggeeffachuuf, "{spell}" isa gubbaa jiru filadhu.', // DRAFT (20 Nov): native-speaker review
       readBack: 'Deebii koo naaf dubbisi',
       readBackId: 'Lakkoofsa naaf dubbisi',
       idNote: 'Namoonni si bira jiran dhagahuu danda\'u.',
@@ -2151,7 +2152,8 @@
       }
       return h + '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="heard-yes">' + t('yes', lang) + '</button>' +
         '<button type="button" class="dm-btn" data-act="heard-again">' + t('again', lang) + '</button>' +
-        '<button type="button" class="dm-btn" data-act="heard-type">' + t(choice && f.type !== 'ethdate' ? 'tapInstead' : 'type', lang) + '</button></div></div>';
+        '<button type="button" class="dm-btn" data-act="heard-type">' + t(choice && f.type !== 'ethdate' ? 'tapInstead' : 'type', lang) + '</button></div>' +
+        (!choice && isNameField(f) ? '<p class="dm-hint" data-ref="heard-spell">' + esc(t('heardSpell', lang, { spell: t('spell', lang) })) + '</p>' : '') + '</div>';
     },
 
     /* Date of birth by voice, one part at a time: the year, then the month, then the day (or only the year, or the
@@ -2734,11 +2736,14 @@
     this.setVoiceButton(false);
     this.setHeard(View.heard(this.vm(), v));
     var choice = f.type === 'choice' || f.type === 'consent' || f.type === 'multi';
-    this.status(t('heardSay', lang, { text: v.shown, yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }));
+    // name fields: also point to "Spell it" above (on the screen, in the announcement and read aloud, 20 Nov)
+    var spellHint = !choice && !v.hits && !v.date && isNameField(f) ? t('heardSpell', lang, { spell: t('spell', lang) }) : '';
+    this.status(t('heardSay', lang, { text: v.shown, yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }) + (spellHint ? ' ' + spellHint : ''));
     var ed = this.ref('heard-edit') || this.ref('heard-h'); if (ed) ed.focus();
     // read back what was heard, so it can be checked by ear, then the three choices
     var back = v.hits || v.date ? [{ key: null, text: t('heard', lang) + ' ' + v.shown, lang: lang }] : readBackItems(f, v.value, lang, 'heard');
     back.push({ key: 'msg-heard-choose-' + (choice ? 'tap' : 'type'), text: t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t(choice ? 'tapInstead' : 'type', lang) }), lang: lang });
+    if (spellHint) back.push({ key: 'msg-heard-spell', text: spellHint, lang: lang });
     // if nothing can read it, stay quiet: "I heard: … Choose …" is already announced and on the screen
     Player.play(back, lang, { audioIssue: function () {} });
   };
@@ -3112,6 +3117,7 @@
     add('Messages', 'msg-heard', t('heard', lang)); add('Messages', 'msg-your-answer', t('yourAnswer', lang)); add('Messages', 'msg-nothing-typed', t('nothingTyped', lang));
     add('Messages', 'msg-heard-choose-type', t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t('type', lang) }));
     add('Messages', 'msg-heard-choose-tap', t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t('tapInstead', lang) }));
+    add('Messages', 'msg-heard-spell', t('heardSpell', lang, { spell: t('spell', lang) }));
     add('Messages', 'msg-selected', t('selected', lang)); add('Messages', 'msg-not-selected', t('notSelected', lang));
     add('Messages', 'msg-offline', t('offline', lang)); add('Messages', 'msg-online', t('online', lang));
     Object.keys(ERROR_CLIPS).forEach(function (k) { add('Messages', ERROR_CLIPS[k], t(k, lang)); });
