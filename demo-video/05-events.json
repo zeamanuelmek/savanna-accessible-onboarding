@@ -1,0 +1,552 @@
+{
+  "scene": "05",
+  "video": "05-passport.webm",
+  "site": "https://savanna-accessible-onboarding.vercel.app",
+  "recordedAt": "2026-11-20T13:39:13.286Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "timeBase": "ms from the start of the video (the page was created at t=0; the first frames may be blank until the page paints)",
+  "notes": [],
+  "events": [
+    {
+      "t": 339,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/passport.html"
+    },
+    {
+      "t": 511,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 3523,
+      "type": "click",
+      "x": 825,
+      "y": 483,
+      "byKeyboard": false,
+      "target": "label \"Yes\""
+    },
+    {
+      "t": 3525,
+      "type": "click",
+      "x": 825,
+      "y": 483,
+      "byKeyboard": false,
+      "target": "input[radio] \"Yes\""
+    },
+    {
+      "t": 3528,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 3532,
+      "type": "speech-synthesis",
+      "text": "Yes",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4997,
+      "type": "click",
+      "x": 822,
+      "y": 697,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 5005,
+      "type": "speech-synthesis",
+      "text": "Support Passport. It is private.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5008,
+      "type": "speech-synthesis",
+      "text": "Step 2 of 4: what helps you, from a list.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5009,
+      "type": "speech-synthesis",
+      "text": "Choose all that apply.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5009,
+      "type": "speech-synthesis",
+      "text": "Below are Continue and Back.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5010,
+      "type": "speech-synthesis",
+      "text": "What would help you? Choose all that fit.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5010,
+      "type": "speech-synthesis",
+      "text": "Works with a screen reader",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5011,
+      "type": "speech-synthesis",
+      "text": "Audio for everything",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5012,
+      "type": "speech-synthesis",
+      "text": "Sign language interpreter",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5012,
+      "type": "speech-synthesis",
+      "text": "Captions on videos and calls",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5013,
+      "type": "speech-synthesis",
+      "text": "Simple words",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5013,
+      "type": "speech-synthesis",
+      "text": "Instructions in writing",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5014,
+      "type": "speech-synthesis",
+      "text": "Step-free building access",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5014,
+      "type": "speech-synthesis",
+      "text": "Extra time for tasks and tests",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5014,
+      "type": "speech-synthesis",
+      "text": "Flexible working hours",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5014,
+      "type": "speech-synthesis",
+      "text": "Work from home",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5015,
+      "type": "speech-synthesis",
+      "text": "Someone to help with forms",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 7485,
+      "type": "click",
+      "x": 825,
+      "y": 395,
+      "byKeyboard": false,
+      "target": "label \"Works with a screen reader\""
+    },
+    {
+      "t": 7486,
+      "type": "click",
+      "x": 825,
+      "y": 395,
+      "byKeyboard": false,
+      "target": "input[checkbox] \"Works with a screen reader\""
+    },
+    {
+      "t": 7486,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 7488,
+      "type": "speech-synthesis",
+      "text": "Works with a screen reader",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9051,
+      "type": "click",
+      "x": 825,
+      "y": 854,
+      "byKeyboard": false,
+      "target": "label \"Extra time for tasks and tests\""
+    },
+    {
+      "t": 9052,
+      "type": "click",
+      "x": 825,
+      "y": 854,
+      "byKeyboard": false,
+      "target": "input[checkbox] \"Extra time for tasks and tests\""
+    },
+    {
+      "t": 9054,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9060,
+      "type": "speech-synthesis",
+      "text": "Extra time for tasks and tests",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9660,
+      "type": "mark",
+      "what": "Screen reader + Extra time chosen"
+    },
+    {
+      "t": 11735,
+      "type": "click",
+      "x": 822,
+      "y": 908,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 11742,
+      "type": "speech-synthesis",
+      "text": "Support Passport. It is private.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 11748,
+      "type": "speech-synthesis",
+      "text": "Step 3 of 4: anything else that helps you, in your own words.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 11749,
+      "type": "speech-synthesis",
+      "text": "Type it.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 11749,
+      "type": "speech-synthesis",
+      "text": "You can skip it.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 11750,
+      "type": "speech-synthesis",
+      "text": "Below are Continue and Back.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 11754,
+      "type": "speech-synthesis",
+      "text": "Is there anything else that helps you? Write it in your own words.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14039,
+      "type": "click",
+      "x": 822,
+      "y": 623,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 14045,
+      "type": "speech-synthesis",
+      "text": "Support Passport. It is private.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14051,
+      "type": "speech-synthesis",
+      "text": "Step 4 of 4: who can see your Support Passport. Only you is chosen for you.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14051,
+      "type": "speech-synthesis",
+      "text": "Choose one answer.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14051,
+      "type": "speech-synthesis",
+      "text": "Below are Continue and Back.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14051,
+      "type": "speech-synthesis",
+      "text": "Who can see this? Private is chosen for you. You can change this at any time.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14051,
+      "type": "speech-synthesis",
+      "text": "Only me. Ask me every time I apply for a job.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14051,
+      "type": "speech-synthesis",
+      "text": "Me and my trainers at ALX",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 15614,
+      "type": "click",
+      "x": 825,
+      "y": 389,
+      "byKeyboard": false,
+      "target": "label \"Only me. Ask me every time I apply for a job.\""
+    },
+    {
+      "t": 15615,
+      "type": "click",
+      "x": 825,
+      "y": 389,
+      "byKeyboard": false,
+      "target": "input[radio] \"Only me. Ask me every time I apply for a job.\""
+    },
+    {
+      "t": 17135,
+      "type": "click",
+      "x": 822,
+      "y": 651,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 17138,
+      "type": "speech-synthesis",
+      "text": "Support Passport. It is private.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 17141,
+      "type": "speech-synthesis",
+      "text": "Check your answers: 4 answers, each with a Change button. At the bottom is Save my Support Passport.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 17749,
+      "type": "mark",
+      "what": "check your answers"
+    },
+    {
+      "t": 20632,
+      "type": "click",
+      "x": 825,
+      "y": 1010,
+      "byKeyboard": false,
+      "target": "button \"Save my Support Passport\""
+    },
+    {
+      "t": 20642,
+      "type": "speech-synthesis",
+      "text": "Support Passport. It is private.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 20642,
+      "type": "speech-synthesis",
+      "text": "Your Support Passport is saved. You can change it at any time. Now you can find jobs that offer this support. Below are the next steps.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 20643,
+      "type": "speech-synthesis",
+      "text": "Your Support Passport is saved You can change it at any time. Now you can find jobs that offer this support.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 21242,
+      "type": "mark",
+      "what": "saved"
+    },
+    {
+      "t": 24109,
+      "type": "click",
+      "x": 60,
+      "y": 1045,
+      "byKeyboard": false,
+      "target": "a \"My Profile\""
+    },
+    {
+      "t": 24183,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/profile.html"
+    },
+    {
+      "t": 24276,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 24311,
+      "type": "speech-synthesis",
+      "text": "My profile.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 24311,
+      "type": "speech-synthesis",
+      "text": "My profile: 4 answers, each with a Change button. At the bottom is Save my changes.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 24321,
+      "type": "speech-synthesis",
+      "text": "Below the form are your ID status with Add your ID, your Support Passport, and Delete my data from this phone.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27030,
+      "type": "click",
+      "x": 1027,
+      "y": 755,
+      "byKeyboard": false,
+      "target": "a \"Open my Support Passport\""
+    },
+    {
+      "t": 27097,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/passport.html"
+    },
+    {
+      "t": 27168,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 27203,
+      "type": "speech-synthesis",
+      "text": "Your Support Passport: what helps you, and who can see it. Below are buttons to read it, change it and manage sharing.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27207,
+      "type": "speech-synthesis",
+      "text": "My Support Passport",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27207,
+      "type": "speech-synthesis",
+      "text": "Works with a screen reader",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27212,
+      "type": "speech-synthesis",
+      "text": "Extra time for tasks and tests",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27215,
+      "type": "speech-synthesis",
+      "text": "Who can see this",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27215,
+      "type": "speech-synthesis",
+      "text": "Only you. When you apply for a job, we ask you each time. An employer sees your support list only if you say yes for that job.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27216,
+      "type": "speech-synthesis",
+      "text": "What you wrote in your own words stays on this phone and is not shared.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27216,
+      "type": "speech-synthesis",
+      "text": "Shared with employers",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27217,
+      "type": "speech-synthesis",
+      "text": "You have not shared it with any employer.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27763,
+      "type": "mark",
+      "what": "Support Passport card shown"
+    },
+    {
+      "t": 31272,
+      "type": "end"
+    }
+  ]
+}

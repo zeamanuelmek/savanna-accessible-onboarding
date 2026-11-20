@@ -1,0 +1,40 @@
+{
+  "scene": "08",
+  "video": "08-fallback.webm",
+  "site": "https://savanna-accessible-onboarding.vercel.app",
+  "recordedAt": "2026-11-20T13:40:44.268Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "timeBase": "ms from the start of the video (the page was created at t=0; the first frames may be blank until the page paints)",
+  "notes": [
+    "Recording browser only: GET /api/stt (the proxy readiness check) answered with HTTP 403 for this page, so the module falls back to the browser engine. The site is unchanged."
+  ],
+  "events": [
+    {
+      "t": 377,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/signup.html"
+    },
+    {
+      "t": 618,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 618,
+      "type": "readiness-check-blocked",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 1272,
+      "type": "mark",
+      "what": "engine line: ድምፅ፦ የእርስዎ ብራውዘር"
+    },
+    {
+      "t": 9642,
+      "type": "end"
+    }
+  ]
+}

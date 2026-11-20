@@ -1,0 +1,358 @@
+{
+  "scene": "07",
+  "video": "07-host-demo.webm",
+  "site": "https://savanna-accessible-onboarding.vercel.app",
+  "recordedAt": "2026-11-20T13:40:11.772Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "timeBase": "ms from the start of the video (the page was created at t=0; the first frames may be blank until the page paints)",
+  "notes": [],
+  "events": [
+    {
+      "t": 473,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/host-demo/"
+    },
+    {
+      "t": 630,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 3634,
+      "type": "click",
+      "x": 700,
+      "y": 880,
+      "byKeyboard": false,
+      "target": "label \"Me, for myself\""
+    },
+    {
+      "t": 3635,
+      "type": "click",
+      "x": 700,
+      "y": 880,
+      "byKeyboard": false,
+      "target": "input[radio] \"Me, for myself\""
+    },
+    {
+      "t": 3638,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 3641,
+      "type": "speech-synthesis",
+      "text": "Me, for myself",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 5126,
+      "type": "click",
+      "x": 697,
+      "y": 540,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 5129,
+      "type": "speech-synthesis",
+      "text": "What should we call you? Amharic or English letters are both fine. You can add your full name later in My profile, if you want to.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 6608,
+      "type": "click",
+      "x": 700,
+      "y": 303,
+      "byKeyboard": false,
+      "target": "input[text] \"\""
+    },
+    {
+      "t": 7217,
+      "type": "key",
+      "key": "M",
+      "code": "KeyM",
+      "mods": [],
+      "target": "input[text] \"\""
+    },
+    {
+      "t": 7370,
+      "type": "key",
+      "key": "e",
+      "code": "KeyE",
+      "mods": [],
+      "target": "input[text] \"M\""
+    },
+    {
+      "t": 7523,
+      "type": "key",
+      "key": "r",
+      "code": "KeyR",
+      "mods": [],
+      "target": "input[text] \"Me\""
+    },
+    {
+      "t": 7676,
+      "type": "key",
+      "key": "o",
+      "code": "KeyO",
+      "mods": [],
+      "target": "input[text] \"Mer\""
+    },
+    {
+      "t": 7828,
+      "type": "key",
+      "key": "n",
+      "code": "KeyN",
+      "mods": [],
+      "target": "input[text] \"Mero\""
+    },
+    {
+      "t": 9458,
+      "type": "click",
+      "x": 697,
+      "y": 573,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 9461,
+      "type": "speech-synthesis",
+      "text": "What is your phone number? We use it only to send you a link to continue. For example 0911 23 45 67.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 10955,
+      "type": "click",
+      "x": 700,
+      "y": 279,
+      "byKeyboard": false,
+      "target": "input[tel] \"\""
+    },
+    {
+      "t": 11562,
+      "type": "key",
+      "key": "0",
+      "code": "Digit0",
+      "mods": [],
+      "target": "input[tel] \"\""
+    },
+    {
+      "t": 11714,
+      "type": "key",
+      "key": "9",
+      "code": "Digit9",
+      "mods": [],
+      "target": "input[tel] \"0\""
+    },
+    {
+      "t": 11867,
+      "type": "key",
+      "key": "1",
+      "code": "Digit1",
+      "mods": [],
+      "target": "input[tel] \"09\""
+    },
+    {
+      "t": 12020,
+      "type": "key",
+      "key": "1",
+      "code": "Digit1",
+      "mods": [],
+      "target": "input[tel] \"091\""
+    },
+    {
+      "t": 12172,
+      "type": "key",
+      "key": "2",
+      "code": "Digit2",
+      "mods": [],
+      "target": "input[tel] \"0911\""
+    },
+    {
+      "t": 12325,
+      "type": "key",
+      "key": "3",
+      "code": "Digit3",
+      "mods": [],
+      "target": "input[tel] \"09112\""
+    },
+    {
+      "t": 12478,
+      "type": "key",
+      "key": "4",
+      "code": "Digit4",
+      "mods": [],
+      "target": "input[tel] \"091123\""
+    },
+    {
+      "t": 12630,
+      "type": "key",
+      "key": "5",
+      "code": "Digit5",
+      "mods": [],
+      "target": "input[tel] \"0911234\""
+    },
+    {
+      "t": 12783,
+      "type": "key",
+      "key": "6",
+      "code": "Digit6",
+      "mods": [],
+      "target": "input[tel] \"09112345\""
+    },
+    {
+      "t": 12936,
+      "type": "key",
+      "key": "7",
+      "code": "Digit7",
+      "mods": [],
+      "target": "input[tel] \"091123456\""
+    },
+    {
+      "t": 14613,
+      "type": "click",
+      "x": 697,
+      "y": 487,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 14617,
+      "type": "speech-synthesis",
+      "text": "When were you born? First choose the Ethiopian or the Gregorian calendar. You can skip this if you are not sure.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14621,
+      "type": "speech-synthesis",
+      "text": "Which calendar do you use?",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14622,
+      "type": "speech-synthesis",
+      "text": "Ethiopian calendar",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 14624,
+      "type": "speech-synthesis",
+      "text": "Gregorian (European) calendar",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 16117,
+      "type": "click",
+      "x": 697,
+      "y": 732,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 16121,
+      "type": "speech-synthesis",
+      "text": "Do you agree to how we keep your answers? We keep only what you tell us here. Nothing is shared with anyone without asking you first. You can change or delete your answers at any time.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 16124,
+      "type": "speech-synthesis",
+      "text": "Yes, I agree",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 16125,
+      "type": "speech-synthesis",
+      "text": "No, I do not agree",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 17606,
+      "type": "click",
+      "x": 700,
+      "y": 355,
+      "byKeyboard": false,
+      "target": "label \"Yes, I agree\""
+    },
+    {
+      "t": 17610,
+      "type": "click",
+      "x": 700,
+      "y": 355,
+      "byKeyboard": false,
+      "target": "input[radio] \"Yes, I agree\""
+    },
+    {
+      "t": 17610,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 17611,
+      "type": "speech-synthesis",
+      "text": "Yes, I agree",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 19097,
+      "type": "click",
+      "x": 697,
+      "y": 647,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 20592,
+      "type": "click",
+      "x": 700,
+      "y": 957,
+      "byKeyboard": false,
+      "target": "button \"Create my account\""
+    },
+    {
+      "t": 21199,
+      "type": "mark",
+      "what": "sign-up submitted"
+    },
+    {
+      "t": 22721,
+      "type": "mark",
+      "what": "records arrived: Pass, Pass, Pass, Pass, Pass, Pass, Pass, Pass, Pass"
+    },
+    {
+      "t": 25641,
+      "type": "click",
+      "x": 570,
+      "y": 257,
+      "byKeyboard": false,
+      "target": "button \"savanna-onboarding:complete\""
+    },
+    {
+      "t": 27260,
+      "type": "mark",
+      "what": "record detail: Schema check: pass (against savanna-onboarding/complete and savanna-onboarding/answers/signup from api-schema.md)"
+    },
+    {
+      "t": 30761,
+      "type": "end"
+    }
+  ]
+}

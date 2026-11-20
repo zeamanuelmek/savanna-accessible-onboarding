@@ -1,0 +1,82 @@
+{
+  "scene": "02",
+  "video": "02-voice-english.webm",
+  "site": "https://savanna-accessible-onboarding.vercel.app",
+  "recordedAt": "2026-11-20T13:37:55.679Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "timeBase": "ms from the start of the video (the page was created at t=0; the first frames may be blank until the page paints)",
+  "notes": [
+    "English voice uses the browser engine (\"Voice: your browser\"). In this recording machine (Chrome for Testing, cloud container) Chrome has no Google speech service, so the site shows \"No microphone was found\" instead of \"I heard…\". This is a real result, not a usable demo take: re-record this scene on a normal desktop Chrome."
+  ],
+  "events": [
+    {
+      "t": 346,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/signup.html"
+    },
+    {
+      "t": 529,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 1143,
+      "type": "mark",
+      "what": "name question; engine line: Voice: your browser"
+    },
+    {
+      "t": 4094,
+      "type": "click",
+      "x": 1151,
+      "y": 500,
+      "byKeyboard": false,
+      "target": "button[data-act=speak] \"Answer by voice\""
+    },
+    {
+      "t": 4099,
+      "type": "speech-synthesis",
+      "text": "Before you use your voice. To turn your voice into text, your recording is sent to a speech service: Addis AI (Ethiopia) for Amharic and Afaan Oromo, and Google (in Chrome) for English, or when Addis AI is not available. You can type or tap instead. You can turn this off at any time in Settings. Do you want to use your voice?",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4104,
+      "type": "speech-synthesis",
+      "text": "Yes, use my voice",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4106,
+      "type": "speech-synthesis",
+      "text": "No, I will type or tap",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4701,
+      "type": "mark",
+      "what": "voice consent shown"
+    },
+    {
+      "t": 7598,
+      "type": "click",
+      "x": 718,
+      "y": 778,
+      "byKeyboard": false,
+      "target": "button[data-act=voice-allow] \"Yes, use my voice\""
+    },
+    {
+      "t": 12270,
+      "type": "mark",
+      "what": "result: / / No microphone was found. Please type or tap your answer. /"
+    },
+    {
+      "t": 14273,
+      "type": "end"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "scene": "06b",
+  "video": "06b-jobs-screen-reader-only.webm",
+  "site": "https://savanna-accessible-onboarding.vercel.app",
+  "recordedAt": "2026-11-20T13:39:58.501Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "timeBase": "ms from the start of the video (the page was created at t=0; the first frames may be blank until the page paints)",
+  "notes": [
+    "Support Passport with Screen reader only: the filter leaves 2 jobs."
+  ],
+  "events": [
+    {
+      "t": 370,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/dashboard.html"
+    },
+    {
+      "t": 646,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 3734,
+      "type": "click",
+      "x": 60,
+      "y": 579,
+      "byKeyboard": false,
+      "target": "a \"Jobs\""
+    },
+    {
+      "t": 3751,
+      "type": "speech-synthesis",
+      "text": "Your Savanna homepage. First come the things waiting for you, such as adding your ID or creating your Support Passport, then your course, your progress and your activities. The Menu button opens the sidebar.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 3751,
+      "type": "speech-synthesis",
+      "text": "You can start learning without an ID. Add one only if you want to.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 3834,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/jobs.html"
+    },
+    {
+      "t": 4002,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 4046,
+      "type": "speech-synthesis",
+      "text": "Jobs. First a checkbox shows only jobs that offer the support in your Support Passport; this is worked out on this phone only. Then the list of jobs: each job title is a heading, with Listen and Apply buttons.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4607,
+      "type": "mark",
+      "what": "jobs: 4 jobs shown"
+    },
+    {
+      "t": 7508,
+      "type": "click",
+      "x": 741,
+      "y": 180,
+      "byKeyboard": false,
+      "target": "label \"Only show jobs that offer all the support I need\""
+    },
+    {
+      "t": 7509,
+      "type": "click",
+      "x": 741,
+      "y": 180,
+      "byKeyboard": false,
+      "target": "input[checkbox] \"Only show jobs that offer all the support I need\""
+    },
+    {
+      "t": 7513,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 7515,
+      "type": "speech-synthesis",
+      "text": "Only show jobs that offer all the support I need",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 8120,
+      "type": "mark",
+      "what": "filter on: 2 jobs shown"
+    },
+    {
+      "t": 11121,
+      "type": "end"
+    }
+  ]
+}

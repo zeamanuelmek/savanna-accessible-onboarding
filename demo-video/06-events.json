@@ -1,0 +1,109 @@
+{
+  "scene": "06",
+  "video": "06-jobs.webm",
+  "site": "https://savanna-accessible-onboarding.vercel.app",
+  "recordedAt": "2026-11-20T13:39:46.134Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "timeBase": "ms from the start of the video (the page was created at t=0; the first frames may be blank until the page paints)",
+  "notes": [
+    "Uses the Support Passport saved in scene 05 (Screen reader + Extra time). No demo job offers both, so the filtered list is empty (\"0 jobs shown\"). See 06b for a passport with Screen reader only."
+  ],
+  "events": [
+    {
+      "t": 335,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/dashboard.html"
+    },
+    {
+      "t": 563,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 3620,
+      "type": "click",
+      "x": 60,
+      "y": 579,
+      "byKeyboard": false,
+      "target": "a \"Jobs\""
+    },
+    {
+      "t": 3639,
+      "type": "speech-synthesis",
+      "text": "Your Savanna homepage. First come the things waiting for you, such as adding your ID or creating your Support Passport, then your course, your progress and your activities. The Menu button opens the sidebar.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 3640,
+      "type": "speech-synthesis",
+      "text": "You can start learning without an ID. Add one only if you want to.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 3714,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/jobs.html"
+    },
+    {
+      "t": 3813,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 3880,
+      "type": "speech-synthesis",
+      "text": "Jobs. First a checkbox shows only jobs that offer the support in your Support Passport; this is worked out on this phone only. Then the list of jobs: each job title is a heading, with Listen and Apply buttons.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4425,
+      "type": "mark",
+      "what": "jobs: 4 jobs shown"
+    },
+    {
+      "t": 7314,
+      "type": "click",
+      "x": 741,
+      "y": 180,
+      "byKeyboard": false,
+      "target": "label \"Only show jobs that offer all the support I need\""
+    },
+    {
+      "t": 7314,
+      "type": "click",
+      "x": 741,
+      "y": 180,
+      "byKeyboard": false,
+      "target": "input[checkbox] \"Only show jobs that offer all the support I need\""
+    },
+    {
+      "t": 7317,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 7321,
+      "type": "speech-synthesis",
+      "text": "Only show jobs that offer all the support I need",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 7921,
+      "type": "mark",
+      "what": "filter on: 0 jobs shown"
+    },
+    {
+      "t": 10922,
+      "type": "end"
+    }
+  ]
+}

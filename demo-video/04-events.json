@@ -1,0 +1,714 @@
+{
+  "scene": "04",
+  "video": "04-keyboard.webm",
+  "site": "https://savanna-accessible-onboarding.vercel.app",
+  "recordedAt": "2026-11-20T13:42:33.538Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "timeBase": "ms from the start of the video (the page was created at t=0; the first frames may be blank until the page paints)",
+  "notes": [],
+  "events": [
+    {
+      "t": 347,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/signup.html"
+    },
+    {
+      "t": 544,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 4140,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "h1 \"What is your phone number?\""
+    },
+    {
+      "t": 4745,
+      "type": "key",
+      "key": "0",
+      "code": "Digit0",
+      "mods": [],
+      "target": "input[tel] \"\""
+    },
+    {
+      "t": 4751,
+      "type": "speech-synthesis",
+      "text": "Sign up for Savanna.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4756,
+      "type": "speech-synthesis",
+      "text": "Step 3 of 5: your phone number.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4757,
+      "type": "speech-synthesis",
+      "text": "You can type it or say it.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4758,
+      "type": "speech-synthesis",
+      "text": "Below are Continue and Back.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4759,
+      "type": "speech-synthesis",
+      "text": "What is your phone number? We use it only to send you a link to continue. For example 0911 23 45 67.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4899,
+      "type": "key",
+      "key": "9",
+      "code": "Digit9",
+      "mods": [],
+      "target": "input[tel] \"0\""
+    },
+    {
+      "t": 5052,
+      "type": "key",
+      "key": "1",
+      "code": "Digit1",
+      "mods": [],
+      "target": "input[tel] \"09\""
+    },
+    {
+      "t": 5206,
+      "type": "key",
+      "key": "1",
+      "code": "Digit1",
+      "mods": [],
+      "target": "input[tel] \"091\""
+    },
+    {
+      "t": 5358,
+      "type": "key",
+      "key": "2",
+      "code": "Digit2",
+      "mods": [],
+      "target": "input[tel] \"0911\""
+    },
+    {
+      "t": 5514,
+      "type": "key",
+      "key": "3",
+      "code": "Digit3",
+      "mods": [],
+      "target": "input[tel] \"09112\""
+    },
+    {
+      "t": 5671,
+      "type": "key",
+      "key": "4",
+      "code": "Digit4",
+      "mods": [],
+      "target": "input[tel] \"091123\""
+    },
+    {
+      "t": 5827,
+      "type": "key",
+      "key": "5",
+      "code": "Digit5",
+      "mods": [],
+      "target": "input[tel] \"0911234\""
+    },
+    {
+      "t": 5980,
+      "type": "key",
+      "key": "6",
+      "code": "Digit6",
+      "mods": [],
+      "target": "input[tel] \"09112345\""
+    },
+    {
+      "t": 6134,
+      "type": "key",
+      "key": "7",
+      "code": "Digit7",
+      "mods": [],
+      "target": "input[tel] \"091123456\""
+    },
+    {
+      "t": 6893,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "input[tel] \"0911234567\""
+    },
+    {
+      "t": 7503,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=listen] \"Listen to the question\""
+    },
+    {
+      "t": 8112,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=readback] \"Read back my answer\""
+    },
+    {
+      "t": 8719,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=speak] \"Answer by voice\""
+    },
+    {
+      "t": 9326,
+      "type": "key",
+      "key": "Enter",
+      "code": "Enter",
+      "mods": [],
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 9327,
+      "type": "click",
+      "x": 0,
+      "y": 0,
+      "byKeyboard": true,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 9340,
+      "type": "speech-synthesis",
+      "text": "Sign up for Savanna.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9344,
+      "type": "speech-synthesis",
+      "text": "Step 4 of 5: your date of birth.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9344,
+      "type": "speech-synthesis",
+      "text": "First choose your calendar. Then type the day, month and year, or choose \"Answer by voice\" to say them one at a time.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9344,
+      "type": "speech-synthesis",
+      "text": "You can skip it.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9348,
+      "type": "speech-synthesis",
+      "text": "Below are Continue and Back.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9355,
+      "type": "speech-synthesis",
+      "text": "When were you born? First choose the Ethiopian or the Gregorian calendar. You can skip this if you are not sure.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9356,
+      "type": "speech-synthesis",
+      "text": "Which calendar do you use?",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9357,
+      "type": "speech-synthesis",
+      "text": "Ethiopian calendar",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9359,
+      "type": "speech-synthesis",
+      "text": "Gregorian (European) calendar",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 9946,
+      "type": "mark",
+      "what": "phone saved"
+    },
+    {
+      "t": 13471,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "h1 \"When were you born? (optional)\""
+    },
+    {
+      "t": 14079,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "input[radio] \"Ethiopian calendar\""
+    },
+    {
+      "t": 14687,
+      "type": "key",
+      "key": "1",
+      "code": "Digit1",
+      "mods": [],
+      "target": "input[text] \"\""
+    },
+    {
+      "t": 14841,
+      "type": "key",
+      "key": "2",
+      "code": "Digit2",
+      "mods": [],
+      "target": "input[text] \"1\""
+    },
+    {
+      "t": 15599,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "input[text] \"12\""
+    },
+    {
+      "t": 16207,
+      "type": "key",
+      "key": "ArrowDown",
+      "code": "ArrowDown",
+      "mods": [],
+      "target": "select \"Choose a month Meskerem Tikimt Hidar Tahsas Tir Yekatit Megabit Miyazi\""
+    },
+    {
+      "t": 16562,
+      "type": "key",
+      "key": "ArrowDown",
+      "code": "ArrowDown",
+      "mods": [],
+      "target": "select \"Choose a month Meskerem Tikimt Hidar Tahsas Tir Yekatit Megabit Miyazi\""
+    },
+    {
+      "t": 16918,
+      "type": "key",
+      "key": "ArrowDown",
+      "code": "ArrowDown",
+      "mods": [],
+      "target": "select \"Choose a month Meskerem Tikimt Hidar Tahsas Tir Yekatit Megabit Miyazi\""
+    },
+    {
+      "t": 17273,
+      "type": "key",
+      "key": "ArrowDown",
+      "code": "ArrowDown",
+      "mods": [],
+      "target": "select \"Choose a month Meskerem Tikimt Hidar Tahsas Tir Yekatit Megabit Miyazi\""
+    },
+    {
+      "t": 17628,
+      "type": "key",
+      "key": "ArrowDown",
+      "code": "ArrowDown",
+      "mods": [],
+      "target": "select \"Choose a month Meskerem Tikimt Hidar Tahsas Tir Yekatit Megabit Miyazi\""
+    },
+    {
+      "t": 18586,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "select \"Choose a month Meskerem Tikimt Hidar Tahsas Tir Yekatit Megabit Miyazi\""
+    },
+    {
+      "t": 19194,
+      "type": "key",
+      "key": "1",
+      "code": "Digit1",
+      "mods": [],
+      "target": "input[text] \"\""
+    },
+    {
+      "t": 19347,
+      "type": "key",
+      "key": "9",
+      "code": "Digit9",
+      "mods": [],
+      "target": "input[text] \"1\""
+    },
+    {
+      "t": 19500,
+      "type": "key",
+      "key": "9",
+      "code": "Digit9",
+      "mods": [],
+      "target": "input[text] \"19\""
+    },
+    {
+      "t": 19653,
+      "type": "key",
+      "key": "0",
+      "code": "Digit0",
+      "mods": [],
+      "target": "input[text] \"199\""
+    },
+    {
+      "t": 20410,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "input[text] \"1990\""
+    },
+    {
+      "t": 21040,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=listen] \"Listen to the question\""
+    },
+    {
+      "t": 21651,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=date-voice] \"Answer by voice\""
+    },
+    {
+      "t": 22256,
+      "type": "key",
+      "key": "Enter",
+      "code": "Enter",
+      "mods": [],
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 22257,
+      "type": "click",
+      "x": 0,
+      "y": 0,
+      "byKeyboard": true,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 22261,
+      "type": "speech-synthesis",
+      "text": "Sign up for Savanna.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 22264,
+      "type": "speech-synthesis",
+      "text": "Step 5 of 5: whether you agree to how we keep your answers.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 22264,
+      "type": "speech-synthesis",
+      "text": "Choose one answer.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 22265,
+      "type": "speech-synthesis",
+      "text": "Below are Continue and Back.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 22266,
+      "type": "speech-synthesis",
+      "text": "Do you agree to how we keep your answers? We keep only what you tell us here. Nothing is shared with anyone without asking you first. You can change or delete your answers at any time.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 22267,
+      "type": "speech-synthesis",
+      "text": "Yes, I agree",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 22268,
+      "type": "speech-synthesis",
+      "text": "No, I do not agree",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 22865,
+      "type": "mark",
+      "what": "date of birth saved"
+    },
+    {
+      "t": 26376,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "h1 \"Do you agree to how we keep your answers?\""
+    },
+    {
+      "t": 26984,
+      "type": "key",
+      "key": " ",
+      "code": "Space",
+      "mods": [],
+      "target": "input[radio] \"Yes, I agree\""
+    },
+    {
+      "t": 26990,
+      "type": "click",
+      "x": 0,
+      "y": 0,
+      "byKeyboard": true,
+      "target": "input[radio] \"Yes, I agree\""
+    },
+    {
+      "t": 26990,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 26990,
+      "type": "speech-synthesis",
+      "text": "Yes, I agree",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 27596,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "input[radio] \"Yes, I agree\""
+    },
+    {
+      "t": 28204,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=play-opt] \"Listen: Yes, I agree\""
+    },
+    {
+      "t": 28811,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=play-opt] \"Listen: No, I do not agree\""
+    },
+    {
+      "t": 29419,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=listen] \"Listen to the question\""
+    },
+    {
+      "t": 30023,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=speak] \"Answer by voice\""
+    },
+    {
+      "t": 30629,
+      "type": "key",
+      "key": "Enter",
+      "code": "Enter",
+      "mods": [],
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 30630,
+      "type": "click",
+      "x": 0,
+      "y": 0,
+      "byKeyboard": true,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 30633,
+      "type": "speech-synthesis",
+      "text": "Sign up for Savanna.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 30635,
+      "type": "speech-synthesis",
+      "text": "Check your answers: 5 answers, each with a Change button. At the bottom is Create my account.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 31245,
+      "type": "mark",
+      "what": "check your answers"
+    },
+    {
+      "t": 34750,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "h1 \"Check your answers\""
+    },
+    {
+      "t": 35356,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=change] \"Change Who filled in this form\""
+    },
+    {
+      "t": 35963,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=change] \"Change Name we call you\""
+    },
+    {
+      "t": 36574,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=change] \"Change What is your phone number?\""
+    },
+    {
+      "t": 37184,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=change] \"Change When were you born?\""
+    },
+    {
+      "t": 37789,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=change] \"Change Agreed to how we use your answers\""
+    },
+    {
+      "t": 38395,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=listen] \"Listen to the question\""
+    },
+    {
+      "t": 39000,
+      "type": "key",
+      "key": "Tab",
+      "code": "Tab",
+      "mods": [],
+      "target": "button[data-act=readall] \"Read all my answers\""
+    },
+    {
+      "t": 39606,
+      "type": "key",
+      "key": "Enter",
+      "code": "Enter",
+      "mods": [],
+      "target": "button \"Create my account\""
+    },
+    {
+      "t": 39607,
+      "type": "click",
+      "x": 0,
+      "y": 0,
+      "byKeyboard": true,
+      "target": "button \"Create my account\""
+    },
+    {
+      "t": 39628,
+      "type": "speech-synthesis",
+      "text": "Sign up for Savanna.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 39629,
+      "type": "speech-synthesis",
+      "text": "Welcome! Your account is ready.. You can start learning now. Below are the next steps.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 39630,
+      "type": "speech-synthesis",
+      "text": "Welcome! Your account is ready. You can start learning now.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 39635,
+      "type": "speech-synthesis",
+      "text": "Your ID status: No ID added yet",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 39635,
+      "type": "speech-synthesis",
+      "text": "You do not need an ID to start learning. You can add one later in My profile, if you want to.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 40236,
+      "type": "mark",
+      "what": "account ready"
+    },
+    {
+      "t": 44238,
+      "type": "end"
+    }
+  ]
+}

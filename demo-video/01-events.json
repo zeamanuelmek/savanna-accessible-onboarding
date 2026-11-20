@@ -1,0 +1,93 @@
+{
+  "scene": "01",
+  "video": "01-home.webm",
+  "site": "https://savanna-accessible-onboarding.vercel.app",
+  "recordedAt": "2026-11-20T13:37:32.906Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "timeBase": "ms from the start of the video (the page was created at t=0; the first frames may be blank until the page paints)",
+  "notes": [],
+  "events": [
+    {
+      "t": 375,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/"
+    },
+    {
+      "t": 575,
+      "type": "stt-readiness-check",
+      "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
+    },
+    {
+      "t": 1175,
+      "type": "mark",
+      "what": "home shown"
+    },
+    {
+      "t": 4115,
+      "type": "click",
+      "x": 1024,
+      "y": 490,
+      "byKeyboard": false,
+      "target": "label \"Listen and respond\""
+    },
+    {
+      "t": 4116,
+      "type": "click",
+      "x": 1024,
+      "y": 490,
+      "byKeyboard": false,
+      "target": "input[radio] \"Listen and respond\""
+    },
+    {
+      "t": 4143,
+      "type": "speech-synthesis",
+      "text": "Selected:",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4144,
+      "type": "speech-synthesis",
+      "text": "Listen and respond",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 4721,
+      "type": "mark",
+      "what": "\"Listen and respond\" chosen"
+    },
+    {
+      "t": 5632,
+      "type": "click",
+      "x": 1022,
+      "y": 769,
+      "byKeyboard": false,
+      "target": "button \"Continue\""
+    },
+    {
+      "t": 5641,
+      "type": "navigate",
+      "url": "https://savanna-accessible-onboarding.vercel.app/index.html?step=account"
+    },
+    {
+      "t": 5643,
+      "type": "speech-synthesis",
+      "text": "Step 2 of 2: sign up or log in. Choose Sign up if you are new to Savanna, or Log in if you already have an account. Above them is a button to change how you register.",
+      "lang": "en-US",
+      "note": "browser voice (no voices installed in the recording machine, so silent)"
+    },
+    {
+      "t": 6252,
+      "type": "mark",
+      "what": "account step: \"You chose: Listen and respond\", Sign up / Log in"
+    },
+    {
+      "t": 8752,
+      "type": "end"
+    }
+  ]
+}
