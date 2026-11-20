@@ -2,7 +2,7 @@
   "scene": "03",
   "video": "03-voice-amharic.webm",
   "site": "https://savanna-accessible-onboarding.vercel.app",
-  "recordedAt": "2026-11-20T13:41:45.873Z",
+  "recordedAt": "2026-11-20T14:28:27.959Z",
   "viewport": {
     "width": 1920,
     "height": 1080
@@ -11,17 +11,17 @@
   "notes": [],
   "events": [
     {
-      "t": 346,
+      "t": 385,
       "type": "navigate",
       "url": "https://savanna-accessible-onboarding.vercel.app/signup.html"
     },
     {
-      "t": 577,
+      "t": 609,
       "type": "stt-readiness-check",
       "url": "https://savanna-accessible-onboarding.vercel.app/api/stt"
     },
     {
-      "t": 3325,
+      "t": 3538,
       "type": "click",
       "x": 1568,
       "y": 83,
@@ -29,42 +29,42 @@
       "target": "button \"Language : English\""
     },
     {
-      "t": 3355,
+      "t": 3589,
       "type": "speech-synthesis",
       "text": "Sign up for Savanna.",
       "lang": "en-US",
       "note": "browser voice (no voices installed in the recording machine, so silent)"
     },
     {
-      "t": 3372,
+      "t": 3617,
       "type": "speech-synthesis",
       "text": "Step 2 of 5: the name we should call you.",
       "lang": "en-US",
       "note": "browser voice (no voices installed in the recording machine, so silent)"
     },
     {
-      "t": 3375,
+      "t": 3628,
       "type": "speech-synthesis",
       "text": "You can type it or say it.",
       "lang": "en-US",
       "note": "browser voice (no voices installed in the recording machine, so silent)"
     },
     {
-      "t": 3376,
+      "t": 3629,
       "type": "speech-synthesis",
       "text": "Below are Continue and Back.",
       "lang": "en-US",
       "note": "browser voice (no voices installed in the recording machine, so silent)"
     },
     {
-      "t": 3376,
+      "t": 3629,
       "type": "speech-synthesis",
       "text": "What should we call you? Amharic or English letters are both fine. You can add your full name later in My profile, if you want to.",
       "lang": "en-US",
       "note": "browser voice (no voices installed in the recording machine, so silent)"
     },
     {
-      "t": 4822,
+      "t": 5145,
       "type": "click",
       "x": 1554,
       "y": 91,
@@ -72,62 +72,62 @@
       "target": "button \"አማርኛ\""
     },
     {
-      "t": 4974,
+      "t": 5376,
       "type": "audio-start",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/pre-signup.mp3"
     },
     {
-      "t": 5440,
+      "t": 5766,
       "type": "mark",
       "what": "Amharic; engine line: ድምፅ፦ Addis AI"
     },
     {
-      "t": 9416,
+      "t": 7848,
       "type": "audio-end",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/pre-signup.mp3"
     },
     {
-      "t": 9486,
+      "t": 7946,
       "type": "audio-start",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/sum-step-2-5.mp3"
     },
     {
-      "t": 12179,
+      "t": 10634,
       "type": "audio-end",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/sum-step-2-5.mp3"
     },
     {
-      "t": 12382,
+      "t": 10714,
       "type": "audio-start",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/sum-say.mp3"
     },
     {
-      "t": 15360,
+      "t": 13698,
       "type": "audio-end",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/sum-say.mp3"
     },
     {
-      "t": 15582,
+      "t": 13770,
       "type": "audio-start",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/sum-both.mp3"
     },
     {
-      "t": 18681,
+      "t": 16880,
       "type": "audio-end",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/sum-both.mp3"
     },
     {
-      "t": 18959,
+      "t": 16975,
       "type": "audio-start",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/signup-name-question.mp3"
     },
     {
-      "t": 28595,
+      "t": 26609,
       "type": "audio-end",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/signup-name-question.mp3"
     },
     {
-      "t": 28638,
+      "t": 29018,
       "type": "click",
       "x": 1017,
       "y": 463,
@@ -135,12 +135,12 @@
       "target": "button[data-act=speak] \"በድምፅ ይመልሱ\""
     },
     {
-      "t": 28848,
+      "t": 29236,
       "type": "mark",
       "what": "microphone on (recording)"
     },
     {
-      "t": 32916,
+      "t": 33306,
       "type": "click",
       "x": 1017,
       "y": 463,
@@ -148,61 +148,46 @@
       "target": "button[data-act=speak] \"ማዳመጥ አቁም\""
     },
     {
-      "t": 32922,
+      "t": 33318,
       "type": "stt-request",
       "url": "https://savanna-accessible-onboarding.vercel.app/api/stt?lang=am"
     },
     {
-      "t": 33118,
+      "t": 33509,
       "type": "mark",
       "what": "stop pressed; sent to the site proxy (Addis AI)"
     },
     {
-      "t": 34404,
+      "t": 35165,
       "type": "stt-response",
       "status": 200,
-      "body": "{\"text\":\"መሮን\"}"
+      "body": "{\"text\":\"ሜሮን\"}"
     },
     {
-      "t": 34413,
-      "type": "mark",
-      "what": "\"I heard…\" shown: የሰማሁት፦ መሮን ድምፅ ስሞችን ሊሳሳት ይችላል። እባክዎ ያረጋግጡና ያስተካክሉ። ፊደል በፊደል አንብብ ያረጋግጡት፤ ካስፈለገም ያስተካክሉት። «ይህን መልስ ተጠቀም»ን እስኪመርጡ ድረስ ምንም አይቀመጥም። ከድምፅዎ የተገኘ መልስ ይህን መልስ ተጠቀም እንደገ"
-    },
-    {
-      "t": 34724,
+      "t": 35240,
       "type": "audio-start",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/msg-heard.mp3"
     },
     {
-      "t": 36610,
+      "t": 35304,
+      "type": "mark",
+      "what": "\"I heard…\" shown: የሰማሁት፦ ሜሮን ድምፅ ስሞችን ሊሳሳት ይችላል። እባክዎ ያረጋግጡና ያስተካክሉ። ፊደል በፊደል አንብብ ያረጋግጡት፤ ካስፈለገም ያስተካክሉት። «ይህን መልስ ተጠቀም»ን እስኪመርጡ ድረስ ምንም አይቀመጥም። ከድምፅዎ የተገኘ መልስ ይህን መልስ ተጠቀም እንደገ"
+    },
+    {
+      "t": 37123,
       "type": "audio-end",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/msg-heard.mp3"
     },
     {
-      "t": 36611,
+      "t": 37125,
       "type": "tts-request",
       "url": "https://savanna-accessible-onboarding.vercel.app/api/tts",
-      "text": "መሮን",
+      "text": "ሜሮን",
       "lang": "am",
       "note": "Addis AI text-to-speech through the site proxy; the audio then plays from a blob: URL"
     },
     {
-      "t": 36697,
-      "type": "audio-start",
-      "url": "blob:https://savanna-accessible-onboarding.vercel.app/082751ae-67f1-44d8-8a2f-75a6fe35dbb2"
-    },
-    {
-      "t": 37265,
-      "type": "audio-end",
-      "url": "blob:https://savanna-accessible-onboarding.vercel.app/082751ae-67f1-44d8-8a2f-75a6fe35dbb2"
-    },
-    {
-      "t": 37356,
-      "type": "audio-start",
-      "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/msg-heard-choose-type.mp3"
-    },
-    {
-      "t": 37790,
+      "t": 38751,
       "type": "click",
       "x": 716,
       "y": 922,
@@ -210,17 +195,32 @@
       "target": "button[data-act=heard-yes] \"ይህን መልስ ተጠቀም\""
     },
     {
-      "t": 38395,
-      "type": "mark",
-      "what": "answer used: መሮን"
+      "t": 39032,
+      "type": "audio-start",
+      "url": "blob:https://savanna-accessible-onboarding.vercel.app/2b30d3da-a1f1-4ae7-8f84-a42dcec5d5aa"
     },
     {
-      "t": 42644,
+      "t": 39356,
+      "type": "mark",
+      "what": "answer used: ሜሮን"
+    },
+    {
+      "t": 39724,
+      "type": "audio-end",
+      "url": "blob:https://savanna-accessible-onboarding.vercel.app/2b30d3da-a1f1-4ae7-8f84-a42dcec5d5aa"
+    },
+    {
+      "t": 39815,
+      "type": "audio-start",
+      "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/msg-heard-choose-type.mp3"
+    },
+    {
+      "t": 45088,
       "type": "audio-end",
       "url": "https://savanna-accessible-onboarding.vercel.app/assets/audio/am/msg-heard-choose-type.mp3"
     },
     {
-      "t": 45667,
+      "t": 48008,
       "type": "end"
     }
   ]
