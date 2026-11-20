@@ -243,7 +243,7 @@
  "sum-date": "Dura dhaha, sana booda guyyaa, ji'aa fi waggaa filadhu.",
  "sum-say": "Barreessuu ykn dubbachuu dandeessa.",
  "sum-type": "Barreessi.",
- "sum-skip": "Dabarsuu dandeessa.",
+ "sum-skip": "\"Gaaffii kana darbi\" filachuun dabarsuu dandeessa.",
  "sum-only": "Gadi \"Itti fufi\" jira.",
  "sum-both": "Gadi \"Itti fufi\" fi \"Duubatti\" jiru.",
  "sum-saved": "Deebiin kee bilbila kana irratti kuufameera. Booda itti fufuuf geessituun gadi jira.",
@@ -430,5 +430,10 @@
  "num-and": "fi",
  "voice-allow": "Eeyyee, sagalee koo fayyadami",
  "voice-deny": "Lakki, nan barreessa ykn nan tuqa",
- "msg-heard-spell": "Maqicha qubee qubeen dhaggeeffachuuf, \"Qubee qubeen dubbisi\" isa gubbaa jiru filadhu."
+ "msg-heard-spell": "Maqicha qubee qubeen dhaggeeffachuuf, \"Qubee qubeen dubbisi\" isa gubbaa jiru filadhu.",
+ "msg-skipped": "Darbameera",
+ "msg-link-copied": "Geessituun garagalfameera.",
+ "msg-date-next": "Amma guyyaa, ji'a fi waggaa galchi.",
+ "msg-link-selected": "Geessituun filatameera. Baafata bilbila keetii irraa garagalchi.",
+ "msg-your-code": "Koodiin kee:"
 }

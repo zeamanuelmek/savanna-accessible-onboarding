@@ -105,6 +105,8 @@
       readFail: 'Reading aloud isn\'t available right now. Everything is written on the screen.',
       selected: 'Selected:', notSelected: 'Not selected:',
       heardChoose: 'Choose {yes}, {again}, or {type}.', yourAnswer: 'Your answer:', nothingTyped: 'Nothing is typed yet.',
+      dateNext: 'Now enter the day, month and year.', skipQ: 'Skip this question', skipped: 'Skipped',
+      copyLink: 'Copy link', linkCopied: 'Link copied.', linkSelected: 'The link is selected. Copy it from your phone\'s menu.', yourCode: 'Your code:',
       spell: 'Spell it', heardSpell: 'To hear the name letter by letter, choose "{spell}" above.', readBack: 'Read back my answer', readBackId: 'Read back the number', idNote: 'People near you may hear this.',
       readItAloud: 'Read it aloud', cancel: 'Cancel', readAll: 'Read all my answers',
       readAllIdQ: 'Your ID number is in these answers. People near you may hear it.', readAllWith: 'Read with my ID number', readAllWithout: 'Read without it',
@@ -218,6 +220,9 @@
       readFail: 'ጮክ ብሎ ማንበብ አሁን አይገኝም። ሁሉም ነገር በማያ ገጹ ላይ ተጽፏል።',
       selected: 'ተመርጧል፦', notSelected: 'አልተመረጠም፦',
       heardChoose: '«{yes}»፣ «{again}» ወይም «{type}»ን ይምረጡ።', yourAnswer: 'መልስዎ፦', nothingTyped: 'እስካሁን ምንም አልተጻፈም።',
+      // DRAFT (20 Nov): for teammate review
+      dateNext: 'አሁን ቀን፣ ወር እና ዓመት ያስገቡ።', skipQ: 'ይህን ጥያቄ እለፍ', skipped: 'ተዘሏል',
+      copyLink: 'ሊንኩን ቅዳ', linkCopied: 'ሊንኩ ተቀድቷል።', linkSelected: 'ሊንኩ ተመርጧል። ከስልክዎ ምናሌ ይቅዱት።', yourCode: 'ኮድዎ፦',
       spell: 'ፊደል በፊደል አንብብ', heardSpell: 'ስሙን ፊደል በፊደል ለመስማት፣ ከላይ ያለውን «{spell}» ይምረጡ።', readBack: 'መልሴን አንብብልኝ', readBackId: 'ቁጥሩን አንብብልኝ', idNote: 'በአጠገብዎ ያሉ ሰዎች ሊሰሙት ይችላሉ።',
       readItAloud: 'ጮክ ብለህ አንብበው', cancel: 'ተው', readAll: 'መልሶቼን ሁሉ አንብብልኝ',
       readAllIdQ: 'የመታወቂያ ቁጥርዎ በእነዚህ መልሶች ውስጥ አለ። በአጠገብዎ ያሉ ሰዎች ሊሰሙት ይችላሉ።', readAllWith: 'ከመታወቂያ ቁጥሬ ጋር አንብብ', readAllWithout: 'ያለ እሱ አንብብ',
@@ -341,6 +346,9 @@
       yourAnswer: 'Deebii kee:',
       nothingTyped: 'Ammaaf wanti barreeffame hin jiru.',
       spell: 'Qubee qubeen dubbisi',
+      // DRAFT (20 Nov): native-speaker review
+      dateNext: 'Amma guyyaa, ji\'a fi waggaa galchi.', skipQ: 'Gaaffii kana darbi', skipped: 'Darbameera',
+      copyLink: 'Geessituu garagalchi', linkCopied: 'Geessituun garagalfameera.', linkSelected: 'Geessituun filatameera. Baafata bilbila keetii irraa garagalchi.', yourCode: 'Koodiin kee:',
       heardSpell: 'Maqicha qubee qubeen dhaggeeffachuuf, "{spell}" isa gubbaa jiru filadhu.', // DRAFT (20 Nov): native-speaker review
       readBack: 'Deebii koo naaf dubbisi',
       readBackId: 'Lakkoofsa naaf dubbisi',
@@ -1568,6 +1576,7 @@
     this.step = 0; this.mode = 'question'; this.returnToReview = false;
     this.resumeCode = null;
     this.changed = {}; // answers changed since the last "Change" from the summary
+    this.skipped = {}; // optional questions left with "Skip this question" (shown as "Skipped"; never sent)
   }
   /** Loads the saved draft. Returns true when it held answers. */
   FormState.prototype.load = function () {
@@ -1576,6 +1585,7 @@
     this.answers = d.answers || {};
     this.step = d.step || 0;
     this.resumeCode = d.resumeCode || null;
+    this.skipped = d.skipped || {};
     // come back to the screen the learner left: the check-your-answers page, or the question
     this.mode = d.mode === 'review' ? 'review' : 'question';
     return Object.keys(this.answers).length > 0;
@@ -1625,6 +1635,7 @@
     var before = JSON.stringify(this.answers[id]), self = this;
     this.answers[id] = value;
     delete this.prefilled[id];
+    if (!isEmpty(value) && this.skipped) delete this.skipped[id]; // answered after all
     if (before === undefined || before === JSON.stringify(value)) return false;
     this.changed[id] = true;
     this.cfg.fields.forEach(function (f) {
@@ -1677,7 +1688,7 @@
   };
   FormState.prototype.save = function () {
     this.prune();
-    store.set(this.key, { answers: this.answers, step: this.step, mode: this.mode, resumeCode: this.resumeCode, at: Date.now() });
+    store.set(this.key, { answers: this.answers, step: this.step, mode: this.mode, resumeCode: this.resumeCode, skipped: this.skipped, at: Date.now() });
   };
   /** A short code for the "finish later" link. The same draft keeps the same code. */
   FormState.prototype.makeResumeCode = function () {
@@ -1819,7 +1830,7 @@
     '.dm a,.dm samp,.dm q{overflow-wrap:anywhere}', // long links (resume link) wrap at 400% zoom
 
     '.dm-tools{display:flex;flex-wrap:wrap;gap:.6em;margin:1em 0}',
-    '.dm-engine{margin:-.4em 0 1em;font-size:.9em;color:var(--so-text-muted)}',
+    '.dm-code{font-size:1.5em;font-weight:600;margin:.5em 0 1em}.dm-code strong{letter-spacing:.12em}.dm-engine{margin:-.4em 0 1em;font-size:.9em;color:var(--so-text-muted)}',
     '.dm-sr-tip p{margin:0 0 .4em}', '.dm-sr-tip p:last-child{margin:0}',
     '.dm-offline-audio{margin:0 0 1.5em}', '.dm-offline-audio h2{font-size:1.2em;margin:0 0 .4em;color:var(--so-heading)}',
     '.dm-offline-audio progress{width:100%;height:1.2em;accent-color:var(--so-heading)}',
@@ -2030,6 +2041,7 @@
       h += '<div id="' + View.id(vm, 'heard') + '" data-ref="heard"></div>';
       h += View.status();
       h += '<div class="dm-actions"><button type="submit" class="dm-btn dm-primary">' + t('next', lang) + '</button>';
+      if (f.optional) h += '<button type="button" class="dm-btn" data-act="skip">' + t('skipQ', lang) + '</button>';
       if (vm.cfg.allowLater !== false) h += '<button type="button" class="dm-link" data-act="later">' + t('later', lang) + '</button>';
       return h + '</div></form>';
     },
@@ -2106,7 +2118,7 @@
       s.visible().forEach(function (f, i) {
         if (f.reviewHide) return;
         var name = esc(L(f.reviewLabel || f.label, lang));
-        h += '<div><dt>' + name + '</dt><dd>' + esc(View.display(vm, f, s.answers[f.id])) + '</dd>' +
+        h += '<div><dt>' + name + '</dt><dd>' + esc(s.skipped[f.id] && isEmpty(s.answers[f.id]) ? t('skipped', lang) : View.display(vm, f, s.answers[f.id])) + '</dd>' +
           '<dd><button type="button" class="dm-link" data-act="change" data-step="' + i + '">' + t('change', lang) + '<span class="dm-vh"> ' + name + '</span></button></dd></div>';
       });
       h += '</dl>';
@@ -2121,7 +2133,9 @@
       var lang = vm.lang, link = vm.resumeLink;
       var sms = ({ am: 'ምዝገባዎን ለመቀጠል፦ ', om: 'Unka kee itti fufuuf: ' }[lang] || 'Continue your form: ') + link;
       return View.bar(vm, false) + '<h1 class="dm-q" tabindex="-1">' + t('savedTitle', lang) + '</h1><p>' + t('savedText', lang) + '</p>' +
-        '<p><a href="' + esc(link) + '">' + esc(link) + '</a></p>' +
+        '<p><a href="' + esc(link) + '" data-ref="resume-link">' + esc(link) + '</a></p>' +
+        '<p><button type="button" class="dm-btn" data-act="copy-link">' + t('copyLink', lang) + '</button></p>' +
+        (vm.resumeCode ? '<p class="dm-code">' + t('yourCode', lang) + ' <strong lang="en">' + esc(vm.resumeCode) + '</strong></p>' : '') + View.status() +
         '<div class="dm-panel"><h2>' + t('smsPreview', lang) + '</h2><p lang="' + lang + '"><samp>' + esc(sms) + '</samp></p></div>' +
         '<div class="dm-actions"><button type="button" class="dm-btn dm-primary" data-act="resume">' + t('next', lang) + '</button></div>';
     },
@@ -2296,7 +2310,7 @@
       askHelperOpen: !!this.askHelperOpen,
       cfg: this.cfg, s: s, lang: this.lang, easy: this.easy, pictures: getPrefs().pictures, offline: navigator.onLine === false, uid: this.uid, error: this.error, helpOpen: this.helpOpen,
       welcomeOn: this.welcomeOn, backUrl: this.getAttribute('back-url') || '', startAtReview: this.startAtReview, prefsMode: mode, voiceFirst: mode === 'speak',
-      resumeLink: location.href.split('#')[0].split('?')[0] + '?resume=' + s.resumeCode + location.hash
+      resumeLink: location.href.split('#')[0].split('?')[0] + '?resume=' + s.resumeCode + location.hash, resumeCode: s.resumeCode
     };
   };
   SavannaOnboardingForm.prototype.save = function () { this.state.save(); };
@@ -2326,7 +2340,7 @@
     this.updatePlayer();
     // Read aloud reads each new question once; Pause and Stop appear at once, and Escape stops it (WCAG 1.4.2).
     // (a host page that reads each step itself, like the Savanna pages, sets SavannaOnboarding.hostReads = true)
-    if ((m === 'question' || m === 'welcome') && this.easy && this._interacted && !API.hostReads) this.readQuestion();
+    if ((m === 'question' || m === 'welcome' || m === 'saved') && this.easy && this._interacted && !API.hostReads) this.readQuestion(); // saved: the link and the code (20 Nov)
     // A new screen: tell the host, with its summary, so it can put it first in the page and read it (see summary())
     var key = m + ':' + this.state.step + ':' + this.lang;
     if (key !== this._stepKey) { this._stepKey = key; emit(this, 'step', { form: this.getAttribute('form'), mode: m, step: this.state.step, summary: this.summary() }, true); }
@@ -2340,17 +2354,17 @@
     en: { welcome: '{title}. First, choose how you like to fill in the form: read and type, listen, speak my answers, or simple steps with pictures. Below is {next}.',
       step: 'Step {n} of {m}: {topic}.', one: 'Choose one answer.', many: 'Choose all that apply.', date: 'First choose your calendar, then the day, month and year.',
       'date-voice': 'First choose your calendar. Then type the day, month and year, or choose "{voice}" to say them one at a time.',
-      say: 'You can type it or say it.', type: 'Type it.', skip: 'You can skip it.', both: 'Below are {next} and {back}.', only: 'Below is {next}.',
+      say: 'You can type it or say it.', type: 'Type it.', skip: 'You can skip it with {skip}.', both: 'Below are {next} and {back}.', only: 'Below is {next}.',
       review: '{title}: {n} answers, each with a {change} button. At the bottom is {submit}.', done: '{title}. {text} Below are the next steps.',
       saved: 'Your answers are saved on this phone. Below is the link to continue later.' },
     am: { welcome: '{title}። መጀመሪያ ቅጹን እንዴት መሙላት እንደሚፈልጉ ይምረጡ፦ አንብቤ እጽፋለሁ፣ አዳምጬ እመልሳለሁ፣ በድምፅ እመልሳለሁ፣ ወይም ቀላል ደረጃዎች ከሥዕል ጋር። ከታች «{next}» አለ።',
       step: 'ደረጃ {n} ከ{m}፦ {topic}', one: 'አንድ መልስ ይምረጡ።', many: 'የሚስማሙትን ሁሉ ይምረጡ።', 'date-voice': 'መጀመሪያ አቆጣጠርዎን ይምረጡ። ከዚያ ቀኑን፣ ወሩንና ዓመቱን ይጻፉ፤ ወይም አንድ በአንድ ለመናገር «{voice}» ይምረጡ።', date: 'መጀመሪያ አቆጣጠሩን፣ ከዚያ ቀን፣ ወርና ዓመት ይምረጡ።',
-      say: 'መጻፍ ወይም መናገር ይችላሉ።', type: 'ይጻፉት።', skip: 'መዝለል ይችላሉ።', both: 'ከታች «{next}» እና «{back}» አሉ።', only: 'ከታች «{next}» አለ።',
+      say: 'መጻፍ ወይም መናገር ይችላሉ።', type: 'ይጻፉት።', skip: '«{skip}»ን በመጫን መዝለል ይችላሉ።', both: 'ከታች «{next}» እና «{back}» አሉ።', only: 'ከታች «{next}» አለ።',
       review: '{title}፦ {n} መልሶች፣ እያንዳንዱ «{change}» አዝራር አለው። ከታች «{submit}» አለ።', done: '{title}። {text} ከታች ቀጣዮቹ እርምጃዎች አሉ።',
       saved: 'መልሶችዎ በዚህ ስልክ ላይ ተቀምጠዋል። በኋላ ለመቀጠል ሊንኩ ከታች አለ።' },
     om: { welcome: '{title}. Jalqaba akkaataa unka kana guutuu barbaaddu filadhu: dubbisuu fi barreessuu, dhaggeeffachuu, sagaleen deebisuu, ykn tarkaanfii salphaa fakkii wajjin. Gadi "{next}" jira.',
       step: 'Tarkaanfii {n} keessaa {m}: {topic}', one: 'Deebii tokko filadhu.', many: 'Kan siif ta\'an hunda filadhu.', 'date-voice': 'Dura dhaha kee filadhu. Sana booda guyyaa, ji\'aa fi waggaa barreessi, ykn tokko tokkoon jechuuf "{voice}" filadhu.', date: 'Dura dhaha, sana booda guyyaa, ji\'aa fi waggaa filadhu.',
-      say: 'Barreessuu ykn dubbachuu dandeessa.', type: 'Barreessi.', skip: 'Dabarsuu dandeessa.', both: 'Gadi "{next}" fi "{back}" jiru.', only: 'Gadi "{next}" jira.',
+      say: 'Barreessuu ykn dubbachuu dandeessa.', type: 'Barreessi.', skip: '"{skip}" filachuun dabarsuu dandeessa.', both: 'Gadi "{next}" fi "{back}" jiru.', only: 'Gadi "{next}" jira.',
       review: '{title}: deebii {n}, tokkoon tokkoon isaa qabduu "{change}" qaba. Gadi "{submit}" jira.', done: '{title}. {text} Gadi tarkaanfiiwwan itti aanan jiru.',
       saved: 'Deebiin kee bilbila kana irratti kuufameera. Booda itti fufuuf geessituun gadi jira.' }
   };
@@ -2361,7 +2375,7 @@
    *  itself follows, so the step piece is "Step 3 of 5" without the topic; in English it includes the topic. */
   SavannaOnboardingForm.prototype.summaryItems = function () {
     var lang = SUMMARY_T[this.lang] ? this.lang : 'en', T = SUMMARY_T[lang], s = this.state, vm = this.vm(), cfg = this.cfg, m = s.mode, form = this.getAttribute('form');
-    var names = { next: t('next', lang), back: t('back', lang), change: t('change', lang) }, it = function (key, text) { return { key: key, text: text, lang: lang }; };
+    var names = { next: t('next', lang), back: t('back', lang), change: t('change', lang), skip: t('skipQ', lang) }, it = function (key, text) { return { key: key, text: text, lang: lang }; };
     if (m === 'welcome') return [it('sum-welcome-' + form, fill(T.welcome, { title: L(cfg.title, lang), next: names.next }))];
     if (m === 'question') {
       var f = s.field(), p = s.progress(), back = s.step > 0 || !!vm.backUrl || this.welcomeOn;
@@ -2369,7 +2383,7 @@
       var how = f.type === 'choice' || f.type === 'consent' ? 'one' : f.type === 'multi' ? 'many' : f.type === 'ethdate' ? (canSay ? 'date-voice' : 'date') : canSay ? 'say' : 'type';
       var step = lang === 'en' ? fill(T.step, { n: p.n, m: p.total, topic: L(f.summary, 'en') || L(f.label, 'en') }) : fill(T.step, { n: p.n, m: p.total, topic: '' }).trim();
       var items = [it('sum-step-' + p.n + '-' + p.total, step), it('sum-' + how, fill(T[how], { voice: t('dvOpen', lang) }))];
-      if (f.optional) items.push(it('sum-skip', T.skip));
+      if (f.optional) items.push(it('sum-skip', fill(T.skip, names)));
       items.push(it(back ? 'sum-both' : 'sum-only', fill(back ? T.both : T.only, names)));
       return items;
     }
@@ -2378,12 +2392,12 @@
       return [it('sum-review-' + form + '-' + n, fill(T.review, { title: L(cfg.reviewTitle, lang) || t('review', lang), n: n, change: names.change, submit: L(cfg.submitLabel, lang) || t('submit', lang) }))];
     }
     if (m === 'done') return [it('sum-done-' + form, fill(T.done, { title: L(cfg.doneTitle, lang), text: L(cfg.doneText, lang) }))];
-    if (m === 'saved') return [it('sum-saved', T.saved)];
+    if (m === 'saved') return [it('sum-saved', T.saved)].concat(this.codeItems()); // the host pages read this
     return [];
   };
   SavannaOnboardingForm.prototype.summary = function () {
     var lang = SUMMARY_T[this.lang] ? this.lang : 'en', T = SUMMARY_T[lang], s = this.state, vm = this.vm(), cfg = this.cfg, m = s.mode;
-    var names = { next: t('next', lang), back: t('back', lang), change: t('change', lang) };
+    var names = { next: t('next', lang), back: t('back', lang), change: t('change', lang), skip: t('skipQ', lang) };
     if (m === 'welcome') return fill(T.welcome, { title: L(cfg.title, lang), next: names.next });
     if (m === 'question') {
       var f = s.field(), p = s.progress(), back = s.step > 0 || !!vm.backUrl || this.welcomeOn;
@@ -2391,7 +2405,7 @@
       var canSay = voiceAllowed(f, vm) && speech.input.supported(lang);
       var how = f.type === 'choice' || f.type === 'consent' ? T.one : f.type === 'multi' ? T.many : f.type === 'ethdate' ? (canSay ? fill(T['date-voice'], { voice: t('dvOpen', lang) }) : T.date)
         : canSay ? T.say : T.type;
-      return [fill(T.step, { n: p.n, m: p.total, topic: topic }), how, f.optional ? T.skip : '', fill(back ? T.both : T.only, names)].filter(Boolean).join(' ');
+      return [fill(T.step, { n: p.n, m: p.total, topic: topic }), how, f.optional ? fill(T.skip, names) : '', fill(back ? T.both : T.only, names)].filter(Boolean).join(' ');
     }
     if (m === 'review') {
       var n = s.visible().filter(function (x) { return !x.reviewHide; }).length;
@@ -2473,6 +2487,7 @@
       if (e.target.name === 'cal') { // month names change: redraw, and keep focus on the calendar choice
         this.render(false);
         var r = this.querySelector('input[name=cal]:checked'); if (r) r.focus();
+        this.sayCalendar(f, e.target.value);
       }
       var v = this.state.answers[f.id], lang = this.lang, msg = !v || !v.gregorian ? '' : v.cal === 'greg'
         ? t('ethiopian', lang, { date: fmtEthiopian(v.gregorian, lang) }) : t('gregorian', lang, { date: fmtGregorian(new Date(v.gregorian), lang) });
@@ -2483,6 +2498,37 @@
   };
   /* Speak what the learner chooses, when reading is on: "Selected: …" (or "Not selected: …" for a box unticked),
      with the option's own clip. */
+  /* The calendar on the date question: "Selected: Ethiopian calendar", then "Now enter the day, month and year."
+     (read aloud when reading is on, like sayChoice; the sentence is always announced in the status region). */
+  SavannaOnboardingForm.prototype.sayCalendar = function (f, cal) {
+    var lang = this.lang, next = t('dateNext', lang);
+    this.status(next);
+    if (!readingOn()) return;
+    Player.play([{ key: 'msg-selected', text: t('selected', lang), lang: lang }, { key: clipKey(this.getAttribute('form'), f.id, 'option', cal), text: t(cal === 'greg' ? 'calGreg' : 'calEth', lang), lang: lang },
+      { key: 'msg-date-next', text: next, lang: lang }], lang, { audioIssue: function () {} });
+  };
+  /* The resume code: "Your code:" (a recorded clip), then the letters one by one on the phone only (never an online voice). */
+  SavannaOnboardingForm.prototype.codeItems = function () {
+    var lang = this.lang, c = this.state.resumeCode;
+    return c ? [{ key: 'msg-your-code', text: t('yourCode', lang), lang: lang }, { key: null, text: spelled(c), lang: scriptLang(c, lang), local: true }] : [];
+  };
+  /* "Copy link" on the Finish later screen: the clipboard, or (e.g. in an Android WebView) the link selected. */
+  SavannaOnboardingForm.prototype.copyLink = function () {
+    var self = this, lang = this.lang, a = this.ref('resume-link'), text = a ? a.textContent : '';
+    if (!text) return;
+    function done(copied) {
+      var k = copied ? 'linkCopied' : 'linkSelected', msg = t(k, lang);
+      self.status(msg);
+      if (readingOn()) Player.play([{ key: copied ? 'msg-link-copied' : 'msg-link-selected', text: msg, lang: lang }], lang, { audioIssue: function () {} });
+    }
+    function select() {
+      var copied = false;
+      try { var r = document.createRange(); r.selectNodeContents(a); var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); copied = document.execCommand('copy'); } catch (e) {}
+      done(!!copied);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function () { done(true); }, select);
+    else select();
+  };
   SavannaOnboardingForm.prototype.sayChoice = function (f, input) {
     if (!readingOn()) return;
     var lang = this.lang, form = this.getAttribute('form'), o = f ? optionsOf(f).filter(function (x) { return String(x.value) === input.value; })[0] : null;
@@ -2566,6 +2612,16 @@
       s.mode = 'saved'; this.render(true); return;
     }
     if (act === 'resume') { s.mode = 'question'; this.render(true); return; }
+    if (act === 'skip') {
+      var sf = s.field(); if (!sf || !sf.optional || s.mode !== 'question') return;
+      Player.stop(); if (this.voice) this.voiceReset(); this.dv = null; this.error = ''; this.askHelperOpen = false;
+      var shown = s.progress().total;
+      s.setAnswer(sf.id, sf.type === 'multi' ? [] : ''); s.skipped[sf.id] = true;
+      var rs = s.advance(shown);
+      if (rs.changed) this.flash = t('countChanged', this.lang, { total: rs.total });
+      this.save(); this.render(true); return;
+    }
+    if (act === 'copy-link') { this.copyLink(); return; }
     if (act === 'voice-allow') { store.set('voiceConsent', true); this.startVoice(); return; }
     if (act === 'voice-deny') { store.set('voiceConsent', false); this.voiceReset(); var inp = this.ref('input'); if (inp) inp.focus(); return; }
     if (act === 'heard-yes') { this.confirmVoice(); return; }
@@ -2606,6 +2662,7 @@
       var slot = this.querySelector('.dm-done-slot'); if (slot) items = items.concat(itemsFromElement(slot, lang)); // the host's confirmation
     } else if (s.mode === 'saved') {
       items.push({ key: 'saved-for-later', text: t('savedTitle', lang) + '. ' + t('savedText', lang) });
+      items = items.concat(this.codeItems());
     }
     return items;
   };
@@ -2627,7 +2684,8 @@
         return;
       }
       items.push({ key: null, text: label, lang: lang });
-      if (isEmpty(v)) items.push({ key: null, text: t('notGiven', lang), lang: lang });
+      if (isEmpty(v) && s.skipped[f.id]) items.push({ key: 'msg-skipped', text: t('skipped', lang), lang: lang });
+      else if (isEmpty(v)) items.push({ key: null, text: t('notGiven', lang), lang: lang });
       else if (f.type === 'tel') items = items.concat(phoneItems(v, lang));
       else if (f.type === 'text' || f.type === 'textarea') items.push({ key: null, text: String(v), lang: scriptLang(String(v), lang) });
       else items.push({ key: null, text: View.display(vm, f, v), lang: lang });
@@ -3085,7 +3143,7 @@
    *  generator (tools/audio-script.cjs) writes these exact words, so a clip always matches the screen. Dynamic text
    *  (names, typed answers, a list built from the learner's own Support Passport) is not in it. */
   function speechCatalog(lang) {
-    var out = [], seen = {}, T = SUMMARY_T[lang] || SUMMARY_T.en, names = { next: t('next', lang), back: t('back', lang), change: t('change', lang) };
+    var out = [], seen = {}, T = SUMMARY_T[lang] || SUMMARY_T.en, names = { next: t('next', lang), back: t('back', lang), change: t('change', lang), skip: t('skipQ', lang) };
     function add(section, key, text) { if (!text || seen[key] || typeof text !== 'string') return; seen[key] = 1; out.push({ section: section, key: key, text: text }); }
     var fixed = function (v) { return typeof v === 'function' ? null : L(v, lang); };
     add('Start', 'welcome-question', t('welcomeTitle', lang) + ' ' + t('welcomeHint', lang));
@@ -3109,7 +3167,8 @@
     });
     var longest = Math.max.apply(null, Object.keys(FORMS).map(function (id) { return FORMS[id].fields.length; }));
     if (lang !== 'en') for (var mm = 1; mm <= longest; mm++) for (var nn = 1; nn <= mm; nn++) add('Summaries', 'sum-step-' + nn + '-' + mm, fill(T.step, { n: nn, m: mm, topic: '' }).trim());
-    ['one', 'many', 'date', 'say', 'type', 'skip', 'saved'].forEach(function (k) { add('Summaries', 'sum-' + k, T[k]); });
+    ['one', 'many', 'date', 'say', 'type', 'saved'].forEach(function (k) { add('Summaries', 'sum-' + k, T[k]); });
+    add('Summaries', 'sum-skip', fill(T.skip, names));
     add('Summaries', 'sum-date-voice', fill(T['date-voice'], { voice: t('dvOpen', lang) }));
     add('Summaries', 'sum-both', fill(T.both, names)); add('Summaries', 'sum-only', fill(T.only, names));
     // messages read aloud
@@ -3118,6 +3177,9 @@
     add('Messages', 'msg-heard-choose-type', t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t('type', lang) }));
     add('Messages', 'msg-heard-choose-tap', t('heardChoose', lang, { yes: t('yes', lang), again: t('again', lang), type: t('tapInstead', lang) }));
     add('Messages', 'msg-heard-spell', t('heardSpell', lang, { spell: t('spell', lang) }));
+    add('Messages', 'msg-date-next', t('dateNext', lang)); add('Messages', 'msg-skipped', t('skipped', lang));
+    add('Messages', 'msg-link-copied', t('linkCopied', lang)); add('Messages', 'msg-link-selected', t('linkSelected', lang));
+    add('Messages', 'msg-your-code', t('yourCode', lang));
     add('Messages', 'msg-selected', t('selected', lang)); add('Messages', 'msg-not-selected', t('notSelected', lang));
     add('Messages', 'msg-offline', t('offline', lang)); add('Messages', 'msg-online', t('online', lang));
     Object.keys(ERROR_CLIPS).forEach(function (k) { add('Messages', ERROR_CLIPS[k], t(k, lang)); });

@@ -44,7 +44,7 @@ test('each form step has its own summary: "Step 3 of 5: your phone number…"', 
   await page.fill('[data-ref=input]', 'Abebe'); await next(page);
   await expect(summary(page)).toHaveText('Sign up for Savanna. Step 3 of 5: your phone number. You can type it or say it. Below are Continue and Back.');
   await page.fill('[data-ref=input]', '0911234567'); await next(page);
-  await expect(summary(page)).toContainText('Step 4 of 5: your date of birth. First choose your calendar, then the day, month and year. You can skip it.');
+  await expect(summary(page)).toContainText('Step 4 of 5: your date of birth. First choose your calendar, then the day, month and year. You can skip it with Skip this question.');
 });
 
 test('first visit: "Tap anywhere or press any key to hear this page" comes right after the skip link; a key press reads the page and is remembered', async ({ page }) => {

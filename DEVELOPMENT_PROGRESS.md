@@ -1954,3 +1954,45 @@ Addis AI's STT read both back ("ስሙም ፊደል በፊደል ለመስማት
 Tests: `readback.spec.mjs`: the English name test now expects the sentence (spoken, on screen, in the live region);
 new Amharic test: the clips play in the order msg-heard, msg-heard-choose-type, msg-heard-spell, and on the phone
 question no pointer is played or shown. The existing phone test still expects exactly the three spoken pieces.
+
+## Final fixes before the pitch (20 Nov evening)
+
+Amharic lines: drafts for teammate review. Oromo lines: DRAFT for native review. Not done, on the team's request:
+the SMS heading word (it reads "ስሪት", not "ስራት"; left unchanged).
+
+**1. Date of birth: the calendar choice is said.** Choosing Ethiopian or Gregorian now puts "Now enter the day,
+month and year." (am "አሁን ቀን፣ ወር እና ዓመት ያስገቡ።", om DRAFT "Amma guyyaa, ji'a fi waggaa galchi.") in the form's
+role=status region, always, so screen readers hear it with reading off. With reading on, it is also read like
+`sayChoice`: msg-selected + the calendar's clip (`signup-dob-option-greg` …) + `msg-date-next`. New
+`sayCalendar()`; the speech engines are unchanged.
+
+**2. "Skip this question"** (am "ይህን ጥያቄ እለፍ", om DRAFT "Gaaffii kana darbi") on every optional question, after
+Continue (Continue stays first and primary red; Skip is a secondary `dm-btn`, ≥44 px). It empties the answer (also
+a partly given date), marks the question as skipped (kept with the draft, `skipped`, never sent), and moves on like
+Continue (the same `advance()`, so "Change" returns to the summary). Check your answers shows "Skipped" (am "ተዘሏል",
+om DRAFT "Darbameera"), also when read aloud (`msg-skipped`); Change works; answering later removes "Skipped".
+Continue is unchanged. The completion event is the same as for an empty Continue (no key for the question).
+Spoken summary: "You can skip it with Skip this question." (am "«ይህን ጥያቄ እለፍ»ን በመጫን መዝለል ይችላሉ።", om DRAFT);
+`sum-skip` clips made again.
+
+**3. Finish later.** (a) "Copy link" (am "ሊንኩን ቅዳ", om DRAFT "Geessituu garagalchi"): a real button under the link,
+before Continue. `navigator.clipboard.writeText`; without it (e.g. an Android WebView) the link text is selected
+and `execCommand('copy')` tried. The result goes to a new role=status region and is read aloud when reading is on:
+"Link copied." (am "ሊንኩ ተቀድቷል።") or, if only selected, "The link is selected. Copy it from your phone's menu."
+(am "ሊንኩ ተመርጧል። ከስልክዎ ምናሌ ይቅዱት።"). (b) The code on its own line, large: "Your code: AAGWIR" (am "ኮድዎ፦").
+With reading on, "Your code:" plays its clip and the letters are read one by one with `local: true` (the phone's
+voice only, never the online voice). The saved screen is now read when it opens (showroom), and its page summary
+includes the code (Savanna pages, which read summaries themselves).
+
+Clips (12): am with edge-tts am-ET-MekdesNeural (`generate-audio.py --only`), om with Addis AI om-bikila
+(`generate-audio-addis.cjs --only`): msg-date-next, msg-skipped, msg-link-copied, msg-link-selected, msg-your-code,
+sum-skip (all between 1.1 and 3.7 s). `audio-script.cjs` regenerated; `check-audio.cjs`: 869 of 869 clips; manifest
+873 clips.
+
+Tests: new `tests/final-fixes.spec.mjs` (11 per size): status sentence with reading off; spoken order with reading
+on (en) and the Amharic clips; Skip only on optional questions, after Continue in tab order, ≥44 px; "Skipped" on the
+summary, Change, nothing sent; answering later; Amharic labels and summary; Copy link (clipboard, tab order,
+status), the no-clipboard fallback; the code line and phone-only letters (en, am, with no letters sent to the
+online voice). `summaries.spec.mjs` and two `voice.spec.mjs` checks updated to the new wording.
+Full suite, one worker: **703 passed, 0 failed**, 9 skipped (24 min), including axe on every screen (a11y, wcag),
+the keyboard-only gate, the keyboard sweep and the 320px reflow checks.
